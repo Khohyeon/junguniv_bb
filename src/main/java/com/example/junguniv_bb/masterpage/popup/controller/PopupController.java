@@ -10,8 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/masterpage")
 public class PopupController {
 
+
+
     @GetMapping("/mainpopup")
     public String mainpopup() {
         return "masterpage/popup/mainpopup";
     }
+
+
 }

@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="ko">
 <head>
     <!-- 헤더에서 CSS 포함 -->
     <th:block th:replace="fragments/header :: head"></th:block>
 </head>
 <body>
 <!-- 헤더에서 상단 메뉴 포함 -->
-<th:block th:replace="fragments/header :: header"></th:block>
+<div th:replace="fragments/header :: header"></div>
+
 <div class="inner">
     <div class="form-wrap">
         <div class="group01">
@@ -138,5 +139,8 @@
         <a href="#none" class="arrow last"></a>
     </div>
 </div>
+
+</div>
+
 </body>
 </html>

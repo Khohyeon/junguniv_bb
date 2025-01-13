@@ -47,7 +47,7 @@
 </head>
 <body>
 <!-- Fragment Definition -->
-<header th:fragment="header">
+<div th:fragment="header">
     <div class="menu-category">
         <a th:href="@{/masterpage_pro/subject.registration.php}">
             <img th:src="@{/include_com/img/intro_IC01.png}" alt="환급과정">환급과정
@@ -112,24 +112,56 @@
                         <!-- depth2 반복 -->
                         <ul class="depth2" th:if="${menu.subMenus != null}">
                             <li th:each="subMenu : ${menu.subMenus}">
-                                <a th:href="${subMenu.url ?: '#'}" th:text="${subMenu.name ?: 'No Name'}"></a>
+                                <a href="#"
+                                   th:href="${subMenu.url ?: '#'}"
+                                   data-menu-id="${subMenu.code}"
+                                   class="depth2-link"
+                                   th:text="${subMenu.name ?: 'No Name'}"></a>
                             </li>
                         </ul>
                     </li>
                 </ul>
             </nav>
         </div>
-    </div>
+        <div class="page-wrap">
+            <!-- depth3 메뉴 -->
+            <div class="depth3">
+                <ul>
+                    <li th:each="menu : ${depth3Menus}" th:class="${menu.active ? 'on' : ''}">
+                        <a th:href="${menu.url}" th:target="${menu.target}" th:text="${menu.name}"></a>
+                    </li>
+                </ul>
+            </div>
 
-    <div class="depth3">
-        <ul>
-            <!-- 반복문: depth3 메뉴 -->
-            <li th:each="menu : ${depth3Menus}" th:class="${menu.active ? 'on' : ''}">
-                <a th:href="${menu.url}" th:target="${menu.target}" th:text="${menu.name}"></a>
-            </li>
-        </ul>
-    </div>
-
-</header>
 </body>
 </html>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.depth2-link').forEach(link => {
+            console.log('링크: ', link);
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const menuId = this.getAttribute('data-menu-id');
+                const depth3Container = document.getElementById('depth3-container');
+
+                // AJAX 호출로 depth3 데이터 가져오기
+                fetch(`/menus/depth3?menuIdx=${menuId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('성공: ', data);
+                        // depth3 데이터를 동적으로 렌더링
+                        depth3Container.innerHTML = data.map(menu => `
+                        <li>
+                            <a href="${menu.url}" target="${menu.target}">${menu.name}</a>
+                        </li>
+                    `).join('');
+                    })
+                    .catch(err => {
+                        console.error('Failed to load depth3 menus:', err);
+                    });
+            });
+        });
+    });
+
+</script>
+
