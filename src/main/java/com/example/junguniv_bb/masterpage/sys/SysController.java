@@ -1,7 +1,11 @@
 package com.example.junguniv_bb.masterpage.sys;
 
-import com.example.junguniv_bb.masterpage.sys.dto.Depth3Menu;
 import com.example.junguniv_bb.masterpage.sys.dto.Menu;
+import com.example.junguniv_bb.masterpage.uznBranch.model.UznBranch;
+import com.example.junguniv_bb.masterpage.uznBranch.model.UznBranchRepository;
+import com.example.junguniv_bb.masterpage.uznBranch.model.UznBranchSub;
+import com.example.junguniv_bb.masterpage.uznBranch.model.UznBranchSubRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +14,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 public class SysController {
+
+    private final UznBranchRepository uznBranchRepository;
+    private final UznBranchSubRepository uznBranchSubRepository;
 
     @GetMapping
     public String index(Model model) {
@@ -20,38 +28,40 @@ public class SysController {
     }
 
 
-    // TODO : 메인 메뉴에 띄울 데이터를 넣어 줘야함
+    /**
+     * 시스템 설정 탭의 Header에 고정으로 넣는 데이터 값
+     * 모델에 항상 띄워 놓은 후 Unz_Branch로 부터 메뉴 와 url을 불러옵니다.
+     */
     @ModelAttribute("xbigMenus")
     public List<Menu> populateBigMenus() {
-        // 공통 데이터 생성
-        return List.of(
-                new Menu("Code1", "Main Menu 1", "/main1", "_self", List.of(
-                        new Menu.SubMenu("SubCode1", "Sub Menu 1", "/sub1"),
-                        new Menu.SubMenu("SubCode2", "Sub Menu 2", "/sub2")
-                )),
-                new Menu("Code2", "Main Menu 2", "/main2", "_self", List.of(
-                        new Menu.SubMenu("SubCode3", "Sub Menu 3", "/sub3"),
-                        new Menu.SubMenu("SubCode4", "Sub Menu 4", "/sub4")
-                ))
-        );
+        // 데이터베이스에서 상위 메뉴 조회
+        List<UznBranch> branches = uznBranchRepository.findAllByChkUseOrderBySortno("Y");
+
+        return branches.stream().map(branch -> {
+            // 각 상위 메뉴에 해당하는 하위 메뉴 조회
+            List<UznBranchSub> subMenus = uznBranchSubRepository.findAllByBranch_BranchIdxAndChkUseOrderBySortno(branch.getBranchIdx(), "Y");
+
+            // 하위 메뉴를 Menu.SubMenu 객체로 변환
+            List<Menu.SubMenu> subMenuList = subMenus.stream()
+                    .map(sub -> new Menu.SubMenu(
+                            String.valueOf(sub.getBranchSubIdx()),
+                            sub.getSubName(),
+                            sub.getUrl()
+                    ))
+                    .toList();
+
+            // 상위 메뉴의 URL은 하위 메뉴 중 첫 번째 메뉴의 URL로 설정
+            String mainMenuUrl = subMenus.isEmpty() ? "#" : subMenus.get(0).getUrl();
+
+            // 상위 메뉴를 Menu 객체로 변환
+            return new Menu(
+                    String.valueOf(branch.getBranchIdx()),
+                    branch.getBranchName(),
+                    mainMenuUrl,
+                    "_self",
+                    subMenuList
+            );
+        }).toList();
     }
 
-    @ModelAttribute("sysMenuGroup")
-    public String populateSysMenuGroup() {
-        return "Code1"; // 활성화된 메뉴 그룹
-    }
-
-    @ModelAttribute("sysBranchSubIdx")
-    public String populateSysBranchSubIdx() {
-        return "SubCode1"; // 활성화된 서브 메뉴
-    }
-
-    @ModelAttribute("depth3Menus")
-    public List<Depth3Menu> populateDepth3Menus() {
-        return List.of(
-                new Depth3Menu("Menu1", "/menu1", "_self", false),
-                new Depth3Menu("Menu2", "/menu2", "_self", true), // 활성화된 메뉴
-                new Depth3Menu("Menu3", "/menu3", "_self", false)
-        );
-    }
 }
