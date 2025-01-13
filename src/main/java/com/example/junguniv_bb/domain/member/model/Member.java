@@ -1,5 +1,6 @@
 package com.example.junguniv_bb.domain.member.model;
 
+import com.example.junguniv_bb.domain.member._enum.UserType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +11,9 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDateTime;
 
+/**
+ * 회원 테이블 - 필드 139개
+ */
 @Entity
 @Table(name = "MEMBER")
 @AllArgsConstructor
@@ -84,8 +88,8 @@ public class Member {
     @Column(name = "BANK_USER_NAME", length = 100)
     private String bankUserName; // 예금주
 
-    @Column(name = "USERID", length = 100)
-    private String userid; // 아이디
+    @Column(name = "USER_ID", length = 100)
+    private String userId; // 아이디
 
     @Column(name = "PERMISSION_DATE", length = 10)
     private String permissionDate; // 허가일
@@ -148,7 +152,7 @@ public class Member {
     private String books; // 저서
 
     @Column(name = "USER_TYPE", length = 100)
-    private String userType; // 회원구분
+    private UserType userType; // 회원구분
 
     @Column(name = "CHANGE_NOTE", columnDefinition = "MEDIUMTEXT")
     private String changeNote; // 변경사유
@@ -168,8 +172,8 @@ public class Member {
     @Column(name = "TEL_FAX", length = 100)
     private String telFax; // 팩스번호
 
-    @Column(name = "CHK_LOGIN", length = 1)
-    private String chkLogin; // 계정중지 여부
+    @Column(name = "MEMBER_STATE", length = 1)
+    private String memberState; // 계정중지 여부
 
     @Column(name = "JOB_CEO", length = 200)
     private String jobCeo; // 대표자명
@@ -276,8 +280,8 @@ public class Member {
     @Column(name = "CORPORATION_IDX")
     private Long corporationIdx; // 지점idx
 
-    @Column(name = "MEMBER_AUTHLEVEL")
-    private Long memberAuthlevel; // 권한
+    @Column(name = "AUTHLEVEL")
+    private Long authLevel; // 권한레벨
 
     @Column(name = "BIRTHDAY_TYPE", length = 1)
     private String birthdayType; // 생일 양력/음력 구분

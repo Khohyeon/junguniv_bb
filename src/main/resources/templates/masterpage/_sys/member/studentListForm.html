@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+	<!-- 헤더에서 CSS 포함 -->
+	<th:block th:replace="fragments/header :: head"></th:block>
+	<title>회원관리 - 수강생</title>
+</head>
+<body>
+	<!-- 헤더에서 상단 메뉴 포함 -->
+	<th:block th:replace="fragments/header :: header"></th:block>
+
+	<div class="depth3">
+		<ul>
+			<li class="on">
+				<a href="/masterpage_sys/member/student/" target="">
+					수강생					</a>
+			</li>
+			<li>
+				<a href="/masterpage_sys/member/teacher/" target="">
+					내용전문가					</a>
+			</li>
+			<li>
+				<a href="/masterpage_sys/member/tutor/" target="">
+					교강사(튜터)					</a>
+			</li>
+			<li>
+				<a href="/masterpage_sys/member/company/" target="">
+					위탁기업					</a>
+			</li>
+			<li>
+				<a href="/masterpage_sys/member/manager/" target="">
+					LMS관리자					</a>
+			</li>
+			<li>
+				<a href="/masterpage_sys/member/history/" target="">
+					회원정보 변경기록					</a>
+			</li>
+
+		</ul>
+	</div>
+
+	<div class="form-wrap search-more">
+		<div class="inner">
+			<div class="group01">
+				<div class="tit">검색</div>
+				<div class="con">
+					<div class="column-tc-wrap">
+						<div class="column-tc">
+							<div class="tit">이름</div>
+							<div class="con">
+								<input type="text" name="name" placeholder="이름을 입력해주세요">	
+							</div>
+						</div>
+						<div class="column-tc">
+							<div class="tit">ID</div>
+							<div class="con">
+								<input type="text" name="userid" placeholder="ID를 입력해주세요">	
+							</div>
+						</div>
+						<div class="column-tc">
+							<div class="tit">생년월일</div>
+							<div class="con flex3">
+								<input type="text" name="birth_y" placeholder="년">	
+								<input type="text" name="birth_m" placeholder="월">	
+								<input type="text" name="birth_d" placeholder="일">	
+							</div>
+						</div>
+						<div class="column-tc">
+							<div class="tit">휴대폰</div>
+							<div class="con flex">
+								<select name="tel_mobile1" id="tel_mobile1">
+									<option value="">선택</option>
+									<option value="010">010</option>
+									<option value="011">011</option>
+									<option value="016">016</option>
+									<option value="017">017</option>
+									<option value="019">019</option>
+								</select>
+								<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
+								<input type="text" name="tel_mobile2" id="tel_mobile2" maxlength="4" placeholder="번호를 입력해주세요">
+								<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
+								<input type="text" name="tel_mobile3" id="tel_mobile3" maxlength="4" placeholder="번호를 입력해주세요">
+							</div>
+						</div>
+						<div class="column-tc">
+							<div class="tit">이메일</div>
+							<div class="con flex">
+								<input type="text" name="email1" placeholder="이메일을 입력해주세요">
+								<span>&nbsp;&nbsp;@&nbsp;&nbsp;</span>
+								<input type="text" name="email2" id="email2">
+								<select id="email_select" name="email_select">
+									<option value="1" selected>직접입력</option>
+									<option value="naver.com">naver.com</option>
+									<option value="gmail.com">gmail.com</option>
+									<option value="daum.net">daum.net</option>
+								</select>
+							</div>
+						</div>
+						<div class="column-tc">
+							<div class="tit">휴면계정</div>
+							<div class="con">
+								<label class="c-input ci-radio">
+									<input type="radio" name="dormant_chk" value="Y"> YES
+									<div class="ci-show"></div>
+								</label>
+								<label class="c-input ci-radio">
+									<input type="radio" name="dormant_chk" value="N"> NO
+									<div class="ci-show"></div>
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="column-tc-wrap hidden">
+						<div class="column-tc">
+							<div class="tit">로그인 제한</div>
+							<div class="con">
+								<label class="c-input ci-radio">
+									<input type="radio" name="chk_login" value="Y"> YES
+									<div class="ci-show"></div>
+								</label>
+								<label class="c-input ci-radio">
+									<input type="radio" name="chk_login" value="N"> NO
+									<div class="ci-show"></div>
+								</label>
+							</div>
+						</div>
+						<div class="column-tc">
+							<div class="tit">외국인여부</div>
+							<div class="con">
+								<label class="c-input ci-radio">
+									<input type="radio" name="chk_foreign" value="Y"> YES
+									<div class="ci-show"></div>
+								</label>
+								<label class="c-input ci-radio">
+									<input type="radio" name="chk_foreign" value="N"> NO
+									<div class="ci-show"></div>
+								</label>
+							</div>
+						</div>
+						<div class="column-tc">
+							<div class="tit">성별</div>
+							<div class="con">
+								<label class="c-input ci-radio">
+									<input type="radio" name="sex" value="M"> 남
+									<div class="ci-show"></div> 
+								</label>
+								<label class="c-input ci-radio">
+									<input type="radio" name="sex" value="F"> 여
+									<div class="ci-show"></div>
+								</label>
+							</div>
+						</div>
+						<div class="column-tc">
+							<div class="tit">근무회사</div>
+							<div class="con">
+								<input type="text" name="job_name" placeholder="근무하시는 회사명을 입력해주세요">
+							</div>
+						</div>
+						<div class="column-tc">
+							<div class="tit">근무상태</div>
+							<div class="con">
+								<select name="job_workstate" id="job_workstate">
+									<option value="">선택</option>
+									<option value="근무">근무</option> 
+									<option value="퇴사">퇴사</option> 
+									<option value="휴직">휴직</option> 
+									<option value="기타">기타</option> 
+								</select>
+							</div>
+						</div>
+						<div class="column-tc">
+							<div class="tit">근무부서</div>
+							<div class="con">
+								<input type="text" name="job_dept" placeholder="부서명을 입력해주세요">
+							</div>
+						</div>
+						<div class="column-tc">
+							<div class="tit">마케팅 수신</div>
+							<div class="con">
+								<div>
+									<span class="marketing-tit">문자</span>
+									<label class="c-input ci-radio">
+										<input type="radio" name="chk_sms_receive" value="Y"> YES
+										<div class="ci-show"></div>
+									</label>
+									<label class="c-input ci-radio">
+										<input type="radio" name="chk_sms_receive" value="N"> NO
+										<div class="ci-show"></div>
+									</label>
+								</div>
+								<div>
+									<span class="marketing-tit">이메일</span>
+									<label class="c-input ci-radio">
+										<input type="radio" name="chk_mail_receive" value="Y"> YES
+										<div class="ci-show"></div>
+									</label>
+									<label class="c-input ci-radio">
+										<input type="radio" name="chk_mail_receive" value="N"> NO
+										<div class="ci-show"></div>
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="column-tc">
+							<div class="tit">인증예외</div>
+							<div class="con">
+								<label class="c-input ci-radio">
+									<input type="radio" name="login_pass" value="Y"> YES
+									<div class="ci-show"></div>
+								</label>
+								<label class="c-input ci-radio">
+									<input type="radio" name="login_pass" value="N"> NO
+									<div class="ci-show"></div>
+								</label>
+							</div>
+						</div>
+						<div class="column-tc">
+							<div class="tit">로그인ID</div>
+							<div class="con">
+								<input type="text" name="loginid" placeholder="로그인ID를 입력해주세요">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="search-more-btn">
+			<span>상세검색</span>
+			<img src="/include_com/img/arrow_fill_down_BK.svg" alt="화살표">
+		</div>
+	</div>
+	<div class="btn-wrap">
+		<a href="javascript:" class="jv-btn jb-fill01-lg">검색</a>
+	</div>
+	<div class="table-util mt50">
+		<div class="left">
+			<a href="javascript:" class="jv-btn fill05">삭제</a>
+			<a href="javascript:" class="jv-btn icon-excel">엑셀</a>
+			<div class="page-view flex">
+				<span>페이지수</span>
+				<select name="pagesize">
+					<option value="">페이지수</option>
+					<option th:each="num : ${#numbers.sequence(20, 1000, 10)}" 
+							th:value="${num}" 
+							th:text="${num}">
+					</option>
+				</select>
+			</div>
+			<div class="count">
+				<span class="Pretd_B" th:text="${totalCount}">0</span>건 검색되었습니다.
+			</div>
+		</div>
+		<div class="right">
+			<a href="javascript:" class="jv-btn fill03-icon-message">SMS발송</a>
+			<a href="javascript:" class="jv-btn fill03-icon-mail">이메일발송</a>
+			<a href="javascript:" class="jv-btn fill04">신규등록</a>
+			<a href="javascript:" class="jv-btn fill04">일괄등록</a>
+		</div>
+	</div>
+
+	<div class="table_wrap" name="PrintLayer" id="PrintLayer">
+		<table class="table01 T_center">
+			<thead>
+				<tr>
+					<th>
+						<label class="c-input ci-check single">
+							<input type="checkbox" name="chk" value="">
+							<div class="ci-show"></div>
+						</label>
+					</th>
+					<th>NO</th>
+					<th>이름</th>
+					<th>ID</th>
+					<th>생년월일</th>
+					<th>
+						<label class="c-input ci-check">
+							<input type="checkbox" name="chk" value=""> 핸드폰
+							<div class="ci-show"></div>
+						</label>
+					</th>
+					<th>
+						<label class="c-input ci-check">
+							<input type="checkbox" name="chk" value=""> 이메일	
+							<div class="ci-show"></div>
+						</label>
+					</th>
+					<th>마케팅 문자 수신</th>
+					<th>마케팅 메일 수신</th>
+					<th>회원등록일</th>
+					<th>약관동의일</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="member : ${members}">
+					<td>
+						<label class="c-input ci-check single">
+							<input type="checkbox" name="vidx[]" th:value="${member.memberIdx}">
+							<div class="ci-show"></div>
+						</label>
+					</td>
+					<td th:text="${member.no}"></td>
+					<td>
+						<a href="#" class="course-tit" th:text="${member.name}"></a>
+					</td>
+					<td>
+						<a href="#" class="course-tit" th:text="${member.userId}"></a>
+					</td>
+					<td th:text="${member.birthday}"></td>
+					<td>
+						<label class="c-input ci-check">
+							<input type="checkbox" name="to_hp[]" th:value="${member.telMobile}">
+							<span th:text="${member.telMobile}"></span>
+							<div class="ci-show"></div>
+						</label>
+					</td>
+					<td>
+						<label class="c-input ci-check" th:if="${member.email}">
+							<input type="checkbox" name="to_email[]" th:value="${member.email}">
+							<span th:text="${member.email}"></span>
+							<div class="ci-show"></div>
+						</label>
+						<span th:unless="${member.email}">-</span>
+					</td>
+					<td th:text="${member.chkSmsReceive == 'Y' ? 'YES' : 'NO'}"></td>
+					<td th:text="${member.chkMailReceive == 'Y' ? 'YES' : 'NO'}"></td>
+					<td th:text="${member.registDate}"></td>
+					<td th:text="${member.agreeChk == 'Y' ? member.agreeDate : '-'}"></td>
+				</tr>
+				<tr th:if="${#lists.isEmpty(members)}">
+					<td colspan="11" align="center">데이타가 없습니다.</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>
