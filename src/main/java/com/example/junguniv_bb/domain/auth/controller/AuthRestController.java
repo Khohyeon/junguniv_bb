@@ -111,13 +111,29 @@ public class AuthRestController {
                 // JWT를 세션에 설정
                 setJwtSession(resDTO.token().accessToken(), resDTO.token().refreshToken(), request);
 
-                // 사용자 타입 및 약관 동의 여부 확인
-                CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-                Member member = userDetails.getMember();
-                UserType userType = member.getUserType();
+                // // 사용자 타입 및 약관 동의 여부 확인
+                // CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+                // Member member = userDetails.getMember();
+                // UserType userType = member.getUserType();
+                //
+                // log.info("로그인 성공 - 사용자: {}, 타입: {}", member.getUserId(), userType);
 
-                log.info("로그인 성공 - 사용자: {}, 타입: {}", member.getUserId(), userType);
-
+                // // 학생인 경우 약관 동의 여부와 기간 확인
+                // if (userType == UserType.STUDENT) {
+                //     LocalDateTime agreeDate = member.getAgreeDate();
+                //     // 약관동의일이 없거나 2년이 지났다면 약관동의 페이지로 이동
+                //     if (agreeDate == null || ChronoUnit.YEARS.between(agreeDate, LocalDateTime.now()) >= 2) {
+                //         log.info("약관 동의 필요 - 사용자: {}, 마지막 동의일: {}", member.getUserId(), agreeDate);
+                //         // 토큰과 함께 약관 동의 필요 정보 전달
+                //         return ResponseEntity.ok(APIUtils.success(Map.of(
+                //                 "token", resDTO.token(),
+                //                 "member", resDTO.member(),
+                //                 "needAgree", true,
+                //                 "redirectUrl", "/nGsmart/student/member/agree-page",
+                //                 "message", "약관 동의가 필요합니다."
+                //         )));
+                //     }
+                // }
 
                 return ResponseEntity.ok(APIUtils.success(resDTO));
 

@@ -389,9 +389,6 @@ public class Member {
     @Column(name = "NICE_REGDATE")
     private LocalDateTime niceRegdate; // 나이스 약관동의일
 
-    @Column(name = "AGREE_DATE")
-    private LocalDateTime agreeDate; // 약관동의일
-
     @Column(name = "LOGIN_FAIL_CNT")
     private Long loginFailCnt; // 로그인 실패 횟수
 
@@ -425,11 +422,12 @@ public class Member {
     @Column(name = "FNAME4_NAME", length = 250)
     private String fname4Name; // 첨부파일명4
 
-    @Column(name = "AGREE_TEXT", columnDefinition = "TEXT")
-    private String agreeText; // 약관동의 내용
+    @Lob
+    @Column(name = "AGREE_PAGE", columnDefinition = "LONGTEXT")
+    private String agreePage; // 회원가입약관내용
 
-    @Column(name = "AGREE_CHK", length = 1)
-    private String agreeChk; // 약관동의 여부
+    @Column(name = "AGREE_DATE")
+    private LocalDateTime agreeDate; // 약관동의일
 
     @Column(name = "LOGIN_FAIL_TIME")
     private LocalDateTime loginFailTime; // 로그인 실패 시간
