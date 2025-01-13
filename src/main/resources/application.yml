@@ -1,32 +1,18 @@
 spring:
-  application:
-    name: junguniv_bb
-  thymeleaf:
-    enabled: true
-    prefix: classpath:/templates/
-    suffix: .html
-    check-template-location: true
-    cache: false
-    encoding: UTF-8
-    content-type: text/html
-  web:
-    resources:
-      static-locations: classpath:/static/
-    locale: ko_KR
-  messages:
-    basename: messages
-    cache-duration: 3600
-  # H2 DB 설정
   datasource:
-    url: jdbc:h2:mem:test;MODE=MySQL
+    url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver
     username: sa
     password:
-
-server:
-  port: 8080
-  servlet:
-    context-path: /
-  error:
-    whitelabel:
-      enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: create # Hibernate? ???? ????? ??
+    defer-datasource-initialization: true # ??? ?? ? data.sql ??
+    show-sql: true
+  h2:
+    console:
+      enabled: true
+  sql:
+    init:
+      mode: always # ?? ??
+      data-locations: classpath:db/data.sql # ??? ?? ??

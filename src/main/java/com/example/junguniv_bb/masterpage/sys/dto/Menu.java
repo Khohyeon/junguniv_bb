@@ -14,6 +14,5 @@ public record Menu(
             String name,
             String url
     ) {
-
     }
 }
