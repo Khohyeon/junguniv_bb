@@ -16,6 +16,12 @@ spring:
   messages:
     basename: messages
     cache-duration: 3600
+  # H2 DB 설정
+  datasource:
+    url: jdbc:h2:mem:test;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
 
 server:
   port: 8080
