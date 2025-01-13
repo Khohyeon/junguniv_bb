@@ -12,8 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 @RequiredArgsConstructor
@@ -24,20 +22,20 @@ public class MemberService {
     /* DI */
     private final MemberRepository memberRepository;
     // private final PasswordEncoder passwordEncoder;
-    
+
     /* 다중삭제 */
-    
-    
+
+
     /* 삭제 */
-    
-    
+
+
     /* 수정 */
     @Transactional
     public void memberUpdate(Long id, MemberUpdateReqDTO reqDTO) {
 
         // DB조회
         Member memberPS = memberRepository.findById(id)
-        .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_MEMBER.getMessage()));
+                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_MEMBER.getMessage()));
 
         // // 비밀번호가 입력된 경우에만 암호화하여 업데이트
         // String encodedPwd = reqDTO.pwd() != null && !reqDTO.pwd().isEmpty()
@@ -47,7 +45,7 @@ public class MemberService {
         // 트랜잭션 처리
         // reqDTO.updateEntity(memberPS);
     }
-    
+
     /* 조회 */
     public MemberDetailResDTO memberDetail(Long id
             // 스프링 시큐리티 로그인한 사람의 정보 가져오기
@@ -64,8 +62,8 @@ public class MemberService {
 
         return new MemberDetailResDTO(memberPS);
     }
-    
-    
+
+
     /* 등록 */
     @Transactional
     public ResponseEntity<?> memberSave(MemberSaveReqDTO requestDTO) {

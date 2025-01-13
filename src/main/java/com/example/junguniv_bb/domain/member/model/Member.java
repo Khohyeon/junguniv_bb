@@ -151,6 +151,7 @@ public class Member {
     @Column(name = "BOOKS", columnDefinition = "TEXT")
     private String books; // 저서
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "USER_TYPE", length = 100)
     private UserType userType; // 회원구분
 

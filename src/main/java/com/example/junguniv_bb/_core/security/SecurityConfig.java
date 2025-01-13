@@ -53,6 +53,9 @@ public class SecurityConfig {
         http
                 // 페이지별 인가 설정
                 .authorizeHttpRequests((auth) -> auth
+
+                        .requestMatchers("/**").permitAll() // ! (Dev) 개발단계에서 모든 경로에 대한 접근 허용, 배포시에 제거해야함.
+
                         .requestMatchers(HIDDEN_PATTERNS).denyAll() // 숨겨진 파일 접근 차단
                         .requestMatchers(WHITELIST).permitAll()
                         .requestMatchers(ADMIN).hasAuthority("ADMIN")
@@ -143,19 +146,20 @@ public class SecurityConfig {
 
 
     /* 스프링 시큐리티 엔드포인트 권한 설정 */
+    // TODO 권한에 따른 엔드포인트 재설정 필요!!!
     public static final String[] ADMIN = {"/nGmaster/**",}; // 관리자
-
-    public static final String[] TEACHER = {"/nGsmart/teacher/**",}; // 강사
-
-    public static final String[] STUDENT = {"/nGsmart/student/**",}; // 신입생
-
-    public static final String[] JAEHAK = {"/nGsmart/student/**",}; // 재학생
-
-    public static final String[] GRADUATE = {"/nGsmart/student/**",}; // 졸업생
+    public static final String[] STUDENT = {"/nGsmart/student/**",}; // 학생
+    public static final String[] TEACHER = {"/nGsmart/teacher/**",}; // 내용전문가
+    public static final String[] TUTOR = {"/nGsmart/student/**",}; // 교강사
+    public static final String[] COMPANY = {"/nGsmart/student/**",}; // 교강사
+    public static final String[] MANAGER = {"/nGsmart/student/**",}; // LMS 관리자
 
     public static final String[] WHITELIST = {
         "/css/**", 
         "/static/**",
+        "/include_com/**",
+        "/js/**",
+        "/images/**",
         "/login", 
         "/access-denied",
         "/join",
