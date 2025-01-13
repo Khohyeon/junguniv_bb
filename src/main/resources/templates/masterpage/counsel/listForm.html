@@ -13,11 +13,34 @@
         <div class="group01">
             <div class="tit">검색</div>
             <div class="con">
-                <div class="column-tc-wrap part1">
+                <div class="column-tc-wrap part2">
                     <div class="column-tc">
-                        <div class="tit">팝업명</div>
+                        <div class="tit">
+                            <select>
+                                <option>제목</option>
+                                <option>1</option>
+                                <option>2</option>
+                            </select>
+                        </div>
+                        <div class="con ml5">
+                            <input type="text" placeholder="Text를 입력해주세요">
+                        </div>
+                    </div>
+                    <div class="column-tc">
+                        <div class="tit">상담상태</div>
                         <div class="con">
-                            <input type="text" placeholder="팝업 제목을 입력해주세요">
+                            <label class="c-input ci-radio">
+                                <input type="radio" name="counsel"> 전체
+                                <div class="ci-show"></div>
+                            </label>
+                            <label class="c-input ci-radio">
+                                <input type="radio" name="counsel"> 상담대기
+                                <div class="ci-show"></div>
+                            </label>
+                            <label class="c-input ci-radio">
+                                <input type="radio" name="counsel"> 상담완료
+                                <div class="ci-show"></div>
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -27,19 +50,23 @@
     <div class="btn-wrap">
         <a href="#none" class="jv-btn jb-fill01-lg">검색</a>
     </div>
-    <div class="info info-bg mt30">
-        메인팝업은 Layer형태로 홈페이지 메인 페이지에 나타납니다.
-    </div>
     <div class="table-util mt30">
         <div class="left">
             <a href="#none" class="jv-btn fill05">삭제</a>
+            <div class="page-view flex">
+                <span>페이지수</span>
+                <select>
+                    <option>선택</option>
+                    <option>1</option>
+                    <option>2</option>
+                </select>
+            </div>
             <div class="count">
                 <span class="Pretd_B">123</span>건 검색되었습니다.
             </div>
         </div>
         <div class="right">
-            <a th:href="@{/templates/masterpage/popup/registForm}" class="jv-btn fill04">팝업등록</a>
-
+            <a th:href="@{/masterpage/counsel/saveForm}" class="jv-btn fill04">상담명 등록</a>
         </div>
     </div>
 
@@ -53,11 +80,11 @@
                 </label>
             </th>
             <th>NO</th>
-            <th>팝업명</th>
-            <th>수정일</th>
-            <th>공개기간</th>
-            <th>팝업종류</th>
-            <th>공개여부</th>
+            <th>제목</th>
+            <th>신청일</th>
+            <th>상담자명</th>
+            <th>상담상태</th>
+            <th>최종수정시간</th>
         </tr>
         </thead>
         <tbody>
@@ -69,13 +96,13 @@
                 </label>
             </td>
             <td>12</td>
-            <td>
-                <a href="#none" class="jv-btn underline01">팝업제목 팝업제목 팝업제목 팝업제목 팝업제목 팝업제목 팝업제목 팝업제목</a>
-            </td>
+            <td>상담신청합니다. 상담신청합니다. 상담신청합니다. 상담신청합니다. 상담신청합니다. </td>
             <td>2022.00.00</td>
-            <td>2022.00.00 ~ 2022.00.00</td>
-            <td>Layer</td>
-            <td>Y</td>
+            <td>홍길동</td>
+            <td>
+                <a href="#none" class="jv-btn label01">상담대기</a>
+            </td>
+            <td>2022.00.00 18:00:00</td>
         </tr>
         <tr>
             <td>
@@ -85,45 +112,13 @@
                 </label>
             </td>
             <td>12</td>
-            <td>
-                <a href="#none" class="jv-btn underline01">팝업제목 팝업제목 팝업제목 팝업제목 팝업제목 팝업제목 팝업제목 팝업제목</a>
-            </td>
+            <td>상담신청합니다. 상담신청합니다. 상담신청합니다. 상담신청합니다. 상담신청합니다. </td>
             <td>2022.00.00</td>
-            <td>2022.00.00 ~ 2022.00.00</td>
-            <td>Layer</td>
-            <td>Y</td>
-        </tr>
-        <tr>
+            <td>홍길동</td>
             <td>
-                <label class="c-input ci-check single">
-                    <input type="checkbox">
-                    <div class="ci-show"></div>
-                </label>
+                <a href="#none" class="jv-btn label07">상담완료</a>
             </td>
-            <td>12</td>
-            <td>
-                <a href="#none" class="jv-btn underline01">팝업제목 팝업제목 팝업제목 팝업제목 팝업제목 팝업제목 팝업제목 팝업제목</a>
-            </td>
-            <td>2022.00.00</td>
-            <td>2022.00.00 ~ 2022.00.00</td>
-            <td>Layer</td>
-            <td>Y</td>
-        </tr>
-        <tr>
-            <td>
-                <label class="c-input ci-check single">
-                    <input type="checkbox">
-                    <div class="ci-show"></div>
-                </label>
-            </td>
-            <td>12</td>
-            <td>
-                <a href="#none" class="jv-btn underline01">팝업제목 팝업제목 팝업제목 팝업제목 팝업제목 팝업제목 팝업제목 팝업제목</a>
-            </td>
-            <td>2022.00.00</td>
-            <td>2022.00.00 ~ 2022.00.00</td>
-            <td>Layer</td>
-            <td>Y</td>
+            <td>2022.00.00 18:00:00</td>
         </tr>
         </tbody>
     </table>
@@ -140,8 +135,3 @@
         <a href="#none" class="arrow last"></a>
     </div>
 </div>
-
-</div>
-
-</body>
-</html>

@@ -46,9 +46,9 @@ INSERT INTO UZN_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX) VALUES
 ('상세정보', 1, 'Y', '/member/info/detail', 3),
 ('수정', 2, 'Y', '/member/info/edit', 3),
 ('메인팝업', 1, 'Y', '/masterpage/popup/listForm', 5),
-('상단팝업', 2, 'Y', '/masterpage/board/mainpopup', 5),
+('상단팝업', 2, 'N', '/masterpage/board/mainpopup', 5),
 ('회원가입약관', 2, 'Y', '/masterpage/agreement/joinForm', 6),
-('수강신청약관', 2, 'Y', '/masterpage/agreement/course', 6),
-('1:1 상담', 2, 'Y', '/masterpage/board/counsel', 7),
-('게시판말머리관리', 2, 'Y', '/masterpage/board/head', 7),
-('상담예약', 2, 'Y', '/masterpage/counsel', 8);
+('수강신청약관', 2, 'Y', '/masterpage/agreement/courseForm', 6),
+('1:1 상담', 2, 'Y', '/masterpage/board/listForm', 7),
+('게시판말머리관리', 2, 'Y', '/masterpage/board/headForm', 7),
+('상담예약', 2, 'Y', '/masterpage/counsel/listForm', 8);
