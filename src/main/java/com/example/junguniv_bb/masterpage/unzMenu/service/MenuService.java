@@ -38,7 +38,7 @@ public class MenuService {
                 .collect(Collectors.toList());
 
         return new Menu(
-                String.valueOf(uznMenu.getMenuIdx()),
+                uznMenu.getMenuIdx(),
                 uznMenu.getMenuName(),
                 uznMenu.getUrl(),
                 "_self",
@@ -49,7 +49,7 @@ public class MenuService {
     // UznMenu -> SubMenu DTO 변환 메서드
     private Menu.SubMenu convertToSubMenu(UznMenu uznMenu) {
         return new Menu.SubMenu(
-                String.valueOf(uznMenu.getMenuIdx()),
+                uznMenu.getMenuIdx(),
                 uznMenu.getMenuName(),
                 uznMenu.getUrl()
         );

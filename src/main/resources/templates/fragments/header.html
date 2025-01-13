@@ -25,6 +25,7 @@
     <link rel="stylesheet" th:href="@{/app/study/jsnew/toast/css/jquery.toast.css}">
 
     <!-- JS -->
+    <script th:src="@{/include_com/js/test.js}"></script>
     <script th:src="@{/include_com/js/jquery-3.3.1.min.js}"></script>
     <script th:src="@{/include_com/js/common.js}" defer></script>
     <script th:src="@{/include_com/js/slick.min.js}"></script>
@@ -108,15 +109,15 @@
                         <div class="link">
                             <a th:href="${menu.url ?: '#'}" th:target="${menu.target ?: '_self'}" th:text="${menu.name}"></a>
                         </div>
-
                         <!-- depth2 반복 -->
                         <ul class="depth2" th:if="${menu.subMenus != null}">
                             <li th:each="subMenu : ${menu.subMenus}">
                                 <a href="#"
                                    th:href="${subMenu.url ?: '#'}"
-                                   data-menu-id="${subMenu.code}"
+                                   th:data-menu-id="${subMenu.code ?: '#'}"
                                    class="depth2-link"
-                                   th:text="${subMenu.name ?: 'No Name'}"></a>
+                                   th:text="${subMenu.name ?: 'No Name'}"
+                                   onclick="loadDepth3Menus(event, this)"></a>
                             </li>
                         </ul>
                     </li>
@@ -124,44 +125,14 @@
             </nav>
         </div>
         <div class="page-wrap">
-            <!-- depth3 메뉴 -->
+            <!-- Depth3 메뉴 -->
             <div class="depth3">
-                <ul>
+                <ul id="depth3-menu-list">
+                    <!-- 정적 렌더링 -->
                     <li th:each="menu : ${depth3Menus}" th:class="${menu.active ? 'on' : ''}">
                         <a th:href="${menu.url}" th:target="${menu.target}" th:text="${menu.name}"></a>
                     </li>
                 </ul>
             </div>
-
 </body>
 </html>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.depth2-link').forEach(link => {
-            console.log('링크: ', link);
-            link.addEventListener('click', function (e) {
-                e.preventDefault();
-                const menuId = this.getAttribute('data-menu-id');
-                const depth3Container = document.getElementById('depth3-container');
-
-                // AJAX 호출로 depth3 데이터 가져오기
-                fetch(`/menus/depth3?menuIdx=${menuId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('성공: ', data);
-                        // depth3 데이터를 동적으로 렌더링
-                        depth3Container.innerHTML = data.map(menu => `
-                        <li>
-                            <a href="${menu.url}" target="${menu.target}">${menu.name}</a>
-                        </li>
-                    `).join('');
-                    })
-                    .catch(err => {
-                        console.error('Failed to load depth3 menus:', err);
-                    });
-            });
-        });
-    });
-
-</script>
-

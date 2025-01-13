@@ -6,13 +6,13 @@ spring:
     password:
   jpa:
     hibernate:
-      ddl-auto: create # Hibernate? ???? ????? ??
-    defer-datasource-initialization: true # ??? ?? ? data.sql ??
-    show-sql: true
+      ddl-auto: create
+    defer-datasource-initialization: true
+#    show-sql: true
   h2:
     console:
       enabled: true
   sql:
     init:
-      mode: always # ?? ??
-      data-locations: classpath:db/data.sql # ??? ?? ??
+      mode: always
+      data-locations: classpath:db/data.sql

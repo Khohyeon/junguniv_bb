@@ -17,7 +17,7 @@ public class UznMenu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "MENU_IDX")
-    private Integer menuIdx;
+    private Long menuIdx;
 
     @Column(name = "MENU_NAME", nullable = false)
     private String menuName;

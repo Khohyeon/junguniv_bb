@@ -65,7 +65,7 @@ public class MasterGlobalModelAttribute {
                 .stream()
                 .filter(child -> "Y".equals(child.getChkUse())) // 사용 가능한 하위 메뉴만 필터링
                 .map(sub -> new Menu.SubMenu(
-                        String.valueOf(sub.getMenuIdx()),
+                        sub.getMenuIdx(),
                         sub.getMenuName(),
                         Optional.ofNullable(sub.getUrl()).orElse("#") // URL이 없으면 기본값 #
                 ))
@@ -73,7 +73,7 @@ public class MasterGlobalModelAttribute {
 
         // 최상위 메뉴를 Menu 객체로 변환
         return new Menu(
-                String.valueOf(menu.getMenuIdx()),
+                menu.getMenuIdx(),
                 menu.getMenuName(),
                 Optional.ofNullable(menu.getUrl()).orElse("#"), // URL이 없으면 기본값 #
                 "_self",

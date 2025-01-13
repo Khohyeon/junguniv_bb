@@ -37,11 +37,18 @@ INSERT INTO UZN_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX) VALUES
 -- 하위 메뉴
 ('회원정보관리', 1, 'Y', '#', 1),
 ('권한관리', 2, 'Y', '#', 1),
-('팝업관리', 1, 'Y', '/masterpage/mainpopup', 2),
-('문의상담관리', 2, 'Y', '#', 2),
+('팝업관리', 1, 'Y', '/masterpage/popup/listForm', 2),
+('약관관리', 2, 'Y', '/masterpage/agreement/joinForm', 2),
+('게시판관리', 2, 'Y', '/masterpage/board/counsel', 2),
+('문의상담관리', 2, 'Y', '/masterpage/counsel', 2),
 
 -- 탭 메뉴
 ('상세정보', 1, 'Y', '/member/info/detail', 3),
 ('수정', 2, 'Y', '/member/info/edit', 3),
-('팝업추가', 1, 'Y', '/homepage/popup/add', 5),
-('팝업목록', 2, 'Y', '/homepage/popup/list', 5);
+('메인팝업', 1, 'Y', '/masterpage/popup/listForm', 5),
+('상단팝업', 2, 'Y', '/masterpage/board/mainpopup', 5),
+('회원가입약관', 2, 'Y', '/masterpage/agreement/joinForm', 6),
+('수강신청약관', 2, 'Y', '/masterpage/agreement/course', 6),
+('1:1 상담', 2, 'Y', '/masterpage/board/counsel', 7),
+('게시판말머리관리', 2, 'Y', '/masterpage/board/head', 7),
+('상담예약', 2, 'Y', '/masterpage/counsel', 8);
