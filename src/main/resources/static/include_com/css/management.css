@@ -1,0 +1,105 @@
+
+/* title */
+h4.con-tit{font-family:"Pretendard-Bold"; font-size:18px; margin-bottom:8px;}
+a.con-tit{display:inline-block; position:relative;}
+a.con-tit:after{content:''; display:block; width:13px; height:13px; background:url("../img/arrow_R_GR.svg")center / 100% auto no-repeat; border:2px solid #cdcdcd; border-radius:50%; position:absolute; top:3px; right:-23px; transition:0.4s;}
+a.con-tit:hover:after{right:-30px; border-color:#555; background:url("../img/arrow_R_BK.svg")center / 100% auto no-repeat;}
+
+/* table */
+table{width:100%;}
+table.table-a{background:#fff; box-shadow:0 5px 30px rgba(0,0,0,0.1); border-radius:5px; overflow:hidden;}
+table.table-a thead{background:var(--color-ui01); color:#fff; text-align:center; font-family:"Pretendard-Medium";}
+table.table-a thead tr td{padding:5px 0;}
+table.table-a tbody tr{border-bottom:1px solid #e5e5e5;}
+table.table-a tbody tr:last-child{border-bottom:none;}
+table.table-a tbody tr td{border-right:1px solid #e5e5e5; text-align:center; padding:5px 0;}
+table.table-a tbody tr td:last-child{border-right:none;}
+
+/* chart */
+div.chart-wrap{width:100%; background:#fff; border-radius:15px; box-shadow:0 5px 30px rgba(0,0,0,0.1); padding:15px;}
+div.chart-wrap:last-child{margin-right:0;}
+div.chart-wrap div.tit{padding:0 0 8px 8px; border-bottom:1px solid #e5e5e5; font-size:16px;}
+
+/* progress */
+div.progress-wrap div.p-tit{margin-bottom:5px; font-family:"Pretendard-Medium";}
+div.progress{width:100%; height:35px; background:#eee; border-radius:5px;}
+div.progress span.pg{display:block; width:0; height:100%; border-radius:5px; color:#fff; font-size:14px; font-family:"Pretendard-Bold"; line-height:35px; text-align:right; padding-right:5px; transition:1s cubic-bezier(0.37, 0, 0.63, 1);}
+div.progress span.pg.pg-color01{background:rgba(91, 141, 238, 0.9);}
+div.progress span.pg.pg-color02{background:rgba(75, 192, 192, 0.9);}
+
+/* width */
+div.wid48{width:48%; margin-right:4%;}
+div.wid48:nth-child(2){margin-right:0;}
+
+/* quick menu */
+div.management div.quickmenu ul.menu-list{display:flex;}
+div.management div.quickmenu ul.menu-list a{display:inline-block; width:15%; height:120px; margin-right:3%; background:#fff; border:1px solid var(--color-ui02); border-radius:5px; position:relative; transition:0.4s;}
+div.management div.quickmenu ul.menu-list a:last-child{margin-right:0;}
+div.management div.quickmenu ul.menu-list a:hover{box-shadow:0 5px 45px rgba(91,141,238,0.3); transform:translateY(-5px);}
+div.management div.quickmenu ul.menu-list a li{width:fit-content; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);}
+div.management div.quickmenu ul.menu-list a li img{display:block; width:30px; height:30px; object-fit:contain; margin:0 auto; margin-bottom:14px;}
+div.management div.quickmenu ul.menu-list a li p{text-align:center;}
+
+/* top */
+div.management div.top{width:100%; background:#fff; box-shadow:5px 5px 30px rgba(0,0,0,0.1); padding: 0 30px; position:fixed; z-index:10;}
+div.management div.top h3.tit{display:flex; align-items:center; font-size:22px; font-family:"Pretendard-SemiBold"; padding:36px 0;}
+div.management div.top h3.tit span.crit{font-size:14px; font-family:"Pretendard-Medium"; background:#f5f5f5; padding:6px 16px; border-radius:30px; margin-left:12px;}
+
+/* inner */
+div.management div.inner div.contents{margin-bottom:50px;}
+div.management div.inner div.contents.row{display:flex;}
+
+
+/* color */
+.color__softblue{color:rgba(91, 141, 238, 1) !important;}
+.color__softgreen{color:rgba(75, 192, 192, 1) !important;}
+
+
+/*  -------------- 환급과정 start -------------- */
+div.management_pro div.inner div.contents div.chart-wrap{min-height:250px;}
+div.management_pro div.inner div.contents.cont01 > div{margin-right:3%;}
+div.management_pro div.inner div.contents.cont01 > div:last-child{margin-right:0;}
+div.management_pro div.inner div.contents.cont01 > div div.chart-wrap div.chart.type_gauge{position:relative;}
+div.management_pro div.inner div.contents.cont01 > div div.chart-wrap div.chart.type_gauge div.gauge_value{position:absolute; top:75%; left:50%; transform:translate(-50%, -50%); font-size:20px; font-family:'Pretendard-SemiBold'; background:rgba(61,80,252,0.1); color:var(--color-ui01); border-radius:16px; padding:0.3rem 0.8rem; border:1px solid var(--color-ui01); box-shadow:0 0 15px rgba(61,80,252,0.10);}
+div.management_pro div.inner div.contents.cont01 > div div.chart-wrap div.chart{width:300px; height:220px; margin:0 auto; position:relative;}
+div.management_pro div.inner div.contents.cont01 > div div.chart-wrap div.chart canvas{position:absolute; top:-40px;}
+div.management_pro div.inner div.contents.cont01 > div.status01{width:28%;}
+div.management_pro div.inner div.contents.cont01 > div.status02{width:38%;}
+div.management_pro div.inner div.contents.cont01 > div.status03{width:28%;}
+div.management_pro div.inner div.contents.cont01 > div.status01 div.chart-wrap div.chart div.c-label > div{position:absolute; font-family:'Pretendard-Bold'; font-size:14px;}
+div.management_pro div.inner div.contents.cont01 > div.status01 div.chart-wrap div.chart div.c-label > div.step1{/*경고*/left:-10%; bottom:10%; color:red;}
+div.management_pro div.inner div.contents.cont01 > div.status01 div.chart-wrap div.chart div.c-label > div.step2{/*주의*/left:20%; top:15%; color:orange;}
+div.management_pro div.inner div.contents.cont01 > div.status01 div.chart-wrap div.chart div.c-label > div.step3{/*보통*/right:20%; top:15%; color:limegreen;}
+div.management_pro div.inner div.contents.cont01 > div.status01 div.chart-wrap div.chart div.c-label > div.step4{/*좋음*/right:-10%; bottom:10%; color:forestgreen;}
+div.management_pro div.inner div.contents.cont01 > div.status01 div.chart-wrap div.chart div.c-label > div.step2:before{opacity:0; animation:show_delay 0.3s forwards; animation-delay:0.2s; content:''; display:block; width:1px; height:65px; background:rgba(255,255,255,0.3); position:absolute; top:36px; left:0; transform:rotate(-45deg); z-index:99;}
+div.management_pro div.inner div.contents.cont01 > div.status01 div.chart-wrap div.chart div.c-label > div.step2:after{opacity:0; animation:show_delay 0.45s forwards; animation-delay:0.2s; content:''; display:block; width:1px; height:65px; background:rgba(255,255,255,0.3); position:absolute; top:6px; left:90px; z-index:99;}
+div.management_pro div.inner div.contents.cont01 > div.status01 div.chart-wrap div.chart div.c-label > div.step3:before{opacity:0; animation:show_delay 0.6s forwards; animation-delay:0.2s; content:''; display:block; width:1px; height:76px; background:rgba(255,255,255,0.3); position:absolute; top:37px; left:14px; transform:rotate(45deg); z-index:99;}
+div.management_pro div.inner div.contents.cont01 > div.status02 div.chart-wrap div.progress-wrap{margin:50px 0; display:flex; align-items:center;}
+div.management_pro div.inner div.contents.cont01 > div.status02 div.chart-wrap div.progress-wrap div.p-tit{font-size:17px; font-family:'Pretendard-Medium'; width:20%; text-align:center;}
+div.management_pro div.inner div.contents.cont02 > div{width:46%; margin-right:8%;}
+div.management_pro div.inner div.contents.cont02 > div:last-child{margin-right:0;}
+@keyframes show_delay{0%{opacity:0;}100%{opacity:1;}}
+
+
+
+/*  -------------- 시스템관리 start -------------- */
+div.management_sys div.inner div.contents > div > div.chart-wrap{min-height:385px;}
+div.management_sys div.inner div.contents.cont01 > div{margin-right:3%;}
+div.management_sys div.inner div.contents.cont01 > div.items01{width:22%;}
+div.management_sys div.inner div.contents.cont01 > div.items02{width:24%;}
+div.management_sys div.inner div.contents.cont01 > div.items03{width:48%; margin-right:0;}
+div.management_sys div.inner div.contents.cont01 > div.items01 div.access__ip{padding:13px; margin-bottom:25px; margin-top:27px; box-shadow:0 0 15px rgba(61,80,252,0.25); background:linear-gradient(90deg, rgba(61,80,252,1) 0%, rgba(56,104,198,1) 100%); color:#fff; height:70px; border-radius:12px; font-size:17px; display:flex; justify-content:space-between; align-items:center;}
+div.management_sys div.inner div.contents.cont01 > div.items01 div.access__ip div.tit{font-size:16px;}
+div.management_sys div.inner div.contents.cont01 > div.items01 div.access__ip div.ip{text-align:center; font-size:17px; font-family:'Pretendard-ExtraLight'; letter-spacing:1px;}
+div.management_sys div.inner div.contents.cont01 > div.items01 div.acccess__num{height:75px; line-height:75px; display:flex; justify-content:space-between; padding:0 20px; background:#fff; border-radius:12px; margin-bottom:16px;}
+div.management_sys div.inner div.contents.cont01 > div.items01 div.acccess__num:last-child{margin-bottom:0;}
+div.management_sys div.inner div.contents.cont01 > div.items01 div.acccess__num div.tit{position:relative; padding-left:30px;}
+div.management_sys div.inner div.contents.cont01 > div.items01 div.acccess__num div.tit:before{content:''; display:block; width:25px; height:25px; position:absolute; top:50%; left:0; transform:translateY(-50%);}
+div.management_sys div.inner div.contents.cont01 > div.items01 div.acccess__num div > span.txt_bigbold{font-family:'Pretendard-SemiBold'; font-size:18px;}
+div.management_sys div.inner div.contents.cont01 > div.items01 div.acccess__num.admin div.tit:before{background:url("../img/management_admin.svg")center/100% auto no-repeat;}
+div.management_sys div.inner div.contents.cont01 > div.items01 div.acccess__num.teacher div.tit:before{background:url("../img/management_teacher.svg")center/100% auto no-repeat;}
+div.management_sys div.inner div.contents.cont01 > div.items01 div.acccess__num.student div.tit:before{background:url("../img/management_student.svg")center/100% auto no-repeat;}
+div.management_sys div.inner div.contents.cont01 > div.items02 div.chart-wrap div.con{position:relative;}
+div.management_sys div.inner div.contents.cont01 > div.items02 div.chart-wrap div.con div.chart{margin-top:25px;}
+div.management_sys div.inner div.contents.cont01 > div.items02 div.chart-wrap div.con div.chart canvas{margin:0 auto;}
+div.management_sys div.inner div.contents.cont01 > div.items02 div.chart-wrap div.con div.c-label{font-family:'Pretendard-Medium'; text-align:center; font-size:16px; letter-spacing:-1px; position:absolute; top:55%; left:50%; transform:translate(-50%, -50%);}

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="description" content="JUNGUNIV LMS">
+    <meta name="keywords" content="JUNGUNIV LMS">
+
+    <!-- CSS -->
+    <link rel="stylesheet" th:href="@{/include_com/css/test.css}">
+    <link rel="stylesheet" th:href="@{/include_com/css/default.css}">
+    <link rel="stylesheet" th:href="@{/include_com/css/common.css}">
+    <link rel="stylesheet" th:href="@{/include_com/css/slick.css}">
+    <link rel="stylesheet" th:href="@{/include_com/css/jquery.modal.css}">
+    <link rel="stylesheet" th:href="@{/include_com/css/jquery.mCustomScrollbar.min.css}">
+    <link rel="stylesheet" th:href="@{/include_com/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/include_com/css/management.css}">
+    <link rel="stylesheet" th:href="@{/_core/js/jquery-ui/css/jquery.ui.all.css}">
+    <link rel="stylesheet" th:href="@{/_core/js/jquery/formValidator/css/validationEngine.jquery.css}" media="screen">
+    <link rel="stylesheet" th:href="@{/_core/js/jquery/formValidator/css/template.css}" media="screen">
+    <link rel="stylesheet" th:href="@{/app/study/jsnew/remodal/remodal.css}">
+    <link rel="stylesheet" th:href="@{/app/study/jsnew/remodal/remodal-default-theme.css}">
+    <link rel="stylesheet" th:href="@{/app/study/jsnew/toast/css/jquery.toast.css}">
+
+    <!-- JS -->
+    <script th:src="@{/include_com/js/jquery-3.3.1.min.js}"></script>
+    <script th:src="@{/include_com/js/common.js}" defer></script>
+    <script th:src="@{/include_com/js/slick.min.js}"></script>
+    <script th:src="@{/include_com/js/chart.min.js}"></script>
+    <script th:src="@{/include_com/js/chartjs-plugin-datalabels.min.js}"></script>
+    <script th:src="@{/include_com/js/jquery.modal.min.js}"></script>
+    <script th:src="@{/include_com/js/jquery.mCustomScrollbar.concat.min.js}"></script>
+    <script th:src="@{/_core/js/jquery/jquery-1.7.1.js}" charset="utf-8"></script>
+    <script th:src="@{/_core/js/jquery-ui-1.13.0.custom/jquery-ui.js}" charset="utf-8"></script>
+    <script th:src="@{/_core/js/jquery-ui/jquery.ui.datepicker-ko.js}" charset="utf-8"></script>
+    <script th:src="@{/_core/js/jquery/ui/jquery.maskedinput-1.0.js}" charset="UTF-8"></script>
+    <script th:src="@{/_core/js/jquery/formValidator/jquery.validationEngine-kr.js}" charset="utf-8"></script>
+    <script th:src="@{/_core/js/jquery/formValidator/jquery.validationEngine.js}" charset="utf-8"></script>
+    <script th:src="@{/_core/js/ckeditor4/ckeditor.js}" charset="utf-8"></script>
+    <script th:src="@{/_core/js/ckeditor4/adapters/jquery.js}" charset="utf-8"></script>
+    <script th:src="@{/app/study/jsnew/remodal/remodal.min.js}" charset="utf-8"></script>
+    <script th:src="@{/app/study/jsnew/wav/jquery.playSound.js}" charset="utf-8"></script>
+    <script th:src="@{/app/study/jsnew/toast/js/jquery.toast.js}" charset="utf-8"></script>
+    <script th:src="@{/app/study/jsnew/jungquery.js}" charset="utf-8"></script>
+</head>
+<body>
+<!-- Fragment Definition -->
+<header th:fragment="header">
+    <div class="menu-category">
+        <a th:href="@{/masterpage_pro/subject.registration.php}">
+            <img th:src="@{/include_com/img/intro_IC01.png}" alt="환급과정">환급과정
+        </a>
+        <a th:href="@{/masterpage_pro/subject.registration.php}">
+            <img th:src="@{/include_com/img/intro_IC02.png}" alt="일반과정">일반과정
+        </a>
+        <a th:href="@{/masterpage_sys/member.php}" class="active">
+            <img th:src="@{/include_com/img/intro_IC03.png}" alt="시스템관리">시스템관리
+        </a>
+    </div>
+    <div class="main-top">
+        <div class="left">
+            <a href="main.php" class="logo"></a>
+            <a href="#none" class="menu-btn"><span></span></a>
+        </div>
+        <div class="right">
+            <div class="login">
+                <div class="txt">
+                    <span class="Pretd_B"><?=$_SESSION["_SESSION_USERNAME"]?></span>님께서 로그인 하셨습니다.
+                </div>
+                <div class="session">
+                    <span id="logout_time">0:00:00</span>
+                    <a href="javascript:" onclick="extLogoutTime();" title="세션 시간을 연장합니다." >연장</a>
+                </div>
+                <a href="logout.php?gopage=/masterpage_pro" class="logout">로그아웃</a>
+            </div>
+            <div class="btn-group">
+                <div href="#none" class="manual">
+                    <div class="tooltip">
+                        <div class="tit">매뉴얼 다운로드</div>
+                        <div class="con">
+                            <ul>
+                                <li><a href="#none">관리자</a></li>
+                                <li><a href="#none">교강사</a></li>
+                                <li><a href="#none">수강생</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <a href="#none" class="search"></a>
+                <div class="search-form">
+                    <div class="form">
+                        <input type="text" id="str" placeholder="검색하실 메뉴명을 입력해주세요">
+                        <a href="javascript:" onclick="findStr()"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-wrap">
+        <nav>
+            <ul class="depth1">
+                <!-- depth1 반복 -->
+                <li th:each="menu : ${xbigMenus}" th:class="${menu.code == sysMenuGroup ? 'open' : 'off'}">
+                    <div class="link">
+                        <a th:href="${menu.url}" th:target="${menu.target}" th:text="${menu.name}"></a>
+                    </div>
+
+                    <!-- depth2 반복 -->
+                    <ul class="depth2">
+                        <li th:each="subMenu : ${menu.subMenus}" th:class="${subMenu.code == sysBranchSubIdx ? 'on' : ''}">
+                            <a th:href="${subMenu.url}" th:text="${subMenu.name}"></a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="depth3">
+        <ul>
+            <!-- 반복문: depth3 메뉴 -->
+            <li th:each="menu : ${depth3Menus}" th:class="${menu.active ? 'on' : ''}">
+                <a th:href="${menu.url}" th:target="${menu.target}" th:text="${menu.name}"></a>
+            </li>
+        </ul>
+    </div>
+
+</header>
+</body>
+</html>

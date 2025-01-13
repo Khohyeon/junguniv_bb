@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: junguniv_bb
+  thymeleaf:
+    enabled: true
+    prefix: classpath:/templates/
+    suffix: .html
+    check-template-location: true
+    cache: false
+    encoding: UTF-8
+    content-type: text/html
+  web:
+    resources:
+      static-locations: classpath:/static/
+    locale: ko_KR
+  messages:
+    basename: messages
+    cache-duration: 3600
+
+server:
+  port: 8080
+  servlet:
+    context-path: /
+  error:
+    whitelabel:
+      enabled: false
