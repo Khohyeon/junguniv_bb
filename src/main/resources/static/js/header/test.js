@@ -11,6 +11,7 @@ async function fetchDepth3Menus(menuIdx) {
         return [];
     }
 }
+
 async function loadDepth3Menus(event, element) {
     event.preventDefault();
 

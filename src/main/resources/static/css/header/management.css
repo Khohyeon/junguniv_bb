@@ -2,8 +2,8 @@
 /* title */
 h4.con-tit{font-family:"Pretendard-Bold"; font-size:18px; margin-bottom:8px;}
 a.con-tit{display:inline-block; position:relative;}
-a.con-tit:after{content:''; display:block; width:13px; height:13px; background:url("../img/arrow_R_GR.svg")center / 100% auto no-repeat; border:2px solid #cdcdcd; border-radius:50%; position:absolute; top:3px; right:-23px; transition:0.4s;}
-a.con-tit:hover:after{right:-30px; border-color:#555; background:url("../img/arrow_R_BK.svg")center / 100% auto no-repeat;}
+a.con-tit:after{content:''; display:block; width:13px; height:13px; background:url("../../img/header/arrow_R_GR.svg")center / 100% auto no-repeat; border:2px solid #cdcdcd; border-radius:50%; position:absolute; top:3px; right:-23px; transition:0.4s;}
+a.con-tit:hover:after{right:-30px; border-color:#555; background:url("../../img/header/arrow_R_BK.svg")center / 100% auto no-repeat;}
 
 /* table */
 table{width:100%;}
@@ -55,7 +55,7 @@ div.management div.inner div.contents.row{display:flex;}
 .color__softgreen{color:rgba(75, 192, 192, 1) !important;}
 
 
-/*  -------------- È¯±Þ°úÁ¤ start -------------- */
+/*  -------------- È¯ï¿½Þ°ï¿½ï¿½ï¿½ start -------------- */
 div.management_pro div.inner div.contents div.chart-wrap{min-height:250px;}
 div.management_pro div.inner div.contents.cont01 > div{margin-right:3%;}
 div.management_pro div.inner div.contents.cont01 > div:last-child{margin-right:0;}
@@ -67,10 +67,10 @@ div.management_pro div.inner div.contents.cont01 > div.status01{width:28%;}
 div.management_pro div.inner div.contents.cont01 > div.status02{width:38%;}
 div.management_pro div.inner div.contents.cont01 > div.status03{width:28%;}
 div.management_pro div.inner div.contents.cont01 > div.status01 div.chart-wrap div.chart div.c-label > div{position:absolute; font-family:'Pretendard-Bold'; font-size:14px;}
-div.management_pro div.inner div.contents.cont01 > div.status01 div.chart-wrap div.chart div.c-label > div.step1{/*°æ°í*/left:-10%; bottom:10%; color:red;}
-div.management_pro div.inner div.contents.cont01 > div.status01 div.chart-wrap div.chart div.c-label > div.step2{/*ÁÖÀÇ*/left:20%; top:15%; color:orange;}
-div.management_pro div.inner div.contents.cont01 > div.status01 div.chart-wrap div.chart div.c-label > div.step3{/*º¸Åë*/right:20%; top:15%; color:limegreen;}
-div.management_pro div.inner div.contents.cont01 > div.status01 div.chart-wrap div.chart div.c-label > div.step4{/*ÁÁÀ½*/right:-10%; bottom:10%; color:forestgreen;}
+div.management_pro div.inner div.contents.cont01 > div.status01 div.chart-wrap div.chart div.c-label > div.step1{/*ï¿½ï¿½ï¿½*/left:-10%; bottom:10%; color:red;}
+div.management_pro div.inner div.contents.cont01 > div.status01 div.chart-wrap div.chart div.c-label > div.step2{/*ï¿½ï¿½ï¿½ï¿½*/left:20%; top:15%; color:orange;}
+div.management_pro div.inner div.contents.cont01 > div.status01 div.chart-wrap div.chart div.c-label > div.step3{/*ï¿½ï¿½ï¿½ï¿½*/right:20%; top:15%; color:limegreen;}
+div.management_pro div.inner div.contents.cont01 > div.status01 div.chart-wrap div.chart div.c-label > div.step4{/*ï¿½ï¿½ï¿½ï¿½*/right:-10%; bottom:10%; color:forestgreen;}
 div.management_pro div.inner div.contents.cont01 > div.status01 div.chart-wrap div.chart div.c-label > div.step2:before{opacity:0; animation:show_delay 0.3s forwards; animation-delay:0.2s; content:''; display:block; width:1px; height:65px; background:rgba(255,255,255,0.3); position:absolute; top:36px; left:0; transform:rotate(-45deg); z-index:99;}
 div.management_pro div.inner div.contents.cont01 > div.status01 div.chart-wrap div.chart div.c-label > div.step2:after{opacity:0; animation:show_delay 0.45s forwards; animation-delay:0.2s; content:''; display:block; width:1px; height:65px; background:rgba(255,255,255,0.3); position:absolute; top:6px; left:90px; z-index:99;}
 div.management_pro div.inner div.contents.cont01 > div.status01 div.chart-wrap div.chart div.c-label > div.step3:before{opacity:0; animation:show_delay 0.6s forwards; animation-delay:0.2s; content:''; display:block; width:1px; height:76px; background:rgba(255,255,255,0.3); position:absolute; top:37px; left:14px; transform:rotate(45deg); z-index:99;}
@@ -82,7 +82,7 @@ div.management_pro div.inner div.contents.cont02 > div:last-child{margin-right:0
 
 
 
-/*  -------------- ½Ã½ºÅÛ°ü¸® start -------------- */
+/*  -------------- ï¿½Ã½ï¿½ï¿½Û°ï¿½ï¿½ï¿½ start -------------- */
 div.management_sys div.inner div.contents > div > div.chart-wrap{min-height:385px;}
 div.management_sys div.inner div.contents.cont01 > div{margin-right:3%;}
 div.management_sys div.inner div.contents.cont01 > div.items01{width:22%;}
@@ -96,9 +96,9 @@ div.management_sys div.inner div.contents.cont01 > div.items01 div.acccess__num:
 div.management_sys div.inner div.contents.cont01 > div.items01 div.acccess__num div.tit{position:relative; padding-left:30px;}
 div.management_sys div.inner div.contents.cont01 > div.items01 div.acccess__num div.tit:before{content:''; display:block; width:25px; height:25px; position:absolute; top:50%; left:0; transform:translateY(-50%);}
 div.management_sys div.inner div.contents.cont01 > div.items01 div.acccess__num div > span.txt_bigbold{font-family:'Pretendard-SemiBold'; font-size:18px;}
-div.management_sys div.inner div.contents.cont01 > div.items01 div.acccess__num.admin div.tit:before{background:url("../img/management_admin.svg")center/100% auto no-repeat;}
-div.management_sys div.inner div.contents.cont01 > div.items01 div.acccess__num.teacher div.tit:before{background:url("../img/management_teacher.svg")center/100% auto no-repeat;}
-div.management_sys div.inner div.contents.cont01 > div.items01 div.acccess__num.student div.tit:before{background:url("../img/management_student.svg")center/100% auto no-repeat;}
+div.management_sys div.inner div.contents.cont01 > div.items01 div.acccess__num.admin div.tit:before{background:url("../../img/header/management_admin.svg")center/100% auto no-repeat;}
+div.management_sys div.inner div.contents.cont01 > div.items01 div.acccess__num.teacher div.tit:before{background:url("../../img/header/management_teacher.svg")center/100% auto no-repeat;}
+div.management_sys div.inner div.contents.cont01 > div.items01 div.acccess__num.student div.tit:before{background:url("../../img/header/management_student.svg")center/100% auto no-repeat;}
 div.management_sys div.inner div.contents.cont01 > div.items02 div.chart-wrap div.con{position:relative;}
 div.management_sys div.inner div.contents.cont01 > div.items02 div.chart-wrap div.con div.chart{margin-top:25px;}
 div.management_sys div.inner div.contents.cont01 > div.items02 div.chart-wrap div.con div.chart canvas{margin:0 auto;}

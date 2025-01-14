@@ -1,17 +1,17 @@
 div.intro{width:100%; height:100vh; overflow:hidden;}
 div.intro > div.top{display:flex; justify-content:space-between; align-items:center; width:100%; padding:30px 5%; z-index:2;}
-div.intro > div.top div.logo{width:150px; height:65px; background:url("../img/logo.png") 0 center / auto 100% no-repeat;}
+div.intro > div.top div.logo{width:150px; height:65px; background:url("../../img/header/logo.png") 0 center / auto 100% no-repeat;}
 div.intro > div.top div.name{font-size:26px;}
 div.intro div.inner{display:flex; justify-content:space-between; width:90%; height:70vh; margin:30px auto 0;}
 div.intro div.inner div[class^="course"]{position:relative; display:flex; justify-content:center; align-items:center; width:32%; border-radius:30px; overflow:hidden; text-align:center; -webkit-transition:all 0.7s; -o-transition:all 0.7s; -ms-transition:all 0.7s; -moz-transition:all 0.7s; transition:all 0.7s;}
 div.intro div.inner div[class^="course"]:before{content:""; position:absolute; top:0; left:0; display:block; width:100%; height:100%; z-index:1;}
 div.intro div.inner.list2 div[class^="course"]{width:48%;}
 div.intro div.inner div.course01{background:#2b3789;}
-div.intro div.inner div.course01:before{background:url("../img/intro_bg01.png") center bottom / auto 100% no-repeat;}
+div.intro div.inner div.course01:before{background:url("../../img/header/intro_bg01.png") center bottom / auto 100% no-repeat;}
 div.intro div.inner div.course02{background:#14bcbd;}
-div.intro div.inner div.course02:before{background:url("../img/intro_bg02.png") center bottom / 100% auto no-repeat;}
+div.intro div.inner div.course02:before{background:url("../../img/header/intro_bg02.png") center bottom / 100% auto no-repeat;}
 div.intro div.inner div.course03{background:#8f55fd;}
-div.intro div.inner div.course03:before{background:url("../img/intro_bg03.png") center bottom / auto 100% no-repeat;}
+div.intro div.inner div.course03:before{background:url("../../img/header/intro_bg03.png") center bottom / auto 100% no-repeat;}
 div.intro div.inner div[class^="course"] div.group{position:relative; z-index:2; -webkit-transition:all 0.5s; -o-transition:all 0.5s; -ms-transition:all 0.5s; -moz-transition:all 0.5s; transition:all 0.5s;}
 div.intro div.inner div[class^="course"] div.tit{color:#fff; -webkit-transition:all 0.7s; -o-transition:all 0.7s; -ms-transition:all 0.7s; -moz-transition:all 0.7s; transition:all 0.7s;}
 div.intro div.inner div[class^="course"] div.tit > span{display:block;}

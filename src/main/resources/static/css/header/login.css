@@ -10,7 +10,7 @@ div.login-inner:before,
 div.login-inner:after{background-image:radial-gradient(#ccc 2px, transparent 2px); background-size:calc(30px * 4) calc(30px * 4); background-position:calc(calc(30px * 4) / 2) calc(calc(30px * 4) / 2);}
 div.login-inner:after{transform:scale(1.1, 1.1);}
 div.login-inner:before{transform:scale(1.2, 1.2);}
-div.login-inner{position:relative; display:flex; justify-content:center; align-items:center; width:100%; height:100%; background:url("../img/login_bg.png") center / cover no-repeat;}
+div.login-inner{position:relative; display:flex; justify-content:center; align-items:center; width:100%; height:100%; background:url("../../img/header/login_bg.png") center / cover no-repeat;}
 div.anim:after{animation:6.4s linear move infinite;}
 div.anim div.login-inner:after{animation:3.2s linear move infinite;}
 div.anim div.login-inner:before{animation:1.6s linear move infinite;}
@@ -20,7 +20,7 @@ div.anim div.login-inner:before{animation:1.6s linear move infinite;}
 }
 
 div.login div.login-inner > div.top{position:absolute; top:0; left:0; display:flex; justify-content:space-between; align-items:center;  width:100%; padding:30px 40px; z-index:2;}
-div.login div.login-inner > div.top div.logo{width:150px; height:65px; background:url("../img/logo_WH.png") 0 center / auto 100% no-repeat;}
+div.login div.login-inner > div.top div.logo{width:150px; height:65px; background:url("../../img/header/logo_WH.png") 0 center / auto 100% no-repeat;}
 div.login div.login-inner > div.top div.name{color:#fff; font-size:26px;}
 div.login div.login-inner div.tit{position:absolute; top:210px; left:0; width:100%; text-align:center; z-index:2;}
 div.login div.login-inner div.tit div.kor{margin-bottom:5px; font-size:50px; color:#fff; font-family:"Pretendard-SemiBold";}

@@ -3,6 +3,7 @@
 <head>
     <!-- 헤더에서 CSS 포함 -->
     <th:block th:replace="fragments/header :: head"></th:block>
+    <script th:src="@{/js/header/contentLoader.js}" defer></script>
 </head>
 <body>
 <!-- 헤더에서 상단 메뉴 포함 -->
@@ -39,7 +40,6 @@
         </div>
         <div class="right">
             <a th:href="@{/templates/masterpage/popup/registForm}" class="jv-btn fill04">팝업등록</a>
-
         </div>
     </div>
 
