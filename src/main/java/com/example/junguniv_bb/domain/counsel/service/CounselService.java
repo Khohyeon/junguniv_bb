@@ -4,16 +4,16 @@ import com.example.junguniv_bb._core.exception.Exception400;
 import com.example.junguniv_bb.domain.counsel.dto.CounselDetailResDTO;
 import com.example.junguniv_bb.domain.counsel.dto.CounselPageResDTO;
 import com.example.junguniv_bb.domain.counsel.dto.CounselSaveReqDTO;
+import com.example.junguniv_bb.domain.counsel.dto.CounselUpdateReqDTO;
 import com.example.junguniv_bb.domain.counsel.model.Counsel;
 import com.example.junguniv_bb.domain.counsel.model.CounselRepository;
-import com.example.junguniv_bb.domain.popup.dto.PopupDetailResDTO;
-import com.example.junguniv_bb.domain.popup.dto.PopupSaveReqDTO;
-import com.example.junguniv_bb.domain.popup.model.Popup;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +43,7 @@ public class CounselService {
 
     /**
      * 문의상담 상세페이지 조회
-     * 응답 타입 : PopupDetailResDTO
+     * 응답 타입 : CounselDetailResDTO
      */
     public CounselDetailResDTO counselDetail(Long counselIdx) {
         Counsel counsel = counselRepository.findById(counselIdx)
@@ -78,11 +78,30 @@ public class CounselService {
 
     /**
      * 문의상담 예약
-     * 요청 타입 : counselSave
+     * 요청 타입 : CounselSaveReqDTO
      */
     @Transactional
     public void counselSave(CounselSaveReqDTO counselSaveReqDTO) {
         counselRepository.save(counselSaveReqDTO.saveEntity());
     }
 
+    /**
+     * 문의상담 예약수정
+     * 요청 타입 : CounselUpdateReqDTO
+     */
+    public void counselUpdate(CounselUpdateReqDTO counselUpdateReqDTO) {
+        counselRepository.save(counselUpdateReqDTO.updateEntity());
+    }
+
+    /**
+     * 문의상담 다중 삭제
+     */
+    @Transactional
+    public void counselListDelete(List<Long> counselIds) {
+        List<Counsel> counselsToDelete = counselRepository.findAllById(counselIds);
+        if (counselsToDelete.isEmpty()) {
+            throw new Exception400("삭제할 문의상담 예약이 없습니다.");
+        }
+        counselRepository.deleteAll(counselsToDelete);
+    }
 }
