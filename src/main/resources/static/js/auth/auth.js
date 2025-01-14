@@ -1,9 +1,29 @@
-// 엔터키 이벤트 처리
-function enterkey() {
-    if (window.event.keyCode == 13) {
-        doSubmit(document.logForm);
-    }
-}
+// DOM이 로드된 후 이벤트 리스너 등록
+document.addEventListener('DOMContentLoaded', function() {
+    const loginForm = document.getElementById('logForm');
+    const userIdInput = document.getElementById('userId');
+    const pwdInput = document.getElementById('pwd');
+    const loginBtn = document.getElementById('loginBtn');
+
+    // 엔터키 이벤트 처리
+    userIdInput.addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+            doSubmit(loginForm);
+        }
+    });
+
+    pwdInput.addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+            doSubmit(loginForm);
+        }
+    });
+
+    // 로그인 버튼 클릭 이벤트
+    loginBtn.addEventListener('click', function(event) {
+        event.preventDefault();
+        doSubmit(loginForm);
+    });
+});
 
 // 로그인 폼 제출 처리
 function doSubmit(form) {
