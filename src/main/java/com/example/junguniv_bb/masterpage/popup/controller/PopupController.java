@@ -7,11 +7,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/masterpage")
+@RequestMapping("masterpage/popup")
 public class PopupController {
 
-    @GetMapping("/mainpopup")
-    public String mainpopup() {
-        return "masterpage/popup/mainpopup";
+    @GetMapping("/listForm")
+    public String popupListForm() {
+        return "/masterpage/popup/listForm";
     }
+
+    @GetMapping("/registForm")
+    public String popupRegistForm() {return "/masterpage/popup/registForm";}
+
 }

@@ -32,6 +32,7 @@
     <script th:src="@{/js/chartjs-plugin-datalabels.min.js}"></script>
     <script th:src="@{/js/jquery.modal.min.js}"></script>
     <script th:src="@{/js/jquery.mCustomScrollbar.concat.min.js}"></script>
+
     <script th:src="@{/_core/js/jquery/jquery-1.7.1.js}" charset="utf-8"></script>
     <script th:src="@{/_core/js/jquery-ui-1.13.0.custom/jquery-ui.js}" charset="utf-8"></script>
     <script th:src="@{/_core/js/jquery-ui/jquery.ui.datepicker-ko.js}" charset="utf-8"></script>
@@ -48,7 +49,7 @@
 </head>
 <body>
 <!-- Fragment Definition -->
-<header th:fragment="header">
+<div th:fragment="header">
     <div class="menu-category">
         <a th:href="@{/masterpage_pro/subject.registration.php}">
             <img th:src="@{/img/intro_IC01.png}" alt="환급과정">환급과정
@@ -109,28 +110,30 @@
                         <div class="link">
                             <a th:href="${menu.url ?: '#'}" th:target="${menu.target ?: '_self'}" th:text="${menu.name}"></a>
                         </div>
-
                         <!-- depth2 반복 -->
                         <ul class="depth2" th:if="${menu.subMenus != null}">
                             <li th:each="subMenu : ${menu.subMenus}">
-                                <a th:href="${subMenu.url ?: '#'}" th:text="${subMenu.name ?: 'No Name'}"></a>
+                                <a href="#"
+                                   th:href="${subMenu.url ?: '#'}"
+                                   th:data-menu-id="${subMenu.code ?: '#'}"
+                                   class="depth2-link"
+                                   th:text="${subMenu.name ?: 'No Name'}"
+                                   onclick="loadDepth3Menus(event, this)"></a>
                             </li>
                         </ul>
                     </li>
                 </ul>
             </nav>
         </div>
-    </div>
-
-    <div class="depth3">
-        <ul>
-            <!-- 반복문: depth3 메뉴 -->
-            <li th:each="menu : ${depth3Menus}" th:class="${menu.active ? 'on' : ''}">
-                <a th:href="${menu.url}" th:target="${menu.target}" th:text="${menu.name}"></a>
-            </li>
-        </ul>
-    </div>
-
-</header>
+        <div class="page-wrap">
+            <!-- Depth3 메뉴 -->
+            <div class="depth3">
+                <ul id="depth3-menu-list">
+                    <!-- 정적 렌더링 -->
+                    <li th:each="menu : ${depth3Menus}" th:class="${menu.active ? 'on' : ''}">
+                        <a th:href="${menu.url}" th:target="${menu.target}" th:text="${menu.name}"></a>
+                    </li>
+                </ul>
+            </div>
 </body>
 </html>

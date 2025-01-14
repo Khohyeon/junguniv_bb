@@ -8,11 +8,11 @@ spring:
     hibernate:
       ddl-auto: create
     defer-datasource-initialization: true
-    show-sql: true
+#    show-sql: true
   h2:
     console:
       enabled: true
   sql:
     init:
-      mode: always # ?? ??
-      data-locations: classpath:db/data.sql # ??? ?? ??
+      mode: always
+      data-locations: classpath:db/data.sql
