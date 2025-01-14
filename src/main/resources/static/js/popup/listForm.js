@@ -154,26 +154,43 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 검색 결과 렌더링
     function renderSearchResults(content) {
-        tableBody.innerHTML = '';
+        tableBody.innerHTML = ''; // 기존 데이터 초기화
 
         if (content.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="6">검색 결과가 없습니다.</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="7">검색 결과가 없습니다.</td></tr>';
             return;
         }
 
-        content.forEach((popup, index) => {
+        content.forEach((popup) => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${index + 1}</td>
-                <td>${popup.popupName}</td>
-                <td>${popup.updateDate || '-'}</td>
-                <td>${popup.startDate} ~ ${popup.endDate}</td>
-                <td>${popup.popupType}</td>
-                <td>${popup.chkOpen}</td>
-            `;
+            <!-- 개별 선택 체크박스 -->
+            <td>
+                <label class="c-input ci-check single">
+                    <input type="checkbox" class="select-item-checkbox" value="${popup.popupIdx}">
+                    <div class="ci-show"></div>
+                </label>
+            </td>
+            <!-- 팝업 ID -->
+            <td>${popup.popupIdx}</td>
+            <!-- 팝업 이름 -->
+            <td>
+                <a href="/masterpage_sys/popup/detailForm/${popup.popupIdx}" 
+                   class="jv-btn underline01">${popup.popupName}</a>
+            </td>
+            <!-- 수정일 -->
+            <td>${popup.updateDate || '-'}</td>
+            <!-- 공개 기간 -->
+            <td>${popup.startDate} ~ ${popup.endDate}</td>
+            <!-- 팝업 종류 -->
+            <td>${popup.popupType}</td>
+            <!-- 공개 여부 -->
+            <td>${popup.chkOpen}</td>
+        `;
             tableBody.appendChild(row);
         });
     }
+
 
     // 페이지네이션 업데이트
     function updatePagination(pageable) {

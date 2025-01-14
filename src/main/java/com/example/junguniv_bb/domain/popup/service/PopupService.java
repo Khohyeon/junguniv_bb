@@ -23,7 +23,7 @@ public class PopupService {
      * 메인팝업 리스트 조회
      * 응답 형태 : Page<PopupPageResDTO>
      */
-    public Page<PopupPageResDTO> getPopupList(Pageable pageable) {
+    public Page<PopupPageResDTO> getPopupPage(Pageable pageable) {
         Page<Popup> popupPage = popupRepository.findAll(pageable);
 
         return popupPage.map(popup ->

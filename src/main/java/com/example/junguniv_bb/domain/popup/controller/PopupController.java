@@ -30,7 +30,7 @@ public class PopupController {
         pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "popupIdx"));
 
         // Service 에서 popup을 Page 형태로 응답받아서 모델에 담음
-        model.addAttribute("popupPage", popupService.getPopupList(pageable));
+        model.addAttribute("popupPage", popupService.getPopupPage(pageable));
 
         return "masterpage_sys/popup/listForm";
     }
