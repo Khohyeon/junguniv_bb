@@ -16,14 +16,33 @@ public class GlobalExceptionHandler {
                 .body(APIUtils.error("잘못된 요청입니다.", HttpStatus.BAD_REQUEST));
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleAllExceptions(Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(APIUtils.error("서버 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR));
-    }
-
     @ExceptionHandler(org.springframework.web.servlet.resource.NoResourceFoundException.class)
     public ResponseEntity<?> handleNoResourceFoundException(org.springframework.web.servlet.resource.NoResourceFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    @ExceptionHandler(Exception400.class)
+    public ResponseEntity<?> badRequest(Exception400 e){
+        return new ResponseEntity<>(APIUtils.error(e.getMessage(), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception401.class)
+    public ResponseEntity<?> unauthorized(Exception401 e){
+        return new ResponseEntity<>(APIUtils.error(e.getMessage(), HttpStatus.UNAUTHORIZED), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(Exception403.class)
+    public ResponseEntity<?> forbidden(Exception403 e){
+        return new ResponseEntity<>(APIUtils.error(e.getMessage(), HttpStatus.FORBIDDEN), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(Exception500.class)
+    public ResponseEntity<?> serverError(Exception500 e){
+        return new ResponseEntity<>(APIUtils.error(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> unknownServerError(Exception e){
+        return new ResponseEntity<>(APIUtils.error(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 } 

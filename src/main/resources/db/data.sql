@@ -1,4 +1,3 @@
-
 -- 회원(Member pwd: 1234)
 INSERT INTO MEMBER (MEMBER_IDX, USER_ID, PWD, BIRTHDAY, SEX, TEL_MOBILE, EMAIL, ZIPCODE, ADDR1, ADDR2, USER_TYPE,
                     AUTHLEVEL, MEMBER_STATE)
@@ -16,6 +15,8 @@ VALUES (1, 'qwer', '$2a$10$5mcrIopDr1/WTCSzbMoGo.5L7SYgLLyxH0OZobyOYkSPeItRqxI6G
         'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호',  'ADMIN', 0, 'Y'),
        (7, 'qwer3', '$2a$10$5mcrIopDr1/WTCSzbMoGo.5L7SYgLLyxH0OZobyOYkSPeItRqxI6G', '1985-09-10', 'M', '010-9101-1122',
         'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호',  'ADMIN', 0, 'Y');
+-- 회원 테이블 시퀀스 초기화
+ALTER TABLE MEMBER ALTER COLUMN MEMBER_IDX RESTART WITH 8;
 
 -- -- 상위 메뉴 데이터
 -- INSERT INTO UZN_BRANCH (BRANCH_IDX, BRANCH_NAME, SORTNO, CHK_USE)
@@ -70,10 +71,10 @@ INSERT INTO UZN_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX) VALUES
 ('메뉴관리', 4, 'Y', '#', 4),
 
 -- 탭 메뉴
-('수강생', 1, 'Y', '#', 5),
-('교강사(튜터)', 2, 'Y', '#', 5),
-('위탁기업', 3, 'Y', '#', 5),
-('LMS관리자', 4, 'Y', '#', 5),
+('수강생', 1, 'Y', '/masterpage_sys/member/student/', 5),
+('교강사(튜터)', 2, 'Y', '/masterpage_sys/member/teacher/', 5),
+('위탁기업', 3, 'Y', '/masterpage_sys/member/company/', 5),
+('LMS관리자', 4, 'Y', '/masterpage_sys/member/manager/', 5),
 ('관리자권한설정', 1, 'Y', '#', 6),
 ('홈페이지게시판', 2, 'Y', '#', 6),
 ('주소록출력', 1, 'Y', '#', 7),

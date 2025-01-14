@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/masterpag_sys/member")
+@RequestMapping("/masterpage_sys/member")
 @Slf4j
 public class MemberController {
 

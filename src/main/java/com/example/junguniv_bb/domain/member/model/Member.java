@@ -1,5 +1,6 @@
 package com.example.junguniv_bb.domain.member.model;
 
+import com.example.junguniv_bb._core.common.BaseTime;
 import com.example.junguniv_bb.domain.member._enum.UserType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,10 +23,11 @@ import java.time.LocalDateTime;
 @Data
 @DynamicInsert
 @DynamicUpdate
-public class Member {
+public class Member extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "MEMBER_IDX", nullable = false)
     private Long memberIdx; // 회원 IDX
 
     @Column(name = "RESIDENT_NUMBER", length = 100)
@@ -108,9 +110,6 @@ public class Member {
 
     @Column(name = "MAJOR", length = 200)
     private String major; // 전공
-
-    @Column(name = "REGIST_DATE")
-    private LocalDateTime registDate; // 등록일(회원가입일)
 
     @Column(name = "CHK_FOREIGN", length = 1)
     private String chkForeign; // 외국인 여부
@@ -440,4 +439,7 @@ public class Member {
 
     @Column(name = "FNAME_SAUP", length = 255)
     private String fnameSaup; // 사업자등록증 사본
+
+    @Column(name = "CHK_SMS_RECEIVE", length = 1)
+    private String chkSmsReceive; // SMS 수신 여부  
 }
