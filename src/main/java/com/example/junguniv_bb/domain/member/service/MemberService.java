@@ -4,10 +4,7 @@ import com.example.junguniv_bb._core.exception.Exception400;
 import com.example.junguniv_bb._core.exception.ExceptionMessage;
 import com.example.junguniv_bb._core.security.CustomUserDetails;
 import com.example.junguniv_bb.domain.member._enum.UserType;
-import com.example.junguniv_bb.domain.member.dto.MemberDetailResDTO;
-import com.example.junguniv_bb.domain.member.dto.MemberPageResDTO;
-import com.example.junguniv_bb.domain.member.dto.MemberSaveReqDTO;
-import com.example.junguniv_bb.domain.member.dto.MemberUpdateReqDTO;
+import com.example.junguniv_bb.domain.member.dto.*;
 import com.example.junguniv_bb.domain.member.model.Member;
 import com.example.junguniv_bb.domain.member.model.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,21 +31,51 @@ public class MemberService {
 
     /* 페이징 */
     // TODO 검색 기능 및 권한 조건 추가 해야함.
-    public MemberPageResDTO memberPage(CustomUserDetails customUserDetails, Pageable pageable) {
+    public ResponseEntity<?> memberPage(String referer, Pageable pageable) {
         
         // 페이지 조회
         Page<Member> memberPagePS;
         
-        // 조건에 따른 페이지 조회
-        memberPagePS = memberRepository.findAll(pageable);
-
-        // 1. userType 조회
-        // 2. 조건에 따른 페이지 조회
-        // 3. 페이지 변환
-   
+        // Referer URL에서 userType 결정
+        UserType userType = null;
         
-        // 반환
-        return new MemberPageResDTO(memberPagePS);
+        if (referer != null) {
+            if (referer.contains("/student/")) {
+                userType = UserType.STUDENT;
+            } else if (referer.contains("/teacher/")) {
+                userType = UserType.TEACHER;
+            } else if (referer.contains("/company/")) {
+                userType = UserType.COMPANY;
+            } else if (referer.contains("/admin/")) {
+                userType = UserType.ADMIN;
+            }
+        }
+        
+        // UserType에 따른 페이지 조회
+        if (userType != null) {
+            memberPagePS = memberRepository.findByUserType(userType, pageable);
+        } else {
+            memberPagePS = memberRepository.findAll(pageable);
+        }
+        
+        // UserType에 따른 DTO 변환 및 반환
+        if (userType != null) {
+            switch (userType) {
+                case STUDENT:
+                    return ResponseEntity.ok(new MemberStudentPageResDTO(memberPagePS));
+                case TEACHER:
+                    return ResponseEntity.ok(new MemberTeacherPageResDTO(memberPagePS));
+                case COMPANY:
+                    return ResponseEntity.ok(new MemberCompanyPageResDTO(memberPagePS));
+                case ADMIN:
+                    return ResponseEntity.ok(new MemberAdminPageResDTO(memberPagePS));
+                default:
+                    return ResponseEntity.ok(new MemberPageResDTO(memberPagePS));
+            }
+        }
+        
+        // 기본 DTO 반환
+        return ResponseEntity.ok(new MemberPageResDTO(memberPagePS));
     }
 
     /* 다중삭제 */
@@ -135,3 +161,4 @@ public class MemberService {
         memberRepository.save(requestDTO.toEntity(encodedPwd));
     }
 }
+

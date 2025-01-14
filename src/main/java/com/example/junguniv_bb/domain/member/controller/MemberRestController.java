@@ -8,6 +8,7 @@ import com.example.junguniv_bb.domain.member.dto.MemberPageResDTO;
 import com.example.junguniv_bb.domain.member.dto.MemberSaveReqDTO;
 import com.example.junguniv_bb.domain.member.dto.MemberUpdateReqDTO;
 import com.example.junguniv_bb.domain.member.service.MemberService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,12 +33,15 @@ public class MemberRestController {
 
     /* 페이지 조회 */
     @GetMapping("/")
-    public ResponseEntity<?> memberPage(@AuthenticationPrincipal CustomUserDetails customUserDetails, Pageable pageable) {
+    public ResponseEntity<?> memberPage(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                      Pageable pageable,
+                                      HttpServletRequest request) {
 
-        // 서비스 호출
-        MemberPageResDTO responseDTO = memberService.memberPage(customUserDetails, pageable);
-
-        return ResponseEntity.ok(responseDTO);
+        // Referer 헤더에서 이전 페이지 URL 가져오기
+        String referer = request.getHeader("Referer");
+        
+        // 서비스 호출 (이미 ResponseEntity를 반환하므로 바로 반환)
+        return memberService.memberPage(referer, pageable);
     }
 
     /* 다중삭제 */

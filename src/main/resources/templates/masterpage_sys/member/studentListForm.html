@@ -192,8 +192,11 @@
 					<span>페이지수</span>
 					<select>
 						<option>선택</option>
-						<option>1</option>
-						<option>2</option>
+						<option>10</option>
+						<option>20</option>
+						<option>30</option>
+						<option>40</option>
+						<option>50</option>
 					</select>
 				</div>
 				<div class="count">
@@ -233,7 +236,6 @@
 							<div class="ci-show"></div>
 						</label>
 					</th>
-					<th>수강현황</th>
 					<th>마케팅<br>문자 수신</th>
 					<th>마케팅<br>메일 수신</th>
 					<th>회원등록일</th>
@@ -248,5 +250,7 @@
 			<!-- 페이지네이션 버튼은 JavaScript로 렌더링됩니다 -->
 		</div>
 	</div>
+
+	<script th:src="@{/js/member/member.js}"></script>
 </body>
 </html>

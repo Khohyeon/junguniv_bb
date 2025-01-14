@@ -33,6 +33,31 @@ public class MemberController {
         return "/masterpage_sys/member/studentListForm";
     }
 
+    /* 회원관리 > 회원정보관리 > 교강사(튜터) 리스트 */
+    @GetMapping("/teacher/")
+    public String teacherListForm(Model model) {
+
+
+        return "/masterpage_sys/member/teacherListForm";
+    }
+
+    /* 회원관리 > 회원정보관리 > 위탁기업 리스트 */
+    @GetMapping("/company/")
+    public String companyListForm(Model model) {
+
+
+        return "/masterpage_sys/member/companyListForm";
+    }
+
+    /* 회원관리 > 회원정보관리 > LMS관리자 리스트 */
+    @GetMapping("/admin/")
+    public String adminListForm(Model model) {
+
+
+        return "/masterpage_sys/member/adminListForm";
+    }
+
+
     /* 회원관리 > 회원정보관리 > 수강생 등록 */
     @GetMapping("/student/saveForm")
     public String studentSaveForm(Model model) {

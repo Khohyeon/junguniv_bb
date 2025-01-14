@@ -20,25 +20,26 @@ public record MemberCompanyPageResDTO(
         );
     }
 
-    // 위탁기업명, userId, 교육담당자, 교육담당자 휴대폰, 교육담당자 이메일, 소속 수강생 수, 대표자명, 기업전용 페이지
+    // 위탁기업명, userId, 교육담당자, 교육담당자 휴대폰, 교육담당자 이메일, 소속 수강생 수, 대표자명
     public record MemberDTO(
+            Long memberIdx,
             String jobName,
             String userId,
-            String name,
-            String telMobile,
-            String email,
-            LocalDateTime createdDate,
-            LocalDateTime agreeDate
+            String contractorName,
+            String contractorTel,
+            String contractorEtc,
+            // TODO 소속 수강생 수 필드
+            String jobCeo
     ) {
         public  MemberDTO (Member member) {
             this(
+                    member.getMemberIdx(),
                     member.getJobName(),
                     member.getUserId(),
-                    member.getName(),
-                    member.getTelMobile(),
-                    member.getEmail(),
-                    member.getCreatedDate(),
-                    member.getAgreeDate()
+                    member.getContractorName(),
+                    member.getContractorTel(),
+                    member.getContractorEtc(),
+                    member.getJobCeo()
             );
         }
     }

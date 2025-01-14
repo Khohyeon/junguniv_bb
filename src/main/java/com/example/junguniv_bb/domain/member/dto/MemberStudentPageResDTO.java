@@ -22,6 +22,7 @@ public record MemberStudentPageResDTO(
 
     // 이름, userId, 생년월일, 휴대폰, 이메일, 마케팅 문자 수신, 메일 수신, 회원등록일, 약관동의일
     public record MemberDTO(
+            Long memberIdx,
             String name,
             String userId,
             String birthday,
@@ -34,6 +35,7 @@ public record MemberStudentPageResDTO(
     ) {
         public  MemberDTO (Member member) {
             this(
+                    member.getMemberIdx(),
                     member.getName(),
                     member.getUserId(),
                     member.getBirthday(),
