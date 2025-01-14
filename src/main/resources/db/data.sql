@@ -37,7 +37,7 @@ VALUES (1, 'qwer', '$2a$10$5mcrIopDr1/WTCSzbMoGo.5L7SYgLLyxH0OZobyOYkSPeItRqxI6G
 -- INSERT INTO UZN_BRANCH_SUB (SUB_NAME, BRANCH_IDX, SORTNO, CHK_USE, URL)
 -- VALUES ('주소록출력', 1, 1, 'Y', '');
 -- INSERT INTO UZN_BRANCH_SUB (SUB_NAME, BRANCH_IDX, SORTNO, CHK_USE, URL)
--- VALUES ('팝업관리', 2, 1, 'Y', '/masterpage/mainpopup');
+-- VALUES ('팝업관리', 2, 1, 'Y', '/masterpage_sys/mainpopup');
 -- INSERT INTO UZN_BRANCH_SUB (SUB_NAME, BRANCH_IDX, SORTNO, CHK_USE, URL)
 -- VALUES ('약관관리', 2, 1, 'Y', '');
 -- INSERT INTO UZN_BRANCH_SUB (SUB_NAME, BRANCH_IDX, SORTNO, CHK_USE, URL)
@@ -59,10 +59,10 @@ INSERT INTO UZN_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX) VALUES
 ('회원정보관리', 1, 'Y', '#', 1),
 ('권한관리', 2, 'Y', '#', 1),
 ('주소록출력', 3, 'Y', '#', 1),
-('팝업관리', 1, 'Y', '/masterpage/popup/listForm', 2),
-('약관관리', 2, 'Y', '/masterpage/agreement/joinForm', 2),
-('게시판관리', 3, 'Y', '/masterpage/board/counsel', 2),
-('문의상담관리', 4, 'Y', '/masterpage/counsel', 2),
+('팝업관리', 1, 'Y', '/masterpage_sys/popup/listForm', 2),
+('약관관리', 2, 'Y', '/masterpage_sys/agreement/joinForm', 2),
+('게시판관리', 3, 'Y', '/masterpage_sys/board/counsel', 2),
+('문의상담관리', 4, 'Y', '/masterpage_sys/counsel', 2),
 ('일반통계', 1, 'Y', '#', 3),
 ('기본설정', 1, 'Y', '#', 4),
 ('기본표시정보', 2, 'Y', '#', 4),
@@ -77,13 +77,13 @@ INSERT INTO UZN_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX) VALUES
 ('관리자권한설정', 1, 'Y', '#', 6),
 ('홈페이지게시판', 2, 'Y', '#', 6),
 ('주소록출력', 1, 'Y', '#', 7),
-('메인팝업', 1, 'Y', '/masterpage/popup/listForm', 8),
-('상단팝업', 2, 'N', '/masterpage/board/mainpopup', 8),
-('회원가입약관', 1, 'Y', '/masterpage/agreement/joinForm', 9),
-('수강신청약관', 2, 'Y', '/masterpage/agreement/courseForm', 9),
-('1:1 상담', 1, 'Y', '/masterpage/board/listForm', 10),
-('게시판말머리관리', 2, 'Y', '/masterpage/board/headForm', 10),
-('상담예약', 1, 'Y', '/masterpage/counsel/listForm', 11),
+('메인팝업', 1, 'Y', '/masterpage_sys/popup/listForm', 8),
+('상단팝업', 2, 'N', '/masterpage_sys/board/mainpopup', 8),
+('회원가입약관', 1, 'Y', '/masterpage_sys/agreement/joinForm', 9),
+('수강신청약관', 2, 'Y', '/masterpage_sys/agreement/courseForm', 9),
+('1:1 상담', 1, 'Y', '/masterpage_sys/board/listForm', 10),
+('게시판말머리관리', 2, 'Y', '/masterpage_sys/board/headForm', 10),
+('상담예약', 1, 'Y', '/masterpage_sys/counsel/listForm', 11),
 ('홈페이지 Q&A', 1, 'Y', '#', 12),
 ('회원통계', 2, 'Y', '#', 12),
 ('회원접속통계', 3, 'Y', '#', 12),

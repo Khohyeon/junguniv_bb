@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/masterpage_sys/member")
+@RequestMapping("/masterpag_sys/member")
 @Slf4j
 public class MemberController {
 
@@ -22,7 +22,7 @@ public class MemberController {
     public String memberListForm(Model model) {
 
 
-        return "/masterpage/_sys/member/_listForm";
+        return "/masterpage_sys/member/_listForm";
     }
 
     /* 회원관리 > 회원정보관리 > 수강생 리스트 */
@@ -30,14 +30,14 @@ public class MemberController {
     public String studentListForm(Model model) {
 
 
-        return "/masterpage/_sys/member/studentListForm";
+        return "/masterpage_sys/member/studentListForm";
     }
 
     /* 회원관리 > 회원정보관리 > 수강생 등록 */
     @GetMapping("/student/saveForm")
     public String studentSaveForm(Model model) {
 
-        return "/masterpage/_sys/member/studentSaveForm";
+        return "/masterpage_sys/member/studentSaveForm";
     }
     
 }
