@@ -1,10 +1,7 @@
 package com.example.junguniv_bb.domain.popup.service;
 
 import com.example.junguniv_bb._core.exception.Exception400;
-import com.example.junguniv_bb.domain.popup.dto.PopupDetailResDTO;
-import com.example.junguniv_bb.domain.popup.dto.PopupPageResDTO;
-import com.example.junguniv_bb.domain.popup.dto.PopupSaveReqDTO;
-import com.example.junguniv_bb.domain.popup.dto.PopupUpdateReqDTO;
+import com.example.junguniv_bb.domain.popup.dto.*;
 import com.example.junguniv_bb.domain.popup.model.Popup;
 import com.example.junguniv_bb.domain.popup.model.PopupRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +28,24 @@ public class PopupService {
 
         return popupPage.map(popup ->
                 new PopupPageResDTO(
+                        popup.getPopupIdx(),
+                        popup.getPopupName(),
+                        popup.getFormattedUpdatedDate2(),
+                        popup.getStartDate(),
+                        popup.getEndDate(),
+                        popup.getPopupType(),
+                        popup.getChkOpen()
+                ));
+    }
+
+    /**
+     * 메인팝업 검색 조회
+     * 응답 형태 : Page<PopupSearchReqDTO>
+     */
+    public Page<PopupSearchReqDTO> searchPopupsByName(String popupName, Pageable pageable) {
+        Page<Popup> popupPage = popupRepository.findByPopupNameContainingIgnoreCase(popupName, pageable);
+        return popupPage.map(popup ->
+                new PopupSearchReqDTO(
                         popup.getPopupIdx(),
                         popup.getPopupName(),
                         popup.getFormattedUpdatedDate2(),
@@ -105,4 +120,5 @@ public class PopupService {
         }
         popupRepository.deleteAll(popupsToDelete);
     }
+
 }

@@ -1,0 +1,11 @@
+<link rel="stylesheet" th:href="@{/css/common/pagination.css}">
+
+<div th:fragment="pagination">
+    <div class="pagination" id="paginationContainer">
+        <button class="pagination-btn" id="prevPageBtn">이전</button>
+        <span id="currentPage">1</span>
+        <button class="pagination-btn" id="nextPageBtn">다음</button>
+    </div>
+</div>
+
+<script th:src="@{/js/common/pagination.js}"></script>

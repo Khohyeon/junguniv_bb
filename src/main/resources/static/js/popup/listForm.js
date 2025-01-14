@@ -93,3 +93,95 @@ function deleteSelectedPopups(popupIds) {
             console.error('Error:', error);
         });
 }
+
+
+/**
+ * 검색 기능
+ */
+document.addEventListener('DOMContentLoaded', function () {
+    const prevPageBtn = document.getElementById('prevPageBtn');
+    const nextPageBtn = document.getElementById('nextPageBtn');
+    const currentPageDisplay = document.getElementById('currentPage');
+    const tableBody = document.getElementById('popupTableBody');
+    const popupNameInput = document.getElementById('popupNameInput');
+    const searchButton = document.getElementById('searchButton');
+
+    let currentPage = 0; // 현재 페이지 번호
+    const pageSize = 20; // 페이지 크기
+
+    // 초기 검색 실행
+    searchPopups('', currentPage);
+
+    // 검색 버튼 클릭
+    searchButton.addEventListener('click', function () {
+        const keyword = popupNameInput.value.trim();
+        currentPage = 0; // 검색 시 항상 첫 페이지로 이동
+        searchPopups(keyword, currentPage);
+    });
+
+    // 이전 페이지 버튼
+    prevPageBtn.addEventListener('click', function () {
+        if (currentPage > 0) {
+            currentPage--;
+            searchPopups(popupNameInput.value.trim(), currentPage);
+        }
+    });
+
+    // 다음 페이지 버튼
+    nextPageBtn.addEventListener('click', function () {
+        currentPage++;
+        searchPopups(popupNameInput.value.trim(), currentPage);
+    });
+
+    // 검색 요청
+    function searchPopups(keyword, page) {
+        fetch(`/masterpage_sys/popup/api/search?popupName=${encodeURIComponent(keyword)}&page=${page}&size=${pageSize}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('검색 실패');
+                }
+                return response.json();
+            })
+            .then(data => {
+                renderSearchResults(data.response.content);
+                updatePagination(data.response);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('검색 중 오류가 발생했습니다.');
+            });
+    }
+
+    // 검색 결과 렌더링
+    function renderSearchResults(content) {
+        tableBody.innerHTML = '';
+
+        if (content.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="6">검색 결과가 없습니다.</td></tr>';
+            return;
+        }
+
+        content.forEach((popup, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${popup.popupName}</td>
+                <td>${popup.updateDate || '-'}</td>
+                <td>${popup.startDate} ~ ${popup.endDate}</td>
+                <td>${popup.popupType}</td>
+                <td>${popup.chkOpen}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    // 페이지네이션 업데이트
+    function updatePagination(pageable) {
+        currentPage = pageable.number;
+        currentPageDisplay.textContent = currentPage + 1;
+
+        // 버튼 활성화/비활성화 설정
+        prevPageBtn.disabled = pageable.first;
+        nextPageBtn.disabled = pageable.last;
+    }
+});
