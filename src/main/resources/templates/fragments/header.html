@@ -32,7 +32,6 @@
     <script th:src="@{/js/header/chart.min.js}"></script>
     <script th:src="@{/js/header/chartjs-plugin-datalabels.min.js}"></script>
     <script th:src="@{/js/header/jquery.modal.min.js}"></script>
-    <script th:src="@{/js/header/jquery.mCustomScrollbar.concat.min.js}"></script>
     <script th:src="@{/_core/js/jquery/jquery-1.7.1.js}" charset="utf-8"></script>
     <script th:src="@{/_core/js/jquery-ui-1.13.0.custom/jquery-ui.js}" charset="utf-8"></script>
     <script th:src="@{/_core/js/jquery-ui/jquery.ui.datepicker-ko.js}" charset="utf-8"></script>
@@ -45,12 +44,14 @@
     <script th:src="@{/app/study/jsnew/wav/jquery.playSound.js}" charset="utf-8"></script>
     <script th:src="@{/app/study/jsnew/toast/js/jquery.toast.js}" charset="utf-8"></script>
     <script th:src="@{/app/study/jsnew/jungquery.js}" charset="utf-8"></script>
+    <script th:src="@{/js/auth/auth.js}"></script>
 </head>
 <body>
 <!-- Fragment Definition -->
 <div th:fragment="header">
     <div class="menu-category">
         <a th:href="@{/masterpage_pro/subject.registration.php}">
+
             <img th:src="@{/img/header/intro_IC01.png}" alt="환급과정">환급과정
         </a>
         <a th:href="@{/masterpage_pro/subject.registration.php}">

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>로그인 페이지</title>
+	<link rel="stylesheet" th:href="@{/css/auth/login.css}">
+
+	
+</head>
+
+<body>
+	<div class="login grid anim">
+		<div class="login-inner">
+			<div class="top">
+				<div class="logo"></div>
+				<div class="name">JUNGUNIV</div>
+			</div>
+			<div class="tit">
+				<div class="kor">관리자모드</div>
+				<div class="eng">ADMINISTRATOR</div>
+			</div>
+
+			<form class="form" name="logForm" id="logForm" method="post" action="#">
+				<input type="hidden" name="#" value="#">
+				<div class="form">
+					<input type="text" name="userId" placeholder="ID" onkeyup="enterkey()">
+					<input type="password" name="pwd" placeholder="PASSWORD" onkeyup="enterkey()">
+					<a href="#" onkeyup="enterkey()" onclick="return doSubmit(document.logForm);"><span>LOGIN</span></a>
+					<!-- 	<a href="#" onkeyup="enterkey()"><span>LOGIN</span></a> -->
+				</div>
+			</form>
+			<div class="copy">ⓒ 2022 JUNGUNIV. All Rights reserved.</div>
+		</div>
+	</div>
+
+	<script th:src="@{/js/auth/auth.js}"></script>
+</body>
+</html>
