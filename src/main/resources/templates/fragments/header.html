@@ -9,14 +9,14 @@
     <meta name="keywords" content="JUNGUNIV LMS">
 
     <!-- CSS -->
-    <link rel="stylesheet" th:href="@{/include_com/css/test.css}">
-    <link rel="stylesheet" th:href="@{/include_com/css/default.css}">
-    <link rel="stylesheet" th:href="@{/include_com/css/common.css}">
-    <link rel="stylesheet" th:href="@{/include_com/css/slick.css}">
-    <link rel="stylesheet" th:href="@{/include_com/css/jquery.modal.css}">
-    <link rel="stylesheet" th:href="@{/include_com/css/jquery.mCustomScrollbar.min.css}">
-    <link rel="stylesheet" th:href="@{/include_com/css/dashboard.css}">
-    <link rel="stylesheet" th:href="@{/include_com/css/management.css}">
+    <link rel="stylesheet" th:href="@{/css/test.css}">
+    <link rel="stylesheet" th:href="@{/css/default.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/slick.css}">
+    <link rel="stylesheet" th:href="@{/css/jquery.modal.css}">
+    <link rel="stylesheet" th:href="@{/css/jquery.mCustomScrollbar.min.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/management.css}">
     <link rel="stylesheet" th:href="@{/_core/js/jquery-ui/css/jquery.ui.all.css}">
     <link rel="stylesheet" th:href="@{/_core/js/jquery/formValidator/css/validationEngine.jquery.css}" media="screen">
     <link rel="stylesheet" th:href="@{/_core/js/jquery/formValidator/css/template.css}" media="screen">
@@ -25,13 +25,13 @@
     <link rel="stylesheet" th:href="@{/app/study/jsnew/toast/css/jquery.toast.css}">
 
     <!-- JS -->
-    <script th:src="@{/include_com/js/jquery-3.3.1.min.js}"></script>
-    <script th:src="@{/include_com/js/common.js}" defer></script>
-    <script th:src="@{/include_com/js/slick.min.js}"></script>
-    <script th:src="@{/include_com/js/chart.min.js}"></script>
-    <script th:src="@{/include_com/js/chartjs-plugin-datalabels.min.js}"></script>
-    <script th:src="@{/include_com/js/jquery.modal.min.js}"></script>
-    <script th:src="@{/include_com/js/jquery.mCustomScrollbar.concat.min.js}"></script>
+    <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+    <script th:src="@{/js/common.js}" defer></script>
+    <script th:src="@{/js/slick.min.js}"></script>
+    <script th:src="@{/js/chart.min.js}"></script>
+    <script th:src="@{/js/chartjs-plugin-datalabels.min.js}"></script>
+    <script th:src="@{/js/jquery.modal.min.js}"></script>
+    <script th:src="@{/js/jquery.mCustomScrollbar.concat.min.js}"></script>
     <script th:src="@{/_core/js/jquery/jquery-1.7.1.js}" charset="utf-8"></script>
     <script th:src="@{/_core/js/jquery-ui-1.13.0.custom/jquery-ui.js}" charset="utf-8"></script>
     <script th:src="@{/_core/js/jquery-ui/jquery.ui.datepicker-ko.js}" charset="utf-8"></script>
@@ -44,19 +44,20 @@
     <script th:src="@{/app/study/jsnew/wav/jquery.playSound.js}" charset="utf-8"></script>
     <script th:src="@{/app/study/jsnew/toast/js/jquery.toast.js}" charset="utf-8"></script>
     <script th:src="@{/app/study/jsnew/jungquery.js}" charset="utf-8"></script>
+    <script th:src="@{/js/auth/auth.js}"></script>
 </head>
 <body>
 <!-- Fragment Definition -->
 <header th:fragment="header">
     <div class="menu-category">
         <a th:href="@{/masterpage_pro/subject.registration.php}">
-            <img th:src="@{/include_com/img/intro_IC01.png}" alt="환급과정">환급과정
+            <img th:src="@{/img/intro_IC01.png}" alt="환급과정">환급과정
         </a>
         <a th:href="@{/masterpage_pro/subject.registration.php}">
-            <img th:src="@{/include_com/img/intro_IC02.png}" alt="일반과정">일반과정
+            <img th:src="@{/img/intro_IC02.png}" alt="일반과정">일반과정
         </a>
         <a th:href="@{/masterpage_sys/member.php}" class="active">
-            <img th:src="@{/include_com/img/intro_IC03.png}" alt="시스템관리">시스템관리
+            <img th:src="@{/img/intro_IC03.png}" alt="시스템관리">시스템관리
         </a>
     </div>
     <div class="main-top">
