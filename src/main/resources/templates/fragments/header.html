@@ -25,7 +25,7 @@
     <link rel="stylesheet" th:href="@{/app/study/jsnew/toast/css/jquery.toast.css}">
 
     <!-- JS -->
-    <script th:src="@{/js/header/test.js}"></script>
+    <script th:src="@{/js/header/menu.js}"></script>
     <script th:src="@{/js/header/jquery-3.3.1.min.js}"></script>
     <script th:src="@{/js/header/common.js}" defer></script>
     <script th:src="@{/js/header/slick.min.js}"></script>
@@ -117,8 +117,7 @@
                                    th:href="${subMenu.url ?: '#'}"
                                    th:data-menu-id="${subMenu.code ?: '#'}"
                                    class="depth2-link"
-                                   th:text="${subMenu.name ?: 'No Name'}"
-                                   onclick="loadDepth3Menus(event, this)"></a>
+                                   th:text="${subMenu.name ?: 'No Name'}"></a>
                             </li>
                         </ul>
                     </li>
@@ -131,9 +130,6 @@
                 <ul id="depth3-menu-list">
                     <!-- 동적 렌더링 -->
                 </ul>
-            </div>
-            <div id="content-container">
-
             </div>
 
 </body>
