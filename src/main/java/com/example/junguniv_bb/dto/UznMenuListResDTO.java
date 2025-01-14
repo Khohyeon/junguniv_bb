@@ -2,7 +2,7 @@ package com.example.junguniv_bb.dto;
 
 import java.util.List;
 
-public record Menu(
+public record UznMenuListResDTO(
         Long code,
         String name,
         String url,

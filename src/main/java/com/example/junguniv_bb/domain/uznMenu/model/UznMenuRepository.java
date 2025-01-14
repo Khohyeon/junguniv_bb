@@ -1,4 +1,4 @@
-package com.example.junguniv_bb.domain.unzMenu.model;
+package com.example.junguniv_bb.domain.uznMenu.model;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

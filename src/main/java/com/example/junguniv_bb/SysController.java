@@ -1,4 +1,4 @@
-package com.example.junguniv_bb.domain.sys;
+package com.example.junguniv_bb;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

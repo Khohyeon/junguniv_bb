@@ -77,19 +77,19 @@ public class SecurityConfig {
                 // 보안 헤더 설정 추가
                 .headers(headers -> headers
                     .contentSecurityPolicy(csp -> csp
-                        .reportOnly()
-                        .policyDirectives(
-                            "default-src 'self'; " +
-                            "script-src 'self' https://code.jquery.com https://cdn.jsdelivr.net https://stackpath.bootstrapcdn.com https://maxcdn.bootstrapcdn.com https://t1.daumcdn.net https://postcode.map.daum.net https://ssl.daumcdn.net; " +
-                            "style-src 'self' https://cdn.jsdelivr.net https://code.jquery.com https://maxcdn.bootstrapcdn.com https://t1.daumcdn.net https://postcode.map.daum.net; " +
-                            "img-src 'self' data: https:; " +
-                            "font-src 'self' https://cdn.jsdelivr.net https://maxcdn.bootstrapcdn.com data:; " +
-                            "connect-src 'self' https://t1.daumcdn.net https://postcode.map.daum.net; " +
-                            "frame-src 'self' https://postcode.map.daum.net; " +
-                            "form-action 'self'; " +
-                            "base-uri 'self'; " +
-                            "object-src 'none';"
-                        )
+                            .reportOnly()
+                            .policyDirectives(
+                                    "default-src 'self'; " +
+                                            "script-src 'self' https://code.jquery.com https://cdn.jsdelivr.net https://stackpath.bootstrapcdn.com https://maxcdn.bootstrapcdn.com https://t1.daumcdn.net https://postcode.map.daum.net https://ssl.daumcdn.net https://cdn.tiny.cloud; " +
+                                            "style-src 'self' https://cdn.jsdelivr.net https://code.jquery.com https://maxcdn.bootstrapcdn.com https://t1.daumcdn.net https://postcode.map.daum.net https://cdn.tiny.cloud 'unsafe-inline'; " +
+                                            "img-src 'self' data: https:; " +
+                                            "font-src 'self' https://cdn.jsdelivr.net https://maxcdn.bootstrapcdn.com https://cdn.tiny.cloud data:; " +
+                                            "connect-src 'self' https://t1.daumcdn.net https://postcode.map.daum.net https://cdn.tiny.cloud; " +
+                                            "frame-src 'self' https://postcode.map.daum.net; " +
+                                            "form-action 'self'; " +
+                                            "base-uri 'self'; " +
+                                            "object-src 'none';"
+                            )
                     )
                     .frameOptions(frame -> frame.sameOrigin())
                     .xssProtection(xss -> xss.disable())

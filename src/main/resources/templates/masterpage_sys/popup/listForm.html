@@ -4,6 +4,8 @@
     <!-- 헤더에서 CSS 포함 -->
     <th:block th:replace="fragments/header :: head"></th:block>
     <script th:src="@{/js/header/contentLoader.js}" defer></script>
+    <script th:src="@{/js/popup/listForm.js}"></script>
+
 </head>
 <body>
 <!-- 헤더에서 상단 메뉴 포함 -->
@@ -33,13 +35,13 @@
     </div>
     <div class="table-util mt30">
         <div class="left">
-            <a href="#none" class="jv-btn fill05">삭제</a>
+            <a href="#none" class="jv-btn fill05 delete-popup-btn">삭제</a>
             <div class="count">
-                <span class="Pretd_B">123</span>건 검색되었습니다.
+                <span class="Pretd_B" th:text="${popupPage.totalElements}"></span>건 검색되었습니다.
             </div>
         </div>
         <div class="right">
-            <a th:href="@{/templates/masterpage_sys/popup/registForm}" class="jv-btn fill04">팝업등록</a>
+            <a th:href="@{/masterpage_sys/popup/saveForm}" class="jv-btn fill04">팝업등록</a>
         </div>
     </div>
 
@@ -48,7 +50,7 @@
         <tr>
             <th>
                 <label class="c-input ci-check single">
-                    <input type="checkbox">
+                    <input type="checkbox" class="select-all-checkbox">
                     <div class="ci-show"></div>
                 </label>
             </th>
@@ -61,69 +63,30 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
+            <tr th:each="popup : ${popupPage}">
+            <!-- 체크박스 -->
             <td>
                 <label class="c-input ci-check single">
-                    <input type="checkbox">
+                    <input type="checkbox" class="select-item-checkbox" th:value="${popup.popupIdx()}">
                     <div class="ci-show"></div>
                 </label>
             </td>
-            <td>12</td>
+            <!-- 팝업 ID -->
+            <td th:text="${popup.popupIdx()}"></td>
+            <!-- 팝업 제목 -->
             <td>
-                <a href="#none" class="jv-btn underline01">팝업제목 팝업제목 팝업제목 팝업제목 팝업제목 팝업제목 팝업제목 팝업제목</a>
+                <a th:href="@{/masterpage_sys/popup/detailForm/{popupIdx}(popupIdx=${popup.popupIdx()})}"
+                   class="jv-btn underline01"
+                   th:text="${popup.popupName()}"></a>
             </td>
-            <td>2022.00.00</td>
-            <td>2022.00.00 ~ 2022.00.00</td>
-            <td>Layer</td>
-            <td>Y</td>
-        </tr>
-        <tr>
-            <td>
-                <label class="c-input ci-check single">
-                    <input type="checkbox">
-                    <div class="ci-show"></div>
-                </label>
-            </td>
-            <td>12</td>
-            <td>
-                <a href="#none" class="jv-btn underline01">팝업제목 팝업제목 팝업제목 팝업제목 팝업제목 팝업제목 팝업제목 팝업제목</a>
-            </td>
-            <td>2022.00.00</td>
-            <td>2022.00.00 ~ 2022.00.00</td>
-            <td>Layer</td>
-            <td>Y</td>
-        </tr>
-        <tr>
-            <td>
-                <label class="c-input ci-check single">
-                    <input type="checkbox">
-                    <div class="ci-show"></div>
-                </label>
-            </td>
-            <td>12</td>
-            <td>
-                <a href="#none" class="jv-btn underline01">팝업제목 팝업제목 팝업제목 팝업제목 팝업제목 팝업제목 팝업제목 팝업제목</a>
-            </td>
-            <td>2022.00.00</td>
-            <td>2022.00.00 ~ 2022.00.00</td>
-            <td>Layer</td>
-            <td>Y</td>
-        </tr>
-        <tr>
-            <td>
-                <label class="c-input ci-check single">
-                    <input type="checkbox">
-                    <div class="ci-show"></div>
-                </label>
-            </td>
-            <td>12</td>
-            <td>
-                <a href="#none" class="jv-btn underline01">팝업제목 팝업제목 팝업제목 팝업제목 팝업제목 팝업제목 팝업제목 팝업제목</a>
-            </td>
-            <td>2022.00.00</td>
-            <td>2022.00.00 ~ 2022.00.00</td>
-            <td>Layer</td>
-            <td>Y</td>
+            <!-- 수정일 -->
+            <td th:text="${popup.updateDate()}">2022.00.00</td>
+            <!-- 시작 날짜 ~ 종료 날짜 -->
+            <td th:text="${popup.startDate() + ' ~ ' + popup.endDate()}"></td>
+            <!-- 팝업 종류 -->
+            <td th:text="${popup.popupType()}"></td>
+            <!-- 오늘 하루만 표시 여부 -->
+            <td th:text="${popup.chkOpen()}"></td>
         </tr>
         </tbody>
     </table>

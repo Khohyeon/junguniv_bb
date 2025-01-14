@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
  */
 async function fetchDepth3Menus(menuIdx) {
     try {
-        const response = await fetch(`/api/menu/depth3?parentMenuIdx=${menuIdx}`);
+        const response = await fetch(`/masterpage_sys/uznMenu/api/depth3?parentMenuIdx=${menuIdx}`);
         if (!response.ok) {
             throw new Error('Failed to fetch depth3 menus');
         }
@@ -32,7 +32,7 @@ async function fetchDepth3Menus(menuIdx) {
 }
 
 /**
- * 2차 메뉴의 idx와 그에 해당하는 3차 메뉴의 list를 localStorage에 저장
+ * 2차 메뉴의 idx와 그에 해당하는 3차 메뉴의 list를 localStorage에 저장하여 tab 상태 관리
  */
 function saveTabState(menuIdx, depth3Menus) {
     const state = {
@@ -42,6 +42,24 @@ function saveTabState(menuIdx, depth3Menus) {
     localStorage.setItem('tabState', JSON.stringify(state));
 }
 
+/**
+ * 3차 메뉴 클릭 시 함수
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    // 기존 Depth2 클릭 이벤트 설정
+    document.querySelectorAll('.depth2-link').forEach(link => {
+        link.addEventListener('click', event => {
+            loadDepth3Menus(event, event.target);
+        });
+    });
+
+    // 상태 복원
+    restoreTabState();
+});
+
+/**
+ * 2차 메뉴 클릭 시 함수 (3차 메뉴의 데이터를 받아와 동적으로 추가)
+ */
 async function loadDepth3Menus(event, element) {
     event.preventDefault();
 
@@ -98,18 +116,10 @@ async function loadDepth3Menus(event, element) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    // 기존 Depth2 클릭 이벤트 설정
-    document.querySelectorAll('.depth2-link').forEach(link => {
-        link.addEventListener('click', event => {
-            loadDepth3Menus(event, event.target);
-        });
-    });
 
-    // 상태 복원
-    restoreTabState();
-});
-
+/**
+ * 상태를 복원하는 함수 페이지가 로드 될때 localstorage 에서 탭 상태를 읽어와서 복원
+ */
 function restoreTabState() {
     const state = localStorage.getItem('tabState');
     if (!state) return;
@@ -162,6 +172,9 @@ function restoreTabState() {
 
 }
 
+/**
+ * 콘텐츠 로드 함수 페이지 이동을 방지하는 함수
+ */
 function handleDepth3Click(event, element) {
     event.preventDefault(); // 기본 동작(페이지 이동) 막기
 

@@ -1,8 +1,11 @@
-package com.example.junguniv_bb.domain.unzMenu.model;
+package com.example.junguniv_bb.domain.uznMenu.model;
 
+import com.example.junguniv_bb._core.common.BaseTime;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +13,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "UZN_MENU")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-public class UznMenu {
+public class UznMenu extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

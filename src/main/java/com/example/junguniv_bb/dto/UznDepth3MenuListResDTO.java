@@ -5,13 +5,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Depth3Menu {
+public class UznDepth3MenuListResDTO {
     private String name;
     private String url;
     private String target;
     private boolean active;
 
-    public Depth3Menu(String name, String url, String target, boolean active) {
+    public UznDepth3MenuListResDTO(String name, String url, String target, boolean active) {
         this.name = name;
         this.url = url;
         this.target = target;

@@ -17,37 +17,6 @@ VALUES (1, 'qwer', '$2a$10$5mcrIopDr1/WTCSzbMoGo.5L7SYgLLyxH0OZobyOYkSPeItRqxI6G
        (7, 'qwer3', '$2a$10$5mcrIopDr1/WTCSzbMoGo.5L7SYgLLyxH0OZobyOYkSPeItRqxI6G', '1985-09-10', 'M', '010-9101-1122',
         'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호',  'ADMIN', 0, 'Y');
 
--- -- 상위 메뉴 데이터
--- INSERT INTO UZN_BRANCH (BRANCH_IDX, BRANCH_NAME, SORTNO, CHK_USE)
--- VALUES (1, '회원관리', 1, 'Y');
--- INSERT INTO UZN_BRANCH (BRANCH_IDX, BRANCH_NAME, SORTNO, CHK_USE)
--- VALUES (2, '홈페이지관리', 2, 'Y');
--- INSERT INTO UZN_BRANCH (BRANCH_IDX, BRANCH_NAME, SORTNO, CHK_USE)
--- VALUES (3, '일반/통계기록', 3, 'Y');
--- INSERT INTO UZN_BRANCH (BRANCH_IDX, BRANCH_NAME, SORTNO, CHK_USE)
--- VALUES (4, '시스템설정', 4, 'Y');
--- INSERT INTO UZN_BRANCH (BRANCH_IDX, BRANCH_NAME, SORTNO, CHK_USE)
--- VALUES (5, '체크안된메뉴', 5, 'N');
---
--- -- 하위 메뉴 데이터
--- INSERT INTO UZN_BRANCH_SUB (SUB_NAME, BRANCH_IDX, SORTNO, CHK_USE, URL)
--- VALUES ('회원정보관리', 1, 1, 'Y', '');
--- INSERT INTO UZN_BRANCH_SUB (SUB_NAME, BRANCH_IDX, SORTNO, CHK_USE, URL)
--- VALUES ('권한관리', 1, 2, 'Y', '');
--- INSERT INTO UZN_BRANCH_SUB (SUB_NAME, BRANCH_IDX, SORTNO, CHK_USE, URL)
--- VALUES ('주소록출력', 1, 1, 'Y', '');
--- INSERT INTO UZN_BRANCH_SUB (SUB_NAME, BRANCH_IDX, SORTNO, CHK_USE, URL)
--- VALUES ('팝업관리', 2, 1, 'Y', '/masterpage_sys/mainpopup');
--- INSERT INTO UZN_BRANCH_SUB (SUB_NAME, BRANCH_IDX, SORTNO, CHK_USE, URL)
--- VALUES ('약관관리', 2, 1, 'Y', '');
--- INSERT INTO UZN_BRANCH_SUB (SUB_NAME, BRANCH_IDX, SORTNO, CHK_USE, URL)
--- VALUES ('문의상담관리', 2, 1, 'Y', '');
--- INSERT INTO UZN_BRANCH_SUB (SUB_NAME, BRANCH_IDX, SORTNO, CHK_USE, URL)
--- VALUES ('게시판관리', 2, 1, 'Y', '');
--- INSERT INTO UZN_BRANCH_SUB (SUB_NAME, BRANCH_IDX, SORTNO, CHK_USE, URL)
--- VALUES ('홈페이지 Q&A', 3, 1, 'Y', '');
-
-
 INSERT INTO UZN_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX) VALUES
 -- 최상위 메뉴
 ('회원관리', 1, 'Y', NULL, NULL),
@@ -94,3 +63,9 @@ INSERT INTO UZN_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX) VALUES
 ('메뉴분류관리', 1, 'Y', '#', 16),
 ('메뉴명관리', 2, 'Y', '#', 16);
 
+INSERT INTO POPUP (POPUP_NAME, START_DATE, END_DATE, WIDTH_SIZE, HEIGHT_SIZE, TOP_SIZE, LEFT_SIZE, CONTENTS, CHK_TODAY, POPUP_TYPE, CHK_OPEN, CHK_SCROLLBAR) VALUES
+('이벤트 팝업', '2023-01-01', '2023-01-10', '800', '600', '100', '100', '이벤트 내용입니다.', 'Y', 'popup', 'Y', 'N'),
+('공지 팝업', '2023-02-01', '2023-02-05', '500', '400', '50', '50', '공지사항 내용입니다.', 'N', 'layer', 'N', 'Y'),
+('할인 팝업', '2023-03-01', '2023-03-20', '600', '450', '120', '120', '할인 이벤트 안내입니다.', 'Y', 'poplayer', 'Y', 'Y'),
+('업데이트 팝업', '2023-04-01', '2023-04-15', '700', '500', '80', '80', '업데이트 내용입니다.', 'N', 'popup', 'N', 'N'),
+('알림 팝업', '2023-05-01', '2023-05-10', '400', '300', '30', '30', '알림 메시지 내용입니다.', 'Y', 'layer', 'Y', 'N');
