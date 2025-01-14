@@ -56,9 +56,9 @@ INSERT INTO UZN_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX) VALUES
 ('시스템설정', 4, 'Y', NULL, NULL),
 
 -- 하위 메뉴
-('회원정보관리', 1, 'Y', '#', 1),
-('권한관리', 2, 'Y', '#', 1),
-('주소록출력', 3, 'Y', '#', 1),
+('회원정보관리', 1, 'Y', '/masterpage_sys/member/student/', 1),
+('권한관리', 2, 'Y', '/masterpage_sys/authlevel/', 1),
+('주소록출력', 3, 'Y', '/masterpage_sys/label/student/', 1),
 ('팝업관리', 1, 'Y', '/masterpage_sys/popup/listForm', 2),
 ('약관관리', 2, 'Y', '/masterpage_sys/agreement/joinForm', 2),
 ('게시판관리', 3, 'Y', '/masterpage_sys/board/counsel', 2),
