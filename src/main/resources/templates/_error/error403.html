@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title th:text="${errorMessage}">Error</title>
+	<style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 50px;
+        }
+        .error-container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+        h1 {
+            font-size: 100px;
+            margin: 0;
+            color: #e74c3c;
+        }
+        h2 {
+            margin-top: 10px;
+            color: #333;
+        }
+        p {
+            color: #666;
+        }
+        a {
+            text-decoration: none;
+            color: #3498db;
+            font-weight: bold;
+        }
+        a:hover {
+            color: #2980b9;
+        }
+	</style>
+</head>
+<body>
+	<div class="error-container">
+		<h2 th:text="${errorMessage}">에러 메시지</h2>
+		<a href="javascript:void(0);" onclick="goToHome()" class="home-link">돌아가기</a>
+	</div>
+
+	<script th:inline="javascript">
+        function goToHome() {
+            var userType = /*[[${userType}]]*/ 'GUEST';
+            if (userType === 'ADMIN') {
+                window.location.href = '/nGmaster/index';
+            }
+            else if(userType === 'TEACHER') {
+                window.location.href = '/nGsmart/teacher/main';
+            }
+            else if (userType === 'STUDENT' || userType === 'JAEHAK' || userType === 'GRADUATE') {
+                window.location.href = '/nGsmart/student/main';
+            } else {
+                window.location.href = '/login';  // 로그인 페이지
+            }
+        }
+	</script>
+</body>
+</html>
