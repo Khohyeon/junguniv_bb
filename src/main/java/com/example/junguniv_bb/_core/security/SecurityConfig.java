@@ -54,7 +54,7 @@ public class SecurityConfig {
                 // 페이지별 인가 설정
                 .authorizeHttpRequests((auth) -> auth
 
-                        .requestMatchers("/**").permitAll() // ! (Dev) 개발단계에서 모든 경로에 대한 접근 허용, 배포시에 제거해야함.
+                        .requestMatchers("/**").permitAll() // ! (Dev) 개발r단계에서 모든 경로에 대한 접근 허용, 배포시에 제거해야함.
 
                         .requestMatchers(HIDDEN_PATTERNS).denyAll() // 숨겨진 파일 접근 차단
                         .requestMatchers(WHITELIST).permitAll()
@@ -77,11 +77,11 @@ public class SecurityConfig {
                 // 보안 헤더 설정 추가
                 .headers(headers -> headers
                     .contentSecurityPolicy(csp -> csp
-                            //.reportOnly()
+                        .reportOnly()
                         .policyDirectives(
-                            "default-src 'self' 'unsafe-inline'; " +
-                            "script-src 'self' 'unsafe-inline' https://code.jquery.com https://cdn.jsdelivr.net https://stackpath.bootstrapcdn.com https://maxcdn.bootstrapcdn.com https://t1.daumcdn.net https://postcode.map.daum.net https://ssl.daumcdn.net; " +
-                            "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://code.jquery.com https://maxcdn.bootstrapcdn.com https://t1.daumcdn.net https://postcode.map.daum.net; " +
+                            "default-src 'self'; " +
+                            "script-src 'self' https://code.jquery.com https://cdn.jsdelivr.net https://stackpath.bootstrapcdn.com https://maxcdn.bootstrapcdn.com https://t1.daumcdn.net https://postcode.map.daum.net https://ssl.daumcdn.net; " +
+                            "style-src 'self' https://cdn.jsdelivr.net https://code.jquery.com https://maxcdn.bootstrapcdn.com https://t1.daumcdn.net https://postcode.map.daum.net; " +
                             "img-src 'self' data: https:; " +
                             "font-src 'self' https://cdn.jsdelivr.net https://maxcdn.bootstrapcdn.com data:; " +
                             "connect-src 'self' https://t1.daumcdn.net https://postcode.map.daum.net; " +

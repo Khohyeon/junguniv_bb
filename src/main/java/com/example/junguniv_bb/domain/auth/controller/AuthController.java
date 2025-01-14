@@ -11,6 +11,6 @@ public class AuthController {
     @GetMapping("/login")
     public String loginForm(Model model) {
 
-        return "auth/loginForm";
+        return "common/auth/loginForm";
     }
 }
