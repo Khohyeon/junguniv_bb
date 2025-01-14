@@ -69,14 +69,14 @@ public record MemberDetailResDTO(
     String jobStaffNumber, // 직장직원수
     String jobEmployeeType, // 직장직원유형 
     String jobName, // 직장이름
-    String jobWorkstate, // 직장근무상태
+    String jobWorkState, // 직장근무상태
     String resignationRegistdate, // 퇴사등록일자
     String resignationContents, // 퇴사내용
-    String jobJoindate, // 직장입사일자
+    String jobJoinDate, // 직장입사일자
     String jobTelOffice, // 직장전화번호
     String jobEmail, // 직장이메일
     String jobTotalSales, // 직장총매출
-    String pwdenc, // 비밀번호암호화
+    String pwdEnc, // 비밀번호암호화
     String realName, // 실명
     String realDate, // 실명일자
     String chkReal, // 실명체크
@@ -86,8 +86,8 @@ public record MemberDetailResDTO(
     String loginClientIp, // 로그인클라이언트IP
     Long loginMemberCount, // 로그인회원수
     Long memberJobIdx, // 회원직장IDX
-    String masterid, // 마스터아이디
-    String chargerid, // 채널아이디
+    String masterId, // 마스터아이디
+    String chargerId, // 채널아이디
     Long corporationIdx, // 지점IDX
     Long authLevel, // 권한레벨
     String birthdayType, // 생년월일유형
@@ -118,13 +118,13 @@ public record MemberDetailResDTO(
     String careerMonth, // 경력월수
     String careerSkill, // 경력기술
     String careerEtc, // 경력기타
-    String niceDupinfo, // 좋아요중복정보
+    String niceDupInfo, // 좋아요중복정보
     Long pwdCnt, // 비밀번호카운트
     String nwIno, // 네이버아이디
     String trneeSe, // 트레니오서비스
     String irglbrSe, // 이력서서비스
     String homepageJoin, // 홈페이지가입
-    LocalDateTime niceRegdate, // 좋아요등록일자    
+    LocalDateTime niceRegDate, // 좋아요등록일자
     Long loginFailCnt, // 로그인실패횟수
     LocalDateTime pwdDate, // 비밀번호일자
     String chkTempPwd, // 임시비밀번호체크
@@ -209,14 +209,14 @@ public record MemberDetailResDTO(
             member.getJobStaffNumber(),
             member.getJobEmployeeType(),
             member.getJobName(),
-            member.getJobWorkstate(),
+            member.getJobWorkState(),
             member.getResignationRegistdate(),
             member.getResignationContents(),
-            member.getJobJoindate(),
+            member.getJobJoinDate(),
             member.getJobTelOffice(),
             member.getJobEmail(),
             member.getJobTotalSales(),
-            member.getPwdenc(),
+            member.getPwdEnc(),
             member.getRealName(),
             member.getRealDate(),
             member.getChkReal(),
@@ -226,8 +226,8 @@ public record MemberDetailResDTO(
             member.getLoginClientIp(),
             member.getLoginMemberCount(),
             member.getMemberJobIdx(),
-            member.getMasterid(),
-            member.getChargerid(),
+            member.getMasterId(),
+            member.getChargerId(),
             member.getCorporationIdx(),
             member.getAuthLevel(),
             member.getBirthdayType(),
@@ -258,13 +258,13 @@ public record MemberDetailResDTO(
             member.getCareerMonth(),
             member.getCareerSkill(),
             member.getCareerEtc(),
-            member.getNiceDupinfo(),
+            member.getNiceDupInfo(),
             member.getPwdCnt(),
             member.getNwIno(),
             member.getTrneeSe(),
             member.getIrglbrSe(),
             member.getHomepageJoin(),
-            member.getNiceRegdate(),
+            member.getNiceRegDate(),
             member.getLoginFailCnt(),
             member.getPwdDate(),
             member.getChkTempPwd(),

@@ -6,11 +6,11 @@ import org.springframework.data.domain.Page;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record MemberPageResDTO(
+public record MemberManagerPageResDTO(
         List<MemberDTO> memberList,
         PageableDTO pageable
 ) {
-    public MemberPageResDTO(Page<Member> memberPage) {
+    public MemberManagerPageResDTO(Page<Member> memberPage) {
         this(
                 memberPage.getContent()
                         .stream()
@@ -20,29 +20,24 @@ public record MemberPageResDTO(
         );
     }
 
-    // 이름, userId, 생년월일, 휴대폰, 이메일, 마케팅 문자 수신, 메일 수신, 회원등록일, 약관동의일
+    // 이름, userId, 휴대폰, 이메일, 환급/일반 담당, 관리자 권한명, 근무상태, 회원등록일
     public record MemberDTO(
             String name,
             String userId,
-            String birthday,
             String telMobile,
             String email,
-            String chkMailReceive,
-            String chkSmsReceive,
-            LocalDateTime createdDate,
-            LocalDateTime agreeDate
+            // TODO 환급/일반 필드 추가
+            String jobWorkState,
+            LocalDateTime createdDate
     ) {
         public  MemberDTO (Member member) {
             this(
                     member.getName(),
                     member.getUserId(),
-                    member.getBirthday(),
                     member.getTelMobile(),
                     member.getEmail(),
-                    member.getChkMailReceive(),
-                    member.getChkSmsReceive(),
-                    member.getCreatedDate(),
-                    member.getAgreeDate()
+                    member.getJobWorkState(),
+                    member.getCreatedDate()
             );
         }
     }

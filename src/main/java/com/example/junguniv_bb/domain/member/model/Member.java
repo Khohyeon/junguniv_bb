@@ -220,8 +220,8 @@ public class Member extends BaseTime {
     @Column(name = "JOB_NAME", length = 255)
     private String jobName; // 위탁기업명
 
-    @Column(name = "JOB_WORKSTATE", length = 100)
-    private String jobWorkstate; // 근무상태
+    @Column(name = "JOB_WORK_STATE", length = 100)
+    private String jobWorkState; // 근무상태
 
     @Column(name = "RESIGNATION_REGISTDATE", length = 10)
     private String resignationRegistdate; // 퇴사일자
@@ -229,8 +229,8 @@ public class Member extends BaseTime {
     @Column(name = "RESIGNATION_CONTENTS", length = 255)
     private String resignationContents; // 퇴사사유
 
-    @Column(name = "JOB_JOINDATE", length = 10)
-    private String jobJoindate; // 입사일자
+    @Column(name = "JOB_JOIN_DATE", length = 10)
+    private String jobJoinDate; // 입사일자
 
     @Column(name = "JOB_TEL_OFFICE", length = 100)
     private String jobTelOffice; // 직장 전화번호
@@ -241,8 +241,8 @@ public class Member extends BaseTime {
     @Column(name = "JOB_TOTAL_SALES", length = 100)
     private String jobTotalSales; // 매출액
 
-    @Column(name = "PWDENC", length = 100)
-    private String pwdenc; // 비밀번호 암호화
+    @Column(name = "PWD_ENC", length = 100)
+    private String pwdEnc; // 비밀번호 암호화
 
     @Column(name = "REAL_NAME", length = 100)
     private String realName; // 실명
@@ -271,11 +271,11 @@ public class Member extends BaseTime {
     @Column(name = "MEMBER_JOB_IDX")
     private Long memberJobIdx; // 소속회사idx
 
-    @Column(name = "MASTERID", length = 100)
-    private String masterid; // 관리자 아이디
+    @Column(name = "MASTER_ID", length = 100)
+    private String masterId; // 관리자 아이디
 
-    @Column(name = "CHARGERID", length = 100)
-    private String chargerid; // 계약관리자idx
+    @Column(name = "CHARGER_ID", length = 100)
+    private String chargerId; // 계약관리자idx
 
     @Column(name = "CORPORATION_IDX")
     private Long corporationIdx; // 지점idx
@@ -367,8 +367,8 @@ public class Member extends BaseTime {
     @Column(name = "CAREER_ETC", length = 250)
     private String careerEtc; // 기타사항
 
-    @Column(name = "NICE_DUPINFO", columnDefinition = "MEDIUMTEXT")
-    private String niceDupinfo; // 인증코드
+    @Column(name = "NICE_DUP_INFO", columnDefinition = "MEDIUMTEXT")
+    private String niceDupInfo; // 인증코드
 
     @Column(name = "PWD_CNT")
     private Long pwdCnt; // 비밀번호변경횟수
@@ -385,8 +385,8 @@ public class Member extends BaseTime {
     @Column(name = "HOMEPAGE_JOIN", length = 1)
     private String homepageJoin; // 홈페이지 가입
 
-    @Column(name = "NICE_REGDATE")
-    private LocalDateTime niceRegdate; // 나이스 약관동의일
+    @Column(name = "NICE_REG_DATE")
+    private LocalDateTime niceRegDate; // 나이스 약관동의일
 
     @Column(name = "LOGIN_FAIL_CNT")
     private Long loginFailCnt; // 로그인 실패 횟수

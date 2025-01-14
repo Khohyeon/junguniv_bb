@@ -77,14 +77,14 @@ public record MemberUpdateReqDTO(
     String jobStaffNumber, // 직장직원수
     String jobEmployeeType, // 직장직원유형 
     String jobName, // 직장이름
-    String jobWorkstate, // 직장근무상태
+    String jobWorkState, // 직장근무상태
     String resignationRegistdate, // 퇴사등록일자
     String resignationContents, // 퇴사내용
-    String jobJoindate, // 직장입사일자
+    String jobJoinDate, // 직장입사일자
     String jobTelOffice, // 직장전화번호
     String jobEmail, // 직장이메일
     String jobTotalSales, // 직장총매출
-    String pwdenc, // 비밀번호암호화
+    String pwdEnc, // 비밀번호암호화
     String realName, // 실명
     String realDate, // 실명일자
     String chkReal, // 실명체크
@@ -94,8 +94,8 @@ public record MemberUpdateReqDTO(
     String loginClientIp, // 로그인클라이언트IP
     Long loginMemberCount, // 로그인회원수
     Long memberJobIdx, // 회원직장IDX
-    String masterid, // 마스터아이디
-    String chargerid, // 채널아이디
+    String masterId, // 마스터아이디
+    String chargerId, // 채널아이디
     Long corporationIdx, // 지점IDX
     Long authLevel, // 권한레벨
     String birthdayType, // 생년월일유형
@@ -126,13 +126,13 @@ public record MemberUpdateReqDTO(
     String careerMonth, // 경력월수
     String careerSkill, // 경력기술
     String careerEtc, // 경력기타
-    String niceDupinfo, // 좋아요중복정보
+    String niceDupInfo, // 좋아요중복정보
     Long pwdCnt, // 비밀번호카운트
     String nwIno, // 네이버아이디
     String trneeSe, // 트레니오서비스
     String irglbrSe, // 이력서서비스
     String homepageJoin, // 홈페이지가입
-    LocalDateTime niceRegdate, // 좋아요등록일자    
+    LocalDateTime niceRegDate, // 좋아요등록일자
     Long loginFailCnt, // 로그인실패횟수
     LocalDateTime pwdDate, // 비밀번호일자
     String chkTempPwd, // 임시비밀번호체크
@@ -216,14 +216,14 @@ public record MemberUpdateReqDTO(
         if (jobStaffNumber != null) member.setJobStaffNumber(jobStaffNumber);
         if (jobEmployeeType != null) member.setJobEmployeeType(jobEmployeeType);
         if (jobName != null) member.setJobName(jobName);
-        if (jobWorkstate != null) member.setJobWorkstate(jobWorkstate);
+        if (jobWorkState != null) member.setJobWorkState(jobWorkState);
         if (resignationRegistdate != null) member.setResignationRegistdate(resignationRegistdate);
         if (resignationContents != null) member.setResignationContents(resignationContents);
-        if (jobJoindate != null) member.setJobJoindate(jobJoindate);
+        if (jobJoinDate != null) member.setJobJoinDate(jobJoinDate);
         if (jobTelOffice != null) member.setJobTelOffice(jobTelOffice);
         if (jobEmail != null) member.setJobEmail(jobEmail);
         if (jobTotalSales != null) member.setJobTotalSales(jobTotalSales);
-        if (pwdenc != null) member.setPwdenc(pwdenc);
+        if (pwdEnc != null) member.setPwdEnc(pwdEnc);
         if (realName != null) member.setRealName(realName);
         if (realDate != null) member.setRealDate(realDate);
         if (chkReal != null) member.setChkReal(chkReal);
@@ -233,8 +233,8 @@ public record MemberUpdateReqDTO(
         if (loginClientIp != null) member.setLoginClientIp(loginClientIp);
         if (loginMemberCount != null) member.setLoginMemberCount(loginMemberCount);
         if (memberJobIdx != null) member.setMemberJobIdx(memberJobIdx);
-        if (masterid != null) member.setMasterid(masterid);
-        if (chargerid != null) member.setChargerid(chargerid);
+        if (masterId != null) member.setMasterId(masterId);
+        if (chargerId != null) member.setChargerId(chargerId);
         if (corporationIdx != null) member.setCorporationIdx(corporationIdx);
         if (authLevel != null) member.setAuthLevel(authLevel);
         if (birthdayType != null) member.setBirthdayType(birthdayType);
@@ -265,13 +265,13 @@ public record MemberUpdateReqDTO(
         if (careerMonth != null) member.setCareerMonth(careerMonth);
         if (careerSkill != null) member.setCareerSkill(careerSkill);
         if (careerEtc != null) member.setCareerEtc(careerEtc);
-        if (niceDupinfo != null) member.setNiceDupinfo(niceDupinfo);
+        if (niceDupInfo != null) member.setNiceDupInfo(niceDupInfo);
         if (pwdCnt != null) member.setPwdCnt(pwdCnt);
         if (nwIno != null) member.setNwIno(nwIno);
         if (trneeSe != null) member.setTrneeSe(trneeSe);
         if (irglbrSe != null) member.setIrglbrSe(irglbrSe);
         if (homepageJoin != null) member.setHomepageJoin(homepageJoin);
-        if (niceRegdate != null) member.setNiceRegdate(niceRegdate);
+        if (niceRegDate != null) member.setNiceRegDate(niceRegDate);
         if (loginFailCnt != null) member.setLoginFailCnt(loginFailCnt);
         if (pwdDate != null) member.setPwdDate(pwdDate);
         if (chkTempPwd != null) member.setChkTempPwd(chkTempPwd);

@@ -6,11 +6,11 @@ import org.springframework.data.domain.Page;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record MemberPageResDTO(
+public record MemberStudentPageResDTO(
         List<MemberDTO> memberList,
         PageableDTO pageable
 ) {
-    public MemberPageResDTO(Page<Member> memberPage) {
+    public MemberStudentPageResDTO(Page<Member> memberPage) {
         this(
                 memberPage.getContent()
                         .stream()
