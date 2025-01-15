@@ -1,5 +1,6 @@
 package com.example.junguniv_bb.domain.board.model;
 
+import com.example.junguniv_bb._core.common.BaseTime;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +13,7 @@ import java.time.LocalDate;
 @ToString
 @Entity
 @Table(name = "BBS")
-public class Bbs {
+public class Bbs extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,7 +48,7 @@ public class Bbs {
     @Column(name = "IP", length = 255)
     private String ip;
 
-    @Column(name = "READNUM")
+    @Column(name = "READ_NUM")
     private Long readNum;
 
     @Column(name = "CHK_MAIN", length = 1)

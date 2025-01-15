@@ -1,7 +1,12 @@
 package com.example.junguniv_bb.domain.board.controller;
 
+import com.example.junguniv_bb.domain.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -10,23 +15,40 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/masterpage_sys/board")
 public class BoardController {
 
-    @GetMapping("/noticeForm")
-    public String noticeForm() {
-        return "masterpage_sys/board/noticeForm";
+    private final BoardService boardService;
+
+    @GetMapping("/managerForm")
+    public String managerForm(Pageable pageable, Model model) {
+
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.Direction.DESC, ("bbsGroupIdx"));
+
+        model.addAttribute("bbsGroupPage", boardService.getBbsGroupPage(pageable));
+
+        return "masterpage_sys/board/managerForm";
     }
 
-    @GetMapping("/suggestionForm")
+    @GetMapping("/notice/listForm")
+    public String noticeListForm() {
+        return "masterpage_sys/board/notice/listForm";
+    }
+
+    @GetMapping("/notice/saveForm")
+    public String noticeSaveForm() {
+        return "masterpage_sys/board/notice/saveForm";
+    }
+
+    @GetMapping("/suggestion/listForm")
     public String suggestionForm() {
-        return "masterpage_sys/board/suggestionForm";
+        return "masterpage_sys/board/suggestion/listForm";
     }
 
-    @GetMapping("/faqForm")
+    @GetMapping("/faq/listForm")
     public String faqForm() {
-        return "masterpage_sys/board/faqForm";
+        return "masterpage_sys/board/faq/listForm";
     }
     @GetMapping("/qnaForm")
     public String qnaForm() {
-        return "masterpage_sys/board/qnaForm";
+        return "masterpage_sys/board/qna/listForm";
     }
 
     @GetMapping("/dataForm")
