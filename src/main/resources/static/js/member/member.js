@@ -386,7 +386,7 @@ const MemberModule = {
                         document.getElementById('jobInsuranceNumber4')?.value
                     ].filter(Boolean).join('-'),
                     jobWorkState: document.getElementById('jobWorkState')?.value,
-                    jobDept: document.getElementById('jobDept')?.value,
+                    jobDept: document.getElementById('jobDept')?.value,``
                     trneeSe: document.getElementById('trnee_se')?.value,
                     irglbrSe: document.getElementById('irglbrSe')?.value,
                     

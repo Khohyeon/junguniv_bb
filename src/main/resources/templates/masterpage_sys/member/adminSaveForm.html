@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<!-- 헤더에서 CSS 포함 -->
+	<th:block th:replace="fragments/header :: head"></th:block>
+
+	<!-- 카카오 주소 API 스크립트 추가 -->
+	<script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
+
+	<title>수강생 등록페이지</title>
+</head>
+<body>
+
+	<div class="inner">
+		<div class="form-wrap2">
+			<h2 class="form-tit">기본정보 <span class="required-txt">표시 항목은 필수 입력 사항입니다.</span></h2>
+			<div class="column-tc-wrap column-tc-wrap2 part2">
+				<div class="column-tc">
+					<div class="con flex2">
+						<div>
+							<div class="tit"><span class="required">ID</span></div>
+							<div class="con">
+								<input type="text" placeholder="ID를 입력해주세요">
+							</div>
+						</div>
+						<div>
+							<div class="tit"><span class="required">비밀번호</span></div>
+							<div class="con">
+								<input type="password" placeholder="영문 소문자 + 숫자 조합 8자 이상을 입력해주세요">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="column-tc">
+					<div class="con flex2">
+						<div>
+							<div class="tit">휴면계정</div>
+							<div class="con mt10">
+								<label class="c-input ci-check">
+									<input type="checkbox"> 적용 시 체크
+									<div class="ci-show"></div>
+								</label>
+							</div>
+						</div>
+						<div>
+							<div class="tit">로그인제한</div>
+							<div class="con mt10">
+								<label class="c-input ci-check">
+									<input type="checkbox"> 적용 시 체크
+									<div class="ci-show"></div>
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="column-tc">
+					<div class="con flex2">
+						<div>
+							<div class="tit">근무상태</div>
+							<div class="con">
+								<select>
+									<option>선택</option>
+									<option>1</option>
+									<option>2</option>
+								</select>
+							</div>
+						</div>
+						<div>
+							<div class="tit">담당업무</div>
+							<div class="con">
+								<input type="text" placeholder="업무내용을 입력해주세요">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="column-tc">
+					<div class="con flex2 align-start">
+						<div>
+							<div class="tit">환급/일반 담당여부</div>
+							<div class="con mt10">
+								<div>
+									<label class="c-input ci-check">
+										<input type="checkbox" checked> 환급과정 담당
+										<div class="ci-show"></div>
+									</label>
+									<label class="c-input ci-check">
+										<input type="checkbox"> 일반과정 담당
+										<div class="ci-show"></div>
+									</label>
+								</div>
+								<div class="color05 fs14 mt20">* 선택한 담당 항목에 따라 우측의 관리자 권한 설정이 가능합니다.</div>
+							</div>
+						</div>
+						<div>
+							<div class="tit"><span class="required">관리자 권한</span></div>
+							<div class="con flex2">
+								<div>
+									<select>
+										<option>선택</option>
+										<option>1</option>
+										<option>2</option>
+									</select>
+									<div class="color05 fs14 mt5">* 환급과정 담당인 경우 <br>권한명을 택1 해주세요.</div>
+								</div>
+								<div>
+									<select disabled>
+										<option>선택</option>
+										<option>1</option>
+										<option>2</option>
+									</select>
+									<div class="color05 fs14 mt5">* 일반과정 담당인 경우 <br>권한명을 택1 해주세요.</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="column-tc">
+					<div class="con flex2">
+						<div>
+							<div class="tit">접속제한IP</div>
+							<div class="con">
+								<input type="text" placeholder="IP입력 시, 설정된 IP에서만 관리자모드 접속이 가능합니다.">
+							</div>
+						</div>
+						<div>
+							<div class="tit">동시접속허용수</div>
+							<div class="con">
+								<input type="text" placeholder="ID 기준으로 동시접속 허용 가능 인원을 설정해주세요">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="column-tc">
+					<div class="con flex2">
+						<div>
+							<div class="tit"><span class="required">이름</span></div>
+							<div class="con">
+								<input type="text" placeholder="이름을 입력해주세요">
+							</div>
+						</div>
+						<div>
+							<div class="tit">직위</div>
+							<div class="con">
+								<input type="text" placeholder="직위를 입력해주세요">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="column-tc">
+					<div class="con flex2">
+						<div>
+							<div class="tit">직통번호</div>
+							<div class="con flex">
+								<select>
+									<option>선택</option>
+									<option>1</option>
+									<option>2</option>
+								</select>
+								<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
+								<input type="text">
+								<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
+								<input type="text">
+							</div>
+						</div>
+						<div>
+							<div class="tit">휴대폰</div>
+							<div class="con flex">
+								<select>
+									<option>010</option>
+									<option>1</option>
+									<option>2</option>
+								</select>
+								<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
+								<input type="text">
+								<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
+								<input type="text">
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+				<div class="column-tc">
+					<div class="tit">이메일</div>
+					<div class="con flex">
+						<input type="text">
+						<span>&nbsp;&nbsp;@&nbsp;&nbsp;</span>
+						<select>
+							<option>선택</option>
+							<option>1</option>
+							<option>2</option>
+						</select>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="btn-wrap mt50">
+			<a href="#none" class="jv-btn fill01-lg">목록</a>
+			<a href="#none" class="jv-btn fill04-lg">저장</a>
+		</div>
+	</div>
+
+	<script th:src="@{/js/member/member.js}"></script>
+</body>
+</html>

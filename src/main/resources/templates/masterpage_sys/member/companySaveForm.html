@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<!-- 헤더에서 CSS 포함 -->
+	<th:block th:replace="fragments/header :: head"></th:block>
+
+	<!-- 카카오 주소 API 스크립트 추가 -->
+	<script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
+
+	<title>위탁기업 등록페이지</title>
+</head>
+<body>
+
+	<div class="inner">
+		<div class="form-wrap2 counsel-regist">
+			<div class="column-tc-wrap column-tc-wrap2 part4">
+				<div class="column-tc">
+					<div class="tit">상담명</div>
+					<div class="con">
+						<input type="text" placeholder="상담명을 입력해주세요">
+					</div>
+				</div>
+				<div class="column-tc">
+					<div class="tit">상담자명</div>
+					<div class="con">
+						<input type="text" value="홍길동" readonly>
+					</div>
+				</div>
+				<div class="column-tc">
+					<div class="tit">상담시간</div>
+					<div class="con">
+						<input type="text" placeholder="상담시간을 입력해주세요">
+					</div>
+				</div>
+				<div class="column-tc">
+					<div class="tit">희망과정</div>
+					<div class="con">
+						<input type="text" placeholder="희망과정을 입력해주세요">
+					</div>
+				</div>
+			</div>
+			<div class="column-tc-wrap column-tc-wrap2 part1">
+				<div class="column-tc address">
+					<div class="tit">주소</div>
+					<div class="con flex">
+						<a href="#none" class="jv-btn fill01">주소찾기</a>
+						<input type="text" readonly>
+						<input type="text" readonly>
+						<input type="text">
+					</div>
+				</div>
+			</div>
+			<div class="column-tc-wrap column-tc-wrap2 part4">
+				<div class="column-tc">
+					<div class="tit">휴대폰</div>
+					<div class="con">
+						<input type="text" placeholder="휴대폰번호를 입력해주세요">
+					</div>
+				</div>
+				<div class="column-tc">
+					<div class="tit">이메일</div>
+					<div class="con">
+						<input type="text" placeholder="이메일 주소를 입력해주세요">
+					</div>
+				</div>
+				<div class="column-tc">
+					<div class="tit">최종학력</div>
+					<div class="con">
+						<input type="text" placeholder="최종학력을 입력해주세요">
+					</div>
+				</div>
+				<div class="column-tc">
+					<div class="tit">비밀번호</div>
+					<div class="con">
+						<input type="password" placeholder="비밀번호를 입력해주세요">
+					</div>
+				</div>
+			</div>
+			<div class="column-tc-wrap column-tc-wrap2 part1">
+				<div class="column-tc">
+					<div class="tit">상담신청내용</div>
+					<div class="con">
+						<textarea rows="5"></textarea>
+					</div>
+				</div>
+				<div class="column-tc">
+					<div class="tit">보유자격증</div>
+					<div class="con">
+						<textarea rows="5"></textarea>
+					</div>
+				</div>
+				<div class="column-tc">
+					<div class="tit">첨부파일</div>
+					<div class="con">
+						<input type="file">
+					</div>
+				</div>
+				<div class="column-tc">
+					<div class="tit">답변내용</div>
+					<div class="con">
+						<textarea rows="5"></textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="btn-wrap mt50">
+			<a href="#none" class="jv-btn fill01-lg">목록</a>
+			<a href="#none" class="jv-btn fill04-lg">저장</a>
+		</div>
+	</div>
+
+	<script th:src="@{/js/member/member.js}"></script>
+</body>
+</html>

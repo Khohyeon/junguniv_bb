@@ -36,6 +36,20 @@ public class MemberController {
         return "/masterpage_sys/member/teacherSaveForm";
     }
 
+    /* 회원관리 > 회원정보관리 > 위탁기업 등록 */
+    @GetMapping("/company/saveForm")
+    public String companySaveForm(Model model) {
+
+        return "/masterpage_sys/member/companySaveForm";
+    }
+
+    /* 회원관리 > 회원정보관리 > LMS관리자 등록 */
+    @GetMapping("/admin/saveForm")
+    public String adminSaveForm(Model model) {
+
+        return "/masterpage_sys/member/adminSaveForm";
+    }
+
 
     /**
      * 회원관리 - 리스트
