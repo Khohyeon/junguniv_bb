@@ -32,10 +32,10 @@ public class CustomUserDetails implements UserDetails {
         return this.member;
     }
 
-    // // 권한 레벨 반환
-    // public Long getAuthLevel() {
-    //     return member.getAuthLevel();
-    // }
+    // 권한 레벨 반환
+    public Long getAuthLevel() {
+        return member.getAuthLevel();
+    }
 
     public void setHasPrivacyAccess(boolean hasPrivacyAccess) {
         this.hasPrivacyAccess = hasPrivacyAccess;

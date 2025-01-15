@@ -5,12 +5,10 @@ package com.example.junguniv_bb.domain.member._enum;
  */
 public enum UserType {
 
-    ADMIN("관리자"), // 웹 관리자
-    STUDENT("신입생"),
-    TEACHER("내용전문가"),
-    TUTOR("교강사"),
+    ADMIN("LMS관리자"),
+    STUDENT("수강생"),
+    TEACHER("교강사(튜터)"),
     COMPANY("위탁기업"),
-    MANAGER("LMS관리자"),
     GUEST("게스트"); // 역할을 할당받지 않은 게스트
 
     final private String text;

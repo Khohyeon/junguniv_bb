@@ -1,5 +1,6 @@
 package com.example.junguniv_bb.domain.member.model;
 
+import com.example.junguniv_bb._core.common.BaseTime;
 import com.example.junguniv_bb.domain.member._enum.UserType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,10 +23,11 @@ import java.time.LocalDateTime;
 @Data
 @DynamicInsert
 @DynamicUpdate
-public class Member {
+public class Member extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "MEMBER_IDX", nullable = false)
     private Long memberIdx; // 회원 IDX
 
     @Column(name = "RESIDENT_NUMBER", length = 100)
@@ -109,11 +111,8 @@ public class Member {
     @Column(name = "MAJOR", length = 200)
     private String major; // 전공
 
-    @Column(name = "REGIST_DATE")
-    private LocalDateTime registDate; // 등록일(회원가입일)
-
-    @Column(name = "CHK_FOREIGN", length = 1)
-    private String chkForeign; // 외국인 여부
+    @Column(name = "CHK_FOREIGNER", length = 1)
+    private String chkForeigner; // 외국인 여부
 
     @Column(name = "SEX", length = 1)
     private String sex; // 성별
@@ -221,8 +220,8 @@ public class Member {
     @Column(name = "JOB_NAME", length = 255)
     private String jobName; // 위탁기업명
 
-    @Column(name = "JOB_WORKSTATE", length = 100)
-    private String jobWorkstate; // 근무상태
+    @Column(name = "JOB_WORK_STATE", length = 100)
+    private String jobWorkState; // 근무상태
 
     @Column(name = "RESIGNATION_REGISTDATE", length = 10)
     private String resignationRegistdate; // 퇴사일자
@@ -230,8 +229,8 @@ public class Member {
     @Column(name = "RESIGNATION_CONTENTS", length = 255)
     private String resignationContents; // 퇴사사유
 
-    @Column(name = "JOB_JOINDATE", length = 10)
-    private String jobJoindate; // 입사일자
+    @Column(name = "JOB_JOIN_DATE", length = 10)
+    private String jobJoinDate; // 입사일자
 
     @Column(name = "JOB_TEL_OFFICE", length = 100)
     private String jobTelOffice; // 직장 전화번호
@@ -242,8 +241,8 @@ public class Member {
     @Column(name = "JOB_TOTAL_SALES", length = 100)
     private String jobTotalSales; // 매출액
 
-    @Column(name = "PWDENC", length = 100)
-    private String pwdenc; // 비밀번호 암호화
+    @Column(name = "PWD_ENC", length = 100)
+    private String pwdEnc; // 비밀번호 암호화
 
     @Column(name = "REAL_NAME", length = 100)
     private String realName; // 실명
@@ -272,11 +271,11 @@ public class Member {
     @Column(name = "MEMBER_JOB_IDX")
     private Long memberJobIdx; // 소속회사idx
 
-    @Column(name = "MASTERID", length = 100)
-    private String masterid; // 관리자 아이디
+    @Column(name = "MASTER_ID", length = 100)
+    private String masterId; // 관리자 아이디
 
-    @Column(name = "CHARGERID", length = 100)
-    private String chargerid; // 계약관리자idx
+    @Column(name = "CHARGER_ID", length = 100)
+    private String chargerId; // 계약관리자idx
 
     @Column(name = "CORPORATION_IDX")
     private Long corporationIdx; // 지점idx
@@ -293,8 +292,8 @@ public class Member {
     @Column(name = "APPLY_DATE")
     private LocalDateTime applyDate; // 적용일
 
-    @Column(name = "APPLY_USERID", length = 100)
-    private String applyUserid; // 적용한 아이디
+    @Column(name = "APPLY_USER_ID", length = 100)
+    private String applyUserId; // 적용한 아이디
 
     @Column(name = "APPLY_CLIENT_IP", length = 100)
     private String applyClientIp; // 적용한 IP
@@ -368,8 +367,8 @@ public class Member {
     @Column(name = "CAREER_ETC", length = 250)
     private String careerEtc; // 기타사항
 
-    @Column(name = "NICE_DUPINFO", columnDefinition = "MEDIUMTEXT")
-    private String niceDupinfo; // 인증코드
+    @Column(name = "NICE_DUP_INFO", columnDefinition = "MEDIUMTEXT")
+    private String niceDupInfo; // 인증코드
 
     @Column(name = "PWD_CNT")
     private Long pwdCnt; // 비밀번호변경횟수
@@ -386,8 +385,8 @@ public class Member {
     @Column(name = "HOMEPAGE_JOIN", length = 1)
     private String homepageJoin; // 홈페이지 가입
 
-    @Column(name = "NICE_REGDATE")
-    private LocalDateTime niceRegdate; // 나이스 약관동의일
+    @Column(name = "NICE_REG_DATE")
+    private LocalDateTime niceRegDate; // 나이스 약관동의일
 
     @Column(name = "LOGIN_FAIL_CNT")
     private Long loginFailCnt; // 로그인 실패 횟수
@@ -436,8 +435,23 @@ public class Member {
     private String pwdOld; // 예전 비밀번호
 
     @Column(name = "LOGIN_PASS", length = 1, columnDefinition = "char(1) default 'N'")
-    private String loginPass; // 로그인 인증 및 비밀번호예외 처리 여부
+    private String loginPass; // 로그인제한 여부
 
     @Column(name = "FNAME_SAUP", length = 255)
     private String fnameSaup; // 사업자등록증 사본
+
+    @Column(name = "CHK_SMS_RECEIVE", length = 1)
+    private String chkSmsReceive; // SMS 수신 여부
+
+    @Column(name = "CHK_DORMANT", length = 1)
+    private String chkDormant; // 휴면 상태여부
+
+    @Column(name = "CHK_IDENTITY_VERIFICATION", length = 1)
+    private String chkIdentityVerification; // 본인인증 예외 처리 여부
+
+    @Column(name = "CHK_PWD_CHANGE", length = 1)
+    private String chkPwdChange; // 비밀번호 변경 예외 처리 여부
+
+    @Column(name = "JOB_COURSE_DUTY", length = 10)
+    private String jobCourseDuty; // 환급/일반 과정 담당
 }
