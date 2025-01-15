@@ -3,9 +3,9 @@
 font-family:"Pretendard-Regular";
 src: url("../../fonts/Pretendard-Regular.eot");
 src: url("../../fonts/Pretendard-Regular.eot?#iefix") format("embedded-opentype"),
-    url("../../fonts/Pretendard-Regular.woff2") format("woff2"),
-    url("../../fonts/Pretendard-Regular.woff") format("woff"),
-    url("../../fonts/Pretendard-Regular.ttf") format("truetype"),
+    /*url("../../fonts/Pretendard-Regular.woff2") format("woff2"),*/
+    /*url("../../fonts/Pretendard-Regular.woff") format("woff"),*/
+    /*url("../../fonts/Pretendard-Regular.ttf") format("truetype"),*/
     url("../../fonts/Pretendard-Regular.svg#Pretendard-Regular") format("svg");
 font-weight: normal;
 font-style: normal;
@@ -63,9 +63,9 @@ font-style: normal;
 font-family:"Pretendard-SemiBold";
 src: url("../../fonts/Pretendard-SemiBold.eot");
 src: url("../../fonts/Pretendard-SemiBold.eot?#iefix") format("embedded-opentype"),
-    url("../../fonts/Pretendard-SemiBold.woff2") format("woff2"),
-    url("../../fonts/Pretendard-SemiBold.woff") format("woff"),
-    url("../../fonts/Pretendard-SemiBold.ttf") format("truetype"),
+    /*url("../../fonts/Pretendard-SemiBold.woff2") format("woff2"),*/
+    /*url("../../fonts/Pretendard-SemiBold.woff") format("woff"),*/
+    /*url("../../fonts/Pretendard-SemiBold.ttf") format("truetype"),*/
     url("../../fonts/Pretendard-SemiBold.svg#Pretendard-SemiBold") format("svg");
 font-weight: normal;
 font-style: normal;
@@ -75,9 +75,9 @@ font-style: normal;
 font-family:"Pretendard-Bold";
 src: url("../../fonts/Pretendard-Bold.eot");
 src: url("../../fonts/Pretendard-Bold.eot?#iefix") format("embedded-opentype"),
-    url("../../fonts/Pretendard-Bold.woff2") format("woff2"),
-    url("../../fonts/Pretendard-Bold.woff") format("woff"),
-    url("../../fonts/Pretendard-Bold.ttf") format("truetype"),
+    /*url("../../fonts/Pretendard-Bold.woff2") format("woff2"),*/
+    /*url("../../fonts/Pretendard-Bold.woff") format("woff"),*/
+    /*url("../../fonts/Pretendard-Bold.ttf") format("truetype"),*/
     url("../../fonts/Pretendard-Bold.svg#Pretendard-Bold") format("svg");
 font-weight: normal;
 font-style: normal;
@@ -108,20 +108,20 @@ font-style: normal;
 }
 
 /*font------------------------------------------------------------------------------------------------------------------ */
-.Pretd_R{font-family:"Pretendard-Regular" !important;} 
+.Pretd_R{font-family:"Pretendard-Regular" !important;}
 .Pretd_T{font-family:"Pretendard-Thin" !important;}
 .Pretd_EL{font-family:"Pretendard-ExtraLight" !important;}
-.Pretd_L{font-family:"Pretendard-Light" !important;} 
-.Pretd_M{font-family:"Pretendard-Medium" !important;} 
-.Pretd_SB{font-family:"Pretendard-SemiBold" !important;} 
+.Pretd_L{font-family:"Pretendard-Light" !important;}
+.Pretd_M{font-family:"Pretendard-Medium" !important;}
+.Pretd_SB{font-family:"Pretendard-SemiBold" !important;}
 .Pretd_B{font-family:"Pretendard-Bold" !important;}
 .Pretd_EB{font-family:"Pretendard-ExtraBold" !important;}
-.Pretd_BK{font-family:"Pretendard-Black" !important;} 
+.Pretd_BK{font-family:"Pretendard-Black" !important;}
 
 /*set_up-----------------------------------------------------------------------------------------------------------------*/
 *{box-sizing: border-box; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
 html{font-size:16px;}
-body{margin:0; padding:0; font-family:"Pretendard-Regular", sans-serif;  width:100%; height:auto; color:#333;} 
+body{margin:0; padding:0; font-family:"Pretendard-Regular", sans-serif;  width:100%; height:auto; color:#333;}
 
 html, body, div, span, applet, object, iframe,h1, h2, h3, h4, h5, h6, p, blockquote, pre,a, abbr, acronym, address, big, cite, code,del, dfn, em, img, ins, kbd, q, s, samp,small, strike, strong, sub, sup, tt, var,
 b, u, i, center,dl, dt, dd, ol, ul, li,fieldset, form, label, legend,table, caption, tbody, tfoot, thead, tr, th, td,article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary,

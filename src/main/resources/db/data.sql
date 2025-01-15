@@ -18,37 +18,6 @@ VALUES (1, 'qwer', '$2a$10$5mcrIopDr1/WTCSzbMoGo.5L7SYgLLyxH0OZobyOYkSPeItRqxI6G
 -- 회원 테이블 시퀀스 초기화
 ALTER TABLE MEMBER ALTER COLUMN MEMBER_IDX RESTART WITH 8;
 
--- -- 상위 메뉴 데이터
--- INSERT INTO UZN_BRANCH (BRANCH_IDX, BRANCH_NAME, SORTNO, CHK_USE)
--- VALUES (1, '회원관리', 1, 'Y');
--- INSERT INTO UZN_BRANCH (BRANCH_IDX, BRANCH_NAME, SORTNO, CHK_USE)
--- VALUES (2, '홈페이지관리', 2, 'Y');
--- INSERT INTO UZN_BRANCH (BRANCH_IDX, BRANCH_NAME, SORTNO, CHK_USE)
--- VALUES (3, '일반/통계기록', 3, 'Y');
--- INSERT INTO UZN_BRANCH (BRANCH_IDX, BRANCH_NAME, SORTNO, CHK_USE)
--- VALUES (4, '시스템설정', 4, 'Y');
--- INSERT INTO UZN_BRANCH (BRANCH_IDX, BRANCH_NAME, SORTNO, CHK_USE)
--- VALUES (5, '체크안된메뉴', 5, 'N');
---
--- -- 하위 메뉴 데이터
--- INSERT INTO UZN_BRANCH_SUB (SUB_NAME, BRANCH_IDX, SORTNO, CHK_USE, URL)
--- VALUES ('회원정보관리', 1, 1, 'Y', '');
--- INSERT INTO UZN_BRANCH_SUB (SUB_NAME, BRANCH_IDX, SORTNO, CHK_USE, URL)
--- VALUES ('권한관리', 1, 2, 'Y', '');
--- INSERT INTO UZN_BRANCH_SUB (SUB_NAME, BRANCH_IDX, SORTNO, CHK_USE, URL)
--- VALUES ('주소록출력', 1, 1, 'Y', '');
--- INSERT INTO UZN_BRANCH_SUB (SUB_NAME, BRANCH_IDX, SORTNO, CHK_USE, URL)
--- VALUES ('팝업관리', 2, 1, 'Y', '/masterpage_sys/mainpopup');
--- INSERT INTO UZN_BRANCH_SUB (SUB_NAME, BRANCH_IDX, SORTNO, CHK_USE, URL)
--- VALUES ('약관관리', 2, 1, 'Y', '');
--- INSERT INTO UZN_BRANCH_SUB (SUB_NAME, BRANCH_IDX, SORTNO, CHK_USE, URL)
--- VALUES ('문의상담관리', 2, 1, 'Y', '');
--- INSERT INTO UZN_BRANCH_SUB (SUB_NAME, BRANCH_IDX, SORTNO, CHK_USE, URL)
--- VALUES ('게시판관리', 2, 1, 'Y', '');
--- INSERT INTO UZN_BRANCH_SUB (SUB_NAME, BRANCH_IDX, SORTNO, CHK_USE, URL)
--- VALUES ('홈페이지 Q&A', 3, 1, 'Y', '');
-
-
 INSERT INTO UZN_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX) VALUES
 -- 최상위 메뉴
 ('회원관리', 1, 'Y', NULL, NULL),
@@ -82,7 +51,13 @@ INSERT INTO UZN_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX) VALUES
 ('상단팝업', 2, 'N', '/masterpage_sys/board/mainpopup', 8),
 ('회원가입약관', 1, 'Y', '/masterpage_sys/agreement/joinForm', 9),
 ('수강신청약관', 2, 'Y', '/masterpage_sys/agreement/courseForm', 9),
-('1:1 상담', 1, 'Y', '/masterpage_sys/board/listForm', 10),
+('환불신청약관', 2, 'Y', '/masterpage_sys/agreement/refundForm', 9),
+('공지사항', 1, 'Y', '/masterpage_sys/board/noticeForm', 10),
+('고충상담게시판', 1, 'Y', '/masterpage_sys/board/suggestionForm', 10),
+('FAQ', 1, 'Y', '/masterpage_sys/board/faqForm', 10),
+('Q&A', 1, 'Y', '/masterpage_sys/board/qnaForm', 10),
+('학습자료실', 1, 'Y', '/masterpage_sys/board/dataForm', 10),
+('1:1 상담', 1, 'Y', '/masterpage_sys/board/consultingForm', 10),
 ('게시판말머리관리', 2, 'Y', '/masterpage_sys/board/headForm', 10),
 ('상담예약', 1, 'Y', '/masterpage_sys/counsel/listForm', 11),
 ('홈페이지 Q&A', 1, 'Y', '#', 12),
@@ -95,3 +70,37 @@ INSERT INTO UZN_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX) VALUES
 ('메뉴분류관리', 1, 'Y', '#', 16),
 ('메뉴명관리', 2, 'Y', '#', 16);
 
+INSERT INTO POPUP (POPUP_NAME, START_DATE, END_DATE, WIDTH_SIZE, HEIGHT_SIZE, TOP_SIZE, LEFT_SIZE, CONTENTS, CHK_TODAY, POPUP_TYPE, CHK_OPEN, CHK_SCROLLBAR) VALUES
+('이벤트 팝업', '2023-01-01', '2023-01-10', '800', '600', '100', '100', '이벤트 내용입니다.', 'Y', 'popup', 'Y', 'N'),
+('공지 팝업', '2023-02-01', '2023-02-05', '500', '400', '50', '50', '공지사항 내용입니다.', 'N', 'layer', 'N', 'Y'),
+('할인 팝업', '2023-03-01', '2023-03-20', '600', '450', '120', '120', '할인 이벤트 안내입니다.', 'Y', 'poplayer', 'Y', 'Y'),
+('업데이트 팝업', '2023-04-01', '2023-04-15', '700', '500', '80', '80', '업데이트 내용입니다.', 'N', 'popup', 'N', 'N'),
+('알림 팝업', '2023-05-01', '2023-05-10', '400', '300', '30', '30', '알림 메시지 내용입니다.', 'Y', 'layer', 'Y', 'N');
+
+INSERT INTO COUNSEL (
+    COUNSEL_NAME, NAME, TEL_MOBILE, TALK_TIME, MEMO, ANSWER_MEMO, APPLY_USER_ID, APPLY_CLIENT_IP, ADDR1, ADDR2, ZIPCODE,
+    FINAL_EDUCATION_TYPE, FNAME1, LICENSE, FNAME2, FNAME3, BBSID, FNAME1_NAME, FNAME2_NAME, FNAME3_NAME, PWD, DEGREE_HOPE,
+    EMAIL, COUNSEL_STATE) VALUES
+('온라인 상담', '홍길동', '010-1234-5678', '2023-05-01 10:30', '상담 신청 내용입니다.', '답변 내용입니다.', 'admin', '127.0.0.1',
+'서울특별시 강남구', '테헤란로 123', '12345', '대학교 졸업', 'file1.jpg', '자격증 내용', 'file2.jpg', 'file3.jpg',
+'ONLINE', 'file1-private.jpg', 'file2-private.jpg', 'file3-private.jpg', 'password1', '웹개발 과정', 'test1@example.com', 'A'),
+('전화 상담', '김영희', '010-9876-5432', '2023-05-02 14:00', '전화 상담 요청 내용입니다.', '전화 상담 답변입니다.', 'admin', '127.0.0.2',
+'경기도 성남시', '분당로 456', '54321', '석사 졸업', 'file4.jpg', '자격증 내용', 'file5.jpg', 'file6.jpg',
+'PHONE', 'file4-private.jpg', 'file5-private.jpg', 'file6-private.jpg', 'password2', '디자인 과정', 'test2@example.com', 'B'),
+('온라인 상담', '이철수', '010-1111-2222', '2023-05-03 09:00', '문의 내용입니다.', '답변입니다.', 'admin', '127.0.0.3',
+'부산광역시 해운대구', '달맞이길 789', '67890', '고등학교 졸업', 'file7.jpg', '자격증 내용', 'file8.jpg', 'file9.jpg',
+'ONLINE', 'file7-private.jpg', 'file8-private.jpg', 'file9-private.jpg', 'password3', '데이터 분석 과정', 'test3@example.com', 'C'),
+('전화 상담', '박민수', '010-3333-4444', '2023-05-04 11:15', '상담 요청 내용입니다.', '전화 상담에 대한 답변입니다.', 'admin', '127.0.0.4',
+'대구광역시 수성구', '범어로 123', '98765', '박사 졸업', 'file10.jpg', '자격증 내용', 'file11.jpg', 'file12.jpg',
+'PHONE', 'file10-private.jpg', 'file11-private.jpg', 'file12-private.jpg', 'password4', 'AI 과정', 'test4@example.com', 'A'),
+('온라인 상담', '최지영', '010-5555-6666', '2023-05-05 16:45', '기타 상담 요청입니다.', '기타 상담 답변입니다.', 'admin', '127.0.0.5',
+'광주광역시 북구', '문흥로 123', '24680', '고등학교 졸업', 'file13.jpg', '자격증 내용', 'file14.jpg', 'file15.jpg',
+'ONLINE', 'file13-private.jpg', 'file14-private.jpg', 'file15-private.jpg', 'password5', '마케팅 과정', 'test5@example.com', 'B');
+
+
+INSERT INTO Agreement (AGREEMENT_TITLE, AGREEMENT_CONTENTS, OPEN_YN, AGREEMENT_TYPE) VALUES
+('약관동의의 안내', '정유니브 교육원(#이하 "교육원")에서는 원활한 교육 운영 및 한국산업인력공단 모니터링, 수강, 증명서 발급 등과 관련하여 귀하의 개인정보를 아래와 같이 수집·이용을 하고자 합니다. 다음 사항에 대해 충분히 읽어보신 후, 동의 여부를 체크하여 주시기 바랍니다.', 'Y', 'JOIN'),
+('지적재산권 보호안내', '본 저작물의 지적재산권은 #교육원에게 있으며, 관리하며 저작권법 등 관련 법규에 따라 국내 및 국제적으로 보호를 받고 있습니다. 사용자는 온라인 교육 콘텐츠 및 강의 관련 자료를 제외한 경우를 제외하고, 개인적, 비영리적 용도로만 사용할 수 있습니다. 단, 개인적 이용을 제외한 경우 수정 및 복제 등을 할 수 없습니다.', 'Y', 'JOIN'),
+('개인정보 수집·이용 동의', '약관 내용이 없습니다.', 'Y', 'JOIN'),
+('교육자료 이용 안내', '본 교육자료는 교육의 특정적 소유의 지적 재산입니다. 교육원의 동의 없이 본 자료를 임의로 사용 및 배포할 경우 법적 문제가 발생할 수 있습니다.', 'Y', 'JOIN'),
+('기타 안내 사항', '본 서버와 관련된 그래픽적 또는 기술적으로 부정확한 내용이 있을 수 있습니다. 변경사항은 주기적으로 업데이트됩니다.', 'Y', 'JOIN');

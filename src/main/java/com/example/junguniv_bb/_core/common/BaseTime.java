@@ -45,4 +45,9 @@ public abstract class BaseTime {
         return updatedDate != null ? updatedDate.format(formatter) : null;
     }
 
+    // 수정일을 지정된 형식으로 반환하는 메서드
+    public String getFormattedUpdatedDate2() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return updatedDate != null ? updatedDate.format(formatter) : null;
+    }
 }

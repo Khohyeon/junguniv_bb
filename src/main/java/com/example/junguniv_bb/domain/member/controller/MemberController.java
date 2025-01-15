@@ -43,8 +43,6 @@ public class MemberController {
     /* 회원관리 > 회원정보관리 > 수강생 리스트 */
     @GetMapping("/student/")
     public String studentListForm(Model model) {
-
-
         return "/masterpage_sys/member/studentListForm";
     }
 
