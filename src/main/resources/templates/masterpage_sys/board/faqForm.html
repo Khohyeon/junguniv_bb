@@ -56,35 +56,11 @@
     </div>
 
     <table class="table01 T_center">
-        <thead>
-        <tr>
-            <th>
-                <label class="c-input ci-check single">
-                    <input type="checkbox">
-                    <div class="ci-show"></div>
-                </label>
-            </th>
-            <th>NO</th>
-            <th>제목</th>
-            <th>작성일</th>
-            <th>조회수</th>
-        </tr>
-        </thead>
+        <!-- 공통 컴포넌트 포함 -->
+        <th:block th:replace="masterpage_sys/board/_board-header :: board_header"></th:block>
+
+        <!-- 페이지별 데이터 렌더링 -->
         <tbody>
-        <tr>
-            <td>
-                <label class="c-input ci-check single">
-                    <input type="checkbox">
-                    <div class="ci-show"></div>
-                </label>
-            </td>
-            <td>12</td>
-            <td>
-                <a th:href="@{/templates/masterpage_sys/board/detailForm}" class="jv-btn underline01">faq 제목</a>
-            </td>
-            <td>2022.00.00</td>
-            <td>1</td>
-        </tr>
         </tbody>
     </table>
 

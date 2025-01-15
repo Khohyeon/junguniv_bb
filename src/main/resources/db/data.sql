@@ -97,9 +97,59 @@ INSERT INTO COUNSEL (
 'ONLINE', 'file13-private.jpg', 'file14-private.jpg', 'file15-private.jpg', 'password5', '마케팅 과정', 'test5@example.com', 'B');
 
 
-INSERT INTO Agreement (AGREEMENT_TITLE, AGREEMENT_CONTENTS, OPEN_YN, AGREEMENT_TYPE) VALUES
+INSERT INTO AGREEMENT (AGREEMENT_TITLE, AGREEMENT_CONTENTS, OPEN_YN, AGREEMENT_TYPE) VALUES
 ('약관동의의 안내', '정유니브 교육원(#이하 "교육원")에서는 원활한 교육 운영 및 한국산업인력공단 모니터링, 수강, 증명서 발급 등과 관련하여 귀하의 개인정보를 아래와 같이 수집·이용을 하고자 합니다. 다음 사항에 대해 충분히 읽어보신 후, 동의 여부를 체크하여 주시기 바랍니다.', 'Y', 'JOIN'),
 ('지적재산권 보호안내', '본 저작물의 지적재산권은 #교육원에게 있으며, 관리하며 저작권법 등 관련 법규에 따라 국내 및 국제적으로 보호를 받고 있습니다. 사용자는 온라인 교육 콘텐츠 및 강의 관련 자료를 제외한 경우를 제외하고, 개인적, 비영리적 용도로만 사용할 수 있습니다. 단, 개인적 이용을 제외한 경우 수정 및 복제 등을 할 수 없습니다.', 'Y', 'JOIN'),
 ('개인정보 수집·이용 동의', '약관 내용이 없습니다.', 'Y', 'JOIN'),
 ('교육자료 이용 안내', '본 교육자료는 교육의 특정적 소유의 지적 재산입니다. 교육원의 동의 없이 본 자료를 임의로 사용 및 배포할 경우 법적 문제가 발생할 수 있습니다.', 'Y', 'JOIN'),
 ('기타 안내 사항', '본 서버와 관련된 그래픽적 또는 기술적으로 부정확한 내용이 있을 수 있습니다. 변경사항은 주기적으로 업데이트됩니다.', 'Y', 'JOIN');
+
+
+INSERT INTO BBS_GROUP (
+    BBSID, BBS_GROUP_NAME, SKIN, CATEGORY, FILENUM, READAUTH, WRITEAUTH, REPLYAUTH, COMMENTAUTH,
+    OPTION_SECRETAUTH, OPTION_REPLYAUTH, OPTION_COMMENTAUTH, FILEAUTH) VALUES
+('NOTICE', '공시사항', 'default', '공지', 3, 'member@company@teacher@tutor@manager', 'manager', 'none', 'none', 'Y', 'N', 'N', 'member@company'),
+('CONSULT', '고충상담게시판', 'consult', '상담', 5, 'member@company@teacher@manager', 'member@manager', 'manager', 'teacher@manager', 'N', 'Y', 'Y', 'manager'),
+('FAQ', 'FAQ', 'faq', '질문', 2, 'member@company@teacher@manager', 'manager', 'none', 'member@teacher', 'N', 'N', 'Y', 'member@teacher'),
+('QNA', 'Q&A', 'qna', '질문답변', 2, 'member@company@teacher@manager', 'member@teacher', 'member@teacher', 'member@teacher', 'N', 'Y', 'Y', 'member@teacher'),
+('MATERIAL', '학습자료실', 'material', '자료', 10, 'member@company@teacher@manager', 'manager', 'manager', 'none', 'N', 'N', 'N', 'member@company@teacher'),
+('CONSULTING', '1:1상담', 'private', '상담', 1, 'member@teacher', 'member@teacher', 'manager', 'none', 'Y', 'Y', 'N', 'manager');
+
+-- Dummy data for BBS table
+INSERT INTO BBS (
+    BBS_IDX, BBS_GROUP_IDX, BBSID, CATEGORY, TITLE, CONTENTS, URL, WRITER, PWD, IP,
+    READNUM, CHK_MAIN, START_DATE, END_DATE, CHK_SECRET, CHK_HIDDEN, CHK_AUTH,
+    REPLY_BBS_IDX, REPLY_SORTNO, WRITE_USERID, MODIFY_USERID, REPLY_DEPTH, C_START_DATE, C_END_DATE) VALUES
+-- Group 1
+(1, 1, 'BOARD001', '공지', '제목 1-1', '내용 1-1', 'http://example.com/1-1', '작성자1', 'pwd1', '127.0.0.1',
+ 10, 'N', '2025-01-01', '2025-12-31', 'N', 'N', 'USER',
+ NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31'),
+(2, 1, 'BOARD001', '공지', '제목 1-2', '내용 1-2', 'http://example.com/1-2', '작성자2', 'pwd2', '127.0.0.2',
+ 15, 'Y', '2025-01-01', '2025-12-31', 'N', 'N', 'USER',
+ NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31'),
+(3, 1, 'BOARD001', '공지', '제목 1-3', '내용 1-3', 'http://example.com/1-3', '작성자3', 'pwd3', '127.0.0.3',
+ 20, 'N', '2025-01-01', '2025-12-31', 'N', 'N', 'USER',
+ NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31'),
+(4, 1, 'BOARD001', '공지', '제목 1-4', '내용 1-4', 'http://example.com/1-4', '작성자4', 'pwd4', '127.0.0.4',
+ 5, 'Y', '2025-01-01', '2025-12-31', 'Y', 'N', 'USER',
+ NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31'),
+(5, 1, 'BOARD001', '공지', '제목 1-5', '내용 1-5', 'http://example.com/1-5', '작성자5', 'pwd5', '127.0.0.5',
+ 8, 'N', '2025-01-01', '2025-12-31', 'N', 'N', 'USER',
+ NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31'),
+
+-- Group 2
+(6, 2, 'BOARD002', '공지', '제목 2-1', '내용 2-1', 'http://example.com/2-1', '작성자1', 'pwd1', '127.0.0.6',
+ 10, 'N', '2025-01-01', '2025-12-31', 'N', 'N', 'USER',
+ NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31'),
+(7, 2, 'BOARD002', '공지', '제목 2-2', '내용 2-2', 'http://example.com/2-2', '작성자2', 'pwd2', '127.0.0.7',
+ 15, 'Y', '2025-01-01', '2025-12-31', 'N', 'N', 'USER',
+ NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31'),
+(8, 2, 'BOARD002', '공지', '제목 2-3', '내용 2-3', 'http://example.com/2-3', '작성자3', 'pwd3', '127.0.0.8',
+ 20, 'N', '2025-01-01', '2025-12-31', 'N', 'N', 'USER',
+ NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31'),
+(9, 2, 'BOARD002', '공지', '제목 2-4', '내용 2-4', 'http://example.com/2-4', '작성자4', 'pwd4', '127.0.0.9',
+ 5, 'Y', '2025-01-01', '2025-12-31', 'Y', 'N', 'USER',
+ NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31'),
+(10, 2, 'BOARD002', '공지', '제목 2-5', '내용 2-5', 'http://example.com/2-5', '작성자5', 'pwd5', '127.0.0.10',
+ 8, 'N', '2025-01-01', '2025-12-31', 'N', 'N', 'USER',
+ NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31');
