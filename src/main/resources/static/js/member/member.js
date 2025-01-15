@@ -328,13 +328,14 @@ const MemberModule = {
             }).open();
         },
 
-        // 회원 등록 폼 제출 핸들러
-        submitStudentSaveForm: async function(event) {
+        // 회원 등록 폼 제출 핸들러 (공통)
+        submitMemberSaveForm: async function(event) {
             event.preventDefault();
             
             try {
                 // 폼 데이터 수집
                 const memberData = {
+                    // 공통 필드
                     userType: document.getElementById('userType').value,
                     userId: document.getElementById('userId').value,
                     pwd: document.getElementById('pwd').value,
@@ -343,61 +344,80 @@ const MemberModule = {
                     memberState: document.getElementById('memberState').checked ? 'N' : 'Y',
                     engName: document.getElementById('engName').value,
                     chkForeigner: document.getElementById('chkForeigner').checked ? 'N' : 'Y',
-                    birthday: document.getElementById('birthday').value,
-                    sex: document.querySelector('input[name="sex"]:checked')?.value,
-                    
-                    // 주민등록번호
-                    residentNumber: document.getElementById('residentNumber1').value + 
-                                  document.getElementById('residentNumber2').value +
-                                  document.getElementById('residentNumber3').value,
                     
                     // 휴대폰
-                    telMobile: document.getElementById('telMobile1').value + '-' +
-                              document.getElementById('telMobile2').value + '-' +
-                              document.getElementById('telMobile3').value,
+                    telMobile: document.getElementById('telMobile1')?.value + '-' +
+                              document.getElementById('telMobile2')?.value + '-' +
+                              document.getElementById('telMobile3')?.value,
                     
                     // 이메일
-                    email: document.getElementById('email1').value + '@' +
-                          document.getElementById('email2').value,
-                    
-                    // 근무정보
-                    jobName: document.getElementById('jobName').value,
-                    jobNumber: [
-                        document.getElementById('jobNumber1').value,
-                        document.getElementById('jobNumber2').value,
-                        document.getElementById('jobNumber3').value
-                    ].join('-'),
-                    jobInsuranceNumber: [
-                        document.getElementById('jobInsuranceNumber1').value,
-                        document.getElementById('jobInsuranceNumber2').value,
-                        document.getElementById('jobInsuranceNumber3').value,
-                        document.getElementById('jobInsuranceNumber4').value
-                    ].join('-'),
-                    jobWorkState: document.getElementById('jobWorkState').value,
-                    jobDept: document.getElementById('jobDept').value,
-                    trneeSe: document.getElementById('trnee_se').value,
-                    irglbrSe: document.getElementById('irglbrSe').value,
+                    email: document.getElementById('email1')?.value + '@' +
+                          document.getElementById('email2')?.value,
                     
                     // 주소
-                    zipcode: document.getElementById('zipcode').value,
-                    addr1: document.getElementById('addr1').value,
-                    addr2: document.getElementById('addr2').value,
+                    zipcode: document.getElementById('zipcode')?.value,
+                    addr1: document.getElementById('addr1')?.value,
+                    addr2: document.getElementById('addr2')?.value,
                     
                     // 계좌정보
-                    bankName: document.getElementById('bankName').value,
-                    bankNumber: document.getElementById('bankNumber').value,
+                    bankName: document.getElementById('bankName')?.value,
+                    bankNumber: document.getElementById('bankNumber')?.value,
                     
                     // 추가정보
-                    applyUserId: document.getElementById('applyUserId').value,
-                    loginMemberCount: document.getElementById('loginMemberCount').value,
-                    chkIdentityVerification: document.querySelector('input[name="chkIdentityVerification"]:checked')?.value || 'N',
-                    chkPwdChange: document.querySelector('input[name="chkPwdChange"]:checked')?.value || 'N',
+                    applyUserId: document.getElementById('applyUserId')?.value,
+                    loginMemberCount: document.getElementById('loginMemberCount')?.value,
+                    
+                    // 학생 전용 필드
+                    birthday: document.getElementById('birthday')?.value,
+                    sex: document.querySelector('input[name="sex"]:checked')?.value,
+                    residentNumber: (document.getElementById('residentNumber1')?.value || '') +
+                                  (document.getElementById('residentNumber2')?.value || '') +
+                                  (document.getElementById('residentNumber3')?.value || ''),
+                    jobName: document.getElementById('jobName')?.value,
+                    jobNumber: [
+                        document.getElementById('jobNumber1')?.value,
+                        document.getElementById('jobNumber2')?.value,
+                        document.getElementById('jobNumber3')?.value
+                    ].filter(Boolean).join('-'),
+                    jobInsuranceNumber: [
+                        document.getElementById('jobInsuranceNumber1')?.value,
+                        document.getElementById('jobInsuranceNumber2')?.value,
+                        document.getElementById('jobInsuranceNumber3')?.value,
+                        document.getElementById('jobInsuranceNumber4')?.value
+                    ].filter(Boolean).join('-'),
+                    jobWorkState: document.getElementById('jobWorkState')?.value,
+                    jobDept: document.getElementById('jobDept')?.value,
+                    trneeSe: document.getElementById('trnee_se')?.value,
+                    irglbrSe: document.getElementById('irglbrSe')?.value,
+                    
+                    // 수신동의
                     chkSmsReceive: document.querySelector('input[name="chkSmsReceive"]:checked')?.value || 'N',
-                    chkMailReceive: document.querySelector('input[name="chkMailReceive"]:checked')?.value || 'N'
+                    chkMailReceive: document.querySelector('input[name="chkMailReceive"]:checked')?.value || 'N',
+                    
+                    // 예외처리
+                    chkIdentityVerification: document.querySelector('input[name="chkIdentityVerification"]:checked')?.value || 'N',
+                    chkPwdChange: document.querySelector('input[name="chkPwdChange"]:checked')?.value || 'N'
                 };
 
                 // 필수 입력값 검증
-                const requiredFields = ['userId', 'pwd', 'name', 'birthday', 'telMobile'];
+                const requiredFields = ['userId', 'pwd', 'name'];
+                
+                // userType에 따른 추가 필수 필드
+                switch(memberData.userType) {
+                    case 'STUDENT':
+                        requiredFields.push('birthday', 'telMobile');
+                        break;
+                    case 'TEACHER':
+                        requiredFields.push('telMobile');
+                        break;
+                    case 'COMPANY':
+                        requiredFields.push('jobName', 'jobNumber');
+                        break;
+                    case 'ADMIN':
+                        requiredFields.push('telMobile');
+                        break;
+                }
+
                 for (const field of requiredFields) {
                     if (!memberData[field]) {
                         const fieldName = MemberModule.state.fieldNames[field] || field;
@@ -411,8 +431,15 @@ const MemberModule = {
                 const response = await MemberModule.api.saveMember(memberData);
                 
                 if (response.success) {
-                    alert('회원이 등록되었습니다.');
-                    window.location.href = '/masterpage_sys/member/student/'; // 목록 페이지로 이동
+                    const userTypeText = {
+                        'STUDENT': '학생',
+                        'TEACHER': '교강사',
+                        'COMPANY': '기업',
+                        'ADMIN': '관리자'
+                    }[memberData.userType];
+                    
+                    alert(`${userTypeText}가 등록되었습니다.`);
+                    window.location.href = `/masterpage_sys/member/${memberData.userType.toLowerCase()}/`; // 목록 페이지로 이동
                 } else {
                     alert(response.message || '회원 등록에 실패했습니다.');
                 }
@@ -472,18 +499,21 @@ const MemberModule = {
                 });
             }
 
-            // 회원 등록 폼 제출 이벤트 리스너
-            const studentSaveForm = document.getElementById('studentSaveForm');
-            if (studentSaveForm) {
-                studentSaveForm.addEventListener('submit', this.handlers.submitStudentSaveForm.bind(this));
-            }
+            // 회원 등록 폼 제출 이벤트 리스너 (모든 타입 공통)
+            const forms = ['studentSaveForm', 'teacherSaveForm', 'companySaveForm', 'adminSaveForm'];
+            forms.forEach(formId => {
+                const form = document.getElementById(formId);
+                if (form) {
+                    form.addEventListener('submit', this.handlers.submitMemberSaveForm.bind(this));
+                }
+            });
 
             // 저장 버튼 클릭 이벤트 리스너 (폼 제출 대체)
             const btnSave = document.getElementById('btnSave');
             if (btnSave) {
                 btnSave.addEventListener('click', (e) => {
                     e.preventDefault();
-                    const form = document.getElementById('studentSaveForm');
+                    const form = document.querySelector('form[id$="SaveForm"]');
                     if (form) {
                         form.dispatchEvent(new Event('submit'));
                     }

@@ -435,7 +435,7 @@ public class Member extends BaseTime {
     private String pwdOld; // 예전 비밀번호
 
     @Column(name = "LOGIN_PASS", length = 1, columnDefinition = "char(1) default 'N'")
-    private String loginPass; // 로그인 인증 및 비밀번호예외 처리 여부
+    private String loginPass; // 로그인제한 여부
 
     @Column(name = "FNAME_SAUP", length = 255)
     private String fnameSaup; // 사업자등록증 사본

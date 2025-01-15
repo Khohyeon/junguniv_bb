@@ -29,6 +29,13 @@ public class MemberController {
         return "/masterpage_sys/member/studentSaveForm";
     }
 
+    /* 회원관리 > 회원정보관리 > 교강사(튜터) 등록 */
+    @GetMapping("/teacher/saveForm")
+    public String teacherSaveForm(Model model) {
+
+        return "/masterpage_sys/member/teacherSaveForm";
+    }
+
 
     /**
      * 회원관리 - 리스트
