@@ -16,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
@@ -34,7 +36,7 @@ public class MemberRestController {
     /* 페이지 조회 */
     @GetMapping("/")
     public ResponseEntity<?> memberPage(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                      Pageable pageable,
+                                      @PageableDefault(size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable,
                                       HttpServletRequest request) {
 
         // Referer 헤더에서 이전 페이지 URL 가져오기

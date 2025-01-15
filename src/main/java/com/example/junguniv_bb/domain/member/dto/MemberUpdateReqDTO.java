@@ -41,7 +41,7 @@ public record MemberUpdateReqDTO(
     String schoolNumber, // 학교번호
     String degree, // 학위
     String major, // 전공
-    String chkForeign, // 외국인여부
+    String chkForeigner, // 외국인여부
     String sex, // 성별
     String memberBelongtoType, // 회원소속유형
     String introduce, // 소개
@@ -101,7 +101,7 @@ public record MemberUpdateReqDTO(
     String birthdayType, // 생년월일유형
     String license, // 자격증
     LocalDateTime applyDate, // 신청일자
-    String applyUserid, // 신청아이디
+    String applyUserId, // 신청아이디
     String applyClientIp, // 신청클라이언트IP
     String studyLevel, // 학습레벨
     String studyEtc, // 학습기타
@@ -150,7 +150,11 @@ public record MemberUpdateReqDTO(
     String pwdOld, // 이전비밀번호
     String loginPass, // 로그인패스
     String fnameSaup, // 프로필사진사용
-    String chkSmsReceive // SMS 수신 여부
+    String chkSmsReceive, // SMS 수신 여부
+    String chkDormant, // 휴면 상태여부
+    String chkIdentityVerification, // 본인인증 예외 처리 여부
+    String chkPwdChange, // 비밀번호 변경 예외 처리 여부
+    String jobCourseDuty // 환급/일반 과정 담당
 ) {
     public void updateEntity(Member member, String encodedPwd) {
         if (residentNumber != null) member.setResidentNumber(residentNumber);
@@ -180,7 +184,7 @@ public record MemberUpdateReqDTO(
         if (schoolNumber != null) member.setSchoolNumber(schoolNumber);
         if (degree != null) member.setDegree(degree);
         if (major != null) member.setMajor(major);
-        if (chkForeign != null) member.setChkForeign(chkForeign);
+        if (chkForeigner != null) member.setChkForeigner(chkForeigner);
         if (sex != null) member.setSex(sex);
         if (memberBelongtoType != null) member.setMemberBelongtoType(memberBelongtoType);
         if (introduce != null) member.setIntroduce(introduce);
@@ -240,7 +244,7 @@ public record MemberUpdateReqDTO(
         if (birthdayType != null) member.setBirthdayType(birthdayType);
         if (license != null) member.setLicense(license);
         if (applyDate != null) member.setApplyDate(applyDate);
-        if (applyUserid != null) member.setApplyUserid(applyUserid);
+        if (applyUserId != null) member.setApplyUserId(applyUserId);
         if (applyClientIp != null) member.setApplyClientIp(applyClientIp);
         if (studyLevel != null) member.setStudyLevel(studyLevel);
         if (studyEtc != null) member.setStudyEtc(studyEtc);
@@ -290,6 +294,11 @@ public record MemberUpdateReqDTO(
         if (loginPass != null) member.setLoginPass(loginPass);
         if (fnameSaup != null) member.setFnameSaup(fnameSaup);
         if (chkSmsReceive != null) member.setChkSmsReceive(chkSmsReceive);
+        if (chkDormant != null) member.setChkDormant(chkDormant);
+        if (chkIdentityVerification != null) member.setChkIdentityVerification(chkIdentityVerification);
+        if (chkPwdChange != null) member.setChkPwdChange(chkPwdChange);
+        if (jobCourseDuty != null) member.setJobCourseDuty(jobCourseDuty);
     }
 }
+
 

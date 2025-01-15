@@ -22,16 +22,16 @@ public record MemberStudentPageResDTO(
 
     // 이름, userId, 생년월일, 휴대폰, 이메일, 마케팅 문자 수신, 메일 수신, 회원등록일, 약관동의일
     public record MemberDTO(
-            Long memberIdx,
-            String name,
-            String userId,
-            String birthday,
-            String telMobile,
-            String email,
-            String chkMailReceive,
-            String chkSmsReceive,
-            LocalDateTime createdDate,
-            LocalDateTime agreeDate
+            Long memberIdx, // 회원 IDX
+            String name, // 이름
+            String userId, // 아이디
+            String birthday, // 생년월일
+            String telMobile, // 휴대폰
+            String email, // 이메일
+            String chkMailReceive, // 메일 수신
+            String chkSmsReceive, // 마케팅 문자 수신
+            LocalDateTime createdDate, // 회원등록일
+            LocalDateTime agreeDate // 약관동의일
     ) {
         public  MemberDTO (Member member) {
             this(

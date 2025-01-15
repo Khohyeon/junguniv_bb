@@ -7,7 +7,20 @@ const MemberModule = {
         currentPage: 0,
         size: 10,
         totalElements: 0,
-        pageType: '' // 'student', 'teacher', 'company', 'admin'
+        pageType: '', // 'student', 'teacher', 'company', 'admin'
+        fieldNames: {
+            userId: '아이디',
+            pwd: '비밀번호',
+            name: '이름',
+            birthday: '생년월일',
+            telMobile: '휴대폰 번호',
+            email: '이메일',
+            jobName: '근무회사',
+            jobNumber: '사업자번호',
+            jobInsuranceNumber: '고용보험관리번호',
+            trneeSe: '훈련생 구분',
+            irglbrSe: '비정규직 구분'
+        }
     },
 
     // API 호출 함수들
@@ -54,6 +67,28 @@ const MemberModule = {
                 console.error('회원 삭제 에러:', error);
                 throw error;
             }
+        },
+
+        // 회원 등록
+        saveMember: async function(memberData) {
+            try {
+                const response = await fetch('/masterpage_sys/member/api/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(memberData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('회원 등록에 실패했습니다.');
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('회원 등록 에러:', error);
+                throw error;
+            }
         }
     },
 
@@ -69,6 +104,9 @@ const MemberModule = {
                 return;
             }
 
+            // 역순 번호 계산을 위한 시작 번호
+            const startNumber = MemberModule.state.totalElements - (MemberModule.state.currentPage * MemberModule.state.size);
+
             // 페이지 타입에 따른 테이블 렌더링
             switch (MemberModule.state.pageType) {
                 case 'teacher':
@@ -80,7 +118,7 @@ const MemberModule = {
                                     <div class="ci-show"></div>
                                 </label>
                             </td>
-                            <td>${MemberModule.state.currentPage * MemberModule.state.size + index + 1}</td>
+                            <td>${startNumber - index}</td>
                             <td>${member.name || '-'}</td>
                             <td>${member.userId || '-'}</td>
                             <td>${member.telMobile || '-'}</td>
@@ -101,7 +139,7 @@ const MemberModule = {
                                     <div class="ci-show"></div>
                                 </label>
                             </td>
-                            <td>${MemberModule.state.currentPage * MemberModule.state.size + index + 1}</td>
+                            <td>${startNumber - index}</td>
                             <td>${member.jobName || '-'}</td>
                             <td>${member.userId || '-'}</td>
                             <td>${member.contractorName || '-'}</td>
@@ -127,14 +165,14 @@ const MemberModule = {
                                     <div class="ci-show"></div>
                                 </label>
                             </td>
-                            <td>${MemberModule.state.currentPage * MemberModule.state.size + index + 1}</td>
+                            <td>${startNumber - index}</td>
                             <td>${member.name || '-'}</td>
                             <td>${member.userId || '-'}</td>
                             <td>${member.telMobile || '-'}</td>
                             <td>${member.email || '-'}</td>
-                            <td>'필드 추가 필요'</td>
-                            <td>${member.jobWorkState || '-'}</td>
+                            <td>${member.jobDuty || '-'}</td>
                             <td>${member.authLevel || '-'}</td>
+                            <td>${member.jobWorkState || '-'}</td>
                             <td>${member.createdDate ? new Date(member.createdDate).toLocaleDateString() : '-'}</td>
                         </tr>
                     `).join('');
@@ -149,7 +187,7 @@ const MemberModule = {
                                     <div class="ci-show"></div>
                                 </label>
                             </td>
-                            <td>${MemberModule.state.currentPage * MemberModule.state.size + index + 1}</td>
+                            <td>${startNumber - index}</td>
                             <td>${member.name || '-'}</td>
                             <td>${member.userId || '-'}</td>
                             <td>${member.birthday || '-'}</td>
@@ -270,6 +308,118 @@ const MemberModule = {
         toggleAll: function(e) {
             const checkboxes = document.querySelectorAll('table.table01 tbody input[type="checkbox"]');
             checkboxes.forEach(cb => cb.checked = e.target.checked);
+        },
+
+        // 카카오 주소검색 API 호출
+        searchAddress: function() {
+            new daum.Postcode({
+                oncomplete: function(data) {
+                    // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분
+                    
+                    // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                    document.getElementById('zipcode').value = data.zonecode;
+                    document.getElementById('addr1').value = data.roadAddress || data.jibunAddress;
+                    
+                    // 커서를 상세주소 필드로 이동한다.
+                    document.getElementById('addr2').focus();
+                },
+                width : '100%',
+                height : '100%'
+            }).open();
+        },
+
+        // 회원 등록 폼 제출 핸들러
+        submitStudentSaveForm: async function(event) {
+            event.preventDefault();
+            
+            try {
+                // 폼 데이터 수집
+                const memberData = {
+                    userType: document.getElementById('userType').value,
+                    userId: document.getElementById('userId').value,
+                    pwd: document.getElementById('pwd').value,
+                    name: document.getElementById('name').value,
+                    chkDormant: document.getElementById('chkDormant').checked ? 'N' : 'Y',
+                    memberState: document.getElementById('memberState').checked ? 'N' : 'Y',
+                    engName: document.getElementById('engName').value,
+                    chkForeigner: document.getElementById('chkForeigner').checked ? 'N' : 'Y',
+                    birthday: document.getElementById('birthday').value,
+                    sex: document.querySelector('input[name="sex"]:checked')?.value,
+                    
+                    // 주민등록번호
+                    residentNumber: document.getElementById('residentNumber1').value + 
+                                  document.getElementById('residentNumber2').value +
+                                  document.getElementById('residentNumber3').value,
+                    
+                    // 휴대폰
+                    telMobile: document.getElementById('telMobile1').value + '-' +
+                              document.getElementById('telMobile2').value + '-' +
+                              document.getElementById('telMobile3').value,
+                    
+                    // 이메일
+                    email: document.getElementById('email1').value + '@' +
+                          document.getElementById('email2').value,
+                    
+                    // 근무정보
+                    jobName: document.getElementById('jobName').value,
+                    jobNumber: [
+                        document.getElementById('jobNumber1').value,
+                        document.getElementById('jobNumber2').value,
+                        document.getElementById('jobNumber3').value
+                    ].join('-'),
+                    jobInsuranceNumber: [
+                        document.getElementById('jobInsuranceNumber1').value,
+                        document.getElementById('jobInsuranceNumber2').value,
+                        document.getElementById('jobInsuranceNumber3').value,
+                        document.getElementById('jobInsuranceNumber4').value
+                    ].join('-'),
+                    jobWorkState: document.getElementById('jobWorkState').value,
+                    jobDept: document.getElementById('jobDept').value,
+                    trneeSe: document.getElementById('trnee_se').value,
+                    irglbrSe: document.getElementById('irglbrSe').value,
+                    
+                    // 주소
+                    zipcode: document.getElementById('zipcode').value,
+                    addr1: document.getElementById('addr1').value,
+                    addr2: document.getElementById('addr2').value,
+                    
+                    // 계좌정보
+                    bankName: document.getElementById('bankName').value,
+                    bankNumber: document.getElementById('bankNumber').value,
+                    
+                    // 추가정보
+                    applyUserId: document.getElementById('applyUserId').value,
+                    loginMemberCount: document.getElementById('loginMemberCount').value,
+                    chkIdentityVerification: document.querySelector('input[name="chkIdentityVerification"]:checked')?.value || 'N',
+                    chkPwdChange: document.querySelector('input[name="chkPwdChange"]:checked')?.value || 'N',
+                    chkSmsReceive: document.querySelector('input[name="chkSmsReceive"]:checked')?.value || 'N',
+                    chkMailReceive: document.querySelector('input[name="chkMailReceive"]:checked')?.value || 'N'
+                };
+
+                // 필수 입력값 검증
+                const requiredFields = ['userId', 'pwd', 'name', 'birthday', 'telMobile'];
+                for (const field of requiredFields) {
+                    if (!memberData[field]) {
+                        const fieldName = MemberModule.state.fieldNames[field] || field;
+                        alert(`${fieldName}은(는) 필수 입력 항목입니다.`);
+                        document.getElementById(field)?.focus();
+                        return;
+                    }
+                }
+
+                // API 호출
+                const response = await MemberModule.api.saveMember(memberData);
+                
+                if (response.success) {
+                    alert('회원이 등록되었습니다.');
+                    window.location.href = '/masterpage_sys/member/student/'; // 목록 페이지로 이동
+                } else {
+                    alert(response.message || '회원 등록에 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('회원 등록 에러:', error);
+                alert('회원 등록에 실패했습니다.');
+            }
         }
     },
 
@@ -321,6 +471,46 @@ const MemberModule = {
                     }
                 });
             }
+
+            // 회원 등록 폼 제출 이벤트 리스너
+            const studentSaveForm = document.getElementById('studentSaveForm');
+            if (studentSaveForm) {
+                studentSaveForm.addEventListener('submit', this.handlers.submitStudentSaveForm.bind(this));
+            }
+
+            // 저장 버튼 클릭 이벤트 리스너 (폼 제출 대체)
+            const btnSave = document.getElementById('btnSave');
+            if (btnSave) {
+                btnSave.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const form = document.getElementById('studentSaveForm');
+                    if (form) {
+                        form.dispatchEvent(new Event('submit'));
+                    }
+                });
+            }
+
+            // 우편번호 찾기 버튼 이벤트 리스너
+            const btnZipcode = document.getElementById('btnZipcode');
+            if (btnZipcode) {
+                btnZipcode.addEventListener('click', this.handlers.searchAddress);
+            }
+
+            // 이메일 도메인 선택 이벤트 리스너
+            const email2Select = document.getElementById('email2');
+            if (email2Select) {
+                email2Select.addEventListener('change', function(e) {
+                    const email2Input = document.getElementById('email2');
+                    if (e.target.value === '직접입력') {
+                        email2Input.value = '';
+                        email2Input.readOnly = false;
+                    } else {
+                        email2Input.value = e.target.value;
+                        email2Input.readOnly = true;
+                    }
+                });
+            }
+
         } catch (error) {
             console.error('초기화 에러:', error);
             alert('데이터를 불러오는데 실패했습니다.');

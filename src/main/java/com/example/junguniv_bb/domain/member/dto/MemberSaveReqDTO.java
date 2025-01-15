@@ -41,7 +41,7 @@ public record MemberSaveReqDTO(
     String schoolNumber, // 학교번호
     String degree, // 학위
     String major, // 전공
-    String chkForeign, // 외국인여부
+    String chkForeigner, // 외국인여부
     String sex, // 성별
     String memberBelongtoType, // 회원소속유형
     String introduce, // 소개
@@ -101,7 +101,7 @@ public record MemberSaveReqDTO(
     String birthdayType, // 생년월일유형
     String license, // 자격증
     LocalDateTime applyDate, // 신청일자
-    String applyUserid, // 신청아이디
+    String applyUserId, // 신청아이디
     String applyClientIp, // 신청클라이언트IP
     String studyLevel, // 학습레벨
     String studyEtc, // 학습기타
@@ -150,7 +150,11 @@ public record MemberSaveReqDTO(
     String pwdOld, // 이전비밀번호
     String loginPass, // 로그인패스
     String fnameSaup, // 프로필사진사용
-    String chkSmsReceive // SMS 수신 여부
+    String chkSmsReceive, // SMS 수신 여부
+    String chkDormant, // 휴면 상태여부
+    String chkIdentityVerification, // 본인인증 예외 처리 여부
+    String chkPwdChange, // 비밀번호 변경 예외 처리 여부
+    String jobCourseDuty // 환급/일반 과정 담당
 ) {
     public Member toEntity(String encodedPwd) {
         return Member.builder()
@@ -181,7 +185,7 @@ public record MemberSaveReqDTO(
                 .schoolNumber(schoolNumber)
                 .degree(degree)
                 .major(major)
-                .chkForeign(chkForeign)
+                .chkForeigner(chkForeigner)
                 .sex(sex)
                 .memberBelongtoType(memberBelongtoType)
                 .introduce(introduce)
@@ -241,7 +245,7 @@ public record MemberSaveReqDTO(
                 .birthdayType(birthdayType)
                 .license(license)
                 .applyDate(applyDate)
-                .applyUserid(applyUserid)
+                .applyUserId(applyUserId)
                 .applyClientIp(applyClientIp)
                 .studyLevel(studyLevel)
                 .studyEtc(studyEtc)
@@ -291,6 +295,10 @@ public record MemberSaveReqDTO(
                 .loginPass(loginPass)
                 .fnameSaup(fnameSaup)
                 .chkSmsReceive(chkSmsReceive)
+                .chkDormant(chkDormant)
+                .chkIdentityVerification(chkIdentityVerification)
+                .chkPwdChange(chkPwdChange)
+                .jobCourseDuty(jobCourseDuty)
                 .build();
     }
 }

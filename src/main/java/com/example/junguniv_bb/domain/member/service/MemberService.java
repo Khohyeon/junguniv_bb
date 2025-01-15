@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -50,7 +51,7 @@ public class MemberService {
                 userType = UserType.ADMIN;
             }
         }
-        
+
         // UserType에 따른 페이지 조회
         if (userType != null) {
             memberPagePS = memberRepository.findByUserType(userType, pageable);

@@ -111,8 +111,8 @@ public class Member extends BaseTime {
     @Column(name = "MAJOR", length = 200)
     private String major; // 전공
 
-    @Column(name = "CHK_FOREIGN", length = 1)
-    private String chkForeign; // 외국인 여부
+    @Column(name = "CHK_FOREIGNER", length = 1)
+    private String chkForeigner; // 외국인 여부
 
     @Column(name = "SEX", length = 1)
     private String sex; // 성별
@@ -292,8 +292,8 @@ public class Member extends BaseTime {
     @Column(name = "APPLY_DATE")
     private LocalDateTime applyDate; // 적용일
 
-    @Column(name = "APPLY_USERID", length = 100)
-    private String applyUserid; // 적용한 아이디
+    @Column(name = "APPLY_USER_ID", length = 100)
+    private String applyUserId; // 적용한 아이디
 
     @Column(name = "APPLY_CLIENT_IP", length = 100)
     private String applyClientIp; // 적용한 IP
@@ -441,5 +441,17 @@ public class Member extends BaseTime {
     private String fnameSaup; // 사업자등록증 사본
 
     @Column(name = "CHK_SMS_RECEIVE", length = 1)
-    private String chkSmsReceive; // SMS 수신 여부  
+    private String chkSmsReceive; // SMS 수신 여부
+
+    @Column(name = "CHK_DORMANT", length = 1)
+    private String chkDormant; // 휴면 상태여부
+
+    @Column(name = "CHK_IDENTITY_VERIFICATION", length = 1)
+    private String chkIdentityVerification; // 본인인증 예외 처리 여부
+
+    @Column(name = "CHK_PWD_CHANGE", length = 1)
+    private String chkPwdChange; // 비밀번호 변경 예외 처리 여부
+
+    @Column(name = "JOB_COURSE_DUTY", length = 10)
+    private String jobCourseDuty; // 환급/일반 과정 담당
 }

@@ -17,14 +17,22 @@ public class MemberController {
     /* DI */
     private final MemberService memberService;
 
-    /* 회원관리 > 회원정보관리 > 공통 (미사용) */
-    @GetMapping("/")
-    public String memberListForm(Model model) {
 
 
-        return "/masterpage_sys/member/_listForm";
+    /**
+     * 회원관리 - 등록
+     */
+    /* 회원관리 > 회원정보관리 > 수강생 등록 */
+    @GetMapping("/student/saveForm")
+    public String studentSaveForm(Model model) {
+
+        return "/masterpage_sys/member/studentSaveForm";
     }
 
+
+    /**
+     * 회원관리 - 리스트
+     */
     /* 회원관리 > 회원정보관리 > 수강생 리스트 */
     @GetMapping("/student/")
     public String studentListForm(Model model) {
@@ -56,13 +64,4 @@ public class MemberController {
 
         return "/masterpage_sys/member/adminListForm";
     }
-
-
-    /* 회원관리 > 회원정보관리 > 수강생 등록 */
-    @GetMapping("/student/saveForm")
-    public String studentSaveForm(Model model) {
-
-        return "/masterpage_sys/member/studentSaveForm";
-    }
-    
 }
