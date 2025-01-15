@@ -10,9 +10,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/masterpage_sys/board")
 public class BoardController {
 
-    @GetMapping("/listForm")
-    public String listForm() {
-        return "masterpage_sys/board/listForm";
+    @GetMapping("/noticeForm")
+    public String noticeForm() {
+        return "masterpage_sys/board/noticeForm";
+    }
+
+    @GetMapping("/suggestionForm")
+    public String suggestionForm() {
+        return "masterpage_sys/board/suggestionForm";
+    }
+
+    @GetMapping("/faqForm")
+    public String faqForm() {
+        return "masterpage_sys/board/faqForm";
+    }
+    @GetMapping("/qnaForm")
+    public String qnaForm() {
+        return "masterpage_sys/board/qnaForm";
+    }
+
+    @GetMapping("/dataForm")
+    public String dataForm() {
+        return "masterpage_sys/board/dataForm";
+    }
+
+    @GetMapping("/consultingForm")
+    public String consultingForm() {
+        return "masterpage_sys/board/consultingForm";
     }
 
     @GetMapping("/saveForm")

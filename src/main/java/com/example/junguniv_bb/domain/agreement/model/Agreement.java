@@ -30,4 +30,7 @@ public class Agreement extends BaseTime {
     @Column(name = "OPEN_YN")
     private String openYn;
 
+    @Column(name = "AGREEMENT_TYPE")
+    private String agreementType; // (JOIN, COURSE, REFUND)
+
 }

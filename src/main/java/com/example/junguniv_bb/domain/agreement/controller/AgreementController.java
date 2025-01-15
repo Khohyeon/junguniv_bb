@@ -46,4 +46,9 @@ public class AgreementController {
     public String courseForm() {
         return "masterpage_sys/agreement/courseForm";
     }
+
+    @GetMapping("/refundForm")
+    public String refundForm() {
+        return "masterpage_sys/agreement/refundForm";
+    }
 }

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="ko">
+<head>
+    <!-- 헤더에서 CSS 포함 -->
+    <th:block th:replace="fragments/header :: head"></th:block>
+</head>
+<body>
+<!-- 헤더에서 상단 메뉴 포함 -->
+<div th:replace="fragments/header :: header"></div>
+
+<div class="inner">
+    <div class="form-wrap">
+        <div class="group01">
+            <div class="tit">검색</div>
+            <div class="con">
+                <div class="column-tc-wrap part2">
+                    <div class="column-tc">
+                        <div class="tit">제목</div>
+                        <div class="con ml5">
+                            <input type="text" placeholder="팝업 제목을 입력해주세요">
+                        </div>
+                    </div>
+                    <div class="column-tc">
+                        <div class="tit">작성일</div>
+                        <div class="con flex">
+                            <input type="date">
+                            <span>&nbsp;&nbsp;~&nbsp;&nbsp;</span>
+                            <input type="date">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="btn-wrap">
+        <a href="#none" class="jv-btn jb-fill01-lg">검색</a>
+    </div>
+    <div class="table-util mt30">
+        <div class="left">
+            <a href="#none" class="jv-btn fill05">삭제</a>
+            <div class="page-view flex">
+                <span>페이지수</span>
+                <select>
+                    <option>선택</option>
+                    <option>1</option>
+                    <option>2</option>
+                </select>
+            </div>
+            <div class="count">
+                <span class="Pretd_B">123</span>건 검색되었습니다.
+            </div>
+        </div>
+        <div class="right">
+            <a th:href="@{/masterpage_sys/board/saveForm}" class="jv-btn fill04">메시지 작성</a>
+        </div>
+    </div>
+
+    <table class="table01 T_center">
+        <thead>
+        <tr>
+            <th>
+                <label class="c-input ci-check single">
+                    <input type="checkbox">
+                    <div class="ci-show"></div>
+                </label>
+            </th>
+            <th>NO</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일</th>
+            <th>조회수</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                <label class="c-input ci-check single">
+                    <input type="checkbox">
+                    <div class="ci-show"></div>
+                </label>
+            </td>
+            <td>12</td>
+            <td>
+                <a th:href="@{/templates/masterpage_sys/board/detailForm}" class="jv-btn underline01">Q&A 제목</a>
+            </td>
+            <td>홍길동</td>
+            <td>2022.00.00</td>
+            <td>1</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        <a href="#none" class="arrow first"></a>
+        <a href="#none" class="arrow prev"></a>
+        <a href="#none">1</a>
+        <a href="#none" class="active">2</a>
+        <a href="#none">3</a>
+        <a href="#none">4</a>
+        <a href="#none">5</a>
+        <a href="#none" class="arrow next"></a>
+        <a href="#none" class="arrow last"></a>
+    </div>
+</div>

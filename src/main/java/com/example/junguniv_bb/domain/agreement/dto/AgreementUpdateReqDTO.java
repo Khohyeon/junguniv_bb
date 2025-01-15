@@ -7,9 +7,9 @@ public record AgreementUpdateReqDTO(
         String agreementTitle,
         String agreementContents
 ) {
-    public Agreement updateEntity() {
+    public Agreement updateJoinEntity() {
         return new Agreement(
-                agreementIdx, agreementTitle, agreementContents, "Y"
+                agreementIdx, agreementTitle, agreementContents, "Y", "JOIN"
         );
     }
 }

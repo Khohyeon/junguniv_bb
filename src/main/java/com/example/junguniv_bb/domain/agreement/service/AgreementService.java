@@ -1,6 +1,7 @@
 package com.example.junguniv_bb.domain.agreement.service;
 
 import com.example.junguniv_bb._core.exception.Exception400;
+import com.example.junguniv_bb._core.exception.ExceptionMessage;
 import com.example.junguniv_bb.domain.agreement.dto.AgreementDetailResDTO;
 import com.example.junguniv_bb.domain.agreement.dto.AgreementPageResDTO;
 import com.example.junguniv_bb.domain.agreement.dto.AgreementUpdateReqDTO;
@@ -43,7 +44,7 @@ public class AgreementService {
     public AgreementDetailResDTO getAgreementDetail(Long agreementIdx) {
 
         Agreement agreement = agreementRepository.findById(agreementIdx)
-                .orElseThrow(()-> new Exception400("adas"));
+                .orElseThrow(()-> new Exception400(ExceptionMessage.NOT_FOUND_AGREEMENT.getMessage()));
 
         return new AgreementDetailResDTO(
                 agreementIdx,
@@ -57,6 +58,6 @@ public class AgreementService {
      * 요청 타입 : AgreementUpdateReqDTO
      */
     public void agreementUpdate(AgreementUpdateReqDTO agreementUpdateReqDTO) {
-            agreementRepository.save(agreementUpdateReqDTO.updateEntity());
+            agreementRepository.save(agreementUpdateReqDTO.updateJoinEntity());
     }
 }
