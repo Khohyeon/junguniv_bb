@@ -61,7 +61,7 @@ public class PopupService {
      * 팝업 상세페이지 조회
      * 응답 타입 : PopupDetailResDTO
      */
-    public PopupDetailResDTO popupDetail(Long popupIdx) {
+    public PopupDetailResDTO getPopupDetail(Long popupIdx) {
 
         Popup popup = popupRepository.findById(popupIdx)
                 .orElseThrow(()-> new Exception400("adas"));

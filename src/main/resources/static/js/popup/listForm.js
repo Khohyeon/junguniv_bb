@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const prevPageBtn = document.getElementById('prevPageBtn');
     const nextPageBtn = document.getElementById('nextPageBtn');
     const currentPageDisplay = document.getElementById('currentPage');
-    const tableBody = document.getElementById('popupTableBody');
+    const tableBody = document.getElementById('tableBody');
     const popupNameInput = document.getElementById('popupNameInput');
     const searchButton = document.getElementById('searchButton');
 

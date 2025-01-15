@@ -14,17 +14,4 @@ document.addEventListener('DOMContentLoaded', function () {
             'bullist numlist outdent indent | removeformat | help'
     });
 
-    // 폼 제출 시 데이터 동기화 및 유효성 검사
-    const form = document.getElementById('popupForm');
-    form.addEventListener('submit', function (e) {
-        // TinyMCE 데이터 동기화
-        tinymce.triggerSave();
-
-        // 유효성 검사
-        const editorContent = tinymce.get('editor').getContent({ format: 'text' }).trim();
-        if (!editorContent) {
-            e.preventDefault();
-            alert('내용을 입력해주세요.');
-        }
-    });
 });

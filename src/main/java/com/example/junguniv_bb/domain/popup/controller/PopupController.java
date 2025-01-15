@@ -48,7 +48,7 @@ public class PopupController {
     public String popupDetailForm(@PathVariable Long popupIdx, Model model) {
 
         // 메인팝업 List 에서 popupIdx를 가져와 팝업 데이터 가져와 model에 담아 보내기
-        model.addAttribute("popup", popupService.popupDetail(popupIdx));
+        model.addAttribute("popup", popupService.getPopupDetail(popupIdx));
 
         return "masterpage_sys/popup/detailForm";
     }
