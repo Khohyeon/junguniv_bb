@@ -22,14 +22,13 @@ public record MemberCompanyPageResDTO(
 
     // 위탁기업명, userId, 교육담당자, 교육담당자 휴대폰, 교육담당자 이메일, 소속 수강생 수, 대표자명
     public record MemberDTO(
-            Long memberIdx,
-            String jobName,
-            String userId,
-            String contractorName,
-            String contractorTel,
-            String contractorEtc,
-            // TODO 소속 수강생 수 필드
-            String jobCeo
+            Long memberIdx, // 회원 IDX
+            String jobName, // 위탁기업명
+            String userId, // 아이디
+            String contractorName, // 교육담당자
+            String contractorTel, // 교육담당자 휴대폰
+            String contractorEtc, // 교육담당자 이메일
+            String jobCeo // 대표자명
     ) {
         public  MemberDTO (Member member) {
             this(
