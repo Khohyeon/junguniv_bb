@@ -46,17 +46,17 @@ public class BoardController {
     public String faqForm() {
         return "masterpage_sys/board/faq/listForm";
     }
-    @GetMapping("/qnaForm")
+    @GetMapping("/qna/listForm")
     public String qnaForm() {
         return "masterpage_sys/board/qna/listForm";
     }
 
-    @GetMapping("/dataForm")
+    @GetMapping("/data/listForm")
     public String dataForm() {
         return "masterpage_sys/board/dataForm";
     }
 
-    @GetMapping("/consultingForm")
+    @GetMapping("/consulting/listForm")
     public String consultingForm() {
         return "masterpage_sys/board/consultingForm";
     }
@@ -71,7 +71,7 @@ public class BoardController {
         return "masterpage_sys/board/detailForm";
     }
 
-    @GetMapping("/headForm")
+    @GetMapping("/head/listForm")
     public String courseForm() {
         return "masterpage_sys/board/headForm";
     }

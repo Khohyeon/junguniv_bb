@@ -22,7 +22,7 @@ public class AgreementController {
      *  [관리자모드] 홈페이지관리 - 약관관리 - 회원가입약관 목록페이지
      *  Model 응답 Page<AgreementPageResDTO>
      */
-    @GetMapping("/joinForm")
+    @GetMapping("/join/listForm")
     public String joinForm(Pageable pageable, Model model) {
 
         // 약관의 페이징 형태를 agreementIdx 기준으로 DESC 내림차순으로 설정
@@ -34,7 +34,7 @@ public class AgreementController {
         return "masterpage_sys/agreement/joinForm";
     }
 
-    @GetMapping("/detailForm/{agreementIdx}")
+    @GetMapping("/join/detailForm/{agreementIdx}")
     public String getAgreement(@PathVariable Long agreementIdx, Model model) {
 
         model.addAttribute("agreement", agreementService.getAgreementDetail(agreementIdx));
@@ -42,12 +42,12 @@ public class AgreementController {
         return "masterpage_sys/agreement/detailForm"; // HTML 파일명 (Thymeleaf 템플릿)
     }
 
-    @GetMapping("/courseForm")
+    @GetMapping("/course/listForm")
     public String courseForm() {
         return "masterpage_sys/agreement/courseForm";
     }
 
-    @GetMapping("/refundForm")
+    @GetMapping("/refund/listForm")
     public String refundForm() {
         return "masterpage_sys/agreement/refundForm";
     }

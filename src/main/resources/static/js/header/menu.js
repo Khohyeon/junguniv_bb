@@ -146,7 +146,7 @@ function restoreTabState() {
     const depth3MenuList = document.getElementById('depth3-menu-list');
     depth3MenuList.innerHTML = ''; // 기존 메뉴 초기화
 
-    depth3Menus.forEach((menu, index) => {
+    depth3Menus.forEach(menu => {
         const li = document.createElement('li');
 
         const anchor = document.createElement('a');
@@ -162,12 +162,18 @@ function restoreTabState() {
         li.appendChild(anchor);
         depth3MenuList.appendChild(li);
 
-        // 현재 URL과 일치하는 메뉴 활성화
-        if (window.location.pathname === new URL(menu.url).pathname) {
-            li.classList.add('on');
+        // 현재 URL과 관련된 메뉴 활성화
+        const currentPath = window.location.pathname;
+        const menuPath = new URL(menu.url, window.location.origin).pathname;
+
+        // 공통 경로 비교 (예: /masterpage_sys/popup/)
+        const isRelated = currentPath.startsWith(menuPath) || currentPath.includes(menuPath.split('/').slice(0, -1).join('/'));
+        if (isRelated) {
+            li.classList.add('on'); // 관련된 경로를 활성화
         }
     });
 }
+
 
 /**
  * 콘텐츠 로드 함수 - 페이지 이동
@@ -183,9 +189,24 @@ function handleDepth3Click(event, element) {
 
     // URL 업데이트 및 페이지 이동
     const targetUrl = element.getAttribute('href');
-    saveTabStateOnNavigation(); // 상태 저장
-    window.location.href = targetUrl; // 실제 페이지 이동
+
+    // 활성화된 상태 저장
+    const activeDepth2 = document.querySelector('.depth2-link.on');
+    const depth3Menus = Array.from(document.querySelectorAll('#depth3-menu-list li a')).map(anchor => ({
+        url: anchor.href,
+        target: anchor.target,
+        name: anchor.textContent,
+    }));
+
+    if (activeDepth2) {
+        const menuIdx = activeDepth2.getAttribute('data-menu-id');
+        saveTabState(menuIdx, depth3Menus); // 상태 저장
+    }
+
+    // 페이지 이동
+    window.location.href = targetUrl;
 }
+
 
 /**
  * 페이지 이동 전에 상태를 저장
