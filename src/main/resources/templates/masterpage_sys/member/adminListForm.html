@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<!-- 헤더에서 CSS 포함 -->
+	<th:block th:replace="fragments/header :: head"></th:block>
+	<title>회원관리 - LMS관리자</title>
+</head>
+<body>
+	<!-- 헤더에서 상단 메뉴 포함 -->
+	<th:block th:replace="fragments/header :: header"></th:block>
+
+	<div class="inner">
+		<div class="form-wrap">
+			<div class="inner">
+				<div class="group01">
+					<div class="tit">검색</div>
+					<div class="con">
+						<div class="column-tc-wrap part3">
+							<div class="column-tc">
+								<div class="tit">이름</div>
+								<div class="con">
+									<input type="text" placeholder="이름을 입력해주세요">
+								</div>
+							</div>
+							<div class="column-tc">
+								<div class="tit">아이디</div>
+								<div class="con">
+									<input type="text" placeholder="아이디를 입력해주세요">
+								</div>
+							</div>
+							<div class="column-tc">
+								<div class="tit">환급/일반 담당</div>
+								<div class="con">
+									<select>
+										<option>전체</option>
+										<option>option01</option>
+										<option>option02</option>
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="btn-wrap">
+			<a href="#none" class="jv-btn jb-fill01-lg">검색</a>
+		</div>
+
+		<div class="table-util mt50">
+			<div class="left">
+				<a href="#none" class="jv-btn fill05">삭제</a>
+				<a href="#none" class="jv-btn icon-excel">엑셀</a>
+				<div class="page-view flex">
+					<span>페이지수</span>
+					<select>
+						<option>선택</option>
+						<option>10</option>
+						<option>20</option>
+						<option>30</option>
+						<option>40</option>
+						<option>50</option>
+					</select>
+				</div>
+				<div class="count">
+					<span class="Pretd_B">123</span>건 검색되었습니다.
+				</div>
+			</div>
+			<div class="right">
+				<a href="#none" class="jv-btn jv-btn fill03-icon-message">SMS발송</a>
+				<a href="#none" class="jv-btn jv-btn fill03-icon-mail">이메일발송</a>
+				<a href="#none" class="jv-btn fill04">신규등록</a>
+			</div>
+		</div>
+
+		<table class="table01 T_center">
+			<thead>
+				<tr>
+					<th>
+						<label class="c-input ci-check single">
+							<input type="checkbox">
+							<div class="ci-show"></div>
+						</label>
+					</th>
+					<th>NO</th>
+					<th>이름</th>
+					<th>ID</th>
+					<th>
+						<label class="c-input ci-check">
+							<input type="checkbox">	휴대폰
+							<div class="ci-show"></div>
+						</label>
+					</th>
+					<th>
+						<label class="c-input ci-check">
+							<input type="checkbox">	이메일
+							<div class="ci-show"></div>
+						</label>
+					</th>
+					<th>환급/일반 담당</th>
+					<th>관리자 권한명</th>
+					<th>근무상태</th>
+					<th>회원등록일</th>
+				</tr>
+			</thead>
+			<tbody>
+				<td colspan="7">데이터를 불러오는 중입니다.</td>
+			</tbody>
+		</table>
+
+		<div class="pagination" id="paginationMember">
+			<!-- 페이지네이션 버튼은 JavaScript로 렌더링됩니다 -->
+		</div>
+	</div>
+
+	<script th:src="@{/js/member/member.js}"></script>
+</body>
+</html>

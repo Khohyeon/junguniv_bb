@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<!-- 헤더에서 CSS 포함 -->
+	<th:block th:replace="fragments/header :: head"></th:block>
+	<title>회원관리 - 교강사(튜터)</title>
+</head>
+<body>
+	<!-- 헤더에서 상단 메뉴 포함 -->
+	<th:block th:replace="fragments/header :: header"></th:block>
+
+	<div class="inner">
+		<div class="form-wrap">
+			<div class="group01">
+				<div class="tit">검색</div>
+				<div class="con">
+					<div class="column-tc-wrap">
+						<div class="column-tc">
+							<div class="tit">이름</div>
+							<div class="con">
+								<input type="text" placeholder="이름을 입력해주세요">
+							</div>
+							<div class="tit">ID</div>
+							<div class="con">
+								<input type="text" placeholder="ID를 입력해주세요">
+							</div>
+						</div>
+						<div class="column-tc">
+							<div class="tit">근무형태</div>
+							<div class="con">
+								<label class="c-input ci-radio">
+									<input type="radio"> 정규직
+									<div class="ci-show"></div>
+								</label>
+								<label class="c-input ci-radio">
+									<input type="radio"> 계약직
+									<div class="ci-show"></div>
+								</label>
+								<label class="c-input ci-radio">
+									<input type="radio"> 계약 종료 후 정규직 검토
+									<div class="ci-show"></div>
+								</label>
+							</div>
+						</div>
+						<div class="column-tc">
+							<div class="tit">휴대폰</div>
+							<div class="con flex">
+								<select>
+									<option>010</option>
+									<option>1</option>
+									<option>2</option>
+								</select>
+								<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
+								<input type="text" placeholder="번호를 입력해주세요">
+								<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
+								<input type="text" placeholder="번호를 입력해주세요">
+							</div>
+						</div>
+						<div class="column-tc">
+							<div class="tit">이메일</div>
+							<div class="con flex">
+								<input type="text" placeholder="번호를 입력해주세요">
+								<span>&nbsp;&nbsp;@&nbsp;&nbsp;</span>
+								<select>
+									<option>선택</option>
+									<option>10</option>
+									<option>20</option>
+									<option>30</option>
+									<option>40</option>
+									<option>50</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="btn-wrap">
+			<a href="#none" class="jv-btn jb-fill01-lg">검색</a>
+		</div>
+
+		<div class="table-util mt50">
+			<div class="left">
+				<a href="#none" class="jv-btn fill05">삭제</a>
+				<a href="#none" class="jv-btn icon-excel">엑셀</a>
+				<div class="page-view flex">
+					<span>페이지수</span>
+					<select>
+						<option>선택</option>
+						<option>10</option>
+						<option>20</option>
+						<option>30</option>
+						<option>40</option>
+						<option>50</option>
+					</select>
+				</div>
+				<div class="count">
+					<span class="Pretd_B">123</span>건 검색되었습니다.
+				</div>
+			</div>
+			<div class="right">
+				<a href="#none" class="jv-btn fill03-icon-message">SMS발송</a>
+				<a href="#none" class="jv-btn fill03-icon-mail">이메일발송</a>
+				<a href="/masterpage_sys/member/teacher/saveForm" class="jv-btn fill04">신규등록</a>
+			</div>
+		</div>
+
+		<table class="table01 T_center">
+			<thead>
+				<tr>
+					<th>
+						<label class="c-input ci-check single">
+							<input type="checkbox">
+							<div class="ci-show"></div>
+						</label>
+					</th>
+					<th>NO</th>
+					<th>이름</th>
+					<th>ID</th>
+					<th>
+						<label class="c-input ci-check">
+							<input type="checkbox">	휴대폰
+							<div class="ci-show"></div>
+						</label>
+					</th>
+					<th>
+						<label class="c-input ci-check">
+							<input type="checkbox">	이메일
+							<div class="ci-show"></div>
+						</label>
+					</th>
+					<th>첨삭 참여 건수</th>
+					<th>회원등록일</th>
+					<th>약관동의일</th>
+				</tr>
+			</thead>
+			<tbody>
+				<td colspan="7">데이터를 불러오는 중입니다.</td>
+			</tbody>
+		</table>
+
+		<div class="pagination" id="paginationMember">
+			<!-- 페이지네이션 버튼은 JavaScript로 렌더링됩니다 -->
+		</div>
+	</div>
+
+	<script th:src="@{/js/member/member.js}"></script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<!-- 헤더에서 CSS 포함 -->
+	<th:block th:replace="fragments/header :: head"></th:block>
+	<title>회원관리 - 위탁기업</title>
+</head>
+<body>
+	<!-- 헤더에서 상단 메뉴 포함 -->
+	<th:block th:replace="fragments/header :: header"></th:block>
+
+	<div class="inner">
+		<div class="form-wrap">
+			<div class="group01">
+				<div class="tit">검색</div>
+				<div class="con">
+					<div class="column-tc-wrap">
+						<div class="column-tc">
+							<div class="tit">기업명</div>
+							<div class="con">
+								<input type="text" placeholder="기업명을 입력해주세요">
+							</div>
+						</div>
+						<div class="column-tc">
+							<div class="tit">ID</div>
+							<div class="con">
+								<input type="text" placeholder="ID를 입력해주세요">
+							</div>
+						</div>
+						<div class="column-tc">
+							<div class="tit">사업자번호</div>
+							<div class="con">
+								<input type="text" placeholder="사업자번호를 입력해주세요">
+							</div>
+						</div>
+						<div class="column-tc">
+							<div class="tit">교육담당자</div>
+							<div class="con">
+								<input type="text" placeholder="담당자 이름을 입력해주세요">
+							</div>
+						</div>
+						<div class="column-tc">
+							<div class="tit">연락처</div>
+							<div class="con">
+								<input type="text" placeholder="연락처를 입력해주세요">
+							</div>
+						</div>
+						<div class="column-tc">
+							<div class="tit">이메일</div>
+							<div class="con">
+								<input type="text" placeholder="이메일을 입력해주세요">
+							</div>
+						</div>
+					</div>
+					<div class="column-tc-wrap part1">
+						<div class="column-tc">
+							<div class="tit">기업규모</div>
+							<div class="con">
+								<label class="c-input ci-radio">
+									<input type="radio" name="company"> 전체
+									<div class="ci-show"></div>
+								</label>
+								<label class="c-input ci-radio">
+									<input type="radio" name="company"> 우선지원 대상
+									<div class="ci-show"></div>
+								</label>
+								<label class="c-input ci-radio">
+									<input type="radio" name="company"> 상시근로자 1,000인 미만
+									<div class="ci-show"></div>
+								</label>
+								<label class="c-input ci-radio">
+									<input type="radio" name="company"> 상시근로자 1,000인 이상
+									<div class="ci-show"></div>
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="btn-wrap">
+			<a href="#none" class="jv-btn jb-fill01-lg">검색</a>
+		</div>
+
+		<div class="table-util mt50">
+			<div class="left">
+				<a href="#none" class="jv-btn fill05">삭제</a>
+				<a href="#none" class="jv-btn icon-excel">엑셀</a>
+				<div class="page-view flex">
+					<span>페이지수</span>
+					<select>
+						<option>선택</option>
+						<option>10</option>
+						<option>20</option>
+						<option>30</option>
+						<option>40</option>
+						<option>50</option>
+					</select>
+				</div>
+				<div class="count">
+					<span class="Pretd_B">123</span>건 검색되었습니다.
+				</div>
+			</div>
+			<div class="right">
+				<a href="#none" class="jv-btn fill03-icon-message">SMS발송</a>
+				<a href="#none" class="jv-btn fill03-icon-mail">이메일발송</a>
+				<a href="#none" class="jv-btn fill04">신규등록</a>
+			</div>
+		</div>
+
+		<table class="table01 T_center">
+			<thead>
+				<tr>
+					<th>
+						<label class="c-input ci-check single">
+							<input type="checkbox">
+							<div class="ci-show"></div>
+						</label>
+					</th>
+					<th>NO</th>
+					<th>위탁기업명</th>
+					<th>ID</th>
+					<th>교육담당자</th>
+					<th>
+						<label class="c-input ci-check">
+							<input type="checkbox">	교육담당자 휴대폰
+							<div class="ci-show"></div>
+						</label>
+					</th>
+					<th>
+						<label class="c-input ci-check">
+							<input type="checkbox">	교육담당자 이메일
+							<div class="ci-show"></div>
+						</label>
+					</th>
+					<th>소속 수강생 수</th>
+					<th>대표자명</th>
+					<th>기업전용 페이지</th>
+				</tr>
+			</thead>
+			<tbody>
+				<td colspan="7">데이터를 불러오는 중입니다.</td>
+			</tbody>
+		</table>
+
+		<div class="pagination" id="paginationMember">
+			<!-- 페이지네이션 버튼은 JavaScript로 렌더링됩니다 -->
+		</div>
+	</div>
+
+	<script th:src="@{/js/member/member.js}"></script>
+</body>
+</html>

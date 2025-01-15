@@ -50,5 +50,4 @@ public abstract class BaseTime {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return updatedDate != null ? updatedDate.format(formatter) : null;
     }
-
 }
