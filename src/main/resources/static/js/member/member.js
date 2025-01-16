@@ -17,7 +17,7 @@ const MemberModule = {
             telMobile: '휴대폰 번호',
             residentNumber: '주민등록번호',
             email: '이메일',
-            jobName: '위탁기업명',
+            jobName: '근무회사(위탁기업명)',
             jobNumber: '사업자번호',
             jobInsuranceNumber: '고용보험관리번호',
             trneeSe: '훈련생 구분',
@@ -210,7 +210,14 @@ const MemberModule = {
 
                 case 'companySearch':
                     tbody.innerHTML = members.map((member, index) => `
-                        <tr>
+                        <tr data-job-number="${member.jobNumber || ''}" 
+                            data-job-insurance-number="${member.jobInsuranceNumber || ''}">
+                            <td>
+                                <label class="c-input ci-check single">
+                                    <input type="checkbox" value="${member.memberIdx || ''}">
+                                    <div class="ci-show"></div>
+                                </label>
+                            </td>
                             <td>${startNumber - index}</td>
                             <td>${member.contractorName || '-'}</td>
                             <td>${member.userId || '-'}</td>
@@ -220,6 +227,10 @@ const MemberModule = {
                             <td>${member.jobScale || '-'}</td>
                             <td>${member.contractorTel || '-'}</td>
                             <td>${member.contractorEtc || '-'}</td>
+                            <td>-</td>
+                            <td>
+                                <button type="button" class="jv-btn select-company" data-member-idx="${member.memberIdx}">선택</button>
+                            </td>
                         </tr>
                     `).join('');
                     break;
@@ -437,6 +448,7 @@ const MemberModule = {
             // 아이디 중복 확인을 통과했는지 확인
             if (!MemberModule.state.isIdCheckPassed) {
                 alert('아이디 중복 확인을 해주세요.');
+                document.getElementById('userId')?.focus();
                 return;
             }
 
@@ -535,7 +547,7 @@ const MemberModule = {
                 // userType에 따른 추가 필수 필드
                 switch(memberData.userType) {
                     case 'STUDENT':
-                        requiredFields.push('name', 'birthday', 'residentNumber');
+                        requiredFields.push('name', 'birthday', 'residentNumber', 'jobName', 'trnee_se', 'irglbrSe');
                         break;
                     case 'TEACHER':
                         requiredFields.push('name');
@@ -549,11 +561,27 @@ const MemberModule = {
                 }
 
                 // 기본 필드 검증
+
+                // Start of Selection
                 for (const field of requiredFields) {
                     if (!memberData[field]) {
                         const fieldName = MemberModule.state.fieldNames[field] || field;
                         alert(`${fieldName}은(는) 필수 입력 항목입니다.`);
-                        document.getElementById(field)?.focus();
+                        if (field === 'residentNumber') {
+                            if(document.getElementById('residentNumber1')?.value===''){
+                                document.getElementById('residentNumber1')?.focus();
+                            }else if(document.getElementById('residentNumber2')?.value===''){
+                                document.getElementById('residentNumber2')?.focus();
+                            }else if(document.getElementById('residentNumber3')?.value===''){
+                                document.getElementById('residentNumber3')?.focus();
+                            }
+                        } else if(field === 'jobName'){
+                            if(document.getElementById('jobName')?.value===''){
+                                document.getElementById('jobName')?.focus();
+                            }
+                        } else {
+                            document.getElementById(field)?.focus();
+                        }
                         return;
                     }
                 }
@@ -603,46 +631,6 @@ const MemberModule = {
                     memberData.email = email1 || email2 ? `${email1 || ''}@${email2 || ''}` : '';
                 }
 
-                // 기업 회원 특별 처리
-                if (memberData.userType === 'COMPANY') {
-                    // 사업자번호 조합
-                    memberData.jobNumber = [
-                        memberData.jobNumber1,
-                        memberData.jobNumber2,
-                        memberData.jobNumber3
-                    ].join('-');
-
-                    // 고용보험관리번호 조합
-                    if (memberData.jobInsuranceNumber1 && memberData.jobInsuranceNumber2 && 
-                        memberData.jobInsuranceNumber3 && memberData.jobInsuranceNumber4) {
-                        memberData.jobInsuranceNumber = [
-                            memberData.jobInsuranceNumber1,
-                            memberData.jobInsuranceNumber2,
-                            memberData.jobInsuranceNumber3,
-                            memberData.jobInsuranceNumber4
-                        ].join('-');
-                    }
-
-                    // 직통번호 조합
-                    if (memberData.jobTelOffice1 && memberData.jobTelOffice2 && memberData.jobTelOffice3) {
-                        memberData.jobTelOffice = [
-                            memberData.jobTelOffice1,
-                            memberData.jobTelOffice2,
-                            memberData.jobTelOffice3
-                        ].join('-');
-                    }
-
-                    // 사업자등록증 파일 처리
-                    const fnameSaupInput = document.getElementById('fnameSaup');
-                    if (fnameSaupInput?.files?.length > 0) {
-                        memberData.fnameSaup = fnameSaupInput.files[0];
-                    }
-
-                    // 삭제 체크된 경우 파일 필드 제거
-                    if (document.getElementById('deleteFnameSaup')?.checked) {
-                        memberData.fnameSaup = null;
-                    }
-                }
 
                 // API 호출
                 const response = await MemberModule.api.saveMember(memberData);
@@ -687,7 +675,128 @@ const MemberModule = {
                 alert(error.message);
                 MemberModule.state.isIdCheckPassed = false; // 오류 발생 시 중복 확인 실패 처리
             }
-        }
+        },
+
+        // 회사찾기 팝업 열기
+        openCompanySearch: function() {
+            const popupWidth = 1200;
+            const popupHeight = 800;
+            const left = (window.screen.width - popupWidth) / 2;
+            const top = (window.screen.height - popupHeight) / 2;
+            
+            window.open('/masterpage_sys/member/company/searchForm', 'companySearch',
+                `width=${popupWidth},height=${popupHeight},left=${left},top=${top}`);
+        },
+
+        // 회사 정보 설정 (팝업에서 호출됨)
+        setCompanyInfo: function(companyInfo) {
+            try {
+                // 회사명
+                const jobNameInput = document.getElementById('jobName');
+                if (jobNameInput) {
+                    jobNameInput.value = companyInfo.jobName || '';
+                }
+                
+                // 사업자번호 설정
+                if (companyInfo.jobNumber) {
+                    const numbers = companyInfo.jobNumber.split('-');
+                    if (numbers.length === 3) {
+                        const jobNumber1 = document.getElementById('jobNumber1');
+                        const jobNumber2 = document.getElementById('jobNumber2');
+                        const jobNumber3 = document.getElementById('jobNumber3');
+                        
+                        if (jobNumber1) jobNumber1.value = numbers[0];
+                        if (jobNumber2) jobNumber2.value = numbers[1];
+                        if (jobNumber3) jobNumber3.value = numbers[2];
+                    }
+                }
+                
+                // 고용보험관리번호 설정
+                if (companyInfo.jobInsuranceNumber) {
+                    const numbers = companyInfo.jobInsuranceNumber.split('-');
+                    if (numbers.length === 4) {
+                        const jobInsuranceNumber1 = document.getElementById('jobInsuranceNumber1');
+                        const jobInsuranceNumber2 = document.getElementById('jobInsuranceNumber2');
+                        const jobInsuranceNumber3 = document.getElementById('jobInsuranceNumber3');
+                        const jobInsuranceNumber4 = document.getElementById('jobInsuranceNumber4');
+                        
+                        if (jobInsuranceNumber1) jobInsuranceNumber1.value = numbers[0];
+                        if (jobInsuranceNumber2) jobInsuranceNumber2.value = numbers[1];
+                        if (jobInsuranceNumber3) jobInsuranceNumber3.value = numbers[2];
+                        if (jobInsuranceNumber4) jobInsuranceNumber4.value = numbers[3];
+                    }
+                }
+            } catch (error) {
+                console.error('회사 정보 설정 중 오류 발생:', error);
+            }
+        },
+
+        // 기업 검색 팝업에서 기업 선택
+        selectCompany: function(memberIdx) {
+            try {
+                const selectedRow = document.querySelector(`input[type="checkbox"][value="${memberIdx}"]`).closest('tr');
+                if (!selectedRow) {
+                    console.error('선택된 행을 찾을 수 없습니다.');
+                    return;
+                }
+
+                const companyInfo = {
+                    jobName: selectedRow.querySelector('td:nth-child(5)').textContent.trim(),
+                    jobNumber: selectedRow.getAttribute('data-job-number'),
+                    jobInsuranceNumber: selectedRow.getAttribute('data-job-insurance-number')
+                };
+
+                // 부모 창이 존재하는지 확인
+                if (!window.opener) {
+                    console.error('부모 창을 찾을 수 없습니다.');
+                    return;
+                }
+
+                // 부모 창의 필드에 직접 값 설정
+                const parentDocument = window.opener.document;
+                
+                // 회사명 설정
+                const jobNameInput = parentDocument.getElementById('jobName');
+                if (jobNameInput) {
+                    jobNameInput.value = companyInfo.jobName || '';
+                }
+                
+                // 사업자번호 설정
+                if (companyInfo.jobNumber) {
+                    const numbers = companyInfo.jobNumber.split('-');
+                    if (numbers.length === 3) {
+                        const jobNumber1 = parentDocument.getElementById('jobNumber1');
+                        const jobNumber2 = parentDocument.getElementById('jobNumber2');
+                        const jobNumber3 = parentDocument.getElementById('jobNumber3');
+                        
+                        if (jobNumber1) jobNumber1.value = numbers[0];
+                        if (jobNumber2) jobNumber2.value = numbers[1];
+                        if (jobNumber3) jobNumber3.value = numbers[2];
+                    }
+                }
+                
+                // 고용보험관리번호 설정
+                if (companyInfo.jobInsuranceNumber) {
+                    const numbers = companyInfo.jobInsuranceNumber.split('-');
+                    if (numbers.length === 4) {
+                        const jobInsuranceNumber1 = parentDocument.getElementById('jobInsuranceNumber1');
+                        const jobInsuranceNumber2 = parentDocument.getElementById('jobInsuranceNumber2');
+                        const jobInsuranceNumber3 = parentDocument.getElementById('jobInsuranceNumber3');
+                        const jobInsuranceNumber4 = parentDocument.getElementById('jobInsuranceNumber4');
+                        
+                        if (jobInsuranceNumber1) jobInsuranceNumber1.value = numbers[0];
+                        if (jobInsuranceNumber2) jobInsuranceNumber2.value = numbers[1];
+                        if (jobInsuranceNumber3) jobInsuranceNumber3.value = numbers[2];
+                        if (jobInsuranceNumber4) jobInsuranceNumber4.value = numbers[3];
+                    }
+                }
+
+                // 팝업 창 닫기
+                window.close();
+            } catch (error) {
+                console.error('기업 선택 중 오류 발생:', error);
+            }
+        },
     },
 
     // 초기화 함수
@@ -697,6 +806,8 @@ const MemberModule = {
             const currentPath = window.location.pathname;
             if (currentPath.includes('/teacher/')) {
                 this.state.pageType = 'teacher';
+            } else if (currentPath.includes('/company/searchForm')) {
+                this.state.pageType = 'companySearch';
             } else if (currentPath.includes('/company/')) {
                 this.state.pageType = 'company';
             } else if (currentPath.includes('/admin/')) {
@@ -806,6 +917,28 @@ const MemberModule = {
             const checkDuplicateIdButton = document.getElementById('checkDuplicateId');
             if (checkDuplicateIdButton) {
                 checkDuplicateIdButton.addEventListener('click', this.handlers.checkIdDuplication);
+            }
+
+            // 회사찾기 버튼 이벤트 리스너
+            const companySearchBtn = document.getElementById('companySearchBtn');
+            if (companySearchBtn) {
+                companySearchBtn.addEventListener('click', this.handlers.openCompanySearch);
+            }
+
+            // 기업 검색 팝업에서 선택 버튼 이벤트 리스너
+            if (this.state.pageType === 'companySearch') {
+                const table = document.querySelector('table.table01 tbody');
+                if (table) {
+                    table.addEventListener('click', (e) => {
+                        const selectBtn = e.target.closest('.jv-btn.select-company');
+                        if (selectBtn) {
+                            const memberIdx = selectBtn.getAttribute('data-member-idx');
+                            if (memberIdx) {
+                                MemberModule.handlers.selectCompany(memberIdx);
+                            }
+                        }
+                    });
+                }
             }
 
         } catch (error) {

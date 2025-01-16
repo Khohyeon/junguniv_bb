@@ -30,7 +30,10 @@ public record MemberCompanyPageResDTO(
             String contractorEtc, // 교육담당자 이메일
             String jobCeo, // 대표자명
             String jobRegion, // 지역
-            String jobScale // 기업규모
+            String jobScale, // 기업규모
+            String jobNumber, // 사업자번호
+            String jobInsuranceNumber // 사업자등록번호
+
     ) {
         public  MemberDTO (Member member) {
             this(
@@ -42,7 +45,9 @@ public record MemberCompanyPageResDTO(
                     member.getContractorEtc(),
                     member.getJobCeo(),
                     member.getJobRegion(),
-                    member.getJobScale()
+                    member.getJobScale(),
+                    member.getJobNumber(),
+                    member.getJobInsuranceNumber()
             );
         }
     }

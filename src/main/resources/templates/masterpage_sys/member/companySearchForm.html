@@ -7,8 +7,6 @@
 	<title>위탁기업 검색</title>
 </head>
 <body>
-	<!-- 헤더에서 상단 메뉴 포함 -->
-	<th:block th:replace="fragments/header :: header"></th:block>
 
 	<div class="inner">
 		<div class="form-wrap">
@@ -119,18 +117,8 @@
 					<th>지역</th>
 					<th>대표자명</th>
 					<th>기업규모</th>
-					<th>
-						<label class="c-input ci-check">
-							<input type="checkbox" data-type="contractorTel">	교육담당자 휴대폰
-							<div class="ci-show"></div>
-						</label>
-					</th>
-					<th>
-						<label class="c-input ci-check">
-							<input type="checkbox" data-type="contractorEtc">	교육담당자 이메일
-							<div class="ci-show"></div>
-						</label>
-					</th>
+					<th data-type="contractorTel">교육담당자 휴대폰</th>
+					<th data-type="contractorEtc">교육담당자 이메일</th>
 					<th>훈련생수</th>
 					<th>선택</th>
 				</tr>
