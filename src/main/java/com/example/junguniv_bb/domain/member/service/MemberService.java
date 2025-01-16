@@ -30,6 +30,11 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
+    /* 아이디 중복체크 */
+    public boolean checkDuplicateId(String userId) {
+        return memberRepository.findByUserId(userId).isPresent();
+    }
+
     /* 페이징 */
     // TODO 검색 기능 및 권한 조건 추가 해야함.
     public ResponseEntity<?> memberPage(String referer, Pageable pageable) {
@@ -77,6 +82,33 @@ public class MemberService {
         
         // 기본 DTO 반환
         return ResponseEntity.ok(new MemberPageResDTO(memberPagePS));
+    }
+
+    /* 학생 검색 */
+    public ResponseEntity<?> searchStudents(MemberSearchReqDTO searchDTO, Pageable pageable) {
+        // 검색 실행
+        Page<Member> memberPagePS = memberRepository.searchStudents(
+            searchDTO.getName(),
+            searchDTO.getUserId(),
+            searchDTO.getBirthday(),
+            searchDTO.getTelMobile(),
+            searchDTO.getEmail(),
+            searchDTO.getChkDormant(),
+            searchDTO.getLoginPass(),
+            searchDTO.getChkForeigner(),
+            searchDTO.getSex(),
+            searchDTO.getJobName(),
+            searchDTO.getJobWorkState(),
+            searchDTO.getJobDept(),
+            searchDTO.getChkSmsReceive(),
+            searchDTO.getChkMailReceive(),
+            searchDTO.getChkIdentityVerification(),
+            searchDTO.getLoginClientIp(),
+            pageable
+        );
+
+        // 검색 결과를 DTO로 변환하여 반환
+        return ResponseEntity.ok(new MemberStudentPageResDTO(memberPagePS));
     }
 
     /* 다중삭제 */
