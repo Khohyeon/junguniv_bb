@@ -25,32 +25,33 @@
                             </select>
                         </div>
                         <div class="con ml5">
-                            <input type="text" placeholder="Text를 입력해주세요">
+                            <input type="text" id="searchInput" placeholder="Text를 입력해주세요">
                         </div>
                     </div>
                     <div class="column-tc">
                         <div class="tit">상담상태</div>
                         <div class="con">
                             <label class="c-input ci-radio">
-                                <input type="radio" name="counsel"> 전체
+                                <input type="radio" name="counsel" value="0" th:checked> 전체
                                 <div class="ci-show"></div>
                             </label>
                             <label class="c-input ci-radio">
-                                <input type="radio" name="counsel"> 상담대기
+                                <input type="radio" name="counsel" value="1"> 상담대기
                                 <div class="ci-show"></div>
                             </label>
                             <label class="c-input ci-radio">
-                                <input type="radio" name="counsel"> 상담완료
+                                <input type="radio" name="counsel" value="2"> 상담완료
                                 <div class="ci-show"></div>
                             </label>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
     <div class="btn-wrap">
-        <a href="#none" class="jv-btn jb-fill01-lg">검색</a>
+        <a href="#none" id="searchButton" class="jv-btn jb-fill01-lg">검색</a>
     </div>
     <div class="table-util mt30">
         <div class="left">
@@ -90,38 +91,7 @@
         </tr>
         </thead>
         <tbody id="tableBody">
-        <tr th:each="counsel : ${counselPage}">
-            <!-- 체크박스 -->
-            <td>
-                <label class="c-input ci-check single">
-                    <input type="checkbox" class="select-item-checkbox" th:value="${counsel.counselIdx()}">
-                    <div class="ci-show"></div>
-                </label>
-            </td>
 
-            <!-- 상담 ID -->
-            <td th:text="${counsel.counselIdx()}"></td>
-
-            <!-- 상담 내용 -->
-            <td th:text="${counsel.memo()}"></td>
-
-            <!-- 상담 일자 -->
-            <td th:text="${counsel.talkTime()}"></td>
-
-            <!-- 상담자명 -->
-            <td th:text="${counsel.name()}"></td>
-
-            <!-- 상담 상태 -->
-            <td>
-                <a th:href="@{/masterpage_sys/counsel/detailForm/{counselIdx}(counselIdx=${counsel.counselIdx()})}" class="jv-btn"
-                   th:classappend="${counsel.counselState() == 'A' ? 'label07' : 'label01'}"
-                   th:text="${counsel.counselState() == 'A' ? '상담완료' : '상담대기'}">
-                </a>
-            </td>
-
-            <!-- 최종 수정 시간 -->
-            <td th:text="${#dates.format(counsel.updateDate(), 'yyyy.MM.dd HH:mm:ss')}"></td>
-        </tr>
         </tbody>
     </table>
     <!-- Footer 포함 -->

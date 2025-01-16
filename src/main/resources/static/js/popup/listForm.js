@@ -151,7 +151,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-
     // 페이지네이션 업데이트
     function updatePagination(pageable) {
         currentPage = pageable.number;

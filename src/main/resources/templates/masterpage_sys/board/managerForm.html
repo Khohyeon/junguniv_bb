@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="ko">
+<head>
+    <!-- 헤더에서 CSS 포함 -->
+    <th:block th:replace="fragments/header :: head"></th:block>
+</head>
+<body>
+<!-- 헤더에서 상단 메뉴 포함 -->
+<div th:replace="fragments/header :: header"></div>
+
+<div class="inner">
+    <div class="form-wrap2">
+        <div class="group01">
+            <div class="tit">검색</div>
+            <div class="con">
+                <div class="column-tc-wrap part1">
+                    <div class="column-tc">
+                        <div class="tit">메뉴명</div>
+                        <div class="con">
+                            <input type="text" placeholder="게시판이 속한 메뉴명을 입력해주세요">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="btn-wrap">
+        <a href="#none" class="jv-btn jb-fill01-lg">검색</a>
+    </div>
+    <table class="table01 T_center board-manage mt50">
+        <colgroup>
+            <col width="5%">
+            <col width="15%">
+            <col width="15%">
+            <col width="10%">
+            <col width="15%">
+            <col width="40%">
+        </colgroup>
+        <thead>
+        <tr>
+            <th>NO</th>
+            <th>게시판 유형</th>
+            <th>메뉴명</th>
+            <th>첨부파일 갯수</th>
+            <th>유형 옵션</th>
+            <th>권한 설정</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="bbsGroup : ${bbsGroupPage}">
+            <!-- 순번 -->
+            <td th:text="${bbsGroup.bbsGroupIdx()}">1</td>
+
+            <!-- 게시판 종류 -->
+            <td th:text="${bbsGroup.bbsId()}">일반게시판</td>
+
+            <!-- 게시판 이름 -->
+            <td th:text="${bbsGroup.bbsGroupName()}">공지사항</td>
+
+            <!-- 셀렉트 박스 -->
+            <td>
+                <select>
+                    <!-- 기본 옵션 -->
+                    <option>선택</option>
+                    <!-- 옵션 1~5 생성 -->
+                    <option th:each="i : ${#numbers.sequence(1, 5)}"
+                            th:value="${i}"
+                            th:text="${i}"
+                            th:selected="${bbsGroup.fileNum() == i}">
+                    </option>
+                </select>
+
+            </td>
+
+            <!-- 옵션 체크박스 -->
+            <td>
+                <ul class="option">
+                    <li>
+                        <label class="c-input ci-check">
+                            답변 <input type="checkbox">
+                            <div class="ci-show"></div>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="c-input ci-check">
+                            비밀 <input type="checkbox">
+                            <div class="ci-show"></div>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="c-input ci-check">
+                            댓글 <input type="checkbox">
+                            <div class="ci-show"></div>
+                        </label>
+                    </li>
+                </ul>
+            </td>
+
+            <!-- 권한 설정 -->
+            <td>
+                <ul class="auth-setting">
+                    <li>
+                        <div class="tit">비회원 :</div>
+                        <div class="list">
+                            <label class="c-input ci-check">
+                                <input type="checkbox"> 조회
+                                <div class="ci-show"></div>
+                            </label>
+                            <label class="c-input ci-check">
+                                <input type="checkbox"> 쓰기
+                                <div class="ci-show"></div>
+                            </label>
+                            <label class="c-input ci-check">
+                                <input type="checkbox"> 댓글
+                                <div class="ci-show"></div>
+                            </label>
+                            <label class="c-input ci-check">
+                                <input type="checkbox"> 답변
+                                <div class="ci-show"></div>
+                            </label>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="tit">수강생(회원) :</div>
+                        <div class="list">
+                            <label class="c-input ci-check">
+                                <input type="checkbox"> 조회
+                                <div class="ci-show"></div>
+                            </label>
+                            <label class="c-input ci-check">
+                                <input type="checkbox"> 쓰기
+                                <div class="ci-show"></div>
+                            </label>
+                            <label class="c-input ci-check">
+                                <input type="checkbox"> 댓글
+                                <div class="ci-show"></div>
+                            </label>
+                            <label class="c-input ci-check">
+                                <input type="checkbox"> 답변
+                                <div class="ci-show"></div>
+                            </label>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="tit">위탁기업 :</div>
+                        <div class="list">
+                            <label class="c-input ci-check">
+                                <input type="checkbox"> 조회
+                                <div class="ci-show"></div>
+                            </label>
+                            <label class="c-input ci-check">
+                                <input type="checkbox"> 쓰기
+                                <div class="ci-show"></div>
+                            </label>
+                            <label class="c-input ci-check">
+                                <input type="checkbox"> 댓글
+                                <div class="ci-show"></div>
+                            </label>
+                            <label class="c-input ci-check">
+                                <input type="checkbox"> 답변
+                                <div class="ci-show"></div>
+                            </label>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="tit">내용전문가 :</div>
+                        <div class="list">
+                            <label class="c-input ci-check">
+                                <input type="checkbox"> 조회
+                                <div class="ci-show"></div>
+                            </label>
+                            <label class="c-input ci-check">
+                                <input type="checkbox"> 쓰기
+                                <div class="ci-show"></div>
+                            </label>
+                            <label class="c-input ci-check">
+                                <input type="checkbox"> 댓글
+                                <div class="ci-show"></div>
+                            </label>
+                            <label class="c-input ci-check">
+                                <input type="checkbox"> 답변
+                                <div class="ci-show"></div>
+                            </label>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="tit">교강사 :</div>
+                        <div class="list">
+                            <label class="c-input ci-check">
+                                <input type="checkbox"> 조회
+                                <div class="ci-show"></div>
+                            </label>
+                            <label class="c-input ci-check">
+                                <input type="checkbox"> 쓰기
+                                <div class="ci-show"></div>
+                            </label>
+                            <label class="c-input ci-check">
+                                <input type="checkbox" disabled> 댓글
+                                <div class="ci-show"></div>
+                            </label>
+                            <label class="c-input ci-check">
+                                <input type="checkbox" disabled> 답변
+                                <div class="ci-show"></div>
+                            </label>
+                        </div>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+<!--     Footer 포함 -->
+    <div th:replace="fragments/footer :: pagination"></div>
+</div>
+</body>
+</html>

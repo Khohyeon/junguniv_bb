@@ -5,7 +5,7 @@ public record CounselPageResDTO(
         String memo,
         String talkTime,
         String name,
-        String counselState,
+        Integer counselState,
         String updateDate
 ) {
 }

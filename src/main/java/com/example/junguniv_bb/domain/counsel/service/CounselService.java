@@ -1,12 +1,11 @@
 package com.example.junguniv_bb.domain.counsel.service;
 
 import com.example.junguniv_bb._core.exception.Exception400;
-import com.example.junguniv_bb.domain.counsel.dto.CounselDetailResDTO;
-import com.example.junguniv_bb.domain.counsel.dto.CounselPageResDTO;
-import com.example.junguniv_bb.domain.counsel.dto.CounselSaveReqDTO;
-import com.example.junguniv_bb.domain.counsel.dto.CounselUpdateReqDTO;
+import com.example.junguniv_bb.domain.counsel.dto.*;
 import com.example.junguniv_bb.domain.counsel.model.Counsel;
 import com.example.junguniv_bb.domain.counsel.model.CounselRepository;
+import com.example.junguniv_bb.domain.popup.dto.PopupSearchResDTO;
+import com.example.junguniv_bb.domain.popup.model.Popup;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -103,5 +102,27 @@ public class CounselService {
             throw new Exception400("삭제할 문의상담 예약이 없습니다.");
         }
         counselRepository.deleteAll(counselsToDelete);
+    }
+
+    public Page<CounselSearchResDTO> searchCounselsByName(String counselName, Integer counselState, Pageable pageable) {
+
+        Page<Counsel> counselPage = null;
+
+        if (counselState == null || counselState == 0) {
+            // 전체 조회
+            counselPage = counselRepository.findByCounselNameContainingIgnoreCase(counselName, pageable);
+        } else {
+            counselPage = counselRepository.findByCounselNameContainingIgnoreCaseAndCounselState(counselName, counselState, pageable);
+        }
+
+        return counselPage.map(counsel ->
+                new CounselSearchResDTO(
+                        counsel.getCounselIdx(),
+                        counsel.getCounselName(),
+                        counsel.getFormattedCreatedDate2(),
+                        counsel.getName(),
+                        counsel.getCounselState(),
+                        counsel.getFormattedUpdatedDate2()
+                ));
     }
 }

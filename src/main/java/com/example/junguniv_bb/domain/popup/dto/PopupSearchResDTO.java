@@ -1,6 +1,6 @@
 package com.example.junguniv_bb.domain.popup.dto;
 
-public record PopupSearchReqDTO(
+public record PopupSearchResDTO(
         Long popupIdx,
         String popupName,
         String updateDate,

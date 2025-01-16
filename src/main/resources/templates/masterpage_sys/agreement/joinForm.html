@@ -43,7 +43,7 @@
                         <input type="checkbox" th:checked="${agreement.openYn() == 'Y'}"> 공개설정
                         <div class="ci-show"></div>
                     </label>
-                    <a th:href="@{/masterpage_sys/agreement/detailForm/{agreementIdx}(agreementIdx=${agreement.agreementIdx()})}" class="jv-btn fill04 ml10">텍스트 수정</a>
+                    <a th:href="@{/masterpage_sys/agreement/join/detailForm/{agreementIdx}(agreementIdx=${agreement.agreementIdx()})}" class="jv-btn fill04 ml10">텍스트 수정</a>
                 </div>
             </div>
             <div class="b01" th:text="${agreement.agreementContents()}">

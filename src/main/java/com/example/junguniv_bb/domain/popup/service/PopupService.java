@@ -42,10 +42,10 @@ public class PopupService {
      * 메인팝업 검색 조회
      * 응답 형태 : Page<PopupSearchReqDTO>
      */
-    public Page<PopupSearchReqDTO> searchPopupsByName(String popupName, Pageable pageable) {
+    public Page<PopupSearchResDTO> searchPopupsByName(String popupName, Pageable pageable) {
         Page<Popup> popupPage = popupRepository.findByPopupNameContainingIgnoreCase(popupName, pageable);
         return popupPage.map(popup ->
-                new PopupSearchReqDTO(
+                new PopupSearchResDTO(
                         popup.getPopupIdx(),
                         popup.getPopupName(),
                         popup.getFormattedUpdatedDate2(),

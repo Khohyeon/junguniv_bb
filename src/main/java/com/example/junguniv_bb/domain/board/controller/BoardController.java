@@ -1,7 +1,12 @@
 package com.example.junguniv_bb.domain.board.controller;
 
+import com.example.junguniv_bb.domain.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -10,33 +15,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/masterpage_sys/board")
 public class BoardController {
 
-    @GetMapping("/noticeForm")
-    public String noticeForm() {
-        return "masterpage_sys/board/noticeForm";
-    }
+    private final BoardService boardService;
 
-    @GetMapping("/suggestionForm")
-    public String suggestionForm() {
-        return "masterpage_sys/board/suggestionForm";
-    }
+    /**
+     *  [관리자모드] 회원관리 - 권한관리 - 홈페이지게시판 페이지
+     *  Model 응답 Page<BbsGroupPageResDTO>
+     */
+    @GetMapping("/managerForm")
+    public String managerForm(Pageable pageable, Model model) {
 
-    @GetMapping("/faqForm")
-    public String faqForm() {
-        return "masterpage_sys/board/faqForm";
-    }
-    @GetMapping("/qnaForm")
-    public String qnaForm() {
-        return "masterpage_sys/board/qnaForm";
-    }
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.Direction.DESC, ("bbsGroupIdx"));
 
-    @GetMapping("/dataForm")
-    public String dataForm() {
-        return "masterpage_sys/board/dataForm";
-    }
+        model.addAttribute("bbsGroupPage", boardService.getBbsGroupPage(pageable));
 
-    @GetMapping("/consultingForm")
-    public String consultingForm() {
-        return "masterpage_sys/board/consultingForm";
+        return "masterpage_sys/board/managerForm";
     }
 
     @GetMapping("/saveForm")
@@ -49,7 +41,7 @@ public class BoardController {
         return "masterpage_sys/board/detailForm";
     }
 
-    @GetMapping("/headForm")
+    @GetMapping("/head/listForm")
     public String courseForm() {
         return "masterpage_sys/board/headForm";
     }
