@@ -11,7 +11,9 @@ public enum ExceptionMessage {
     NOT_FOUND_ID("아이디가 틀렸습니다."),
     NOT_FOUND_AGREEMENT("존재하지 않는 약관입니다."),
     NOT_FOUND_MEMBER("존재하지 않는 멤버입니다."),
-    
+    NOT_FOUND_BBS("존재하지 않는 게시글입니다."),
+    NOT_FOUND_BBS_FILE("존재하지 않는 게시글 첨부파일입니다."),
+
     EXISTS_AUTH_LEVEL("이미 존재하는 권한 레벨입니다."),
 
 

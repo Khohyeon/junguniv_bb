@@ -1,16 +1,36 @@
-<div class="form-wrap2">
-    <div class="view-top">
-        <div class="tit">ㅁㄴㅇㄹ</div>
-        <ul class="write-info">
-            <li>프론트관리자(manager)</li>
-            <li>2022-12-14 17:08:48</li>
-            <li>View.61</li>
-        </ul>
+<div th:fragment="board-header" class="inner">
+    <div class="bbs-view">
+        <div class="form-wrap2">
+            <div class="view-top">
+                <!-- 제목 -->
+                <div class="tit" th:text="${board.title()}">제목</div>
+                <ul class="write-info">
+                    <!-- 작성자 -->
+                    <li th:text="${board.writer()}">작성자</li>
+                    <!-- 작성일 -->
+                    <li th:text="${board.createdDate()}">작성일</li>
+                    <!-- 조회수 -->
+                    <li>View.<span th:text="${board.readNum()}">0</span></li>
+                </ul>
+            </div>
+            <div class="view-con">
+                <!-- 내용 -->
+                <p th:text="${board.contents()}">내용</p>
+            </div>
+        </div>
+        <div class="view-bot">
 
+            <div class="btn-wrap">
+                <a href="#" id="listButton" class="jv-btn fill01-lg">목록</a>
+                <a class="jv-btn fill06-lg" href="#" id="updateButton" th:data-id="${board.bbsIdx()}">수정</a>
+                <a class="jv-btn fill05-lg" href="#" id="deleteButton" th:data-id="${board.bbsIdx()}">삭제</a>
+            </div>
 
-    </div>
-    <div class="view-con">
-        <p>ㅁㄴㅇㄹ</p>
-        ​
+            <a class="view-arrow next" href="#">
+                <span class="icon"></span>
+                <span>다음글</span>
+            </a>
+
+        </div>
     </div>
 </div>

@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <td>${index + 1}</td>
             <!-- 제목 -->
             <td>
-                <a href="/board/detail/${item.bbsIdx}" class="jv-btn underline01">${item.title || '제목 없음'}</a>
+                <a href="/masterpage_sys/board/qna/detailForm/${item.bbsIdx}" class="jv-btn underline01">${item.title || '제목 없음'}</a>
             </td>
             <!-- 작성일 -->
             <td>${item.createdDate || '-'}</td>

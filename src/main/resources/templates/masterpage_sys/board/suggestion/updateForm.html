@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="ko">
+<head>
+    <!-- 헤더에서 CSS 포함 -->
+    <th:block th:replace="fragments/header :: head"></th:block>
+
+    <!-- TinyMCE CDN -->
+    <script src="https://cdn.tiny.cloud/1/k5zf849n8pjpkhfi1fjilm3rdkphbmrm37osivbz5908i8da/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <!-- editor.js 파일 불러오기 -->
+    <script th:src="@{/js/common/editor.js}"></script>
+
+    <script th:src="@{/js/board/suggestion/updateForm.js}"></script>
+</head>
+<body>
+<!-- 헤더에서 상단 메뉴 포함 -->
+<div th:replace="fragments/header :: header"></div>
+
+<!--  board_header (카테고리, 작성일, 상단고정, 메인노출, 첨부파일, 파일개수)-->
+<div th:replace="/masterpage_sys/board/_board-updateHeader :: board_header(false, false, false, false, false, 1)"></div>
+
+
+</body>
+</html>

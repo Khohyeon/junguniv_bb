@@ -3,8 +3,15 @@
 <head>
     <!-- 헤더에서 CSS 포함 -->
     <th:block th:replace="fragments/header :: head"></th:block>
-    <script th:src="@{/js/board/qna/listForm.js}"></script>
+
+    <!-- 게시판의 공통 헤더 JS -->
+    <script th:src="@{/js/board/header.js}"></script>
+
+    <!-- 전체 체크박스 JS -->
     <script th:src="@{/js/common/checkbox.js}"></script>
+
+    <!-- Q&A JS -->
+    <script th:src="@{/js/board/qna/listForm.js}"></script>
 </head>
 <body>
 <!-- 헤더에서 상단 메뉴 포함 -->

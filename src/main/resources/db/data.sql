@@ -109,7 +109,7 @@ INSERT INTO AGREEMENT (AGREEMENT_TITLE, AGREEMENT_CONTENTS, OPEN_YN, AGREEMENT_T
 INSERT INTO BBS_GROUP (
     BBSID, BBS_GROUP_NAME, SKIN, CATEGORY, FILENUM, READAUTH, WRITEAUTH, REPLYAUTH, COMMENTAUTH,
     OPTION_SECRETAUTH, OPTION_REPLYAUTH, OPTION_COMMENTAUTH, FILEAUTH) VALUES
-('NOTICE', '공지사항', 'default', '공지', 3, 'member@company@teacher@tutor@manager', 'manager', 'none', 'none', 'Y', 'N', 'N', 'member@company'),
+('NOTICE', '공지사항', 'board', '공지', 3, 'member@company@teacher@tutor@manager', 'manager', 'none', 'none', 'Y', 'N', 'N', 'member@company'),
 ('SUGGESTION', '고충상담게시판', 'consult', '상담', 5, 'member@company@teacher@manager', 'member@manager', 'manager', 'teacher@manager', 'N', 'Y', 'Y', 'manager'),
 ('FAQ', 'FAQ', 'faq', '질문', 2, 'member@company@teacher@manager', 'manager', 'none', 'member@teacher', 'N', 'N', 'Y', 'member@teacher'),
 ('QNA', 'Q&A', 'qna', '질문답변', 2, 'member@company@teacher@manager', 'member@teacher', 'member@teacher', 'member@teacher', 'N', 'Y', 'Y', 'member@teacher'),

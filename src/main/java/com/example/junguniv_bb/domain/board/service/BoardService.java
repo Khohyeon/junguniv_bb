@@ -1,8 +1,9 @@
 package com.example.junguniv_bb.domain.board.service;
 
-import com.example.junguniv_bb.domain.board.dto.BbsGroupPageResDTO;
-import com.example.junguniv_bb.domain.board.dto.BoardSaveReqDTO;
-import com.example.junguniv_bb.domain.board.dto.BoardSearchResDTO;
+import com.example.junguniv_bb._core.exception.Exception400;
+import com.example.junguniv_bb._core.exception.ExceptionMessage;
+import com.example.junguniv_bb.domain.board._notice.dto.BoardDetailResDTO;
+import com.example.junguniv_bb.domain.board.dto.*;
 import com.example.junguniv_bb.domain.board.model.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
@@ -25,8 +26,7 @@ import java.nio.file.attribute.FileTime;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
-
-import static org.h2.store.fs.FileUtils.createDirectory;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +47,7 @@ public class BoardService {
 
 
     /**
-     * 게시판 검색 조회
+     * 게시판 검색 조회 BoardType 을 통해 모두 하나의 매핑으로 작업
      * 응답 형태 : Page<BoardSearchReqDTO>
      */
     public Page<BoardSearchResDTO> searchByName(String title, String boardType, Pageable pageable) {
@@ -62,6 +62,24 @@ public class BoardService {
                         bbs.getFormattedCreatedDate2(),
                         bbs.getReadNum()
                 ));
+    }
+
+    /**
+     * 게시판 상세페이지 BoardType 을 통해 모두 하나의 매핑으로 작업
+     * 응답 형태 : BoardDetailResDTO
+     */
+    public BoardDetailResDTO getBoardDetail(Long bbsIdx) {
+        Bbs bbs = bbsRepository.findById(bbsIdx)
+                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_BBS.getMessage()));
+
+        return new BoardDetailResDTO(
+                bbs.getBbsIdx(),
+                bbs.getTitle(),
+                bbs.getWriter(),
+                bbs.getFormattedCreatedDate2(),
+                bbs.getReadNum(),
+                bbs.getContents()
+        );
     }
 
     /**
@@ -80,6 +98,10 @@ public class BoardService {
                 ));
     }
 
+    /**
+     * 홈페이지게시판 등록 BoardType 을 통해 모두 하나의 매핑으로 작업
+     * 요청 형태 : BoardSaveReqDTO
+     */
     @Transactional
     public void saveBoard(BoardSaveReqDTO boardSaveReqDTO) {
 
@@ -91,11 +113,85 @@ public class BoardService {
 
         // BBS File 엔티티 저장
         saveFiles(bbs, boardSaveReqDTO.attachments());
+
         // 강제 플러시
         entityManager.flush();
 
     }
 
+    /**
+     * 홈페이지게시판 수정 BoardType 을 통해 모두 하나의 매핑으로 작업
+     * 요청 형태 : BoardUpdateReqDTO
+     */
+    @Transactional
+    public void updateBoard(BoardUpdateReqDTO boardUpdateReqDTO) {
+        String boardType = boardUpdateReqDTO.boardType();
+        BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(boardType);
+
+        // BBS 엔터티 저장
+        Bbs bbs = bbsRepository.save(boardUpdateReqDTO.updateEntity(bbsGroup));
+
+        // BBS File 엔티티 저장
+        saveFiles(bbs, boardUpdateReqDTO.attachments());
+
+        // 강제 플러시
+        entityManager.flush();
+    }
+
+    /**
+     * 게시판 다중 삭제
+     */
+    @Transactional
+    public void boardListDelete(List<Long> boardIds) {
+
+        List<Bbs> boardToDelete = bbsRepository.findAllById(boardIds);
+        if (boardToDelete.isEmpty()) {
+            throw new Exception400("삭제할 게시판이 없습니다.");
+        }
+        bbsRepository.deleteAll(boardToDelete);
+
+    }
+
+    /**
+     * 게시판 삭제
+     */
+    @Transactional
+    public void boardDelete(Long boardId) {
+        Bbs boardToDelete = bbsRepository.findById(boardId)
+                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_BBS.getMessage()));
+
+        bbsRepository.delete(boardToDelete);
+    }
+
+    public BoardUpdateResDTO getBoardUpdate(Long bbsIdx) {
+        Bbs bbs = bbsRepository.findById(bbsIdx)
+                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_BBS.getMessage()));
+
+        List<String> attachments = bbsFileRepository.findAllByBbs(bbs)
+                .stream()
+                .map(BbsFile::getFName1) // 첨부파일 이름만 추출
+                .toList();
+
+        return new BoardUpdateResDTO(
+                bbsIdx,
+                bbs.getTitle(),
+                bbs.getWriter(),
+                bbs.getCategory(),
+                bbs.getFormattedCreatedDate2(),
+                bbs.getChkTopFix(),
+                bbs.getFixStartDate(),
+                bbs.getFixEndDate(),
+                bbs.getChkMain(),
+                bbs.getStartDate(),
+                bbs.getEndDate(),
+                bbs.getContents(),
+                attachments
+        );
+    }
+
+    /**
+     * 첨부파일 List 를 저장하는 메서드
+     */
     private void saveFiles(Bbs bbs, List<MultipartFile> files) {
         if (files == null || files.isEmpty()) {
             return;
