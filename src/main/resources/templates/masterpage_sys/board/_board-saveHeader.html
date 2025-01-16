@@ -1,5 +1,5 @@
 <div th:fragment="board_header(includeCategory, includeDate, includeTopFix, includeMainExpose, includeAttachments, fileCount)" class="inner">
-    <div class="form-wrap2">
+    <form class="form-wrap2" action="/masterpage_sys/board/api/save" method="post" enctype="multipart/form-data">
         <div class="column-tc-wrap bbs__write part1">
             <div class="column-tc">
                 <div class="tit">제목</div>
@@ -25,10 +25,10 @@
         </div>
 
         <div class="column-tc-wrap part1 bbs__write" th:if="${includeDate}">
-            <div class="column-tc" >
+            <div class="column-tc">
                 <div class="tit">작성일</div>
                 <div class="con">
-                    <input name="answer_date" id="answer_date" type="date" >
+                    <input name="answer_date" id="createdDate" type="date">
                 </div>
             </div>
         </div>
@@ -67,11 +67,11 @@
                     <div class="tit">홈페이지 메인노출</div>
                     <div class="con">
                         <label class="c-input ci-radio">
-                            <input type="radio" name="chkmain" id="chkmain_y" value="Y"> 메인노출
+                            <input type="radio" name="chkMain" id="chkMain_y" value="Y"> 메인노출
                             <div class="ci-show"></div>
                         </label>
                         <label class="c-input ci-radio">
-                            <input type="radio" name="chkmain" id="chkmain_n" value="N"> 메인노출 해제
+                            <input type="radio" name="chkMain" id="chkMain_n" value="N"> 메인노출 해제
                             <div class="ci-show"></div>
                         </label>
                     </div>
@@ -79,9 +79,9 @@
                 <div class="column-tc">
                     <div class="tit">노출기간</div>
                     <div class="con flex">
-                        <input name="expose_start_date" id="expose_start_date" type="date" value="">
+                        <input name="startDate" id="start_date" type="date" value="">
                         <span class="bar">&nbsp;&nbsp;~&nbsp;&nbsp;</span>
-                        <input name="expose_end_date" id="expose_end_date" type="date" value="">
+                        <input name="endDate" id="end_date" type="date" value="">
                     </div>
                 </div>
             </div>
@@ -93,17 +93,20 @@
                 <div class="tit">첨부파일</div>
                 <div class="con flex2 fx-wrap">
                     <label class="lab_attach" th:each="i : ${#numbers.sequence(1, fileCount)}">
-                        <input type="file" class="mt5" th:name="'fname' + ${i}">
+                        <input type="file" class="mt5" name="attachments">
                     </label>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="mt30 con">
-        <textarea id="editor" name="contents"></textarea>
-    </div>
-    <div class="btn-wrap mt50">
-        <a href="#" class="jv-btn fill01-lg">목록</a>
-        <button type="submit" class="jv-btn fill04-lg">저장</button>
-    </div>
+
+        <div class="mt30 con">
+            <textarea id="editor" name="contents"></textarea>
+        </div>
+
+        <div class="btn-wrap mt50">
+            <a href="#" class="jv-btn fill01-lg">목록</a>
+            <button type="submit" class="jv-btn fill04-lg">저장</button>
+        </div>
+    </form>
+
 </div>

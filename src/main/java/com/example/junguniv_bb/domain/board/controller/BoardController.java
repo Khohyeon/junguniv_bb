@@ -17,6 +17,10 @@ public class BoardController {
 
     private final BoardService boardService;
 
+    /**
+     *  [관리자모드] 회원관리 - 권한관리 - 홈페이지게시판 페이지
+     *  Model 응답 Page<BbsGroupPageResDTO>
+     */
     @GetMapping("/managerForm")
     public String managerForm(Pageable pageable, Model model) {
 

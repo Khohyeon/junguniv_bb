@@ -3,6 +3,7 @@ package com.example.junguniv_bb.domain.board.model;
 import com.example.junguniv_bb._core.common.BaseTime;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 @ToString
 @Entity
 @Table(name = "BBS")
+@NoArgsConstructor
 public class Bbs extends BaseTime {
 
     @Id
@@ -20,10 +22,11 @@ public class Bbs extends BaseTime {
     @Column(name = "BBS_IDX", nullable = false)
     private Long bbsIdx;
 
-    @Column(name = "BBS_GROUP_IDX", nullable = false)
-    private Long bbsGroupIdx;
+    @JoinColumn(name = "BBS_GROUP_IDX", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private BbsGroup bbsGroup;
 
-    @Column(name = "BBSID", nullable = false, length = 255)
+    @Column(name = "BBSID", length = 255)
     private String bbsId;
 
     @Column(name = "CATEGORY", length = 255)
@@ -90,4 +93,28 @@ public class Bbs extends BaseTime {
     @Column(name = "C_END_DATE", length = 255)
     private String cEndDate;
 
+    @Column(name = "CHK_TOP_FIX", length = 1)
+    private String chkTopFix;   // y/n
+
+    @Column(name = "FIX_START_DATE")
+    private LocalDate fixStartDate;
+
+    @Column(name = "FIX_END_DATE")
+    private LocalDate fixEndDate;
+
+    public Bbs(Long bbsIdx, BbsGroup bbsGroupIdx, String title, String writer, String category, String chkTopFix, LocalDate fixStartDate, LocalDate fixEndDate,
+               String chkMain, LocalDate startDate, LocalDate endDate, String contents) {
+        this.bbsIdx = bbsIdx;
+        this.bbsGroup = bbsGroupIdx;
+        this.title = title;
+        this.writer = writer;
+        this.category = category;
+        this.chkTopFix = chkTopFix;
+        this.fixStartDate = fixStartDate;
+        this.fixEndDate = fixEndDate;
+        this.chkMain = chkMain;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.contents = contents;
+    }
 }
