@@ -20,43 +20,46 @@
 							<div class="column-tc">
 								<div class="tit">이름</div>
 								<div class="con">
-									<input type="text" placeholder="이름을 입력해주세요">	
+									<input type="text" id="name" name="name" placeholder="이름을 입력해주세요">	
 								</div>
 								<div class="tit">아이디</div>
 								<div class="con">
-									<input type="text" placeholder="아이디를 입력해주세요">	
+									<input type="text" id="userId" name="userId" placeholder="아이디를 입력해주세요">	
 								</div>
 							</div>
 							<div class="column-tc">
 								<div class="tit">생년월일</div>
 								<div class="con flex3">
-									<select>
-										<option>년도</option>
-										<option>option01</option>
-										<option>option02</option>
+									<select id="birthYear" name="birthYear">
+										<option value="">년도</option>
+										<th:block th:each="year : ${#numbers.sequence(1950, #calendars.format(#calendars.createNow(), 'yyyy'))}">
+											<option th:value="${year}" th:text="${year}"></option>
+										</th:block>
 									</select>
-									<select>
-										<option>월</option>
-										<option>option01</option>
-										<option>option02</option>
+									<select id="birthMonth" name="birthMonth">
+										<option value="">월</option>
+										<th:block th:each="month : ${#numbers.sequence(1, 12)}">
+											<option th:value="${month}" th:text="${month}"></option>
+										</th:block>
 									</select>
-									<select>
-										<option>일</option>
-										<option>option01</option>
-										<option>option02</option>
+									<select id="birthDay" name="birthDay">
+										<option value="">일</option>
+										<th:block th:each="day : ${#numbers.sequence(1, 31)}">
+											<option th:value="${day}" th:text="${day}"></option>
+										</th:block>
 									</select>
 								</div>
 							</div>
 							<div class="column-tc">
 								<div class="tit">휴대폰</div>
 								<div class="con">
-									<input type="text" placeholder="번호를 입력해주세요">	
+									<input type="text" id="telMobile" name="telMobile" placeholder="번호를 입력해주세요">	
 								</div>
 							</div>
 							<div class="column-tc">
 								<div class="tit">이메일</div>
 								<div class="con">
-									<input type="text" placeholder="이메일 주소를 입력해주세요">	
+									<input type="text" id="email" name="email" placeholder="이메일 주소를 입력해주세요">	
 								</div>
 							</div>
 						</div>
@@ -65,22 +68,22 @@
 								<div class="tit">휴면계정</div>
 								<div class="con">
 									<label class="c-input ci-radio">
-										<input type="radio" name="sleep"> Y
+										<input type="radio" name="chkDormant" value="Y"> Y
 										<div class="ci-show"></div>
 									</label>
 									<label class="c-input ci-radio">
-										<input type="radio" name="sleep"> N
+										<input type="radio" name="chkDormant" value="N"> N
 										<div class="ci-show"></div>
 									</label>
 								</div>
 								<div class="tit">로그인 제한</div>
 								<div class="con">
 									<label class="c-input ci-radio">
-										<input type="radio" name="limit"> Y
+										<input type="radio" name="loginPass" value="Y"> Y
 										<div class="ci-show"></div>
 									</label>
 									<label class="c-input ci-radio">
-										<input type="radio" name="limit"> N
+										<input type="radio" name="loginPass" value="N"> N
 										<div class="ci-show"></div>
 									</label>
 								</div>
@@ -89,22 +92,22 @@
 								<div class="tit">외국인여부</div>
 								<div class="con">
 									<label class="c-input ci-radio">
-										<input type="radio" name="foreigner"> Y
+										<input type="radio" name="chkForeigner" value="Y"> Y
 										<div class="ci-show"></div>
 									</label>
 									<label class="c-input ci-radio">
-										<input type="radio" name="foreigner"> N
+										<input type="radio" name="chkForeigner" value="N"> N
 										<div class="ci-show"></div>
 									</label>
 								</div>
 								<div class="tit">성별</div>
 								<div class="con">
 									<label class="c-input ci-radio">
-										<input type="radio" name="gender"> 남
+										<input type="radio" name="sex" value="M"> 남
 										<div class="ci-show"></div>
 									</label>
 									<label class="c-input ci-radio">
-										<input type="radio" name="gender"> 여
+										<input type="radio" name="sex" value="F"> 여
 										<div class="ci-show"></div>
 									</label>
 								</div>
@@ -112,43 +115,44 @@
 							<div class="column-tc">
 								<div class="tit">근무회사</div>
 								<div class="con">
-									<input type="text" placeholder="회사명을 입력해주세요">
+									<input type="text" id="jobName" name="jobName" placeholder="회사명을 입력해주세요">
 								</div>										
 							</div>
 							<div class="column-tc">
 								<div class="tit">근무상태</div>
 								<div class="con">
-									<select>
-										<option>선택</option>
-										<option>option 01</option>
-										<option>option 02</option>
+									<select id="jobWorkState" name="jobWorkState">
+										<option value="">선택</option>
+										<option value="재직">재직</option>
+										<option value="휴직">휴직</option>
+										<option value="퇴사">퇴사</option>
 									</select>
 								</div>
 								<div class="tit">근무부서</div>
 								<div class="con">
-									<input type="text" placeholder="부서명을 입력해주세요">
+									<input type="text" id="jobDept" name="jobDept" placeholder="부서명을 입력해주세요">
 								</div>
 							</div>
 							<div class="column-tc">
 								<div class="tit">마케팅수신(문자)</div>
 								<div class="con">
 									<label class="c-input ci-radio">
-										<input type="radio" name="marketingSMS"> Y
+										<input type="radio" name="chkSmsReceive" value="Y"> Y
 										<div class="ci-show"></div>
 									</label>
 									<label class="c-input ci-radio">
-										<input type="radio" name="marketingSMS"> N
+										<input type="radio" name="chkSmsReceive" value="N"> N
 										<div class="ci-show"></div>
 									</label>
 								</div>
 								<div class="tit">마케팅수신(이메일)</div>
 								<div class="con">
 									<label class="c-input ci-radio">
-										<input type="radio" name="marketingMail"> Y
+										<input type="radio" name="chkMailReceive" value="Y"> Y
 										<div class="ci-show"></div>
 									</label>
 									<label class="c-input ci-radio">
-										<input type="radio" name="marketingMail"> N
+										<input type="radio" name="chkMailReceive" value="N"> N
 										<div class="ci-show"></div>
 									</label>
 								</div>
@@ -157,17 +161,17 @@
 								<div class="tit">인증예외</div>
 								<div class="con">
 									<label class="c-input ci-radio">
-										<input type="radio" name="exception"> Y
+										<input type="radio" name="chkIdentityVerification" value="Y"> Y
 										<div class="ci-show"></div>
 									</label>
 									<label class="c-input ci-radio">
-										<input type="radio" name="exception"> N
+										<input type="radio" name="chkIdentityVerification" value="N"> N
 										<div class="ci-show"></div>
 									</label>
 								</div>
 								<div class="tit">로그인ID</div>
 								<div class="con">
-									<input type="text" placeholder="로그인 ID를 입력해주세요">
+									<input type="text" id="loginClientIp" name="loginClientIp" placeholder="로그인 ID를 입력해주세요">
 								</div>
 							</div>
 						</div>
@@ -181,7 +185,7 @@
 		</div>
 
 		<div class="btn-wrap">
-			<a href="#none" class="jv-btn jb-fill01-lg">검색</a>
+			<a href="#none" class="jv-btn jb-fill01-lg" id="searchBtn">검색</a>
 		</div>
 
 		<div class="table-util mt50">
@@ -226,13 +230,13 @@
 					<th>생년월일</th>
 					<th>
 						<label class="c-input ci-check">
-							<input type="checkbox">	휴대폰
+							<input type="checkbox" data-type="telMobile">	휴대폰
 							<div class="ci-show"></div>
 						</label>
 					</th>
 					<th>
 						<label class="c-input ci-check">
-							<input type="checkbox">	이메일
+							<input type="checkbox" data-type="email">	이메일
 							<div class="ci-show"></div>
 						</label>
 					</th>

@@ -4,11 +4,9 @@
 	<meta charset="UTF-8">
 	<!-- 헤더에서 CSS 포함 -->
 	<th:block th:replace="fragments/header :: head"></th:block>
-	<title>회원관리 - 위탁기업</title>
+	<title>위탁기업 검색</title>
 </head>
 <body>
-	<!-- 헤더에서 상단 메뉴 포함 -->
-	<th:block th:replace="fragments/header :: header"></th:block>
 
 	<div class="inner">
 		<div class="form-wrap">
@@ -86,8 +84,6 @@
 
 		<div class="table-util mt50">
 			<div class="left">
-				<a href="#none" class="jv-btn fill05">삭제</a>
-				<a href="#none" class="jv-btn icon-excel">엑셀</a>
 				<div class="page-view flex">
 					<span>페이지수</span>
 					<select>
@@ -103,11 +99,6 @@
 					<span class="Pretd_B">123</span>건 검색되었습니다.
 				</div>
 			</div>
-			<div class="right">
-				<a href="#none" class="jv-btn fill03-icon-message">SMS발송</a>
-				<a href="#none" class="jv-btn fill03-icon-mail">이메일발송</a>
-				<a href="/masterpage_sys/member/company/saveForm" class="jv-btn fill04">신규등록</a>
-			</div>
 		</div>
 
 		<table class="table01 T_center">
@@ -120,24 +111,16 @@
 						</label>
 					</th>
 					<th>NO</th>
-					<th>위탁기업명</th>
-					<th>ID</th>
 					<th>교육담당자</th>
-					<th>
-						<label class="c-input ci-check">
-							<input type="checkbox" data-type="contractorTel">	교육담당자 휴대폰
-							<div class="ci-show"></div>
-						</label>
-					</th>
-					<th>
-						<label class="c-input ci-check">
-							<input type="checkbox" data-type="contractorEtc">	교육담당자 이메일
-							<div class="ci-show"></div>
-						</label>
-					</th>
-					<th>소속 수강생 수</th>
+					<th>아이디</th>
+					<th>위탁기업</th>
+					<th>지역</th>
 					<th>대표자명</th>
-					<th>기업전용 페이지</th>
+					<th>기업규모</th>
+					<th data-type="contractorTel">교육담당자 휴대폰</th>
+					<th data-type="contractorEtc">교육담당자 이메일</th>
+					<th>훈련생수</th>
+					<th>선택</th>
 				</tr>
 			</thead>
 			<tbody>

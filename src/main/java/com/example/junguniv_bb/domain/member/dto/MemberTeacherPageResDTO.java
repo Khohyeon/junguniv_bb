@@ -22,15 +22,17 @@ public record MemberTeacherPageResDTO(
 
     // 이름, userId, 휴대폰, 이메일, 첨삭 참여 건수, 회원등록일, 약관동의일
     public record MemberDTO(
-            String name,
-            String userId,
-            String telMobile,
-            String email,
-            LocalDateTime createdDate,
-            LocalDateTime agreeDate
+            Long memberIdx, // 회원 IDX
+            String name, // 이름
+            String userId, // 아이디
+            String telMobile, // 휴대폰
+            String email, // 이메일
+            LocalDateTime createdDate, // 회원등록일
+            LocalDateTime agreeDate // 약관동의일
     ) {
         public  MemberDTO (Member member) {
             this(
+                    member.getMemberIdx(),
                     member.getName(),
                     member.getUserId(),
                     member.getTelMobile(),

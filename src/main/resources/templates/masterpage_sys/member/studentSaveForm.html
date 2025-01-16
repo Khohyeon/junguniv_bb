@@ -28,6 +28,7 @@
 						</div>
 						<div class="con">
 							<input type="text" name="userId" id="userId" placeholder="ID를 입력해주세요">
+							<button type="button" id="checkDuplicateId">중복 확인</button>
 						</div>
 					</div>
 					<div class="column-tc">
@@ -164,11 +165,12 @@
 						<div class="con flex">
 							<input type="text" name="email1" id="email1">
 							<span>&nbsp;&nbsp;@&nbsp;&nbsp;</span>
-							<select name="email2" id="email2">
+							<input type="text" name="email2" id="email2">
+							<select name="email2Select" id="email2Select">
 								<option value="">직접입력</option>
-								<option>naver.com</option>
-								<option>gmail.com</option>
-								<option>daum.net</option>
+								<option value="naver.com">naver.com</option>
+								<option value="gmail.com">gmail.com</option>
+								<option value="daum.net">daum.net</option>
 							</select>
 						</div>
 					</div>
@@ -183,7 +185,7 @@
 						</div>
 						<div class="con flex">
 							<input type="text" name="jobName" id="jobName" readonly>
-							<a href="#none" class="jv-btn fill01">회사찾기</a>
+							<a href="#none" class="jv-btn fill01" id="companySearchBtn">회사찾기</a>
 						</div>
 					</div>
 					<div class="column-tc">

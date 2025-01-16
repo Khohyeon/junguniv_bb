@@ -18,6 +18,13 @@ public class MemberController {
     private final MemberService memberService;
 
 
+    /* 수강생 등록시 사용되는 기업검색 페이지 */
+    @GetMapping("/company/searchForm")
+    public String companySearchForm(Model model) {
+
+        
+        return "/masterpage_sys/member/companySearchForm";
+    }
 
     /**
      * 회원관리 - 등록
@@ -34,6 +41,20 @@ public class MemberController {
     public String teacherSaveForm(Model model) {
 
         return "/masterpage_sys/member/teacherSaveForm";
+    }
+
+    /* 회원관리 > 회원정보관리 > 위탁기업 등록 */
+    @GetMapping("/company/saveForm")
+    public String companySaveForm(Model model) {
+
+        return "/masterpage_sys/member/companySaveForm";
+    }
+
+    /* 회원관리 > 회원정보관리 > LMS관리자 등록 */
+    @GetMapping("/admin/saveForm")
+    public String adminSaveForm(Model model) {
+
+        return "/masterpage_sys/member/adminSaveForm";
     }
 
 

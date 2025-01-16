@@ -280,7 +280,7 @@ public class Member extends BaseTime {
     @Column(name = "CORPORATION_IDX")
     private Long corporationIdx; // 지점idx
 
-    @Column(name = "AUTHLEVEL")
+    @Column(name = "AUTH_LEVEL")
     private Long authLevel; // 권한레벨
 
     @Column(name = "BIRTHDAY_TYPE", length = 1)

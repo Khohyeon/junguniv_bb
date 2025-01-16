@@ -22,7 +22,7 @@ public record MemberAdminPageResDTO(
 
     // 이름, userId, 휴대폰, 이메일, 환급/일반 담당, 관리자 권한명, 근무상태, 회원등록일
     public record MemberDTO(
-            Long memberIdx,
+            Long memberIdx, // 회원 IDX
             String name, // 이름
             String userId, // 아이디
             String telMobile, // 휴대폰
