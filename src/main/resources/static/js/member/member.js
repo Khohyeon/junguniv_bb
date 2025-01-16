@@ -208,6 +208,22 @@ const MemberModule = {
                     `).join('');
                     break;
 
+                case 'companySearch':
+                    tbody.innerHTML = members.map((member, index) => `
+                        <tr>
+                            <td>${startNumber - index}</td>
+                            <td>${member.contractorName || '-'}</td>
+                            <td>${member.userId || '-'}</td>
+                            <td>${member.jobName || '-'}</td>
+                            <td>${member.jobRegion || '-'}</td>
+                            <td>${member.jobCeo || '-'}</td>
+                            <td>${member.jobScale || '-'}</td>
+                            <td>${member.contractorTel || '-'}</td>
+                            <td>${member.contractorEtc || '-'}</td>
+                        </tr>
+                    `).join('');
+                    break;
+
                 case 'admin':
                     tbody.innerHTML = members.map((member, index) => `
                         <tr>

@@ -18,6 +18,13 @@ public class MemberController {
     private final MemberService memberService;
 
 
+    /* 수강생 등록시 사용되는 기업검색 페이지 */
+    @GetMapping("/company/searchForm")
+    public String companySearchForm(Model model) {
+
+        
+        return "/masterpage_sys/member/companySearchForm";
+    }
 
     /**
      * 회원관리 - 등록
