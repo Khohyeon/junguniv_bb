@@ -1,4 +1,4 @@
-package com.example.junguniv_bb.domain.board._qna.controller;
+package com.example.junguniv_bb.domain.board.controller;
 
 import com.example.junguniv_bb.domain.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -10,31 +10,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/masterpage_sys/board/qna")
-public class BoardQnaController {
+@RequestMapping("/masterpage_sys/board/suggestion")
+public class _BoardSuggestionController {
 
     private final BoardService boardService;
 
 
     @GetMapping("/listForm")
-    public String qnaListForm() {
-        return "masterpage_sys/board/qna/listForm";
+    public String suggestionListForm() {
+        return "masterpage_sys/board/suggestion/listForm";
     }
 
     @GetMapping("/saveForm")
-    public String qnaSaveForm() {
-        return "masterpage_sys/board/qna/saveForm";
+    public String suggestionSaveForm() {
+        return "masterpage_sys/board/suggestion/saveForm";
     }
 
     @GetMapping("/detailForm/{bbsIdx}")
-    public String qnaDetailForm(@PathVariable Long bbsIdx, Model model) {
+    public String suggestionDetailForm(@PathVariable Long bbsIdx, Model model) {
         model.addAttribute("board", boardService.getBoardDetail(bbsIdx));
-        return "masterpage_sys/board/qna/detailForm";
+        return "masterpage_sys/board/suggestion/detailForm";
     }
 
     @GetMapping("/updateForm/{bbsIdx}")
-    public String qnaUpdateForm(@PathVariable Long bbsIdx, Model model) {
+    public String suggestionUpdateForm(@PathVariable Long bbsIdx, Model model) {
         model.addAttribute("board", boardService.getBoardUpdate(bbsIdx));
-        return "masterpage_sys/board/qna/updateForm";
+        return "masterpage_sys/board/suggestion/updateForm";
     }
 }

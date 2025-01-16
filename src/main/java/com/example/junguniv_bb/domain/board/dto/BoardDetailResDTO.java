@@ -1,4 +1,4 @@
-package com.example.junguniv_bb.domain.board._notice.dto;
+package com.example.junguniv_bb.domain.board.dto;
 
 public record BoardDetailResDTO(
         Long bbsIdx,

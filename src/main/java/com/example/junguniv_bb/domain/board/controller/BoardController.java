@@ -31,16 +31,6 @@ public class BoardController {
         return "masterpage_sys/board/managerForm";
     }
 
-    @GetMapping("/data/listForm")
-    public String dataForm() {
-        return "masterpage_sys/board/dataForm";
-    }
-
-    @GetMapping("/consulting/listForm")
-    public String consultingForm() {
-        return "masterpage_sys/board/consultingForm";
-    }
-
     @GetMapping("/saveForm")
     public String saveForm() {
         return "masterpage_sys/board/saveForm";

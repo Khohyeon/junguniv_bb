@@ -1,4 +1,4 @@
-package com.example.junguniv_bb.domain.board._notice.controller;
+package com.example.junguniv_bb.domain.board.controller;
 
 import com.example.junguniv_bb.domain.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -8,32 +8,33 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller
 @RequiredArgsConstructor
-@RequestMapping("/masterpage_sys/board/notice")
-public class BoardNoticeController {
+@Controller
+@RequestMapping("/masterpage_sys/board/qna")
+public class _BoardQnaController {
 
     private final BoardService boardService;
 
+
     @GetMapping("/listForm")
-    public String noticeListForm() {
-        return "masterpage_sys/board/notice/listForm";
+    public String qnaListForm() {
+        return "masterpage_sys/board/qna/listForm";
     }
 
     @GetMapping("/saveForm")
-    public String noticeSaveForm() {
-        return "masterpage_sys/board/notice/saveForm";
+    public String qnaSaveForm() {
+        return "masterpage_sys/board/qna/saveForm";
     }
 
     @GetMapping("/detailForm/{bbsIdx}")
-    public String noticeDetailForm(@PathVariable Long bbsIdx, Model model) {
+    public String qnaDetailForm(@PathVariable Long bbsIdx, Model model) {
         model.addAttribute("board", boardService.getBoardDetail(bbsIdx));
-        return "masterpage_sys/board/notice/detailForm";
+        return "masterpage_sys/board/qna/detailForm";
     }
 
     @GetMapping("/updateForm/{bbsIdx}")
-    public String noticeUpdateForm(@PathVariable Long bbsIdx, Model model) {
+    public String qnaUpdateForm(@PathVariable Long bbsIdx, Model model) {
         model.addAttribute("board", boardService.getBoardUpdate(bbsIdx));
-        return "masterpage_sys/board/notice/updateForm";
+        return "masterpage_sys/board/qna/updateForm";
     }
 }

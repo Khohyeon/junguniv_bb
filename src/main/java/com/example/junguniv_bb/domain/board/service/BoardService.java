@@ -2,7 +2,6 @@ package com.example.junguniv_bb.domain.board.service;
 
 import com.example.junguniv_bb._core.exception.Exception400;
 import com.example.junguniv_bb._core.exception.ExceptionMessage;
-import com.example.junguniv_bb.domain.board._notice.dto.BoardDetailResDTO;
 import com.example.junguniv_bb.domain.board.dto.*;
 import com.example.junguniv_bb.domain.board.model.*;
 import jakarta.annotation.PostConstruct;
@@ -51,7 +50,7 @@ public class BoardService {
      * 응답 형태 : Page<BoardSearchReqDTO>
      */
     public Page<BoardSearchResDTO> searchByName(String title, String boardType, Pageable pageable) {
-        BbsGroup bbsGroup = bbsGroupRepository.findByBbsGroupName(boardType);
+        BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(boardType);
 
         Page<Bbs> bbsPage = bbsRepository.findByTitleContainingIgnoreCaseAndBbsGroup(title, bbsGroup,pageable);
         return bbsPage.map(bbs ->
@@ -106,7 +105,7 @@ public class BoardService {
     public void saveBoard(BoardSaveReqDTO boardSaveReqDTO) {
 
         String boardType = boardSaveReqDTO.boardType();
-        BbsGroup bbsGroup = bbsGroupRepository.findByBbsGroupName(boardType);
+        BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(boardType);
 
         // BBS 엔터티 저장
         Bbs bbs = bbsRepository.save(boardSaveReqDTO.saveEntity(bbsGroup));

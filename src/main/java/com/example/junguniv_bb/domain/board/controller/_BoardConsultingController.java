@@ -1,4 +1,4 @@
-package com.example.junguniv_bb.domain.board._faq.controller;
+package com.example.junguniv_bb.domain.board.controller;
 
 import com.example.junguniv_bb.domain.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -10,30 +10,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/masterpage_sys/board/faq")
-public class BoardFaqController {
+@RequestMapping("/masterpage_sys/board/consulting")
+public class _BoardConsultingController {
 
     private final BoardService boardService;
 
     @GetMapping("/listForm")
-    public String faqListForm() {
-        return "masterpage_sys/board/faq/listForm";
+    public String consultingListForm() {
+        return "masterpage_sys/board/consulting/listForm";
     }
 
     @GetMapping("/saveForm")
-    public String faqSaveForm() {
-        return "masterpage_sys/board/faq/saveForm";
+    public String consultingSaveForm() {
+        return "masterpage_sys/board/consulting/saveForm";
     }
 
     @GetMapping("/detailForm/{bbsIdx}")
-    public String faqDetailForm(@PathVariable Long bbsIdx, Model model) {
+    public String consultingDetailForm(@PathVariable Long bbsIdx, Model model) {
         model.addAttribute("board", boardService.getBoardDetail(bbsIdx));
-        return "masterpage_sys/board/faq/detailForm";
+        return "masterpage_sys/board/consulting/detailForm";
     }
 
     @GetMapping("/updateForm/{bbsIdx}")
-    public String faqUpdateForm(@PathVariable Long bbsIdx, Model model) {
+    public String consultingUpdateForm(@PathVariable Long bbsIdx, Model model) {
         model.addAttribute("board", boardService.getBoardUpdate(bbsIdx));
-        return "masterpage_sys/board/faq/updateForm";
+        return "masterpage_sys/board/consulting/updateForm";
     }
 }

@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function search(keyword, page) {
         const url = new URL('/masterpage_sys/board/api/search', window.location.origin);
         url.searchParams.set('title', keyword);
-        url.searchParams.set('boardType', '공지사항');
+        url.searchParams.set('boardType', 'NOTICE');
         url.searchParams.set('page', page);
         url.searchParams.set('size', pageSize);
 

@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then(data => {
-                alert('저장 성공!');
+                alert(data.response);
                 window.location.href = '/masterpage_sys/board/faq/listForm'; // 성공 후 목록으로 이동
             })
             .catch(error => {

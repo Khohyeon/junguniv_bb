@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
         event.preventDefault(); // 기본 제출 방지
 
         const formData = new FormData(form); // 폼 데이터 생성
-        const boardType = 'SUGGESTION';
+        const boardType = 'MATERIAL';
         const editorContent = document.getElementById('editor').value; // 에디터 내용 추가
         formData.append('contents', editorContent);
         formData.append('boardType', boardType);
@@ -23,8 +23,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then(data => {
-                alert(data.response);
-                window.location.href = '/masterpage_sys/board/suggestion/listForm'; // 성공 후 목록으로 이동
+                alert('저장 성공!');
+                window.location.href = '/masterpage_sys/board/data/listForm'; // 성공 후 목록으로 이동
             })
             .catch(error => {
                 console.error('저장 중 오류 발생:', error);
