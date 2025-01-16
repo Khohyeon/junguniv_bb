@@ -117,7 +117,34 @@ const MemberModule = {
                 console.error('아이디 중복 확인 에러:', error);
                 throw error;
             }
-        }
+        },
+
+        // 학생 검색
+        searchStudents: async function(searchParams, page = 0, size = 10) {
+            try {
+                const queryString = new URLSearchParams({
+                    ...searchParams,
+                    page: page,
+                    size: size
+                }).toString();
+
+                const response = await fetch(`/masterpage_sys/member/api/student/search?${queryString}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('검색에 실패했습니다.');
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('검색 에러:', error);
+                throw error;
+            }
+        },
     },
 
     // UI 렌더링 함수들
@@ -797,6 +824,64 @@ const MemberModule = {
                 console.error('기업 선택 중 오류 발생:', error);
             }
         },
+
+        // 검색 핸들러
+        search: async function(e) {
+            e.preventDefault();
+            
+            // 검색 파라미터 수집
+            const searchParams = {
+                name: document.getElementById('name')?.value || null,
+                userId: document.getElementById('userId')?.value || null,
+                birthYear: document.getElementById('birthYear')?.value || null,
+                birthMonth: document.getElementById('birthMonth')?.value || null,
+                birthDay: document.getElementById('birthDay')?.value || null,
+                telMobile: document.getElementById('telMobile')?.value || null,
+                email: document.getElementById('email')?.value || null,
+                chkDormant: document.querySelector('input[name="chkDormant"]:checked')?.value || null,
+                loginPass: document.querySelector('input[name="loginPass"]:checked')?.value || null,
+                chkForeigner: document.querySelector('input[name="chkForeigner"]:checked')?.value || null,
+                sex: document.querySelector('input[name="sex"]:checked')?.value || null,
+                jobName: document.getElementById('jobName')?.value || null,
+                jobWorkState: document.getElementById('jobWorkState')?.value || null,
+                jobDept: document.getElementById('jobDept')?.value || null,
+                chkSmsReceive: document.querySelector('input[name="chkSmsReceive"]:checked')?.value || null,
+                chkMailReceive: document.querySelector('input[name="chkMailReceive"]:checked')?.value || null,
+                chkIdentityVerification: document.querySelector('input[name="chkIdentityVerification"]:checked')?.value || null,
+                loginClientIp: document.getElementById('loginClientIp')?.value || null
+            };
+
+            // 빈 값이나 null 값을 가진 속성 제거
+            Object.keys(searchParams).forEach(key => {
+                if (searchParams[key] === null || searchParams[key] === '') {
+                    delete searchParams[key];
+                }
+            });
+
+            try {
+                const response = await MemberModule.api.searchStudents(searchParams, 0, MemberModule.state.size);
+                MemberModule.state.members = response.memberList;
+                MemberModule.state.currentPage = response.pageable.pageNumber;
+                MemberModule.state.totalPages = response.pageable.totalPages;
+                MemberModule.state.totalElements = response.pageable.totalElements;
+                
+                MemberModule.render.memberTable(MemberModule.state.members);
+                MemberModule.render.pagination(MemberModule.state.totalPages);
+            } catch (error) {
+                console.error('검색 에러:', error);
+                alert('검색에 실패했습니다.');
+            }
+        },
+
+        // 상세검색 토글
+        toggleDetailSearch: function() {
+            const hiddenArea = document.querySelector('.column-tc-wrap.hidden');
+            const toggleBtn = document.querySelector('.search-more-btn');
+            if (hiddenArea && toggleBtn) {
+                hiddenArea.classList.toggle('show');
+                toggleBtn.classList.toggle('active');
+            }
+        },
     },
 
     // 초기화 함수
@@ -939,6 +1024,18 @@ const MemberModule = {
                         }
                     });
                 }
+            }
+
+            // 검색 버튼 이벤트 리스너
+            const searchBtn = document.getElementById('searchBtn');
+            if (searchBtn) {
+                searchBtn.addEventListener('click', this.handlers.search);
+            }
+
+            // 상세검색 토글 버튼 이벤트 리스너
+            const searchMoreBtn = document.querySelector('.search-more-btn');
+            if (searchMoreBtn) {
+                searchMoreBtn.addEventListener('click', this.handlers.toggleDetailSearch);
             }
 
         } catch (error) {
