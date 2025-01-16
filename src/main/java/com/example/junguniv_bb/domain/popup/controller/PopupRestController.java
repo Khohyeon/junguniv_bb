@@ -2,7 +2,7 @@ package com.example.junguniv_bb.domain.popup.controller;
 
 import com.example.junguniv_bb._core.util.APIUtils;
 import com.example.junguniv_bb.domain.popup.dto.PopupSaveReqDTO;
-import com.example.junguniv_bb.domain.popup.dto.PopupSearchReqDTO;
+import com.example.junguniv_bb.domain.popup.dto.PopupSearchResDTO;
 import com.example.junguniv_bb.domain.popup.dto.PopupUpdateReqDTO;
 import com.example.junguniv_bb.domain.popup.service.PopupService;
 import lombok.RequiredArgsConstructor;
@@ -23,12 +23,12 @@ public class PopupRestController {
     private final PopupService popupService;
 
     @GetMapping("/search")
-    public ResponseEntity<APIUtils.APIResult<Page<PopupSearchReqDTO>>> searchPopups(@RequestParam String popupName, Pageable pageable) {
+    public ResponseEntity<APIUtils.APIResult<Page<PopupSearchResDTO>>> searchPopups(@RequestParam String popupName, Pageable pageable) {
 
         // 팝업의 페이징 형태를 popupIdx 기준으로 DESC 내림차순으로 설정
         pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "popupIdx"));
 
-        Page<PopupSearchReqDTO> searchResults = popupService.searchPopupsByName(popupName, pageable);
+        Page<PopupSearchResDTO> searchResults = popupService.searchPopupsByName(popupName, pageable);
         return ResponseEntity.ok(APIUtils.success(searchResults));
 
     }

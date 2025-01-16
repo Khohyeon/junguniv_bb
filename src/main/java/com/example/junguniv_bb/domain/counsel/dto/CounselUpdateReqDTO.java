@@ -24,7 +24,7 @@ public record CounselUpdateReqDTO(
         String fname2Name,
         String fname3Name,
         String answerMemo,
-        String counselState
+        Integer counselState
 ) {
 
     public Counsel updateEntity() {

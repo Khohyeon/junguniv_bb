@@ -2,9 +2,14 @@ package com.example.junguniv_bb.domain.counsel.controller;
 
 import com.example.junguniv_bb._core.util.APIUtils;
 import com.example.junguniv_bb.domain.counsel.dto.CounselSaveReqDTO;
+import com.example.junguniv_bb.domain.counsel.dto.CounselSearchResDTO;
 import com.example.junguniv_bb.domain.counsel.dto.CounselUpdateReqDTO;
 import com.example.junguniv_bb.domain.counsel.service.CounselService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +21,21 @@ import java.util.List;
 public class CounselRestController {
 
     private final CounselService counselService;
+
+    @GetMapping("/search")
+    public ResponseEntity<APIUtils.APIResult<Page<CounselSearchResDTO>>> searchCounsels(
+            @RequestParam String counselName,
+            @RequestParam Integer counselState,
+            Pageable pageable) {
+
+        // 팝업의 페이징 형태를 counselIdx 기준으로 DESC 내림차순으로 설정
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "counselIdx"));
+
+        Page<CounselSearchResDTO> searchResults = counselService.searchCounselsByName(counselName, counselState, pageable);
+        return ResponseEntity.ok(APIUtils.success(searchResults));
+
+    }
+
 
     /**
      *  [관리자모드] 홈페이지관리 - 문의상담관리 - 상담예약 - 상담명 등록페이지 - 등록하기

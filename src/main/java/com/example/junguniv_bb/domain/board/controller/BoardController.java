@@ -27,30 +27,6 @@ public class BoardController {
         return "masterpage_sys/board/managerForm";
     }
 
-    @GetMapping("/notice/listForm")
-    public String noticeListForm() {
-        return "masterpage_sys/board/notice/listForm";
-    }
-
-    @GetMapping("/notice/saveForm")
-    public String noticeSaveForm() {
-        return "masterpage_sys/board/notice/saveForm";
-    }
-
-    @GetMapping("/suggestion/listForm")
-    public String suggestionForm() {
-        return "masterpage_sys/board/suggestion/listForm";
-    }
-
-    @GetMapping("/faq/listForm")
-    public String faqForm() {
-        return "masterpage_sys/board/faq/listForm";
-    }
-    @GetMapping("/qna/listForm")
-    public String qnaForm() {
-        return "masterpage_sys/board/qna/listForm";
-    }
-
     @GetMapping("/data/listForm")
     public String dataForm() {
         return "masterpage_sys/board/dataForm";

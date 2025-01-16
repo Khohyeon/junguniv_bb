@@ -1,32 +1,109 @@
-<!-- fragments/boardHeader.html -->
-<div th:fragment="board_header(title, editorPlaceholder)" class="inner">
+<div th:fragment="board_header(includeCategory, includeDate, includeTopFix, includeMainExpose, includeAttachments, fileCount)" class="inner">
     <div class="form-wrap2">
-        <div class="column-tc-wrap column-tc-wrap2 part2">
+        <div class="column-tc-wrap bbs__write part1">
             <div class="column-tc">
-                <div class="tit">[[${title}]]</div>
+                <div class="tit">제목</div>
                 <div class="con">
-                    <input type="text" placeholder="[[${title}]]" name="title">
+                    <input type="text" name="title" id="title" placeholder="제목을 입력해주세요" value="">
+                    <input type="hidden" name="chksecret" id="chksecret" value="N">
                 </div>
             </div>
+            <input type="hidden" name="writer" value="이러닝관리자" placeholder="작성자를 입력해주세요.">
+        </div>
+
+        <div class="column-tc-wrap part1 bbs__write" th:if="${includeCategory}">
             <div class="column-tc">
-                <div class="tit">받는 사람</div>
-                <div class="con flex">
-                    <input type="text" readonly name="recipient">
-                    <a href="#none" class="jv-btn fill01" style="width:150px;">회원찾기</a>
+                <div class="tit">카테고리</div>
+                <div class="con">
+                    <select name="category" id="category">
+                        <option value="">선택</option>
+                        <option value="수강신청">수강신청</option>
+                        <option value="입학원서">입학원서</option>
+                    </select>
                 </div>
             </div>
         </div>
-        <div class="column-tc-wrap column-tc-wrap2 part1">
+
+        <div class="column-tc-wrap part1 bbs__write" th:if="${includeDate}">
+            <div class="column-tc" >
+                <div class="tit">작성일</div>
+                <div class="con">
+                    <input name="answer_date" id="answer_date" type="date" >
+                </div>
+            </div>
+        </div>
+
+        <!-- 게시글 상단 고정 -->
+        <div class="column-tc-bg" th:if="${includeTopFix}">
+            <div class="column-tc-wrap bbs__write">
+                <div class="column-tc">
+                    <div class="tit">게시글 상단고정</div>
+                    <div class="con">
+                        <label class="c-input ci-radio">
+                            <input type="radio" name="top_fix" id="top_fix_y" value="Y"> 리스트 상단 고정
+                            <div class="ci-show"></div>
+                        </label>
+                        <label class="c-input ci-radio">
+                            <input type="radio" name="top_fix" id="top_fix_n" value="N"> 리스트 상단 고정 해제
+                            <div class="ci-show"></div>
+                        </label>
+                    </div>
+                </div>
+                <div class="column-tc">
+                    <div class="tit">고정기간</div>
+                    <div class="con flex">
+                        <input name="fix_start_date" id="fix_start_date" type="date" value="">
+                        <span class="bar">&nbsp;&nbsp;~&nbsp;&nbsp;</span>
+                        <input name="fix_end_date" id="fix_end_date" type="date" value="">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 홈페이지 메인 노출 -->
+        <div class="column-tc-bg" th:if="${includeMainExpose}">
+            <div class="column-tc-wrap bbs__write">
+                <div class="column-tc">
+                    <div class="tit">홈페이지 메인노출</div>
+                    <div class="con">
+                        <label class="c-input ci-radio">
+                            <input type="radio" name="chkmain" id="chkmain_y" value="Y"> 메인노출
+                            <div class="ci-show"></div>
+                        </label>
+                        <label class="c-input ci-radio">
+                            <input type="radio" name="chkmain" id="chkmain_n" value="N"> 메인노출 해제
+                            <div class="ci-show"></div>
+                        </label>
+                    </div>
+                </div>
+                <div class="column-tc">
+                    <div class="tit">노출기간</div>
+                    <div class="con flex">
+                        <input name="expose_start_date" id="expose_start_date" type="date" value="">
+                        <span class="bar">&nbsp;&nbsp;~&nbsp;&nbsp;</span>
+                        <input name="expose_end_date" id="expose_end_date" type="date" value="">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 첨부파일 -->
+        <div class="column-tc-wrap part1 bbs__write" th:if="${includeAttachments}">
             <div class="column-tc">
-                <div class="tit">내용</div>
-                <div class="mt30 con">
-                    <textarea id="editor" name="contents" placeholder="[[${editorPlaceholder}]]"></textarea>
+                <div class="tit">첨부파일</div>
+                <div class="con flex2 fx-wrap">
+                    <label class="lab_attach" th:each="i : ${#numbers.sequence(1, fileCount)}">
+                        <input type="file" class="mt5" th:name="'fname' + ${i}">
+                    </label>
                 </div>
             </div>
         </div>
     </div>
+    <div class="mt30 con">
+        <textarea id="editor" name="contents"></textarea>
+    </div>
     <div class="btn-wrap mt50">
-        <a th:href="@{/masterpage_sys/board/listForm}" class="jv-btn fill01-lg">목록</a>
-<!--        <a th:href="[[${actionUrl}]]" class="jv-btn fill04-lg">보내기</a>-->
+        <a href="#" class="jv-btn fill01-lg">목록</a>
+        <button type="submit" class="jv-btn fill04-lg">저장</button>
     </div>
 </div>

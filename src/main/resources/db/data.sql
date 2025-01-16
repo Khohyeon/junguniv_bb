@@ -83,19 +83,19 @@ INSERT INTO COUNSEL (
     EMAIL, COUNSEL_STATE) VALUES
 ('온라인 상담', '홍길동', '010-1234-5678', '2023-05-01 10:30', '상담 신청 내용입니다.', '답변 내용입니다.', 'admin', '127.0.0.1',
 '서울특별시 강남구', '테헤란로 123', '12345', '대학교 졸업', 'file1.jpg', '자격증 내용', 'file2.jpg', 'file3.jpg',
-'ONLINE', 'file1-private.jpg', 'file2-private.jpg', 'file3-private.jpg', 'password1', '웹개발 과정', 'test1@example.com', 'A'),
+'ONLINE', 'file1-private.jpg', 'file2-private.jpg', 'file3-private.jpg', 'password1', '웹개발 과정', 'test1@example.com', 1),
 ('전화 상담', '김영희', '010-9876-5432', '2023-05-02 14:00', '전화 상담 요청 내용입니다.', '전화 상담 답변입니다.', 'admin', '127.0.0.2',
 '경기도 성남시', '분당로 456', '54321', '석사 졸업', 'file4.jpg', '자격증 내용', 'file5.jpg', 'file6.jpg',
-'PHONE', 'file4-private.jpg', 'file5-private.jpg', 'file6-private.jpg', 'password2', '디자인 과정', 'test2@example.com', 'B'),
+'PHONE', 'file4-private.jpg', 'file5-private.jpg', 'file6-private.jpg', 'password2', '디자인 과정', 'test2@example.com', 2),
 ('온라인 상담', '이철수', '010-1111-2222', '2023-05-03 09:00', '문의 내용입니다.', '답변입니다.', 'admin', '127.0.0.3',
 '부산광역시 해운대구', '달맞이길 789', '67890', '고등학교 졸업', 'file7.jpg', '자격증 내용', 'file8.jpg', 'file9.jpg',
-'ONLINE', 'file7-private.jpg', 'file8-private.jpg', 'file9-private.jpg', 'password3', '데이터 분석 과정', 'test3@example.com', 'C'),
+'ONLINE', 'file7-private.jpg', 'file8-private.jpg', 'file9-private.jpg', 'password3', '데이터 분석 과정', 'test3@example.com', 1),
 ('전화 상담', '박민수', '010-3333-4444', '2023-05-04 11:15', '상담 요청 내용입니다.', '전화 상담에 대한 답변입니다.', 'admin', '127.0.0.4',
 '대구광역시 수성구', '범어로 123', '98765', '박사 졸업', 'file10.jpg', '자격증 내용', 'file11.jpg', 'file12.jpg',
-'PHONE', 'file10-private.jpg', 'file11-private.jpg', 'file12-private.jpg', 'password4', 'AI 과정', 'test4@example.com', 'A'),
+'PHONE', 'file10-private.jpg', 'file11-private.jpg', 'file12-private.jpg', 'password4', 'AI 과정', 'test4@example.com', 1),
 ('온라인 상담', '최지영', '010-5555-6666', '2023-05-05 16:45', '기타 상담 요청입니다.', '기타 상담 답변입니다.', 'admin', '127.0.0.5',
 '광주광역시 북구', '문흥로 123', '24680', '고등학교 졸업', 'file13.jpg', '자격증 내용', 'file14.jpg', 'file15.jpg',
-'ONLINE', 'file13-private.jpg', 'file14-private.jpg', 'file15-private.jpg', 'password5', '마케팅 과정', 'test5@example.com', 'B');
+'ONLINE', 'file13-private.jpg', 'file14-private.jpg', 'file15-private.jpg', 'password5', '마케팅 과정', 'test5@example.com', 2);
 
 
 INSERT INTO AGREEMENT (AGREEMENT_TITLE, AGREEMENT_CONTENTS, OPEN_YN, AGREEMENT_TYPE) VALUES

@@ -1,35 +1,16 @@
 <div class="form-wrap2">
-    <div class="column-tc-wrap column-tc-wrap2 part2">
-        <!-- 메시지 제목 -->
-        <div class="column-tc">
-            <div class="tit">메시지 제목</div>
-            <div class="con">
-                <input type="text" th:value="${detail.title()}" readonly>
-            </div>
-        </div>
-        <!-- 받는 사람 -->
-        <div class="column-tc">
-            <div class="tit">받는 사람</div>
-            <div class="con">
-                <input type="text" th:value="${detail.receiverName} + ' / ' + ${detail.receiverId}" readonly>
-            </div>
-        </div>
+    <div class="view-top">
+        <div class="tit">ㅁㄴㅇㄹ</div>
+        <ul class="write-info">
+            <li>프론트관리자(manager)</li>
+            <li>2022-12-14 17:08:48</li>
+            <li>View.61</li>
+        </ul>
+
+
     </div>
-    <div class="column-tc-wrap column-tc-wrap2 part1">
-        <!-- 메시지 내용 -->
-        <div class="column-tc">
-            <div class="tit">메시지 내용</div>
-            <div class="mt30 con">
-                <textarea id="editor" name="contents" placeholder="내용을 입력해주세요" th:text="${detail.contents()}"></textarea>
-            </div>
-        </div>
+    <div class="view-con">
+        <p>ㅁㄴㅇㄹ</p>
+        ​
     </div>
-</div>
-<div class="btn-wrap mt50">
-    <!-- 목록으로 돌아가기 -->
-    <a th:href="@{/masterpage_sys/board/listForm}" class="jv-btn fill01-lg">목록</a>
-    <!-- 삭제 버튼 -->
-    <a href="#none" class="jv-btn fill05-lg" th:onclick="|deleteMessage(${detail.messageId})|">삭제</a>
-    <!-- 답변 보내기 -->
-    <a th:href="@{/masterpage_sys/board/answerForm(messageId=${detail.messageId})}" class="jv-btn fill04-lg">답변 보내기</a>
 </div>

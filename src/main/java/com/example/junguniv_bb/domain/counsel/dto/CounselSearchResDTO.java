@@ -1,9 +1,9 @@
 package com.example.junguniv_bb.domain.counsel.dto;
 
-public record CounselPageResDTO(
+public record CounselSearchResDTO(
         Long counselIdx,
-        String memo,
-        String talkTime,
+        String counselName,
+        String createdDate,
         String name,
         Integer counselState,
         String updateDate

@@ -23,7 +23,7 @@ public record CounselSaveReqDTO(
         String fname2Name,
         String fname3Name,
         String answerMemo,
-        String counselState
+        Integer counselState
 
 ) {
 

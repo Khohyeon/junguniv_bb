@@ -116,6 +116,6 @@ public class Counsel extends BaseTime {
 
     // 상담상태
     @Column(name = "COUNSEL_STATE", length = 1, nullable = false)
-    private String counselState;
+    private Integer counselState;
 }
 
