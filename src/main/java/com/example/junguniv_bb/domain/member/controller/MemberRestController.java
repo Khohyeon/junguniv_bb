@@ -22,6 +22,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -31,6 +34,17 @@ public class MemberRestController {
 
     /* DI */
     private final MemberService memberService;
+
+
+    /* 아이디 중복 체크 */
+    @GetMapping("/idCheck")
+    public ResponseEntity<?> idCheck(@RequestParam String userId) {
+        // 서비스 호출
+        boolean isDuplicate = memberService.checkDuplicateId(userId);
+        
+        // true일 때가 중복이므로, 응답을 반대로 해야 합니다
+        return ResponseEntity.ok(APIUtils.success(!isDuplicate));
+    }
 
 
     /* 페이지 조회 */

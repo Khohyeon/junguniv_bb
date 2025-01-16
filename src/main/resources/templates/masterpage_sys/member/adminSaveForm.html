@@ -27,6 +27,7 @@
 								<div class="tit"><span class="required">ID</span></div>
 								<div class="con">
 									<input type="text" name="userId" id="userId" placeholder="ID를 입력해주세요">
+									<button type="button" id="checkDuplicateId">중복 확인</button>
 								</div>
 							</div>
 							<div>
@@ -171,7 +172,8 @@
 						<div class="con flex">
 							<input type="text" name="email1" id="email1">
 							<span>&nbsp;&nbsp;@&nbsp;&nbsp;</span>
-							<select name="email2" id="email2">
+							<input type="text" name="email2" id="email2">
+							<select name="email2Select" id="email2Select">
 								<option value="">직접입력</option>
 								<option value="naver.com">naver.com</option>
 								<option value="gmail.com">gmail.com</option>

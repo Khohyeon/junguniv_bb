@@ -30,6 +30,11 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
+    /* 아이디 중복체크 */
+    public boolean checkDuplicateId(String userId) {
+        return memberRepository.findByUserId(userId).isPresent();
+    }
+
     /* 페이징 */
     // TODO 검색 기능 및 권한 조건 추가 해야함.
     public ResponseEntity<?> memberPage(String referer, Pageable pageable) {

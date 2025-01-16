@@ -7,6 +7,7 @@ const MemberModule = {
         currentPage: 0,
         size: 10,
         totalElements: 0,
+        isIdCheckPassed: false, // 아이디 중복 확인 통과 여부
         pageType: '', // 'student', 'teacher', 'company', 'admin'
         fieldNames: {
             userId: '아이디',
@@ -14,6 +15,7 @@ const MemberModule = {
             name: '이름',
             birthday: '생년월일',
             telMobile: '휴대폰 번호',
+            residentNumber: '주민등록번호',
             email: '이메일',
             jobName: '위탁기업명',
             jobNumber: '사업자번호',
@@ -94,6 +96,25 @@ const MemberModule = {
                 return await response.json();
             } catch (error) {
                 console.error('회원 등록 에러:', error);
+                throw error;
+            }
+        },
+
+        // 아이디 중복 확인
+        checkDuplicateId: async function(userId) {
+            try {
+                const response = await fetch(`/masterpage_sys/member/api/idCheck?userId=${userId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('아이디 중복 확인에 실패했습니다.');
+                }
+                return await response.json();
+            } catch (error) {
+                console.error('아이디 중복 확인 에러:', error);
                 throw error;
             }
         }
@@ -397,6 +418,12 @@ const MemberModule = {
         submitMemberSaveForm: async function(event) {
             event.preventDefault();
             
+            // 아이디 중복 확인을 통과했는지 확인
+            if (!MemberModule.state.isIdCheckPassed) {
+                alert('아이디 중복 확인을 해주세요.');
+                return;
+            }
+
             try {
                 // 폼 데이터 수집
                 const memberData = {
@@ -405,19 +432,24 @@ const MemberModule = {
                     userId: document.getElementById('userId')?.value,
                     pwd: document.getElementById('pwd')?.value,
                     name: document.getElementById('name')?.value,
+                    birthday: document.getElementById('birthday')?.value,
+                    sex: document.querySelector('input[name="sex"]:checked')?.value,
                     chkDormant: document.getElementById('chkDormant')?.checked ? 'N' : 'Y',
                     memberState: document.getElementById('memberState')?.checked ? 'N' : 'Y',
                     engName: document.getElementById('engName')?.value,
                     chkForeigner: document.getElementById('chkForeigner')?.checked ? 'N' : 'Y',
+                    agreeDate: document.getElementById('agreeDate')?.value,
+                    realDate: document.getElementById('realDate')?.value,
                     
                     // 휴대폰
-                    telMobile1: document.getElementById('telMobile1')?.value,
-                    telMobile2: document.getElementById('telMobile2')?.value,
-                    telMobile3: document.getElementById('telMobile3')?.value,
+                    telMobile: document.getElementById('telMobile1')?.value && document.getElementById('telMobile2')?.value && document.getElementById('telMobile3')?.value
+                        ? document.getElementById('telMobile1')?.value + '-' + document.getElementById('telMobile2')?.value + '-' + document.getElementById('telMobile3')?.value
+                        : null,
                     
                     // 이메일
-                    email1: document.getElementById('email1')?.value,
-                    email2: document.getElementById('email2')?.value,
+                    email: document.getElementById('email1')?.value && document.getElementById('email2')?.value
+                        ? document.getElementById('email1')?.value + '@' + document.getElementById('email2')?.value
+                        : null,
                     
                     // 주소
                     zipcode: document.getElementById('zipcode')?.value,
@@ -442,23 +474,43 @@ const MemberModule = {
                     jobPosition: document.getElementById('jobPosition')?.value,
                     
                     // 기업 전화번호
-                    jobTelOffice1: document.getElementById('jobTelOffice1')?.value,
-                    jobTelOffice2: document.getElementById('jobTelOffice2')?.value,
-                    jobTelOffice3: document.getElementById('jobTelOffice3')?.value,
+                    jobTelOffice: document.getElementById('jobTelOffice1')?.value && document.getElementById('jobTelOffice2')?.value && document.getElementById('jobTelOffice3')?.value
+                        ? document.getElementById('jobTelOffice1')?.value + '-' + document.getElementById('jobTelOffice2')?.value + '-' + document.getElementById('jobTelOffice3')?.value
+                        : null,
                     
                     // 사업자번호
-                    jobNumber1: document.getElementById('jobNumber1')?.value,
-                    jobNumber2: document.getElementById('jobNumber2')?.value,
-                    jobNumber3: document.getElementById('jobNumber3')?.value,
+                    jobNumber: document.getElementById('jobNumber1')?.value && document.getElementById('jobNumber2')?.value && document.getElementById('jobNumber3')?.value
+                        ? document.getElementById('jobNumber1')?.value + '-' + document.getElementById('jobNumber2')?.value + '-' + document.getElementById('jobNumber3')?.value
+                        : null,
                     
                     // 고용보험관리번호
-                    jobInsuranceNumber1: document.getElementById('jobInsuranceNumber1')?.value,
-                    jobInsuranceNumber2: document.getElementById('jobInsuranceNumber2')?.value,
-                    jobInsuranceNumber3: document.getElementById('jobInsuranceNumber3')?.value,
-                    jobInsuranceNumber4: document.getElementById('jobInsuranceNumber4')?.value,
+                    jobInsuranceNumber: document.getElementById('jobInsuranceNumber1')?.value && document.getElementById('jobInsuranceNumber2')?.value && document.getElementById('jobInsuranceNumber3')?.value && document.getElementById('jobInsuranceNumber4')?.value
+                        ? document.getElementById('jobInsuranceNumber1')?.value + '-' + document.getElementById('jobInsuranceNumber2')?.value + '-' + document.getElementById('jobInsuranceNumber3')?.value + '-' + document.getElementById('jobInsuranceNumber4')?.value
+                        : null,
 
                     // 관리자 전용 필드
-                    authLevel: document.getElementById('authLevel')?.value
+                    authLevel: document.getElementById('authLevel')?.value,
+                    jobWorkState: document.getElementById('jobWorkState')?.value,
+                    jobDuty: document.getElementById('jobDuty')?.value,
+                    jobCourseDuty: document.querySelector('input[name="jobCourseDuty"]:checked')?.value,
+                    loginDenyIp: document.getElementById('loginDenyIp')?.value,
+
+                    // 주민등록번호 (학생 전용)
+                    residentNumber: document.getElementById('residentNumber1')?.value && document.getElementById('residentNumber2')?.value && document.getElementById('residentNumber3')?.value
+                        ? `${document.getElementById('residentNumber1')?.value}-${document.getElementById('residentNumber2')?.value}${document.getElementById('residentNumber3')?.value}`
+                        : null,
+
+                    // 훈련생 구분 (학생 전용)
+                    trnee_se: document.getElementById('trnee_se')?.value,
+                    irglbrSe: document.getElementById('irglbrSe')?.value,
+
+                    // SMS/이메일 수신 여부
+                    chkSmsReceive: document.querySelector('input[name="chkSmsReceive"]:checked')?.value,
+                    chkMailReceive: document.querySelector('input[name="chkMailReceive"]:checked')?.value,
+
+                    // 본인인증/비밀번호 변경 예외처리
+                    chkIdentityVerification: document.querySelector('input[name="chkIdentityVerification"]:checked')?.value,
+                    chkPwdChange: document.querySelector('input[name="chkPwdChange"]:checked')?.value,
                 };
 
                 // 필수 입력값 검증
@@ -467,7 +519,7 @@ const MemberModule = {
                 // userType에 따른 추가 필수 필드
                 switch(memberData.userType) {
                     case 'STUDENT':
-                        requiredFields.push('name', 'birthday');
+                        requiredFields.push('name', 'birthday', 'residentNumber');
                         break;
                     case 'TEACHER':
                         requiredFields.push('name');
@@ -521,17 +573,18 @@ const MemberModule = {
                     memberData.contractorEtc = `${document.getElementById('email1').value}@${document.getElementById('email2').value}`;
                 } else if (memberData.userType == 'STUDENT' || memberData.userType == 'TEACHER') {
                     // 학생 또는 교강사 회원의 경우 일반 연락처 필드에 저장
-                    memberData.telMobile = `${memberData.telMobile1 || ''}-${document.getElementById('telMobile2')?.value || ''}-${document.getElementById('telMobile3')?.value || ''}`;
+                    memberData.telMobile = `${document.getElementById('telMobile1')?.value || ''}-${document.getElementById('telMobile2')?.value || ''}-${document.getElementById('telMobile3')?.value || ''}`;
                     memberData.email = `${document.getElementById('email1')?.value || ''}@${document.getElementById('email2')?.value || ''}`;
                 } else {
                     // 관리자 회원의 경우 값이 없으면 빈 문자열로 저장
+                    const telMobile1 = document.getElementById('telMobile1')?.value || '';
                     const telMobile2 = document.getElementById('telMobile2')?.value || '';
                     const telMobile3 = document.getElementById('telMobile3')?.value || '';
                     const email1 = document.getElementById('email1')?.value || '';
                     const email2 = document.getElementById('email2')?.value || '';
 
-                    memberData.telMobile = telMobile2 || telMobile3 ? `${memberData.telMobile1 || ''}-${telMobile2}-${telMobile3}` : '';
-                    memberData.email = email1 || email2 ? `${email1}@${email2}` : '';
+                    memberData.telMobile = telMobile1 || telMobile2 || telMobile3 ? `${telMobile1 || ''}-${telMobile2 || ''}-${telMobile3 || ''}` : '';
+                    memberData.email = email1 || email2 ? `${email1 || ''}@${email2 || ''}` : '';
                 }
 
                 // 기업 회원 특별 처리
@@ -586,7 +639,7 @@ const MemberModule = {
                         'ADMIN': '관리자'
                     }[memberData.userType];
                     
-                    alert(`${userTypeText}가 등록되었습니다.`);
+                    alert(`${userTypeText} 등록 완료.`);
                     window.location.href = `/masterpage_sys/member/${memberData.userType.toLowerCase()}/`; // 목록 페이지로 이동
                 } else {
                     alert(response.message || '회원 등록에 실패했습니다.');
@@ -594,6 +647,29 @@ const MemberModule = {
             } catch (error) {
                 console.error('회원 등록 에러:', error);
                 alert('회원 등록에 실패했습니다.');
+            }
+        },
+
+        // 아이디 중복 확인 핸들러
+        checkIdDuplication: async function() {
+            const userId = document.getElementById('userId').value;
+            if (!userId) {
+                alert('아이디를 입력해주세요.');
+                return;
+            }
+
+            try {
+                const response = await MemberModule.api.checkDuplicateId(userId);
+                if (response.response) {
+                    alert('사용 가능한 아이디입니다.');
+                    MemberModule.state.isIdCheckPassed = true; // 중복 확인 통과
+                } else {
+                    alert('이미 사용 중인 아이디입니다.');
+                    MemberModule.state.isIdCheckPassed = false; // 중복 확인 실패
+                }
+            } catch (error) {
+                alert(error.message);
+                MemberModule.state.isIdCheckPassed = false; // 오류 발생 시 중복 확인 실패 처리
             }
         }
     },
@@ -687,18 +763,33 @@ const MemberModule = {
             }
 
             // 이메일 도메인 선택 이벤트 리스너
-            const email2Select = document.getElementById('email2');
+            const email2Select = document.getElementById('email2Select');
             if (email2Select) {
                 email2Select.addEventListener('change', function(e) {
                     const email2Input = document.getElementById('email2');
-                    if (e.target.value === '직접입력') {
+                    if (e.target.value === '') {
+                        // 직접입력 선택 시
                         email2Input.value = '';
                         email2Input.readOnly = false;
+                        email2Input.focus();
                     } else {
+                        // 도메인 선택 시
                         email2Input.value = e.target.value;
                         email2Input.readOnly = true;
                     }
                 });
+
+                // 페이지 로드 시 초기 상태 설정
+                const email2Input = document.getElementById('email2');
+                if (email2Input) {
+                    email2Input.readOnly = email2Select.value !== '';
+                }
+            }
+
+            // 아이디 중복 확인 버튼 이벤트 리스너
+            const checkDuplicateIdButton = document.getElementById('checkDuplicateId');
+            if (checkDuplicateIdButton) {
+                checkDuplicateIdButton.addEventListener('click', this.handlers.checkIdDuplication);
             }
 
         } catch (error) {
