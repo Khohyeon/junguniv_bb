@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -27,6 +28,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
+
 import java.util.List;
 
 @Service
@@ -97,7 +100,6 @@ public class MemberService {
     /* 페이징 */
     // TODO 검색 기능 및 권한 조건 추가 해야함.
     public ResponseEntity<?> memberPage(String referer, Pageable pageable) {
-        
         // 페이지 조회
         Page<Member> memberPagePS;
         
@@ -117,25 +119,20 @@ public class MemberService {
         }
 
         // UserType에 따른 페이지 조회
-        if (userType != null) {
-            memberPagePS = memberRepository.findByUserType(userType, pageable);
-        } else {
-            memberPagePS = memberRepository.findAll(pageable);
-        }
+        memberPagePS = (userType != null) ?
+            memberRepository.findByUserType(userType, pageable) :
+            memberRepository.findAll(pageable);
         
         // UserType에 따른 DTO 변환 및 반환
         if (userType != null) {
-            switch (userType) {
-                case STUDENT:
-                    return ResponseEntity.ok(new MemberStudentPageResDTO(memberPagePS));
-                case TEACHER:
-                    return ResponseEntity.ok(new MemberTeacherPageResDTO(memberPagePS));
-                case COMPANY:
-                    return ResponseEntity.ok(new MemberCompanyPageResDTO(memberPagePS));
-                case ADMIN:
-                    return ResponseEntity.ok(new MemberAdminPageResDTO(memberPagePS));
-                default:
-                    return ResponseEntity.ok(new MemberPageResDTO(memberPagePS));
+            if (userType == UserType.STUDENT) {
+                return ResponseEntity.ok(new MemberStudentPageResDTO(memberPagePS));
+            } else if (userType == UserType.TEACHER) {
+                return ResponseEntity.ok(new MemberTeacherPageResDTO(memberPagePS));
+            } else if (userType == UserType.COMPANY) {
+                return ResponseEntity.ok(new MemberCompanyPageResDTO(memberPagePS));
+            } else if (userType == UserType.ADMIN) {
+                return ResponseEntity.ok(new MemberAdminPageResDTO(memberPagePS));
             }
         }
         
@@ -170,43 +167,100 @@ public class MemberService {
 //        return ResponseEntity.ok(new MemberStudentPageResDTO(memberPagePS));
 //    }
 
+    /* 교강사 검색 */
+    @Transactional(readOnly = true)
+    public ResponseEntity<?> searchTeachers(MemberTeacherSearchReqDTO searchDTO, Pageable pageable) {
+        try {
+            Page<Member> memberPagePS = memberRepository.searchTeachers(
+                searchDTO.name(),
+                searchDTO.userId(),
+                searchDTO.jobEmployeeType(),
+                searchDTO.telMobile(),
+                searchDTO.email(),
+                pageable
+            );
+            return ResponseEntity.ok(new MemberPageResDTO(memberPagePS));
+        } catch (Exception e) {
+            log.error("교강사 검색 중 오류 발생: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("교강사 검색 중 오류가 발생했습니다.");
+        }
+    }
+
+    /* 기업 검색 */
+    @Transactional(readOnly = true)
+    public ResponseEntity<?> searchCompanies(MemberCompanySearchReqDTO searchDTO, Pageable pageable) {
+        try {
+            Page<Member> memberPagePS = memberRepository.searchCompanies(
+                searchDTO.jobName(),
+                searchDTO.userId(),
+                searchDTO.jobNumber(),
+                searchDTO.contractorName(),
+                searchDTO.contractorTel(),
+                searchDTO.contractorEtc(),
+                searchDTO.jobScale(),
+                pageable
+            );
+            return ResponseEntity.ok(new MemberCompanyPageResDTO(memberPagePS));
+        } catch (Exception e) {
+            log.error("기업 검색 중 오류 발생: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("기업 검색 중 오류가 발생했습니다.");
+        }
+    }
+
+    /* 관리자 검색 */
+    @Transactional(readOnly = true)
+    public ResponseEntity<?> searchAdmins(MemberAdminSearchReqDTO searchDTO, Pageable pageable) {
+        try {
+            Page<Member> memberPagePS = memberRepository.searchAdmins(
+                searchDTO.name(),
+                searchDTO.userId(),
+                searchDTO.jobCourseDuty(),
+                pageable
+            );
+            return ResponseEntity.ok(new MemberAdminPageResDTO(memberPagePS));
+        } catch (Exception e) {
+            log.error("관리자 검색 중 오류 발생: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("관리자 검색 중 오류가 발생했습니다.");
+        }
+    }
+
     /* 회원 이미지 파일 삭제 */
     private void deleteAllMemberFiles(Member member) {
         // 메인 이미지 삭제
         if (member.getMainImg() != null) {
             FileUtils.deleteFile(member.getMainImg(), uploadDirPath);
         }
-        
+
         // 서브 이미지 삭제
         if (member.getSubImg() != null) {
             FileUtils.deleteFile(member.getSubImg(), uploadDirPath);
         }
-        
+
         // 증명사진 삭제
         if (member.getFnamePicture() != null) {
             FileUtils.deleteFile(member.getFnamePicture(), uploadDirPath);
         }
-        
+
         // 사업자등록증 삭제
         if (member.getFnameSaup() != null) {
             FileUtils.deleteFile(member.getFnameSaup(), uploadDirPath);
         }
-        
+
         // 로고 삭제
         if (member.getFnameLogo() != null) {
             FileUtils.deleteFile(member.getFnameLogo(), uploadDirPath);
         }
-        
+
         // 첨부파일2 삭제
         if (member.getFname2() != null) {
             FileUtils.deleteFile(member.getFname2(), uploadDirPath);
         }
-        
+
         // 첨부파일3 삭제
         if (member.getFname3() != null) {
             FileUtils.deleteFile(member.getFname3(), uploadDirPath);
         }
-        
+
         // 첨부파일4 삭제
         if (member.getFname4() != null) {
             FileUtils.deleteFile(member.getFname4(), uploadDirPath);
@@ -216,7 +270,6 @@ public class MemberService {
     /* 다중삭제 */
     @Transactional
     public void memberDeleteList(List<Long> idList) {
-        
         // DB조회
         List<Member> memberListPS = memberRepository.findAllById(idList);
 
@@ -236,7 +289,6 @@ public class MemberService {
     /* 삭제 */
     @Transactional
     public void memberDelete(Long id) {
-
         // DB조회
         Member memberPS = memberRepository.findById(id)
                 .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_MEMBER.getMessage()));
@@ -251,7 +303,6 @@ public class MemberService {
     /* 수정 */
     @Transactional
     public void memberUpdate(Long id, MemberUpdateReqDTO reqDTO) {
-
         // DB조회
         Member memberPS = memberRepository.findById(id)
                 .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_MEMBER.getMessage()));
@@ -294,13 +345,12 @@ public class MemberService {
         return MemberDetailResDTO.from(memberPS);
     }
 
-
     /* 등록 */
     @Transactional
     public void memberSave(MemberSaveReqDTO requestDTO) {
         String mainImgPath = null;
         String subImgPath = null;
-        
+
         try {
             // pwd null 체크
             if (requestDTO.pwd() == null) {
@@ -314,7 +364,7 @@ public class MemberService {
             MultipartFile mainImgFile = requestDTO.mainImgFile();
             MultipartFile subImgFile = requestDTO.subImgFile();
 
-            log.info("파일 업로드 시작 - 메인이미지: {}, 서브이미지: {}", 
+            log.info("파일 업로드 시작 - 메인이미지: {}, 서브이미지: {}",
                 mainImgFile != null ? mainImgFile.getOriginalFilename() : "없음",
                 subImgFile != null ? subImgFile.getOriginalFilename() : "없음");
 
@@ -342,9 +392,9 @@ public class MemberService {
             Member member = requestDTO.toEntity(encodedPwd);
             member.setMainImg(mainImgPath);
             member.setSubImg(subImgPath);
-            
+
             memberRepository.save(member);
-            log.info("회원 저장 완료 - ID: {}, 메인이미지: {}, 서브이미지: {}", 
+            log.info("회원 저장 완료 - ID: {}, 메인이미지: {}, 서브이미지: {}",
                 member.getUserId(), mainImgPath, subImgPath);
 
         } catch (Exception e) {
@@ -355,7 +405,7 @@ public class MemberService {
             if (subImgPath != null) {
                 FileUtils.deleteFile(subImgPath, uploadDirPath);
             }
-            
+
             log.error("회원 저장 중 오류 발생: {}", e.getMessage(), e);
             throw new RuntimeException("회원 저장에 실패했습니다: " + e.getMessage());
         }

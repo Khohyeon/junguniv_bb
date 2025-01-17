@@ -19,57 +19,40 @@
 						<div class="column-tc">
 							<div class="tit">이름</div>
 							<div class="con">
-								<input type="text" placeholder="이름을 입력해주세요">
+								<input type="text" id="name" name="name" placeholder="이름을 입력해주세요">
 							</div>
 							<div class="tit">ID</div>
 							<div class="con">
-								<input type="text" placeholder="ID를 입력해주세요">
+								<input type="text" id="userId" name="userId" placeholder="ID를 입력해주세요">
 							</div>
 						</div>
 						<div class="column-tc">
 							<div class="tit">근무형태</div>
 							<div class="con">
 								<label class="c-input ci-radio">
-									<input type="radio"> 정규직
+									<input type="radio" name="jobEmployeeType" value="정규직"> 정규직
 									<div class="ci-show"></div>
 								</label>
 								<label class="c-input ci-radio">
-									<input type="radio"> 계약직
+									<input type="radio" name="jobEmployeeType" value="계약직"> 계약직
 									<div class="ci-show"></div>
 								</label>
 								<label class="c-input ci-radio">
-									<input type="radio"> 계약 종료 후 정규직 검토
+									<input type="radio" name="jobEmployeeType" value="계약 종료 후 정규직 검토"> 계약 종료 후 정규직 검토
 									<div class="ci-show"></div>
 								</label>
 							</div>
 						</div>
 						<div class="column-tc">
 							<div class="tit">휴대폰</div>
-							<div class="con flex">
-								<select>
-									<option>010</option>
-									<option>1</option>
-									<option>2</option>
-								</select>
-								<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
-								<input type="text" placeholder="번호를 입력해주세요">
-								<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
-								<input type="text" placeholder="번호를 입력해주세요">
+							<div class="con">
+								<input type="text" id="telMobile" name="telMobile" placeholder="휴대폰 번호를 입력해주세요">
 							</div>
 						</div>
 						<div class="column-tc">
 							<div class="tit">이메일</div>
-							<div class="con flex">
-								<input type="text" placeholder="번호를 입력해주세요">
-								<span>&nbsp;&nbsp;@&nbsp;&nbsp;</span>
-								<select>
-									<option>선택</option>
-									<option>10</option>
-									<option>20</option>
-									<option>30</option>
-									<option>40</option>
-									<option>50</option>
-								</select>
+							<div class="con">
+								<input type="text" id="email" name="email" placeholder="이메일 주소를 입력해주세요">
 							</div>
 						</div>
 					</div>
@@ -78,7 +61,7 @@
 		</div>
 
 		<div class="btn-wrap">
-			<a href="#none" class="jv-btn jb-fill01-lg">검색</a>
+			<a href="#none" class="jv-btn jb-fill01-lg" id="searchBtn">검색</a>
 		</div>
 
 		<div class="table-util mt50">

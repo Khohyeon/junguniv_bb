@@ -19,37 +19,37 @@
 						<div class="column-tc">
 							<div class="tit">기업명</div>
 							<div class="con">
-								<input type="text" placeholder="기업명을 입력해주세요">
+								<input type="text" id="jobName" placeholder="기업명을 입력해주세요">
 							</div>
 						</div>
 						<div class="column-tc">
 							<div class="tit">ID</div>
 							<div class="con">
-								<input type="text" placeholder="ID를 입력해주세요">
+								<input type="text" id="userId" placeholder="ID를 입력해주세요">
 							</div>
 						</div>
 						<div class="column-tc">
 							<div class="tit">사업자번호</div>
 							<div class="con">
-								<input type="text" placeholder="사업자번호를 입력해주세요">
+								<input type="text" id="jobNumber" placeholder="사업자번호를 입력해주세요">
 							</div>
 						</div>
 						<div class="column-tc">
 							<div class="tit">교육담당자</div>
 							<div class="con">
-								<input type="text" placeholder="담당자 이름을 입력해주세요">
+								<input type="text" id="contractorName" placeholder="담당자 이름을 입력해주세요">
 							</div>
 						</div>
 						<div class="column-tc">
 							<div class="tit">연락처</div>
 							<div class="con">
-								<input type="text" placeholder="연락처를 입력해주세요">
+								<input type="text" id="contractorTel" placeholder="연락처를 입력해주세요">
 							</div>
 						</div>
 						<div class="column-tc">
 							<div class="tit">이메일</div>
 							<div class="con">
-								<input type="text" placeholder="이메일을 입력해주세요">
+								<input type="text" id="contractorEtc" placeholder="이메일을 입력해주세요">
 							</div>
 						</div>
 					</div>
@@ -58,19 +58,19 @@
 							<div class="tit">기업규모</div>
 							<div class="con">
 								<label class="c-input ci-radio">
-									<input type="radio" name="company"> 전체
+									<input type="radio" name="company" value=""> 전체
 									<div class="ci-show"></div>
 								</label>
 								<label class="c-input ci-radio">
-									<input type="radio" name="company"> 우선지원 대상
+									<input type="radio" name="company" value="001"> 우선지원 대상
 									<div class="ci-show"></div>
 								</label>
 								<label class="c-input ci-radio">
-									<input type="radio" name="company"> 상시근로자 1,000인 미만
+									<input type="radio" name="company" value="002"> 상시근로자 1,000인 미만
 									<div class="ci-show"></div>
 								</label>
 								<label class="c-input ci-radio">
-									<input type="radio" name="company"> 상시근로자 1,000인 이상
+									<input type="radio" name="company" value="003"> 상시근로자 1,000인 이상
 									<div class="ci-show"></div>
 								</label>
 							</div>
@@ -81,7 +81,7 @@
 		</div>
 
 		<div class="btn-wrap">
-			<a href="#none" class="jv-btn jb-fill01-lg">검색</a>
+			<a href="#none" class="jv-btn jb-fill01-lg" id="searchBtn">검색</a>
 		</div>
 
 		<div class="table-util mt50">
