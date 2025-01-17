@@ -51,15 +51,14 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
     defer-datasource-initialization: true
+    
 # 파일 업로드 위치
 file:
   upload:
     base-dir: upload
     directories:
-      popup: ${file.upload.base-dir}/popUp
-      popup-temp: ${file.upload.base-dir}/popUp/temp  # 임시 저장 경로 추가
-      courseSub: ${file.upload.base-dir}/courseSub
-      courseSub-temp: ${file.upload.base-dir}/courseSub/temp  # 임시 저장 경로 추가
+      board: C:/upload/board
+      board-temp: C:/upload/board/temp  # 임시 저장 경로 추가
       # 아래 처럼 사용하면됨.
       # board: ${file.upload.base-dir}/board
       # profile: ${file.upload.base-dir}/profile

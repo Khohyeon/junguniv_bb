@@ -9,16 +9,15 @@ import com.example.junguniv_bb.domain.member.model.Member;
 import com.example.junguniv_bb.domain.member.model.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +37,6 @@ public class MemberService {
     /* 페이징 */
     // TODO 검색 기능 및 권한 조건 추가 해야함.
     public ResponseEntity<?> memberPage(String referer, Pageable pageable) {
-        
         // 페이지 조회
         Page<Member> memberPagePS;
         
@@ -58,25 +56,20 @@ public class MemberService {
         }
 
         // UserType에 따른 페이지 조회
-        if (userType != null) {
-            memberPagePS = memberRepository.findByUserType(userType, pageable);
-        } else {
-            memberPagePS = memberRepository.findAll(pageable);
-        }
+        memberPagePS = (userType != null) ? 
+            memberRepository.findByUserType(userType, pageable) : 
+            memberRepository.findAll(pageable);
         
         // UserType에 따른 DTO 변환 및 반환
         if (userType != null) {
-            switch (userType) {
-                case STUDENT:
-                    return ResponseEntity.ok(new MemberStudentPageResDTO(memberPagePS));
-                case TEACHER:
-                    return ResponseEntity.ok(new MemberTeacherPageResDTO(memberPagePS));
-                case COMPANY:
-                    return ResponseEntity.ok(new MemberCompanyPageResDTO(memberPagePS));
-                case ADMIN:
-                    return ResponseEntity.ok(new MemberAdminPageResDTO(memberPagePS));
-                default:
-                    return ResponseEntity.ok(new MemberPageResDTO(memberPagePS));
+            if (userType == UserType.STUDENT) {
+                return ResponseEntity.ok(new MemberStudentPageResDTO(memberPagePS));
+            } else if (userType == UserType.TEACHER) {
+                return ResponseEntity.ok(new MemberTeacherPageResDTO(memberPagePS));
+            } else if (userType == UserType.COMPANY) {
+                return ResponseEntity.ok(new MemberCompanyPageResDTO(memberPagePS));
+            } else if (userType == UserType.ADMIN) {
+                return ResponseEntity.ok(new MemberAdminPageResDTO(memberPagePS));
             }
         }
         
@@ -85,25 +78,25 @@ public class MemberService {
     }
 
     /* 학생 검색 */
-    public ResponseEntity<?> searchStudents(MemberSearchReqDTO searchDTO, Pageable pageable) {
+    public ResponseEntity<?> searchStudents(MemberStudentSearchReqDTO searchDTO, Pageable pageable) {
         // 검색 실행
         Page<Member> memberPagePS = memberRepository.searchStudents(
-            searchDTO.getName(),
-            searchDTO.getUserId(),
+            searchDTO.name(),
+            searchDTO.userId(),
             searchDTO.getBirthday(),
-            searchDTO.getTelMobile(),
-            searchDTO.getEmail(),
-            searchDTO.getChkDormant(),
-            searchDTO.getLoginPass(),
-            searchDTO.getChkForeigner(),
-            searchDTO.getSex(),
-            searchDTO.getJobName(),
-            searchDTO.getJobWorkState(),
-            searchDTO.getJobDept(),
-            searchDTO.getChkSmsReceive(),
-            searchDTO.getChkMailReceive(),
-            searchDTO.getChkIdentityVerification(),
-            searchDTO.getLoginClientIp(),
+            searchDTO.telMobile(),
+            searchDTO.email(),
+            searchDTO.chkDormant(),
+            searchDTO.loginPass(),
+            searchDTO.chkForeigner(),
+            searchDTO.sex(),
+            searchDTO.jobName(),
+            searchDTO.jobWorkState(),
+            searchDTO.jobDept(),
+            searchDTO.chkSmsReceive(),
+            searchDTO.chkMailReceive(),
+            searchDTO.chkIdentityVerification(),
+            searchDTO.loginClientIp(),
             pageable
         );
 
@@ -111,10 +104,66 @@ public class MemberService {
         return ResponseEntity.ok(new MemberStudentPageResDTO(memberPagePS));
     }
 
+    /* 교강사 검색 */
+    @Transactional(readOnly = true)
+    public ResponseEntity<?> searchTeachers(MemberTeacherSearchReqDTO searchDTO, Pageable pageable) {
+        try {
+            Page<Member> memberPagePS = memberRepository.searchTeachers(
+                searchDTO.name(),
+                searchDTO.userId(),
+                searchDTO.jobEmployeeType(),
+                searchDTO.telMobile(),
+                searchDTO.email(),
+                pageable
+            );
+            return ResponseEntity.ok(new MemberPageResDTO(memberPagePS));
+        } catch (Exception e) {
+            log.error("교강사 검색 중 오류 발생: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("교강사 검색 중 오류가 발생했습니다.");
+        }
+    }
+
+    /* 기업 검색 */
+    @Transactional(readOnly = true)
+    public ResponseEntity<?> searchCompanies(MemberCompanySearchReqDTO searchDTO, Pageable pageable) {
+        try {
+            Page<Member> memberPagePS = memberRepository.searchCompanies(
+                searchDTO.jobName(),
+                searchDTO.userId(),
+                searchDTO.jobNumber(),
+                searchDTO.contractorName(),
+                searchDTO.contractorTel(),
+                searchDTO.contractorEtc(),
+                searchDTO.jobScale(),
+                pageable
+            );
+            return ResponseEntity.ok(new MemberCompanyPageResDTO(memberPagePS));
+        } catch (Exception e) {
+            log.error("기업 검색 중 오류 발생: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("기업 검색 중 오류가 발생했습니다.");
+        }
+    }
+
+    /* 관리자 검색 */
+    @Transactional(readOnly = true)
+    public ResponseEntity<?> searchAdmins(MemberAdminSearchReqDTO searchDTO, Pageable pageable) {
+        try {
+            Page<Member> memberPagePS = memberRepository.searchAdmins(
+                searchDTO.name(),
+                searchDTO.userId(),
+                searchDTO.jobCourseDuty(),
+                pageable
+            );
+            return ResponseEntity.ok(new MemberAdminPageResDTO(memberPagePS));
+        } catch (Exception e) {
+            log.error("관리자 검색 중 오류 발생: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("관리자 검색 중 오류가 발생했습니다.");
+        }
+    }
+
     /* 다중삭제 */
     @Transactional
     public void memberDeleteList(List<Long> idList) {
-        
         // DB조회
         List<Member> memberListPS = memberRepository.findAllById(idList);
 
@@ -129,7 +178,6 @@ public class MemberService {
     /* 삭제 */
     @Transactional
     public void memberDelete(Long id) {
-
         // DB조회
         Member memberPS = memberRepository.findById(id)
                 .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_MEMBER.getMessage()));
@@ -141,15 +189,14 @@ public class MemberService {
     /* 수정 */
     @Transactional
     public void memberUpdate(Long id, MemberUpdateReqDTO reqDTO) {
-
         // DB조회
         Member memberPS = memberRepository.findById(id)
                 .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_MEMBER.getMessage()));
 
         // 비밀번호가 입력된 경우에만 암호화하여 업데이트
         String encodedPwd = reqDTO.pwd() != null && !reqDTO.pwd().isEmpty()
-        ? passwordEncoder.encode(reqDTO.pwd())
-        : memberPS.getPwd();
+            ? passwordEncoder.encode(reqDTO.pwd())
+            : memberPS.getPwd();
 
         // 트랜잭션 처리
         reqDTO.updateEntity(memberPS, encodedPwd);
@@ -157,7 +204,6 @@ public class MemberService {
 
     /* 조회 */
     public MemberDetailResDTO memberDetail(Long id, CustomUserDetails customUserDetails) {
-
         // DB조회
         Member memberPS = memberRepository.findById(id)
                 .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_MEMBER.getMessage()));
@@ -177,11 +223,9 @@ public class MemberService {
         return MemberDetailResDTO.from(memberPS);
     }
 
-
     /* 등록 */
     @Transactional
     public void memberSave(MemberSaveReqDTO requestDTO) {
-
         // pwd null 체크
         if (requestDTO.pwd() == null) {
             throw new Exception400(ExceptionMessage.INVALID_INPUT_VALUE.getMessage());

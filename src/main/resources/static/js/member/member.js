@@ -145,6 +145,87 @@ const MemberModule = {
                 throw error;
             }
         },
+
+        // 교강사 검색
+        searchTeachers: async function(searchParams, page = 0, size = 10) {
+            try {
+                const queryString = new URLSearchParams({
+                    ...searchParams,
+                    page: page,
+                    size: size
+                }).toString();
+
+                const response = await fetch(`/masterpage_sys/member/api/teacher/search?${queryString}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('검색에 실패했습니다.');
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('검색 에러:', error);
+                throw error;
+            }
+        },
+
+        // 기업 검색
+        searchCompanies: async function(searchParams, page = 0, size = 10) {
+            try {
+                const queryString = new URLSearchParams({
+                    ...searchParams,
+                    page: page,
+                    size: size
+                }).toString();
+
+                const response = await fetch(`/masterpage_sys/member/api/company/search?${queryString}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('검색에 실패했습니다.');
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('검색 에러:', error);
+                throw error;
+            }
+        },
+
+        // 관리자 검색
+        searchAdmins: async function(searchParams, page = 0, size = 10) {
+            try {
+                const queryString = new URLSearchParams({
+                    ...searchParams,
+                    page: page,
+                    size: size
+                }).toString();
+
+                const response = await fetch(`/masterpage_sys/member/api/admin/search?${queryString}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('검색에 실패했습니다.');
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('검색 에러:', error);
+                throw error;
+            }
+        },
     },
 
     // UI 렌더링 함수들
@@ -215,21 +296,19 @@ const MemberModule = {
                                     <input type="checkbox" data-type="contractorTel" data-id="${member.memberIdx}">
                                     ${member.contractorTel}
                                     <div class="ci-show"></div>
-                                </label>` : ''}
+                                </label>` : '-'}
                             </td>
                             <td>
                                 ${member.contractorEtc ? `<label class="c-input ci-check">
                                     <input type="checkbox" data-type="contractorEtc" data-id="${member.memberIdx}">
                                     ${member.contractorEtc}
                                     <div class="ci-show"></div>
-                                </label>` : ''}
+                                </label>` : '-'}
                             </td>
-                            <td>수강생 계산 필요</td>
-                            <td>${member.jobCeo || '-'}</td>
+                            <td>${member.studentCount || '0'}</td>
+                            <td>${member.ceoName || '-'}</td>
                             <td>
-                                <a href="#" class="jv-btn" onclick="window.open('/company/${member.memberIdx || ''}', '_blank')">
-                                    바로가기
-                                </a>
+                                <a href="/company/${member.memberIdx}" class="jv-btn" target="_blank">바로가기</a>
                             </td>
                         </tr>
                     `).join('');
@@ -292,7 +371,7 @@ const MemberModule = {
                                     </label>
                                 ` : ''}
                             </td>
-                            <td>${member.jobDuty || '-'}</td>
+                            <td>${member.jobCourseDuty || '-'}</td>
                             <td>${member.authLevel || '-'}</td>
                             <td>${member.jobWorkState || '-'}</td>
                             <td>${member.createdDate ? new Date(member.createdDate).toLocaleDateString() : '-'}</td>
@@ -828,28 +907,53 @@ const MemberModule = {
         // 검색 핸들러
         search: async function(e) {
             e.preventDefault();
-            
+
             // 검색 파라미터 수집
-            const searchParams = {
-                name: document.getElementById('name')?.value || null,
-                userId: document.getElementById('userId')?.value || null,
-                birthYear: document.getElementById('birthYear')?.value || null,
-                birthMonth: document.getElementById('birthMonth')?.value || null,
-                birthDay: document.getElementById('birthDay')?.value || null,
-                telMobile: document.getElementById('telMobile')?.value || null,
-                email: document.getElementById('email')?.value || null,
-                chkDormant: document.querySelector('input[name="chkDormant"]:checked')?.value || null,
-                loginPass: document.querySelector('input[name="loginPass"]:checked')?.value || null,
-                chkForeigner: document.querySelector('input[name="chkForeigner"]:checked')?.value || null,
-                sex: document.querySelector('input[name="sex"]:checked')?.value || null,
-                jobName: document.getElementById('jobName')?.value || null,
-                jobWorkState: document.getElementById('jobWorkState')?.value || null,
-                jobDept: document.getElementById('jobDept')?.value || null,
-                chkSmsReceive: document.querySelector('input[name="chkSmsReceive"]:checked')?.value || null,
-                chkMailReceive: document.querySelector('input[name="chkMailReceive"]:checked')?.value || null,
-                chkIdentityVerification: document.querySelector('input[name="chkIdentityVerification"]:checked')?.value || null,
-                loginClientIp: document.getElementById('loginClientIp')?.value || null
-            };
+            const searchParams = {};
+
+            // 페이지 타입에 따른 검색 파라미터 설정
+            if (MemberModule.state.pageType === 'teacher') {
+                // 교강사 검색 파라미터
+                searchParams.name = document.getElementById('name')?.value || null;
+                searchParams.userId = document.getElementById('userId')?.value || null;
+                searchParams.jobEmployeeType = document.querySelector('input[name="jobEmployeeType"]:checked')?.value || null;
+                searchParams.telMobile = document.getElementById('telMobile')?.value || null;
+                searchParams.email = document.getElementById('email')?.value || null;
+            } else if (MemberModule.state.pageType === 'company') {
+                // 기업 검색 파라미터
+                searchParams.jobName = document.getElementById('jobName')?.value || null;
+                searchParams.userId = document.getElementById('userId')?.value || null;
+                searchParams.jobNumber = document.getElementById('jobNumber')?.value || null;
+                searchParams.contractorName = document.getElementById('contractorName')?.value || null;
+                searchParams.contractorTel = document.getElementById('contractorTel')?.value || null;
+                searchParams.contractorEtc = document.getElementById('contractorEtc')?.value || null;
+                searchParams.jobScale = document.querySelector('input[name="company"]:checked')?.value || null;
+            } else if (MemberModule.state.pageType === 'admin') {
+                // 관리자 검색 파라미터
+                searchParams.name = document.getElementById('name')?.value || null;
+                searchParams.userId = document.getElementById('userId')?.value || null;
+                searchParams.jobCourseDuty = document.getElementById('jobCourseDuty')?.value || null;
+            } else {
+                // 학생 검색 파라미터
+                searchParams.name = document.getElementById('name')?.value || null;
+                searchParams.userId = document.getElementById('userId')?.value || null;
+                searchParams.birthYear = document.getElementById('birthYear')?.value || null;
+                searchParams.birthMonth = document.getElementById('birthMonth')?.value || null;
+                searchParams.birthDay = document.getElementById('birthDay')?.value || null;
+                searchParams.telMobile = document.getElementById('telMobile')?.value || null;
+                searchParams.email = document.getElementById('email')?.value || null;
+                searchParams.chkDormant = document.querySelector('input[name="chkDormant"]:checked')?.value || null;
+                searchParams.loginPass = document.querySelector('input[name="loginPass"]:checked')?.value || null;
+                searchParams.chkForeigner = document.querySelector('input[name="chkForeigner"]:checked')?.value || null;
+                searchParams.sex = document.querySelector('input[name="sex"]:checked')?.value || null;
+                searchParams.jobName = document.getElementById('jobName')?.value || null;
+                searchParams.jobWorkState = document.getElementById('jobWorkState')?.value || null;
+                searchParams.jobDept = document.getElementById('jobDept')?.value || null;
+                searchParams.chkSmsReceive = document.querySelector('input[name="chkSmsReceive"]:checked')?.value || null;
+                searchParams.chkMailReceive = document.querySelector('input[name="chkMailReceive"]:checked')?.value || null;
+                searchParams.chkIdentityVerification = document.querySelector('input[name="chkIdentityVerification"]:checked')?.value || null;
+                searchParams.loginClientIp = document.getElementById('loginClientIp')?.value || null;
+            }
 
             // 빈 값이나 null 값을 가진 속성 제거
             Object.keys(searchParams).forEach(key => {
@@ -859,11 +963,30 @@ const MemberModule = {
             });
 
             try {
-                const response = await MemberModule.api.searchStudents(searchParams, 0, MemberModule.state.size);
-                MemberModule.state.members = response.memberList;
-                MemberModule.state.currentPage = response.pageable.pageNumber;
-                MemberModule.state.totalPages = response.pageable.totalPages;
-                MemberModule.state.totalElements = response.pageable.totalElements;
+                let response;
+                if (MemberModule.state.pageType === 'teacher') {
+                    response = await MemberModule.api.searchTeachers(searchParams, 0, MemberModule.state.size);
+                } else if (MemberModule.state.pageType === 'company') {
+                    response = await MemberModule.api.searchCompanies(searchParams, 0, MemberModule.state.size);
+                } else if (MemberModule.state.pageType === 'admin') {
+                    response = await MemberModule.api.searchAdmins(searchParams, 0, MemberModule.state.size);
+                } else {
+                    response = await MemberModule.api.searchStudents(searchParams, 0, MemberModule.state.size);
+                }
+
+                // 응답 구조 확인 및 데이터 추출
+                const responseData = response.response || response;
+                const memberList = responseData.memberList;
+                const pageable = responseData.pageable;
+
+                if (!memberList || !pageable) {
+                    throw new Error('Invalid response format');
+                }
+
+                MemberModule.state.members = memberList;
+                MemberModule.state.currentPage = pageable.pageNumber;
+                MemberModule.state.totalPages = pageable.totalPages;
+                MemberModule.state.totalElements = pageable.totalElements;
                 
                 MemberModule.render.memberTable(MemberModule.state.members);
                 MemberModule.render.pagination(MemberModule.state.totalPages);
@@ -889,24 +1012,32 @@ const MemberModule = {
         try {
             // 페이지 타입 설정
             const currentPath = window.location.pathname;
-            if (currentPath.includes('/teacher/')) {
+            if (currentPath.includes('/member/teacher')) {
                 this.state.pageType = 'teacher';
-            } else if (currentPath.includes('/company/searchForm')) {
+            } else if (currentPath.includes('/member/company/searchForm')) {
                 this.state.pageType = 'companySearch';
-            } else if (currentPath.includes('/company/')) {
+            } else if (currentPath.includes('/member/company')) {
                 this.state.pageType = 'company';
-            } else if (currentPath.includes('/admin/')) {
+            } else if (currentPath.includes('/member/admin')) {
                 this.state.pageType = 'admin';
-            } else {
+            } else if (currentPath.includes('/member/student')) {
                 this.state.pageType = 'student';
             }
 
             // 초기 데이터 로드
             const response = await this.api.getMembers();
-            this.state.members = response.memberList;
-            this.state.currentPage = response.pageable.pageNumber;
-            this.state.totalPages = response.pageable.totalPages;
-            this.state.totalElements = response.pageable.totalElements;
+            if (response && response.response) {
+                const responseData = response.response;
+                this.state.members = responseData.memberList || [];
+                this.state.currentPage = responseData.pageable?.pageNumber || 0;
+                this.state.totalPages = responseData.pageable?.totalPages || 0;
+                this.state.totalElements = responseData.pageable?.totalElements || 0;
+            } else {
+                this.state.members = response.memberList || [];
+                this.state.currentPage = response.pageable?.pageNumber || 0;
+                this.state.totalPages = response.pageable?.totalPages || 0;
+                this.state.totalElements = response.pageable?.totalElements || 0;
+            }
             
             // 초기 렌더링
             this.render.memberTable(this.state.members);
@@ -929,6 +1060,23 @@ const MemberModule = {
             if (emailCheckbox) {
                 emailCheckbox.addEventListener('change', (e) => this.handlers.toggleColumn(e, 'email'));
             }
+
+            // 검색 버튼 클릭 이벤트
+            const searchBtn = document.getElementById('searchBtn');
+            if (searchBtn) {
+                searchBtn.addEventListener('click', this.handlers.search);
+            }
+
+            // 검색 입력 필드에 엔터키 이벤트 추가
+            const searchInputs = document.querySelectorAll('.column-tc-wrap input[type="text"]');
+            searchInputs.forEach(input => {
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        this.handlers.search(e);
+                    }
+                });
+            });
 
             const deleteBtn = document.querySelector('.jv-btn.fill05');
             if (deleteBtn) {
@@ -1026,16 +1174,18 @@ const MemberModule = {
                 }
             }
 
-            // 검색 버튼 이벤트 리스너
-            const searchBtn = document.getElementById('searchBtn');
-            if (searchBtn) {
-                searchBtn.addEventListener('click', this.handlers.search);
-            }
-
             // 상세검색 토글 버튼 이벤트 리스너
             const searchMoreBtn = document.querySelector('.search-more-btn');
             if (searchMoreBtn) {
                 searchMoreBtn.addEventListener('click', this.handlers.toggleDetailSearch);
+            }
+
+            // 일괄등록 버튼 이벤트 리스너
+            const bulkRegisterBtn = document.getElementById('bulkRegisterBtn');
+            if (bulkRegisterBtn) {
+                bulkRegisterBtn.addEventListener('click', function() {
+                    alert('일괄 등록은 준비중입니다.');
+                });
             }
 
         } catch (error) {
