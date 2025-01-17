@@ -24,6 +24,7 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -87,14 +88,25 @@ public class BoardService {
      */
     public Page<BbsGroupPageResDTO> getBbsGroupPage(Pageable pageable) {
         Page<BbsGroup> bbsGroupPage = bbsGroupRepository.findAll(pageable);
+        return bbsGroupPage.map(bbsGroup -> {
 
-        return bbsGroupPage.map(bbsGroup ->
-                new BbsGroupPageResDTO(
-                        bbsGroup.getBbsGroupIdx(),
-                        bbsGroup.getBbsId(),
-                        bbsGroup.getBbsGroupName(),
-                        bbsGroup.getFileNum()
-                ));
+            // DTO에 전달 (그대로 전달하거나 가공해서 사용 가능)
+            return new BbsGroupPageResDTO(
+                    bbsGroup.getBbsGroupIdx(),
+                    bbsGroup.getBbsId(),
+                    bbsGroup.getBbsGroupName(),
+                    bbsGroup.getCategory(),
+                    bbsGroup.getFileNum(),
+                    bbsGroup.getSkin(),
+                    bbsGroup.getOptionSecretAuth(),
+                    bbsGroup.getOptionReplyAuth(),
+                    bbsGroup.getOptionCommentAuth(),
+                    bbsGroup.getReadAuth(),
+                    bbsGroup.getWriteAuth(),
+                    bbsGroup.getCommentAuth(),
+                    bbsGroup.getReplyAuth()
+            );
+        });
     }
 
     /**

@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -85,7 +84,7 @@ public class MemberService {
     }
 
     /* 학생 검색 */
-    public ResponseEntity<?> searchStudents(MemberSearchReqDTO searchDTO, Pageable pageable) {
+    public ResponseEntity<?> searchStudents(MemberStudentSearchReqDTO searchDTO, Pageable pageable) {
         // 검색 실행
         Page<Member> memberPagePS = memberRepository.searchStudents(
             searchDTO.getName(),

@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MemberSearchReqDTO {
+public class MemberStudentSearchReqDTO {
     private String name;                    // 이름
     private String userId;                  // 아이디
     private String birthYear;               // 생년
