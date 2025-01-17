@@ -303,4 +303,8 @@ public class BoardService {
     }
 
 
+    public String getBoardCategory(String boardType) {
+        BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(boardType);
+        return bbsGroup.getCategory();
+    }
 }

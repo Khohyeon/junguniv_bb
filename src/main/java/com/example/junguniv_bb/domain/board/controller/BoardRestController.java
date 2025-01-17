@@ -79,4 +79,11 @@ public class BoardRestController {
         boardService.updateBoard(boardUpdateReqDTO); // 서비스 호출
         return ResponseEntity.ok(APIUtils.success("게시판수정이 성공적으로 완료되었습니다."));
     }
+
+    @GetMapping("/categories")
+    @ResponseBody
+    public ResponseEntity<?> getCategories(@RequestParam String boardType) {
+        String boardCategory = boardService.getBoardCategory(boardType);
+        return ResponseEntity.ok(APIUtils.success(boardCategory));
+    }
 }
