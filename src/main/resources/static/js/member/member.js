@@ -32,6 +32,21 @@ const MemberModule = {
         }
     },
 
+    // UUID 생성 함수 추가
+    utils: {
+        generateUUID: function() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        },
+
+        getFileExtension: function(filename) {
+            return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
+        }
+    },
+
     // API 호출 함수들
     api: {
         // 회원 목록 조회
@@ -472,16 +487,13 @@ const MemberModule = {
         submitMemberSaveForm: async function(event) {
             event.preventDefault();
             
-            // 아이디 중복 확인을 통과했는지 확인
-            if (!MemberModule.state.isIdCheckPassed) {
-                alert('아이디 중복 확인을 해주세요.');
-                document.getElementById('userId')?.focus();
-                return;
-            }
-
             try {
-                // 폼 데이터 수집
-                const memberData = {
+                // hidden input에서 파일명 가져오기
+                const mainImgFileName = document.getElementById('mainImgFileName')?.value;
+                const subImgFileName = document.getElementById('subImgFileName')?.value;
+
+                // 멤버 데이터 준비
+                const data = {
                     // 공통 필드
                     userType: document.getElementById('userType').value,
                     userId: document.getElementById('userId')?.value,
@@ -566,13 +578,25 @@ const MemberModule = {
                     // 본인인증/비밀번호 변경 예외처리
                     chkIdentityVerification: document.querySelector('input[name="chkIdentityVerification"]:checked')?.value,
                     chkPwdChange: document.querySelector('input[name="chkPwdChange"]:checked')?.value,
+
+                    // 기업 전용 홈페이지 설정
+                    companyHomepageUse: document.querySelector('input[name="companyHomepageUse"]:checked')?.value,
+                    companyUrl: document.getElementById('companyUrl')?.value,
+                    counselNumber: document.getElementById('counselNumber')?.value,
+                    counselTime: document.getElementById('counselTime1')?.value && document.getElementById('counselTime2')?.value
+                        ? `${document.getElementById('counselTime1')?.value}-${document.getElementById('counselTime2')?.value}`
+                        : null,
+
+                    // 메인 이미지 처리
+                    mainImg: mainImgFileName,
+                    subImg: subImgFileName
                 };
 
                 // 필수 입력값 검증
                 const requiredFields = ['userId', 'pwd'];
                 
                 // userType에 따른 추가 필수 필드
-                switch(memberData.userType) {
+                switch(data.userType) {
                     case 'STUDENT':
                         requiredFields.push('name', 'birthday', 'residentNumber', 'jobName', 'trnee_se', 'irglbrSe');
                         break;
@@ -588,10 +612,8 @@ const MemberModule = {
                 }
 
                 // 기본 필드 검증
-
-                // Start of Selection
                 for (const field of requiredFields) {
-                    if (!memberData[field]) {
+                    if (!data[field]) {
                         const fieldName = MemberModule.state.fieldNames[field] || field;
                         alert(`${fieldName}은(는) 필수 입력 항목입니다.`);
                         if (field === 'residentNumber') {
@@ -614,7 +636,7 @@ const MemberModule = {
                 }
 
                 // 휴대폰 번호 검증 (관리자 제외한 모든 회원 타입 공통)
-                if (memberData.userType !== 'ADMIN') {
+                if (data.userType !== 'ADMIN') {
                     const telMobile2 = document.getElementById('telMobile2')?.value;
                     const telMobile3 = document.getElementById('telMobile3')?.value;
                     if (!telMobile2 || !telMobile3) {
@@ -626,7 +648,7 @@ const MemberModule = {
                 }
 
                 // 이메일 검증 (관리자 제외한 모든 회원 타입 공통)
-                if (memberData.userType !== 'ADMIN') {
+                if (data.userType !== 'ADMIN') {
                     const email1 = document.getElementById('email1')?.value;
                     const email2 = document.getElementById('email2')?.value;
                     if (!email1 || !email2) {
@@ -638,14 +660,14 @@ const MemberModule = {
                 }
 
                 // 전화번호와 이메일 조합 (회원 타입에 따라 다른 필드에 저장)
-                if (memberData.userType === 'COMPANY') {
+                if (data.userType === 'COMPANY') {
                     // 기업 회원의 경우 교육담당자 연락처 필드에 저장
-                    memberData.contractorTel = `${document.getElementById('telMobile1').value}-${document.getElementById('telMobile2').value}-${document.getElementById('telMobile3').value}`;
-                    memberData.contractorEtc = `${document.getElementById('email1').value}@${document.getElementById('email2').value}`;
-                } else if (memberData.userType == 'STUDENT' || memberData.userType == 'TEACHER') {
+                    data.contractorTel = `${document.getElementById('telMobile1').value}-${document.getElementById('telMobile2').value}-${document.getElementById('telMobile3').value}`;
+                    data.contractorEtc = `${document.getElementById('email1').value}@${document.getElementById('email2').value}`;
+                } else if (data.userType == 'STUDENT' || data.userType == 'TEACHER') {
                     // 학생 또는 교강사 회원의 경우 일반 연락처 필드에 저장
-                    memberData.telMobile = `${document.getElementById('telMobile1')?.value || ''}-${document.getElementById('telMobile2')?.value || ''}-${document.getElementById('telMobile3')?.value || ''}`;
-                    memberData.email = `${document.getElementById('email1')?.value || ''}@${document.getElementById('email2')?.value || ''}`;
+                    data.telMobile = `${document.getElementById('telMobile1')?.value || ''}-${document.getElementById('telMobile2')?.value || ''}-${document.getElementById('telMobile3')?.value || ''}`;
+                    data.email = `${document.getElementById('email1')?.value || ''}@${document.getElementById('email2')?.value || ''}`;
                 } else {
                     // 관리자 회원의 경우 값이 없으면 빈 문자열로 저장
                     const telMobile1 = document.getElementById('telMobile1')?.value || '';
@@ -654,24 +676,36 @@ const MemberModule = {
                     const email1 = document.getElementById('email1')?.value || '';
                     const email2 = document.getElementById('email2')?.value || '';
 
-                    memberData.telMobile = telMobile1 || telMobile2 || telMobile3 ? `${telMobile1 || ''}-${telMobile2 || ''}-${telMobile3 || ''}` : '';
-                    memberData.email = email1 || email2 ? `${email1 || ''}@${email2 || ''}` : '';
+                    data.telMobile = telMobile1 || telMobile2 || telMobile3 ? `${telMobile1 || ''}-${telMobile2 || ''}-${telMobile3 || ''}` : '';
+                    data.email = email1 || email2 ? `${email1 || ''}@${email2 || ''}` : '';
                 }
 
-
                 // API 호출
-                const response = await MemberModule.api.saveMember(memberData);
+                const response = await MemberModule.api.saveMember(data);
                 
                 if (response.success) {
+                    // 멤버 등록 성공 시 임시 파일을 실제 경로로 이동
+                    if (mainImgFileName) {
+                        await fetch(`/api/v1/files/move/${mainImgFileName}`, {
+                            method: 'POST'
+                        });
+                    }
+                    
+                    if (subImgFileName) {
+                        await fetch(`/api/v1/files/move/${subImgFileName}`, {
+                            method: 'POST'
+                        });
+                    }
+
                     const userTypeText = {
                         'STUDENT': '학생',
                         'TEACHER': '교강사',
                         'COMPANY': '기업',
                         'ADMIN': '관리자'
-                    }[memberData.userType];
+                    }[data.userType];
                     
                     alert(`${userTypeText} 등록 완료.`);
-                    window.location.href = `/masterpage_sys/member/${memberData.userType.toLowerCase()}/`; // 목록 페이지로 이동
+                    window.location.href = `/masterpage_sys/member/${data.userType.toLowerCase()}/`;
                 } else {
                     alert(response.message || '회원 등록에 실패했습니다.');
                 }
@@ -1036,6 +1070,79 @@ const MemberModule = {
             const searchMoreBtn = document.querySelector('.search-more-btn');
             if (searchMoreBtn) {
                 searchMoreBtn.addEventListener('click', this.handlers.toggleDetailSearch);
+            }
+
+            // 파일 업로드 처리 (메인 이미지)
+            const mainImgFileInput = document.querySelector('#mainImgFile');
+            const subImgFileInput = document.querySelector('#subImgFile');
+
+            if (mainImgFileInput) {
+                mainImgFileInput.addEventListener('change', async function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const formData = new FormData();
+                        formData.append('file', file);
+                        
+                        try {
+                            const response = await fetch('/api/v1/files/upload/temp', {
+                                method: 'POST',
+                                body: formData
+                            });
+                            
+                            if (!response.ok) {
+                                throw new Error('메인 이미지 업로드 실패');
+                            }
+                            
+                            const data = await response.json();
+                            
+                            // UUID 파일명과 원본 파일명 저장
+                            document.getElementById('mainImg').value = data.fileName;      // UUID 파일명
+                            document.getElementById('mainImgName').value = file.name;      // 원본 파일명
+                            
+                            console.log('메인 이미지 업로드 완료:', data.fileName);
+                            console.log('원본 파일명:', file.name);
+                        } catch (error) {
+                            console.error('메인 이미지 업로드 중 오류:', error);
+                            alert('메인 이미지 업로드에 실패했습니다.');
+                            e.target.value = '';
+                        }
+                    }
+                });
+            }
+
+            // 파일 업로드 처리 (서브 이미지)
+            if (subImgFileInput) {
+                subImgFileInput.addEventListener('change', async function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const formData = new FormData();
+                        formData.append('file', file);
+                        
+                        try {
+                            const response = await fetch('/api/v1/files/upload/temp', {
+                                method: 'POST',
+                                body: formData
+                            });
+                            
+                            if (!response.ok) {
+                                throw new Error('서브 이미지 업로드 실패');
+                            }
+                            
+                            const data = await response.json();
+                            
+                            // UUID 파일명과 원본 파일명 저장
+                            document.getElementById('subImg').value = data.fileName;       // UUID 파일명
+                            document.getElementById('subImgName').value = file.name;       // 원본 파일명
+                            
+                            console.log('서브 이미지 업로드 완료:', data.fileName);
+                            console.log('원본 파일명:', file.name);
+                        } catch (error) {
+                            console.error('서브 이미지 업로드 중 오류:', error);
+                            alert('서브 이미지 업로드에 실패했습니다.');
+                            e.target.value = '';
+                        }
+                    }
+                });
             }
 
         } catch (error) {

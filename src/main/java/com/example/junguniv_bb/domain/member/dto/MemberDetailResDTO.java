@@ -146,7 +146,15 @@ public record MemberDetailResDTO(
     String chkDormant, // 휴면 상태여부
     String chkIdentityVerification, // 본인인증 예외 처리 여부
     String chkPwdChange, // 비밀번호 변경 예외 처리 여부
-    String jobCourseDuty // 환급/일반 과정 담당
+    String jobCourseDuty, // 환급/일반 과정 담당
+    String companyType, // 기업 구분(본사/지사)
+    String companyHomepageUse, // 기업 홈페이지 사용 여부
+    String companyUrl, // 기업 홈페이지 URL
+    String fnameLogo, // 로고 파일
+    String counselNumber, // 상담번호
+    String counselTime, // 상담시간
+    String mainImg, // 메인 상단 이미지
+    String subImg // 서브 상단 이미지
 ) {
     public static MemberDetailResDTO from(Member member) {
         return new MemberDetailResDTO(
@@ -290,7 +298,15 @@ public record MemberDetailResDTO(
             member.getChkDormant(),
             member.getChkIdentityVerification(),
             member.getChkPwdChange(),
-            member.getJobCourseDuty()
+            member.getJobCourseDuty(),
+            member.getCompanyType(),
+            member.getCompanyHomepageUse(),
+            member.getCompanyUrl(),
+            member.getFnameLogo(),
+            member.getCounselNumber(),
+            member.getCounselTime(),
+            member.getMainImg(),
+            member.getSubImg()
         );
     }
 }
