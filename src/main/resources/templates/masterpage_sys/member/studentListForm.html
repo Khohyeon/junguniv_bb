@@ -32,7 +32,7 @@
 								<div class="con flex3">
 									<select id="birthYear" name="birthYear">
 										<option value="">년도</option>
-										<th:block th:each="year : ${#numbers.sequence(1950, #calendars.format(#calendars.createNow(), 'yyyy'))}">
+										<th:block th:each="year : ${#numbers.sequence(#calendars.format(#calendars.createNow(), 'yyyy'), 1950)}">
 											<option th:value="${year}" th:text="${year}"></option>
 										</th:block>
 									</select>

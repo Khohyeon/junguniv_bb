@@ -32,6 +32,21 @@ const MemberModule = {
         }
     },
 
+    // UUID 생성 함수 추가
+    utils: {
+        generateUUID: function() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        },
+
+        getFileExtension: function(filename) {
+            return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
+        }
+    },
+
     // API 호출 함수들
     api: {
         // 회원 목록 조회
@@ -207,7 +222,9 @@ const MemberModule = {
                                 </label>
                             </td>
                             <td>${startNumber - index}</td>
-                            <td>${member.jobName || '-'}</td>
+                            <td>
+                                <a href="/masterpage_sys/member/company/${member.memberIdx}" class="jv-btn underline01">${member.jobName || '-'}</a>
+                            </td>
                             <td>${member.userId || '-'}</td>
                             <td>${member.contractorName || '-'}</td>
                             <td>
@@ -272,7 +289,9 @@ const MemberModule = {
                                 </label>
                             </td>
                             <td>${startNumber - index}</td>
-                            <td>${member.name || '-'}</td>
+                            <td>
+                                <a href="/masterpage_sys/member/admin/${member.memberIdx}" class="jv-btn underline01">${member.name || '-'}</a>
+                            </td>
                             <td>${member.userId || '-'}</td>
                             <td>
                                 ${member.telMobile ? `
@@ -472,16 +491,8 @@ const MemberModule = {
         submitMemberSaveForm: async function(event) {
             event.preventDefault();
             
-            // 아이디 중복 확인을 통과했는지 확인
-            if (!MemberModule.state.isIdCheckPassed) {
-                alert('아이디 중복 확인을 해주세요.');
-                document.getElementById('userId')?.focus();
-                return;
-            }
-
             try {
-                // 폼 데이터 수집
-                const memberData = {
+                const data = {
                     // 공통 필드
                     userType: document.getElementById('userType').value,
                     userId: document.getElementById('userId')?.value,
@@ -566,13 +577,26 @@ const MemberModule = {
                     // 본인인증/비밀번호 변경 예외처리
                     chkIdentityVerification: document.querySelector('input[name="chkIdentityVerification"]:checked')?.value,
                     chkPwdChange: document.querySelector('input[name="chkPwdChange"]:checked')?.value,
+
+                    // 기업 전용 홈페이지 설정
+                    companyHomepageUse: document.querySelector('input[name="companyHomepageUse"]:checked')?.value,
+                    companyUrl: document.getElementById('companyUrl')?.value,
+                    counselNumber: document.getElementById('counselNumber')?.value,
+                    counselTime: document.getElementById('counselTime1')?.value && document.getElementById('counselTime2')?.value
+                        ? `${document.getElementById('counselTime1')?.value}-${document.getElementById('counselTime2')?.value}`
+                        : null,
+
+                    // 이미지 처리
+                    mainImg: document.getElementById('mainImg')?.value,
+                    subImg: document.getElementById('subImg')?.value,
+                    fnameLogo: document.getElementById('fnameLogo')?.value
                 };
 
                 // 필수 입력값 검증
                 const requiredFields = ['userId', 'pwd'];
                 
                 // userType에 따른 추가 필수 필드
-                switch(memberData.userType) {
+                switch(data.userType) {
                     case 'STUDENT':
                         requiredFields.push('name', 'birthday', 'residentNumber', 'jobName', 'trnee_se', 'irglbrSe');
                         break;
@@ -588,10 +612,8 @@ const MemberModule = {
                 }
 
                 // 기본 필드 검증
-
-                // Start of Selection
                 for (const field of requiredFields) {
-                    if (!memberData[field]) {
+                    if (!data[field]) {
                         const fieldName = MemberModule.state.fieldNames[field] || field;
                         alert(`${fieldName}은(는) 필수 입력 항목입니다.`);
                         if (field === 'residentNumber') {
@@ -614,7 +636,7 @@ const MemberModule = {
                 }
 
                 // 휴대폰 번호 검증 (관리자 제외한 모든 회원 타입 공통)
-                if (memberData.userType !== 'ADMIN') {
+                if (data.userType !== 'ADMIN') {
                     const telMobile2 = document.getElementById('telMobile2')?.value;
                     const telMobile3 = document.getElementById('telMobile3')?.value;
                     if (!telMobile2 || !telMobile3) {
@@ -626,7 +648,7 @@ const MemberModule = {
                 }
 
                 // 이메일 검증 (관리자 제외한 모든 회원 타입 공통)
-                if (memberData.userType !== 'ADMIN') {
+                if (data.userType !== 'ADMIN') {
                     const email1 = document.getElementById('email1')?.value;
                     const email2 = document.getElementById('email2')?.value;
                     if (!email1 || !email2) {
@@ -638,14 +660,14 @@ const MemberModule = {
                 }
 
                 // 전화번호와 이메일 조합 (회원 타입에 따라 다른 필드에 저장)
-                if (memberData.userType === 'COMPANY') {
+                if (data.userType === 'COMPANY') {
                     // 기업 회원의 경우 교육담당자 연락처 필드에 저장
-                    memberData.contractorTel = `${document.getElementById('telMobile1').value}-${document.getElementById('telMobile2').value}-${document.getElementById('telMobile3').value}`;
-                    memberData.contractorEtc = `${document.getElementById('email1').value}@${document.getElementById('email2').value}`;
-                } else if (memberData.userType == 'STUDENT' || memberData.userType == 'TEACHER') {
+                    data.contractorTel = `${document.getElementById('telMobile1').value}-${document.getElementById('telMobile2').value}-${document.getElementById('telMobile3').value}`;
+                    data.contractorEtc = `${document.getElementById('email1').value}@${document.getElementById('email2').value}`;
+                } else if (data.userType == 'STUDENT' || data.userType == 'TEACHER') {
                     // 학생 또는 교강사 회원의 경우 일반 연락처 필드에 저장
-                    memberData.telMobile = `${document.getElementById('telMobile1')?.value || ''}-${document.getElementById('telMobile2')?.value || ''}-${document.getElementById('telMobile3')?.value || ''}`;
-                    memberData.email = `${document.getElementById('email1')?.value || ''}@${document.getElementById('email2')?.value || ''}`;
+                    data.telMobile = `${document.getElementById('telMobile1')?.value || ''}-${document.getElementById('telMobile2')?.value || ''}-${document.getElementById('telMobile3')?.value || ''}`;
+                    data.email = `${document.getElementById('email1')?.value || ''}@${document.getElementById('email2')?.value || ''}`;
                 } else {
                     // 관리자 회원의 경우 값이 없으면 빈 문자열로 저장
                     const telMobile1 = document.getElementById('telMobile1')?.value || '';
@@ -654,30 +676,106 @@ const MemberModule = {
                     const email1 = document.getElementById('email1')?.value || '';
                     const email2 = document.getElementById('email2')?.value || '';
 
-                    memberData.telMobile = telMobile1 || telMobile2 || telMobile3 ? `${telMobile1 || ''}-${telMobile2 || ''}-${telMobile3 || ''}` : '';
-                    memberData.email = email1 || email2 ? `${email1 || ''}@${email2 || ''}` : '';
+                    data.telMobile = telMobile1 || telMobile2 || telMobile3 ? `${telMobile1 || ''}-${telMobile2 || ''}-${telMobile3 || ''}` : '';
+                    data.email = email1 || email2 ? `${email1 || ''}@${email2 || ''}` : '';
                 }
 
+                    // 이미지 파일 정보 추가
+                    const mainImgFile = document.getElementById('mainImgFile');
+                    const subImgFile = document.getElementById('subImgFile');
+                    const logoFile = document.getElementById('fnameLogo');
+    
+                    // 메인 이미지 정보
+                    if (mainImgFile && mainImgFile.dataset.uploadedFileName) {
+                        data.mainImg = mainImgFile.dataset.uploadedFileName;
+                        data.mainImgName = mainImgFile.dataset.originalFileName;
+                    }
+    
+                    // 서브 이미지 정보
+                    if (subImgFile && subImgFile.dataset.uploadedFileName) {
+                        data.subImg = subImgFile.dataset.uploadedFileName;
+                        data.subImgName = subImgFile.dataset.originalFileName;
+                    }
+    
+                    // 로고 이미지 정보
+                    if (logoFile && logoFile.dataset.uploadedFileName) {
+                        data.fnameLogo = logoFile.dataset.uploadedFileName;
+                        data.fnameLogoName = logoFile.dataset.originalFileName;
+                    }
+                
+            
+                // 빈 값이나 null 값을 가진 속성 제거
+                Object.keys(data).forEach(key => {
+                    if (data[key] === null || data[key] === '' || data[key] === undefined) {
+                        delete data[key];
+                    }
+                });
 
                 // API 호출
-                const response = await MemberModule.api.saveMember(memberData);
-                
-                if (response.success) {
+                const response = await fetch('/masterpage_sys/member/api/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error('회원 등록에 실패했습니다.');
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // 파일 이동 처리
+                    const uploadedFiles = [];
+                    if (mainImgFile?.dataset.uploadedFileName) {
+                        uploadedFiles.push(mainImgFile.dataset.uploadedFileName);
+                    }
+                    if (subImgFile?.dataset.uploadedFileName) {
+                        uploadedFiles.push(subImgFile.dataset.uploadedFileName);
+                    }
+                    if (logoFile?.dataset.uploadedFileName) {
+                        uploadedFiles.push(logoFile.dataset.uploadedFileName);
+                    }
+
+                    // 업로드된 파일들을 temp에서 member 폴더로 이동
+                    for (const fileName of uploadedFiles) {
+                        try {
+                            const moveResponse = await fetch(`/api/v1/files/move/member/${fileName}`, {
+                                method: 'POST'
+                            });
+                            
+                            if (!moveResponse.ok) {
+                                console.error(`파일 이동 실패: ${fileName}`);
+                                throw new Error('파일 이동에 실패했습니다.');
+                            }
+
+                            const moveResult = await moveResponse.json();
+                            if (!moveResult.success) {
+                                throw new Error(moveResult.message || '파일 이동에 실패했습니다.');
+                            }
+                        } catch (error) {
+                            console.error('파일 이동 중 오류 발생:', error);
+                            throw new Error('파일 이동 중 오류가 발생했습니다.');
+                        }
+                    }
+
                     const userTypeText = {
                         'STUDENT': '학생',
                         'TEACHER': '교강사',
                         'COMPANY': '기업',
                         'ADMIN': '관리자'
-                    }[memberData.userType];
+                    }[data.userType];
                     
                     alert(`${userTypeText} 등록 완료.`);
-                    window.location.href = `/masterpage_sys/member/${memberData.userType.toLowerCase()}/`; // 목록 페이지로 이동
+                    window.location.href = `/masterpage_sys/member/${data.userType.toLowerCase()}/`;
                 } else {
-                    alert(response.message || '회원 등록에 실패했습니다.');
+                    alert(result.message || '회원 등록에 실패했습니다.');
                 }
             } catch (error) {
                 console.error('회원 등록 에러:', error);
-                alert('회원 등록에 실패했습니다.');
+                alert(error.message || '회원 등록에 실패했습니다.');
             }
         },
 
@@ -882,6 +980,350 @@ const MemberModule = {
                 toggleBtn.classList.toggle('active');
             }
         },
+
+        // 회원 수정 폼 제출 핸들러 (공통)
+        submitMemberUpdateForm: async function(event) {
+            event.preventDefault();
+            
+            try {
+                const data = {
+                    // 공통 필드
+                    memberIdx: document.getElementById('memberIdx')?.value,
+                    userType: document.getElementById('userType')?.value,
+                    userId: document.getElementById('userId')?.value,
+                    name: document.getElementById('name')?.value,
+                    chkDormant: document.getElementById('chkDormant')?.checked ? 'N' : 'Y',
+                    memberState: document.getElementById('memberState')?.checked ? 'N' : 'Y',
+                    
+                    // 휴대폰
+                    telMobile: document.getElementById('telMobile1')?.value && document.getElementById('telMobile2')?.value && document.getElementById('telMobile3')?.value
+                        ? document.getElementById('telMobile1')?.value + '-' + document.getElementById('telMobile2')?.value + '-' + document.getElementById('telMobile3')?.value
+                        : null,
+                    
+                    // 이메일
+                    email: document.getElementById('email1')?.value && document.getElementById('email2')?.value
+                        ? document.getElementById('email1')?.value + '@' + document.getElementById('email2')?.value
+                        : null,
+
+                    // 관리자 전용 필드
+                    authLevel: document.getElementById('authLevel')?.value,
+                    jobWorkState: document.getElementById('jobWorkState')?.value,
+                    jobDuty: document.getElementById('jobDuty')?.value,
+                    jobCourseDuty: document.querySelector('input[name="jobCourseDuty"]:checked')?.value,
+                    loginDenyIp: document.getElementById('loginDenyIp')?.value,
+                    loginMemberCount: document.getElementById('loginMemberCount')?.value,
+                    jobPosition: document.getElementById('jobPosition')?.value,
+
+                    // 기업 전용 필드
+                    jobName: document.getElementById('jobName')?.value,
+                    jobCeo: document.getElementById('jobCeo')?.value,
+                    jobScale: document.querySelector('input[name="jobScale"]:checked')?.value,
+                    corporationCode: document.querySelector('input[name="corporationCode"]:checked')?.value,
+                    masterId: document.getElementById('masterId')?.value,
+                    contractorName: document.getElementById('contractorName')?.value,
+                    
+                    // 기업 전화번호
+                    jobTelOffice: document.getElementById('jobTelOffice1')?.value && document.getElementById('jobTelOffice2')?.value && document.getElementById('jobTelOffice3')?.value
+                        ? document.getElementById('jobTelOffice1')?.value + '-' + document.getElementById('jobTelOffice2')?.value + '-' + document.getElementById('jobTelOffice3')?.value
+                        : null,
+                    
+                    // 사업자번호
+                    jobNumber: document.getElementById('jobNumber1')?.value && document.getElementById('jobNumber2')?.value && document.getElementById('jobNumber3')?.value
+                        ? document.getElementById('jobNumber1')?.value + '-' + document.getElementById('jobNumber2')?.value + '-' + document.getElementById('jobNumber3')?.value
+                        : null,
+                    
+                    // 고용보험관리번호
+                    jobInsuranceNumber: document.getElementById('jobInsuranceNumber1')?.value && document.getElementById('jobInsuranceNumber2')?.value && document.getElementById('jobInsuranceNumber3')?.value && document.getElementById('jobInsuranceNumber4')?.value
+                        ? document.getElementById('jobInsuranceNumber1')?.value + '-' + document.getElementById('jobInsuranceNumber2')?.value + '-' + document.getElementById('jobInsuranceNumber3')?.value + '-' + document.getElementById('jobInsuranceNumber4')?.value
+                        : null,
+
+                    // 주소
+                    zipcode: document.getElementById('zipcode')?.value,
+                    addr1: document.getElementById('addr1')?.value,
+                    addr2: document.getElementById('addr2')?.value,
+
+                    // 기업 전용 홈페이지 설정
+                    companyHomepageUse: document.querySelector('input[name="companyHomepageUse"]:checked')?.value,
+                    companyUrl: document.getElementById('companyUrl')?.value,
+                    counselNumber: document.getElementById('counselNumber')?.value,
+                    counselTime: document.getElementById('counselTime1')?.value && document.getElementById('counselTime2')?.value
+                        ? `${document.getElementById('counselTime1')?.value}-${document.getElementById('counselTime2')?.value}`
+                        : null,
+
+                    // 이미지 정보
+                    mainImg: document.querySelector('input[name="mainImg"]:checked')?.value,
+                    subImg: document.querySelector('input[name="subImg"]:checked')?.value,
+                    fnameLogo: document.getElementById('fnameLogo')?.value,
+
+                    // 교육담당자 연락처 (기업 회원)
+                    contractorTel: document.getElementById('telMobile1')?.value && document.getElementById('telMobile2')?.value && document.getElementById('telMobile3')?.value
+                        ? `${document.getElementById('telMobile1')?.value}-${document.getElementById('telMobile2')?.value}-${document.getElementById('telMobile3')?.value}`
+                        : null,
+                    contractorEtc: document.getElementById('email1')?.value && document.getElementById('email2')?.value
+                        ? `${document.getElementById('email1')?.value}@${document.getElementById('email2')?.value}`
+                        : null
+                };
+
+                // 비밀번호가 입력된 경우에만 추가
+                const pwdValue = document.getElementById('pwd')?.value;
+                if (pwdValue && pwdValue.trim() !== '') {
+                    data.pwd = pwdValue;
+                }
+
+                // 필수 입력값 검증
+                const requiredFields = ['memberIdx', 'userId'];
+                
+                // userType에 따른 추가 필수 필드
+                switch(data.userType) {
+                    case 'ADMIN':
+                        requiredFields.push('name', 'authLevel');
+                        break;
+                    case 'COMPANY':
+                        requiredFields.push('jobName', 'contractorName');
+                        break;
+                }
+
+                // 기본 필드 검증
+                for (const field of requiredFields) {
+                    if (!data[field]) {
+                        const fieldName = MemberModule.state.fieldNames[field] || field;
+                        alert(`${fieldName}은(는) 필수 입력 항목입니다.`);
+                        document.getElementById(field)?.focus();
+                        return;
+                    }
+                }
+
+                // 빈 값이나 null 값을 가진 속성 제거
+                Object.keys(data).forEach(key => {
+                    if (data[key] === null || data[key] === '' || data[key] === undefined) {
+                        delete data[key];
+                    }
+                });
+
+                // API 호출
+                const response = await fetch(`/masterpage_sys/member/api/${data.memberIdx}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error('회원 수정에 실패했습니다.');
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // 파일 이동 처리
+                    const uploadedFiles = [];
+                    const mainImgFile = document.getElementById('mainImgFile');
+                    const subImgFile = document.getElementById('subImgFile');
+                    const logoFile = document.getElementById('fnameLogo');
+
+                    if (mainImgFile?.dataset.uploadedFileName) {
+                        uploadedFiles.push(mainImgFile.dataset.uploadedFileName);
+                    }
+                    if (subImgFile?.dataset.uploadedFileName) {
+                        uploadedFiles.push(subImgFile.dataset.uploadedFileName);
+                    }
+                    if (logoFile?.dataset.uploadedFileName) {
+                        uploadedFiles.push(logoFile.dataset.uploadedFileName);
+                    }
+
+                    // 업로드된 파일들을 temp에서 member 폴더로 이동
+                    for (const fileName of uploadedFiles) {
+                        try {
+                            const moveResponse = await fetch(`/api/v1/files/move/member/${fileName}`, {
+                                method: 'POST'
+                            });
+                            
+                            if (!moveResponse.ok) {
+                                console.error(`파일 이동 실패: ${fileName}`);
+                                throw new Error('파일 이동에 실패했습니다.');
+                            }
+
+                            const moveResult = await moveResponse.json();
+                            if (!moveResult.success) {
+                                throw new Error(moveResult.message || '파일 이동에 실패했습니다.');
+                            }
+                        } catch (error) {
+                            console.error('파일 이동 중 오류 발생:', error);
+                            throw new Error('파일 이동 중 오류가 발생했습니다.');
+                        }
+                    }
+
+                    const userTypeText = {
+                        'STUDENT': '학생',
+                        'TEACHER': '교강사',
+                        'COMPANY': '기업',
+                        'ADMIN': '관리자'
+                    }[data.userType];
+                    
+                    alert(`${userTypeText} 수정이 완료되었습니다.`);
+                    window.location.reload();
+                } else {
+                    alert(result.message || '회원 수정에 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('회원 수정 에러:', error);
+                alert(error.message || '회원 수정에 실패했습니다.');
+            }
+        },
+    },
+
+    // 파일 업로드 관련 핸들러 추가
+    fileHandlers: {
+        // 메인 이미지 파일 업로드
+        handleMainImageUpload: async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                alert('이미지 파일만 업로드 가능합니다.');
+                e.target.value = '';
+                return;
+            }
+
+            if (file.size > 10 * 1024 * 1024) {
+                alert('파일 크기는 10MB를 초과할 수 없습니다.');
+                e.target.value = '';
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/api/v1/files/upload/temp/member', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('파일 업로드에 실패했습니다.');
+                }
+
+                const data = await response.json();
+                // 기존 데이터 초기화 후 새로운 데이터 설정
+                e.target.value = '';  // 파일 input 초기화
+                e.target.dataset.uploadedFileName = data.fileName;
+                e.target.dataset.originalFileName = file.name;
+                
+                // 파일명 표시 업데이트
+                const fileNameDisplay = e.target.parentElement.querySelector('.file-name');
+                if (fileNameDisplay) {
+                    fileNameDisplay.textContent = file.name;
+                }
+                
+                console.log('메인 이미지 업로드 성공:', data);
+            } catch (error) {
+                console.error('메인 이미지 업로드 중 오류 발생:', error);
+                alert('파일 업로드에 실패했습니다.');
+                e.target.value = '';
+            }
+        },
+
+        // 서브 이미지 파일 업로드
+        handleSubImageUpload: async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                alert('이미지 파일만 업로드 가능합니다.');
+                e.target.value = '';
+                return;
+            }
+
+            if (file.size > 10 * 1024 * 1024) {
+                alert('파일 크기는 10MB를 초과할 수 없습니다.');
+                e.target.value = '';
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/api/v1/files/upload/temp/member', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('파일 업로드에 실패했습니다.');
+                }
+
+                const data = await response.json();
+                // 기존 데이터 초기화 후 새로운 데이터 설정
+                e.target.value = '';  // 파일 input 초기화
+                e.target.dataset.uploadedFileName = data.fileName;
+                e.target.dataset.originalFileName = file.name;
+                
+                // 파일명 표시 업데이트
+                const fileNameDisplay = e.target.parentElement.querySelector('.file-name');
+                if (fileNameDisplay) {
+                    fileNameDisplay.textContent = file.name;
+                }
+                
+                console.log('서브 이미지 업로드 성공:', data);
+            } catch (error) {
+                console.error('서브 이미지 업로드 중 오류 발생:', error);
+                alert('파일 업로드에 실패했습니다.');
+                e.target.value = '';
+            }
+        },
+
+        // 로고 파일 업로드
+        handleLogoUpload: async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                alert('이미지 파일만 업로드 가능합니다.');
+                e.target.value = '';
+                return;
+            }
+
+            if (file.size > 10 * 1024 * 1024) {
+                alert('파일 크기는 10MB를 초과할 수 없습니다.');
+                e.target.value = '';
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/api/v1/files/upload/temp/member', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('파일 업로드에 실패했습니다.');
+                }
+
+                const data = await response.json();
+                // 기존 데이터 초기화 후 새로운 데이터 설정
+                e.target.value = '';  // 파일 input 초기화
+                e.target.dataset.uploadedFileName = data.fileName;
+                e.target.dataset.originalFileName = file.name;
+                
+                // 파일명 표시 업데이트
+                const fileNameDisplay = e.target.parentElement.querySelector('.file-name');
+                if (fileNameDisplay) {
+                    fileNameDisplay.textContent = file.name;
+                }
+                
+                console.log('로고 이미지 업로드 성공:', data);
+            } catch (error) {
+                console.error('로고 이미지 업로드 중 오류 발생:', error);
+                alert('파일 업로드에 실패했습니다.');
+                e.target.value = '';
+            }
+        }
     },
 
     // 초기화 함수
@@ -1038,6 +1480,41 @@ const MemberModule = {
                 searchMoreBtn.addEventListener('click', this.handlers.toggleDetailSearch);
             }
 
+            // 파일 업로드 이벤트 리스너 등록
+            const mainImgFile = document.getElementById('mainImgFile');
+            const subImgFile = document.getElementById('subImgFile');
+            const logoFile = document.getElementById('fnameLogo');
+
+            if (mainImgFile) {
+                mainImgFile.addEventListener('change', this.fileHandlers.handleMainImageUpload);
+            }
+            if (subImgFile) {
+                subImgFile.addEventListener('change', this.fileHandlers.handleSubImageUpload);
+            }
+            if (logoFile) {
+                logoFile.addEventListener('change', this.fileHandlers.handleLogoUpload);
+            }
+
+            // 회원 수정 폼 제출 이벤트 리스너 (모든 타입 공통)
+            const updateForms = ['studentDetailForm', 'teacherDetailForm', 'companyDetailForm', 'adminDetailForm'];
+            updateForms.forEach(formId => {
+                const form = document.getElementById(formId);
+                if (form) {
+                    form.addEventListener('submit', this.handlers.submitMemberUpdateForm.bind(this));
+                }
+            });
+
+            // 수정 버튼 클릭 이벤트 리스너 (폼 제출 대체)
+            const btnUpdate = document.getElementById('btnUpdate');
+            if (btnUpdate) {
+                btnUpdate.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const form = document.querySelector('form[id$="DetailForm"]');
+                    if (form) {
+                        form.dispatchEvent(new Event('submit'));
+                    }
+                });
+            }
         } catch (error) {
             console.error('초기화 에러:', error);
             alert('데이터를 불러오는데 실패했습니다.');
@@ -1045,7 +1522,7 @@ const MemberModule = {
     }
 };
 
-// 페이지 로드 시 초기화
+// 모듈 초기화
 document.addEventListener('DOMContentLoaded', () => {
     MemberModule.init();
 });

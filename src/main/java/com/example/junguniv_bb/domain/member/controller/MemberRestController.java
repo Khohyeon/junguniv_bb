@@ -3,10 +3,9 @@ package com.example.junguniv_bb.domain.member.controller;
 import com.example.junguniv_bb._core.exception.Exception400;
 import com.example.junguniv_bb._core.security.CustomUserDetails;
 import com.example.junguniv_bb._core.util.APIUtils;
-import com.example.junguniv_bb.domain.member.dto.MemberDetailResDTO;
-import com.example.junguniv_bb.domain.member.dto.MemberSaveReqDTO;
-import com.example.junguniv_bb.domain.member.dto.MemberUpdateReqDTO;
-import com.example.junguniv_bb.domain.member.dto.MemberStudentSearchReqDTO;
+
+import com.example.junguniv_bb.domain.member.dto.*;
+
 import com.example.junguniv_bb.domain.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -112,7 +111,7 @@ public class MemberRestController {
     @GetMapping("/{id}")
     public ResponseEntity<?> memberDetail(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         // 서비스 호출
-        MemberDetailResDTO responseDTO = memberService.memberDetail(id, customUserDetails);
+        MemberDetailResDTO responseDTO = memberService.memberDetail(id);
 
         return ResponseEntity.ok(responseDTO);
     }
