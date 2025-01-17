@@ -141,31 +141,31 @@ public class MemberService {
     }
 
     /* 학생 검색 */
-    public ResponseEntity<?> searchStudents(MemberStudentSearchReqDTO searchDTO, Pageable pageable) {
-        // 검색 실행
-        Page<Member> memberPagePS = memberRepository.searchStudents(
-            searchDTO.name(),
-            searchDTO.userId(),
-            searchDTO.getBirthday(),
-            searchDTO.telMobile(),
-            searchDTO.email(),
-            searchDTO.chkDormant(),
-            searchDTO.loginPass(),
-            searchDTO.chkForeigner(),
-            searchDTO.sex(),
-            searchDTO.jobName(),
-            searchDTO.jobWorkState(),
-            searchDTO.jobDept(),
-            searchDTO.chkSmsReceive(),
-            searchDTO.chkMailReceive(),
-            searchDTO.chkIdentityVerification(),
-            searchDTO.loginClientIp(),
-            pageable
-        );
-
-        // 검색 결과를 DTO로 변환하여 반환
-        return ResponseEntity.ok(new MemberStudentPageResDTO(memberPagePS));
-    }
+//    public ResponseEntity<?> searchStudents(MemberStudentSearchReqDTO searchDTO, Pageable pageable) {
+//        // 검색 실행
+//        Page<Member> memberPagePS = memberRepository.searchStudents(
+//            searchDTO.name(),
+//            searchDTO.userId(),
+//            searchDTO.getBirthday(),
+//            searchDTO.telMobile(),
+//            searchDTO.email(),
+//            searchDTO.chkDormant(),
+//            searchDTO.loginPass(),
+//            searchDTO.chkForeigner(),
+//            searchDTO.sex(),
+//            searchDTO.jobName(),
+//            searchDTO.jobWorkState(),
+//            searchDTO.jobDept(),
+//            searchDTO.chkSmsReceive(),
+//            searchDTO.chkMailReceive(),
+//            searchDTO.chkIdentityVerification(),
+//            searchDTO.loginClientIp(),
+//            pageable
+//        );
+//
+//        // 검색 결과를 DTO로 변환하여 반환
+//        return ResponseEntity.ok(new MemberStudentPageResDTO(memberPagePS));
+//    }
 
     /* 교강사 검색 */
     @Transactional(readOnly = true)
