@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then(data => {
-                renderSearchResults(data.response.content);
+                renderSearchResults(data.response.content, data.response.totalElements);
                 updatePagination(data.response);
             })
             .catch(error => {
@@ -113,7 +113,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // 검색 결과 렌더링
-    function renderSearchResults(content) {
+    function renderSearchResults(content, totalElements) {
+
+        // 총 검색 결과 수를 렌더링
+        const countDiv = document.querySelector('.count .Pretd_B');
+        if (countDiv) {
+            countDiv.textContent = totalElements; // 총 검색 결과 수를 설정
+        }
+
         tableBody.innerHTML = ''; // 기존 데이터 초기화
 
         if (content.length === 0) {
@@ -143,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <!-- 공개 기간 -->
             <td>${popup.startDate} ~ ${popup.endDate}</td>
             <!-- 팝업 종류 -->
-            <td>${popup.popupType}</td>
+            
             <!-- 공개 여부 -->
             <td>${popup.chkOpen}</td>
         `;

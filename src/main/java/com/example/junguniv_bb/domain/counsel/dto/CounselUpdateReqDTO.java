@@ -30,6 +30,7 @@ public record CounselUpdateReqDTO(
     public Counsel updateEntity() {
         return new Counsel(
                 counselIdx, counselName, name, telMobile, talkTime, memo, answerMemo, null, null ,addr1, addr2, zipcode, finalEducationType,
-                fname1, license, fname2, fname3, null, fname1Name, fname2Name, fname3Name, pwd, degreeHope, email, counselState);
+                fname1, license, fname2, fname3, null, fname1Name, fname2Name, fname3Name, pwd, degreeHope, email,
+                counselState == null ? 1: counselState);
     }
 }

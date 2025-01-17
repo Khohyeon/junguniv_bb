@@ -1,0 +1,18 @@
+<!-- 📌📌📌📌 홈페이지관리 > 약관관리 > 약관 수정 페이지입니다. 📌📌📌📌  -->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="ko">
+<head>
+    <!-- 헤더에서 CSS 포함 -->
+    <th:block th:replace="fragments/header :: head"></th:block>
+
+    <script th:src="@{/js/agreement/refund/detailForm.js}"></script>
+</head>
+<body>
+<!-- 헤더에서 상단 메뉴 포함 -->
+<div th:replace="fragments/header :: header"></div>
+
+<!-- 공통 헤더 포함 -->
+<div th:replace="/masterpage_sys/agreement/_agreement-detailHeader :: agreement-header"></div>
+</body>
+</html>

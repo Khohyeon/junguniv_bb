@@ -1,10 +1,8 @@
 package com.example.junguniv_bb.domain.agreement.dto;
 
-public record AgreementPageResDTO(
+public record AgreementListResDTO(
         Long agreementIdx,
-        String agreementTitle,
         String agreementContents,
         String openYn
-
 ) {
 }

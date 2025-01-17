@@ -98,12 +98,14 @@ INSERT INTO COUNSEL (
 'ONLINE', 'file13-private.jpg', 'file14-private.jpg', 'file15-private.jpg', 'password5', '마케팅 과정', 'test5@example.com', 2);
 
 
-INSERT INTO AGREEMENT (AGREEMENT_TITLE, AGREEMENT_CONTENTS, OPEN_YN, AGREEMENT_TYPE) VALUES
-('약관동의의 안내', '정유니브 교육원(#이하 "교육원")에서는 원활한 교육 운영 및 한국산업인력공단 모니터링, 수강, 증명서 발급 등과 관련하여 귀하의 개인정보를 아래와 같이 수집·이용을 하고자 합니다. 다음 사항에 대해 충분히 읽어보신 후, 동의 여부를 체크하여 주시기 바랍니다.', 'Y', 'JOIN'),
-('지적재산권 보호안내', '본 저작물의 지적재산권은 #교육원에게 있으며, 관리하며 저작권법 등 관련 법규에 따라 국내 및 국제적으로 보호를 받고 있습니다. 사용자는 온라인 교육 콘텐츠 및 강의 관련 자료를 제외한 경우를 제외하고, 개인적, 비영리적 용도로만 사용할 수 있습니다. 단, 개인적 이용을 제외한 경우 수정 및 복제 등을 할 수 없습니다.', 'Y', 'JOIN'),
-('개인정보 수집·이용 동의', '약관 내용이 없습니다.', 'Y', 'JOIN'),
-('교육자료 이용 안내', '본 교육자료는 교육의 특정적 소유의 지적 재산입니다. 교육원의 동의 없이 본 자료를 임의로 사용 및 배포할 경우 법적 문제가 발생할 수 있습니다.', 'Y', 'JOIN'),
-('기타 안내 사항', '본 서버와 관련된 그래픽적 또는 기술적으로 부정확한 내용이 있을 수 있습니다. 변경사항은 주기적으로 업데이트됩니다.', 'Y', 'JOIN');
+INSERT INTO AGREEMENT (TRAINING_CENTER_NAME, TRAINING_CENTER_URL, AGREEMENT_TITLE, AGREEMENT_CONTENTS, OPEN_YN, AGREEMENT_TYPE) VALUES
+('정유니브 아카데미','univ2024.unz.kr','약관동의의 안내', '정유니브 교육원(#이하 "교육원")에서는 원활한 교육 운영 및 한국산업인력공단 모니터링, 수강, 증명서 발급 등과 관련하여 귀하의 개인정보를 아래와 같이 수집·이용을 하고자 합니다. 다음 사항에 대해 충분히 읽어보신 후, 동의 여부를 체크하여 주시기 바랍니다.', 'Y', 'JOIN'),
+('정유니브 아카데미','univ2024.unz.kr','지적재산권 보호안내', '본 저작물의 지적재산권은 #교육원에게 있으며, 관리하며 저작권법 등 관련 법규에 따라 국내 및 국제적으로 보호를 받고 있습니다. 사용자는 온라인 교육 콘텐츠 및 강의 관련 자료를 제외한 경우를 제외하고, 개인적, 비영리적 용도로만 사용할 수 있습니다. 단, 개인적 이용을 제외한 경우 수정 및 복제 등을 할 수 없습니다.', 'Y', 'JOIN'),
+('정유니브 아카데미','univ2024.unz.kr','개인정보 수집·이용 동의', '약관 내용이 없습니다.', 'Y', 'JOIN'),
+('정유니브 아카데미','univ2024.unz.kr','교육자료 이용 안내', '본 교육자료는 교육의 특정적 소유의 지적 재산입니다. 교육원의 동의 없이 본 자료를 임의로 사용 및 배포할 경우 법적 문제가 발생할 수 있습니다.', 'Y', 'JOIN'),
+('정유니브 아카데미','univ2024.unz.kr','교육자료 이용 안내', '본 교육자료는 교육의 특정적 소유의 지적 재산입니다. 교육원의 동의 없이 본 자료를 임의로 사용 및 배포할 경우 법적 문제가 발생할 수 있습니다.', 'Y', 'JOIN'),
+(null,null,null, '본 교육자료는 교육의 특정적 소유의 지적 재산입니다. 교육원의 동의 없이 본 자료를 임의로 사용 및 배포할 경우 법적 문제가 발생할 수 있습니다.', 'Y', 'COURSE'),
+(null,null,null, '본 서버와 관련된 그래픽적 또는 기술적으로 부정확한 내용이 있을 수 있습니다. 변경사항은 주기적으로 업데이트됩니다.', 'Y', 'REFUND');
 
 
 INSERT INTO BBS_GROUP (
@@ -111,9 +113,9 @@ INSERT INTO BBS_GROUP (
     OPTION_SECRETAUTH, OPTION_REPLYAUTH, OPTION_COMMENTAUTH, FILEAUTH) VALUES
 ('NOTICE', '공지사항', 'board', '공지', 3, 'member@company@teacher@tutor@manager', 'manager', 'none', 'none', 'Y', 'N', 'N', 'member@company'),
 ('SUGGESTION', '고충상담게시판', 'consult', '상담', 5, 'member@company@teacher@manager', 'member@manager', 'manager', 'teacher@manager', 'N', 'Y', 'Y', 'manager'),
-('FAQ', 'FAQ', 'faq', '질문', 2, 'member@company@teacher@manager', 'manager', 'none', 'member@teacher', 'N', 'N', 'Y', 'member@teacher'),
+('FAQ', 'FAQ', 'faq', '질문, 답변, 수강신청', 2, 'member@company@teacher@manager', 'manager', 'none', 'member@teacher', 'N', 'N', 'Y', 'member@teacher'),
 ('QNA', 'Q&A', 'qna', '질문답변', 2, 'member@company@teacher@manager', 'member@teacher', 'member@teacher', 'member@teacher', 'N', 'Y', 'Y', 'member@teacher'),
-('MATERIAL', '학습자료실', 'material', '자료', 10, 'member@company@teacher@manager', 'manager', 'manager', 'none', 'N', 'N', 'N', 'member@company@teacher'),
+('MATERIAL', '학습자료실', 'material', '자료', 4, 'member@company@teacher@manager', 'manager', 'manager', 'none', 'N', 'N', 'N', 'member@company@teacher'),
 ('CONSULTING', '1:1상담', 'private', '상담', 1, 'member@teacher', 'member@teacher', 'manager', 'none', 'Y', 'Y', 'N', 'manager');
 
 -- Dummy data for BBS table

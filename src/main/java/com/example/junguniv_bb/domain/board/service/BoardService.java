@@ -2,6 +2,7 @@ package com.example.junguniv_bb.domain.board.service;
 
 import com.example.junguniv_bb._core.exception.Exception400;
 import com.example.junguniv_bb._core.exception.ExceptionMessage;
+import com.example.junguniv_bb._core.util.FileUtils;
 import com.example.junguniv_bb.domain.board.dto.*;
 import com.example.junguniv_bb.domain.board.model.*;
 import jakarta.annotation.PostConstruct;
@@ -24,8 +25,9 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
+
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +46,57 @@ public class BoardService {
     @Value("${file.upload.directories.board-temp}")
     private String tempDir;
 
+    /* 프로젝트 실행시 yml 경로에 해당하는 파일 업로드 디렉토리 생성 */
+    @PostConstruct
+    public void init() {
+        FileUtils.createDirectory(uploadDirPath);
+        FileUtils.createDirectory(tempDir);
+        cleanupTempDirectory(); // 임시 디렉토리 초기화
+    }
+
+    // 임시 폴더 청소 (24시간 이상 된 파일 삭제)
+    @Scheduled(cron = "0 0 * * * *") // 매시간 실행
+    public void cleanupTempDirectory() {
+        FileUtils.cleanupDirectory(tempDir, 24); // 24시간 이상 된 파일 삭제
+    }
+
+    /**
+     * 첨부파일 List 를 저장하는 메서드
+     */
+    private void saveFiles(Bbs bbs, List<MultipartFile> files) {
+        if (files == null || files.isEmpty()) {
+            return;
+        }
+
+        for (MultipartFile file : files) {
+            if (!file.isEmpty()) {
+                try {
+                    // 파일 업로드 및 이동
+                    String savedFileName = FileUtils.uploadFile(file, tempDir);
+                    if (savedFileName == null) {
+                        continue;
+                    }
+
+                    // 엔티티 저장 로직
+                    BbsFile bbsFile = new BbsFile(
+                            null,
+                            "BOARD",
+                            bbs,
+                            savedFileName,
+                            file.getOriginalFilename(),
+                            "createUser",
+                            "updateUser"
+                    );
+                    bbsFileRepository.save(bbsFile);
+                    log.info("파일 저장 성공: {}", savedFileName);
+
+                } catch (RuntimeException e) {
+                    log.error("파일 저장 중 오류 발생: {}", e.getMessage(), e);
+                    throw new RuntimeException("파일 저장에 실패했습니다.", e);
+                }
+            }
+        }
+    }
 
     /**
      * 게시판 검색 조회 BoardType 을 통해 모두 하나의 매핑으로 작업
@@ -87,14 +140,25 @@ public class BoardService {
      */
     public Page<BbsGroupPageResDTO> getBbsGroupPage(Pageable pageable) {
         Page<BbsGroup> bbsGroupPage = bbsGroupRepository.findAll(pageable);
+        return bbsGroupPage.map(bbsGroup -> {
 
-        return bbsGroupPage.map(bbsGroup ->
-                new BbsGroupPageResDTO(
-                        bbsGroup.getBbsGroupIdx(),
-                        bbsGroup.getBbsId(),
-                        bbsGroup.getBbsGroupName(),
-                        bbsGroup.getFileNum()
-                ));
+            // DTO에 전달 (그대로 전달하거나 가공해서 사용 가능)
+            return new BbsGroupPageResDTO(
+                    bbsGroup.getBbsGroupIdx(),
+                    bbsGroup.getBbsId(),
+                    bbsGroup.getBbsGroupName(),
+                    bbsGroup.getCategory(),
+                    bbsGroup.getFileNum(),
+                    bbsGroup.getSkin(),
+                    bbsGroup.getOptionSecretAuth(),
+                    bbsGroup.getOptionReplyAuth(),
+                    bbsGroup.getOptionCommentAuth(),
+                    bbsGroup.getReadAuth(),
+                    bbsGroup.getWriteAuth(),
+                    bbsGroup.getCommentAuth(),
+                    bbsGroup.getReplyAuth()
+            );
+        });
     }
 
     /**
@@ -103,19 +167,30 @@ public class BoardService {
      */
     @Transactional
     public void saveBoard(BoardSaveReqDTO boardSaveReqDTO) {
+        try {
+            String boardType = boardSaveReqDTO.boardType();
+            BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(boardType);
 
-        String boardType = boardSaveReqDTO.boardType();
-        BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(boardType);
+            // BBS 엔터티 저장
+            Bbs bbs = bbsRepository.save(boardSaveReqDTO.saveEntity(bbsGroup));
 
-        // BBS 엔터티 저장
-        Bbs bbs = bbsRepository.save(boardSaveReqDTO.saveEntity(bbsGroup));
+            // BBS File 엔티티 저장
+            saveFiles(bbs, boardSaveReqDTO.attachments());
 
-        // BBS File 엔티티 저장
-        saveFiles(bbs, boardSaveReqDTO.attachments());
-
-        // 강제 플러시
-        entityManager.flush();
-
+            // 강제 플러시
+            entityManager.flush();
+        } catch (Exception e) {
+            // 업로드된 파일이 있다면 삭제 시도
+            if (boardSaveReqDTO.attachments() != null) {
+                for (MultipartFile file : boardSaveReqDTO.attachments()) {
+                    if (!file.isEmpty()) {
+                        String fileName = FileUtils.generateUniqueFileName(file.getOriginalFilename());
+                        FileUtils.deleteFile(fileName, uploadDirPath);
+                    }
+                }
+            }
+            throw e;
+        }
     }
 
     /**
@@ -124,17 +199,30 @@ public class BoardService {
      */
     @Transactional
     public void updateBoard(BoardUpdateReqDTO boardUpdateReqDTO) {
-        String boardType = boardUpdateReqDTO.boardType();
-        BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(boardType);
+        try {
+            String boardType = boardUpdateReqDTO.boardType();
+            BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(boardType);
 
-        // BBS 엔터티 저장
-        Bbs bbs = bbsRepository.save(boardUpdateReqDTO.updateEntity(bbsGroup));
+            // BBS 엔터티 저장
+            Bbs bbs = bbsRepository.save(boardUpdateReqDTO.updateEntity(bbsGroup));
 
-        // BBS File 엔티티 저장
-        saveFiles(bbs, boardUpdateReqDTO.attachments());
+            // BBS File 엔티티 저장
+            saveFiles(bbs, boardUpdateReqDTO.attachments());
 
-        // 강제 플러시
-        entityManager.flush();
+            // 강제 플러시
+            entityManager.flush();
+        } catch (Exception e) {
+            // 업로드된 파일이 있다면 삭제 시도
+            if (boardUpdateReqDTO.attachments() != null) {
+                for (MultipartFile file : boardUpdateReqDTO.attachments()) {
+                    if (!file.isEmpty()) {
+                        String fileName = FileUtils.generateUniqueFileName(file.getOriginalFilename());
+                        FileUtils.deleteFile(fileName, uploadDirPath);
+                    }
+                }
+            }
+            throw e;
+        }
     }
 
     /**
@@ -142,13 +230,20 @@ public class BoardService {
      */
     @Transactional
     public void boardListDelete(List<Long> boardIds) {
-
         List<Bbs> boardToDelete = bbsRepository.findAllById(boardIds);
         if (boardToDelete.isEmpty()) {
             throw new Exception400("삭제할 게시판이 없습니다.");
         }
-        bbsRepository.deleteAll(boardToDelete);
 
+        // 첨부 파일 삭제
+        for (Bbs bbs : boardToDelete) {
+            List<BbsFile> files = bbsFileRepository.findAllByBbs(bbs);
+            for (BbsFile file : files) {
+                FileUtils.deleteFile(file.getFName1(), uploadDirPath);
+            }
+        }
+
+        bbsRepository.deleteAll(boardToDelete);
     }
 
     /**
@@ -159,6 +254,12 @@ public class BoardService {
         Bbs boardToDelete = bbsRepository.findById(boardId)
                 .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_BBS.getMessage()));
 
+        // 첨부 파일 삭제
+        List<BbsFile> files = bbsFileRepository.findAllByBbs(boardToDelete);
+        for (BbsFile file : files) {
+            FileUtils.deleteFile(file.getFName1(), uploadDirPath);
+        }
+
         bbsRepository.delete(boardToDelete);
     }
 
@@ -168,7 +269,7 @@ public class BoardService {
 
         List<String> attachments = bbsFileRepository.findAllByBbs(bbs)
                 .stream()
-                .map(BbsFile::getFName1) // 첨부파일 이름만 추출
+                .map(BbsFile::getFName1)
                 .toList();
 
         return new BoardUpdateResDTO(
@@ -187,108 +288,4 @@ public class BoardService {
                 attachments
         );
     }
-
-    /**
-     * 첨부파일 List 를 저장하는 메서드
-     */
-    private void saveFiles(Bbs bbs, List<MultipartFile> files) {
-        if (files == null || files.isEmpty()) {
-            return;
-        }
-
-        for (MultipartFile file : files) {
-            if (!file.isEmpty()) {
-                try {
-                    String originalFileName = file.getOriginalFilename();
-                    String savedFileName = System.currentTimeMillis() + "_" + originalFileName;
-
-                    // 디렉토리 경로 확인 및 생성
-                    File uploadDir = new File(uploadDirPath);
-                    if (!uploadDir.exists()) {
-                        boolean dirCreated = uploadDir.mkdirs();
-                        if (dirCreated) {
-                            System.out.println("디렉토리가 생성되었습니다: " + uploadDirPath);
-                        } else {
-                            throw new RuntimeException("디렉토리 생성에 실패했습니다: " + uploadDirPath);
-                        }
-                    }
-
-                    // 파일 저장 경로
-                    String filePath = uploadDirPath + File.separator + savedFileName;
-
-                    // 파일 저장
-                    file.transferTo(new File(filePath));
-                    System.out.println("파일 저장 성공: " + filePath);
-
-                    // 엔티티 저장 로직
-                    BbsFile bbsFile = new BbsFile(
-                            null,
-                            "BOARD",
-                            bbs,
-                            savedFileName,
-                            originalFileName,
-                            "createUser",
-                            "updateUser"
-                    );
-                    bbsFileRepository.save(bbsFile);
-
-                } catch (IOException e) {
-                    throw new RuntimeException("파일 저장 중 오류 발생: " + e.getMessage(), e);
-                }
-            }
-        }
-    }
-
-
-    /* 프로젝트 실행시 yml 경로에 해당하는 파일 업로드 디렉토리 생성 */
-    @PostConstruct
-    public void init() {
-        try {
-            createDirectory(uploadDirPath); // 업로드 디렉토리 생성
-            createDirectory(tempDir); // 임시 디렉토리 생성
-            cleanupTempDirectory(); // 임시 디렉토리 초기화
-        } catch (IOException e) {
-            // 로그 추가
-            System.err.println("파일 업로드 디렉토리 초기화 중 오류 발생: " + e.getMessage());
-            throw new RuntimeException("Could not create directories!", e);
-        }
-    }
-
-    private void createDirectory(String directory) throws IOException {
-        Path path = Paths.get(directory);
-        if (!Files.exists(path)) {
-            Files.createDirectories(path);
-            System.out.println("디렉토리 생성: " + path);
-        }
-    }
-
-    // 임시 폴더 청소 (24시간 이상 된 파일 삭제)
-    @Scheduled(cron = "0 0 * * * *") // 매시간 실행
-    public void cleanupTempDirectory() {
-        try {
-            Files.walk(Paths.get(tempDir))
-                    .filter(Files::isRegularFile)
-                    .filter(path -> {
-                        try {
-                            FileTime creationTime = Files.getLastModifiedTime(path);
-                            return Duration.between(creationTime.toInstant(),
-                                    Instant.now()).toHours() >= 24;
-                        } catch (IOException e) {
-                            return false;
-                        }
-                    })
-                    .forEach(path -> {
-                        try {
-                            Files.delete(path);
-                            log.info("임시 파일 삭제됨: {}", path);
-                        } catch (IOException e) {
-                            log.error("임시 파일 삭제 실패: {}", path, e);
-                        }
-                    });
-        } catch (IOException e) {
-            log.error("임시 폴더 청소 중 오류 발생", e);
-        }
-    }
-
-
 }

@@ -47,15 +47,21 @@ public class BbsGroup extends BaseTime {
     @Column(name = "COMMENTAUTH", length = 255)
     private String commentAuth; // 댓글 권한
 
-    @Column(name = "OPTION_SECRETAUTH", length = 1, nullable = false)
+    @Column(name = "OPTION_SECRETAUTH", length = 1)
     private String optionSecretAuth; // 옵션 비밀 권한 (Y, N)
 
-    @Column(name = "OPTION_REPLYAUTH", length = 1, nullable = false)
+    @Column(name = "OPTION_REPLYAUTH", length = 1)
     private String optionReplyAuth; // 옵션 답변 권한 (Y, N)
 
-    @Column(name = "OPTION_COMMENTAUTH", length = 1, nullable = false)
+    @Column(name = "OPTION_COMMENTAUTH", length = 1)
     private String optionCommentAuth; // 옵션 댓글 권한 (Y, N)
 
     @Column(name = "FILEAUTH", length = 255)
     private String fileAuth; // 파일 첨부 권한
+
+    public BbsGroup(Long bbsGroupIdx, String bbsGroupName, String bbsId) {
+        this.bbsGroupIdx = bbsGroupIdx;
+        this.bbsGroupName = bbsGroupName;
+        this.bbsId = bbsId;
+    }
 }

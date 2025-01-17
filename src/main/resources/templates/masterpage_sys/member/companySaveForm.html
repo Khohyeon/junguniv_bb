@@ -14,8 +14,8 @@
 	<!-- 헤더에서 상단 메뉴 포함 -->
 	<th:block th:replace="fragments/header :: header"></th:block>
 
-
 	<input type="hidden" name="userType" id="userType" value="COMPANY">
+
 
 	<div class="inner">
 		<form id="companySaveForm">
@@ -268,11 +268,11 @@
 						<div class="tit">사용여부</div>
 						<div class="con mt10">
 							<label class="c-input ci-radio">
-								<input type="radio" name="companyUse"> 사용함
+								<input type="radio" name="companyHomepageUse" value="Y"> 사용함
 								<div class="ci-show"></div>
 							</label>
 							<label class="c-input ci-radio">
-								<input type="radio" name="companyUse"> 사용안함
+								<input type="radio" name="companyHomepageUse" value="N"> 사용안함
 								<div class="ci-show"></div>
 							</label>
 						</div>
@@ -281,15 +281,15 @@
 						<div class="tit">URL주소</div>
 						<div class="con flex">
 							<span>https://교육원도메인/</span>
-							<input type="text">
+							<input type="text" name="companyUrl" id="companyUrl">
 						</div>
 					</div>
 					<div class="column-tc logo">
 						<div class="tit">로고 파일</div>
 						<div class="con flex">
-							<input type="file">
+							<input type="file" name="fnameLogo" id="fnameLogo">
 							<label class="c-input ci-check">
-								<input type="checkbox"> 삭제
+								<input type="checkbox" name="deleteFnameLogo"> 삭제
 								<div class="ci-show"></div>
 							</label>
 							<div class="info">가로 265px X 세로55px</div>
@@ -300,15 +300,15 @@
 							<div>
 								<div class="tit">상담번호</div>
 								<div class="con">
-									<input type="text" placeholder="상담번호를 입력해주세요">
+									<input type="text" name="counselNumber" id="counselNumber" placeholder="상담번호를 입력해주세요">
 								</div>
 							</div>
 							<div>
 								<div class="tit">상담시간</div>
 								<div class="con flex">
-									<input type="time">
+									<input type="time" name="counselTime1" id="counselTime1">
 									<span>&nbsp;&nbsp;~&nbsp;&nbsp;</span>
-									<input type="time">
+									<input type="time" name="counselTime2" id="counselTime2">
 								</div>
 							</div>
 						</div>
@@ -319,7 +319,7 @@
 						<div class="tit">메인 상단 이미지</div>
 						<div class="con flex4 mt10">
 							<label class="ci-card">
-								<input type="radio" name="mainImage" class="ci-card-input">
+								<input type="radio" name="mainImg" class="ci-card-input" value="sample01.jpg">
 								<div class="ci-card-body">
 									<div class="body-tit">이미지 1</div>
 									<div class="body-con">
@@ -328,7 +328,7 @@
 								</div>
 							</label>
 							<label class="ci-card">
-								<input type="radio" name="mainImage" class="ci-card-input">
+								<input type="radio" name="mainImg" class="ci-card-input" value="sample02.jpg">
 								<div class="ci-card-body">
 									<div class="body-tit">이미지 2</div>
 									<div class="body-con">
@@ -337,7 +337,7 @@
 								</div>
 							</label>
 							<label class="ci-card">
-								<input type="radio" name="mainImage" class="ci-card-input">
+								<input type="radio" name="mainImg" class="ci-card-input" value="sample03.jpg">
 								<div class="ci-card-body">
 									<div class="body-tit">이미지 3</div>
 									<div class="body-con">
@@ -346,14 +346,14 @@
 								</div>
 							</label>
 							<label class="ci-card">
-								<input type="radio" name="mainImage" class="ci-card-input">
+								<input type="radio" name="mainImg" class="ci-card-input" value="custom">
 								<div class="ci-card-body">
 									<div class="body-tit">이미지 파일 첨부</div>
 									<div class="body-con">
 										<div class="flex-spaceB">
-											<input type="file">
+											<input type="file" name="mainImgFile" id="mainImgFile" accept="image/*">
 											<label class="c-input ci-check ml5">
-												<input type="checkbox"> 삭제
+												<input type="checkbox" name="deleteMainImg"> 삭제
 												<div class="ci-show"></div>
 											</label>
 										</div>
@@ -367,7 +367,7 @@
 						<div class="tit">서브 상단 이미지</div>
 						<div class="con flex4 mt10">
 							<label class="ci-card">
-								<input type="radio" name="subImage" class="ci-card-input">
+								<input type="radio" name="subImg" class="ci-card-input" value="sample01.jpg">
 								<div class="ci-card-body">
 									<div class="body-tit">이미지 1</div>
 									<div class="body-con">
@@ -376,7 +376,7 @@
 								</div>
 							</label>
 							<label class="ci-card">
-								<input type="radio" name="subImage" class="ci-card-input">
+								<input type="radio" name="subImg" class="ci-card-input" value="sample02.jpg">
 								<div class="ci-card-body">
 									<div class="body-tit">이미지 2</div>
 									<div class="body-con">
@@ -385,7 +385,7 @@
 								</div>
 							</label>
 							<label class="ci-card">
-								<input type="radio" name="subImage" class="ci-card-input">
+								<input type="radio" name="subImg" class="ci-card-input" value="sample03.jpg">
 								<div class="ci-card-body">
 									<div class="body-tit">이미지 3</div>
 									<div class="body-con">
@@ -394,14 +394,14 @@
 								</div>
 							</label>
 							<label class="ci-card">
-								<input type="radio" name="subImage" class="ci-card-input">
+								<input type="radio" name="subImg" class="ci-card-input" value="custom">
 								<div class="ci-card-body">
 									<div class="body-tit">이미지 파일 첨부</div>
 									<div class="body-con">
 										<div class="flex-spaceB">
-											<input type="file">
+											<input type="file" name="subImgFile" id="subImgFile" accept="image/*">
 											<label class="c-input ci-check ml5">
-												<input type="checkbox"> 삭제
+												<input type="checkbox" name="deleteSubImg"> 삭제
 												<div class="ci-show"></div>
 											</label>
 										</div>
