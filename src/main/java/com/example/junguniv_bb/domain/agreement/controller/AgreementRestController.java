@@ -1,15 +1,14 @@
 package com.example.junguniv_bb.domain.agreement.controller;
 
 import com.example.junguniv_bb._core.util.APIUtils;
+import com.example.junguniv_bb.domain.agreement.dto.AgreementJoinUpdateReqDTO;
 import com.example.junguniv_bb.domain.agreement.dto.AgreementUpdateReqDTO;
 import com.example.junguniv_bb.domain.agreement.service.AgreementService;
-import com.example.junguniv_bb.domain.popup.dto.PopupUpdateReqDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,9 +21,27 @@ public class AgreementRestController {
      *  [관리자모드] 홈페이지관리 - 약관관리 - 회원가입약관 - 약관 상세페이지 - 수정하기
      */
     @PutMapping("/update")
-    public ResponseEntity<APIUtils.APIResult<String>> agreementUpdate(@ModelAttribute AgreementUpdateReqDTO agreementUpdateReqDTO) {
-        agreementService.agreementUpdate(agreementUpdateReqDTO);
+    public ResponseEntity<APIUtils.APIResult<String>> agreementUpdate(@ModelAttribute AgreementJoinUpdateReqDTO agreementJoinUpdateReqDTO) {
+        agreementService.agreementUpdate(agreementJoinUpdateReqDTO);
         return ResponseEntity.ok(APIUtils.success("회원약관수정이 성공적으로 완료되었습니다."));
     }
+
+    /**
+     *  [관리자모드] 홈페이지관리 - 약관관리 - 수강신청약관/환불신청약관 - 약관 상세페이지 - 수정하기
+     */
+    @PutMapping("/update2")
+    public ResponseEntity<APIUtils.APIResult<String>> agreementUpdate2(
+            @RequestBody List<AgreementUpdateReqDTO> agreementUpdateReqDTOList) {
+
+        agreementService.agreementUpdate2(agreementUpdateReqDTOList);
+        return ResponseEntity.ok(APIUtils.success("약관수정이 성공적으로 완료되었습니다."));
+    }
+
+    @DeleteMapping("/delete/{agreementIdx}")
+    public ResponseEntity<APIUtils.APIResult<String>> deleteAgreement(@PathVariable Long agreementIdx) {
+        agreementService.deleteAgreement(agreementIdx);
+        return ResponseEntity.ok(APIUtils.success("항목이 성공적으로 삭제되었습니다."));
+    }
+
 
 }

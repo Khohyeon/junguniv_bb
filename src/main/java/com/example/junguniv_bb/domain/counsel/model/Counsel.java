@@ -114,8 +114,8 @@ public class Counsel extends BaseTime {
     @Column(name = "EMAIL", length = 255, nullable = false)
     private String email;
 
-    // 상담상태
-    @Column(name = "COUNSEL_STATE", length = 1, nullable = false)
+    // 상담상태 (1: 상담완료, 2: 상담대기)
+    @Column(name = "COUNSEL_STATE", length = 1)
     private Integer counselState;
 }
 

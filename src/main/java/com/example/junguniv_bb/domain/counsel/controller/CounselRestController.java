@@ -1,16 +1,19 @@
 package com.example.junguniv_bb.domain.counsel.controller;
 
+import com.example.junguniv_bb._core.exception.Exception400;
 import com.example.junguniv_bb._core.util.APIUtils;
 import com.example.junguniv_bb.domain.counsel.dto.CounselSaveReqDTO;
 import com.example.junguniv_bb.domain.counsel.dto.CounselSearchResDTO;
 import com.example.junguniv_bb.domain.counsel.dto.CounselUpdateReqDTO;
 import com.example.junguniv_bb.domain.counsel.service.CounselService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,7 +44,12 @@ public class CounselRestController {
      *  [관리자모드] 홈페이지관리 - 문의상담관리 - 상담예약 - 상담명 등록페이지 - 등록하기
      */
     @PostMapping("/save")
-    public ResponseEntity<APIUtils.APIResult<String>> counselSave(@ModelAttribute CounselSaveReqDTO counselSaveReqDTO) {
+    public ResponseEntity<APIUtils.APIResult<String>> counselSave(@Valid @ModelAttribute CounselSaveReqDTO counselSaveReqDTO, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            throw new Exception400(bindingResult.getAllErrors().get(0).getDefaultMessage());
+        }
+
         counselService.counselSave(counselSaveReqDTO);
         return ResponseEntity.ok(APIUtils.success("상담예약이 성공적으로 완료되었습니다."));
     }
