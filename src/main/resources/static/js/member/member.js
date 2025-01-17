@@ -287,7 +287,9 @@ const MemberModule = {
                                 </label>
                             </td>
                             <td>${startNumber - index}</td>
-                            <td>${member.name || '-'}</td>
+                            <td>
+                                <a href="/masterpage_sys/member/admin/${member.memberIdx}" class="jv-btn underline01">${member.name || '-'}</a>
+                            </td>
                             <td>${member.userId || '-'}</td>
                             <td>
                                 ${member.telMobile ? `
@@ -1115,7 +1117,10 @@ const MemberModule = {
                     }[data.userType];
                     
                     alert(`${userTypeText} 수정이 완료되었습니다.`);
-                    window.location.href = `/masterpage_sys/member/${data.userType.toLowerCase()}/`;
+
+                    // 수정 완료 후 리스트 페이지로 이동
+                    // window.location.href = `/masterpage_sys/member/${data.userType.toLowerCase()}/`;
+                    window.location.reload();
                 } else {
                     alert(result.message || '회원 수정에 실패했습니다.');
                 }
