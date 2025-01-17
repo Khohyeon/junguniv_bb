@@ -488,11 +488,6 @@ const MemberModule = {
             event.preventDefault();
             
             try {
-                // hidden input에서 파일명 가져오기
-                const mainImgFileName = document.getElementById('mainImgFileName')?.value;
-                const subImgFileName = document.getElementById('subImgFileName')?.value;
-
-                // 멤버 데이터 준비
                 const data = {
                     // 공통 필드
                     userType: document.getElementById('userType').value,
@@ -587,9 +582,10 @@ const MemberModule = {
                         ? `${document.getElementById('counselTime1')?.value}-${document.getElementById('counselTime2')?.value}`
                         : null,
 
-                    // 메인 이미지 처리
-                    mainImg: mainImgFileName,
-                    subImg: subImgFileName
+                    // 이미지 처리
+                    mainImg: document.getElementById('mainImg')?.value,
+                    subImg: document.getElementById('subImg')?.value,
+                    fnameLogo: document.getElementById('fnameLogo')?.value
                 };
 
                 // 필수 입력값 검증
@@ -680,21 +676,78 @@ const MemberModule = {
                     data.email = email1 || email2 ? `${email1 || ''}@${email2 || ''}` : '';
                 }
 
-                // API 호출
-                const response = await MemberModule.api.saveMember(data);
-                
-                if (response.success) {
-                    // 멤버 등록 성공 시 임시 파일을 실제 경로로 이동
-                    if (mainImgFileName) {
-                        await fetch(`/api/v1/files/move/${mainImgFileName}`, {
-                            method: 'POST'
-                        });
+                    // 이미지 파일 정보 추가
+                    const mainImgFile = document.getElementById('mainImgFile');
+                    const subImgFile = document.getElementById('subImgFile');
+                    const logoFile = document.getElementById('fnameLogo');
+    
+                    // 메인 이미지 정보
+                    if (mainImgFile && mainImgFile.dataset.uploadedFileName) {
+                        data.mainImg = mainImgFile.dataset.uploadedFileName;
+                        data.mainImgName = mainImgFile.dataset.originalFileName;
                     }
-                    
-                    if (subImgFileName) {
-                        await fetch(`/api/v1/files/move/${subImgFileName}`, {
-                            method: 'POST'
-                        });
+    
+                    // 서브 이미지 정보
+                    if (subImgFile && subImgFile.dataset.uploadedFileName) {
+                        data.subImg = subImgFile.dataset.uploadedFileName;
+                        data.subImgName = subImgFile.dataset.originalFileName;
+                    }
+    
+                    // 로고 이미지 정보
+                    if (logoFile && logoFile.dataset.uploadedFileName) {
+                        data.fnameLogo = logoFile.dataset.uploadedFileName;
+                        data.fnameLogoName = logoFile.dataset.originalFileName;
+                    }
+                
+            
+                // API 호출
+                const response = await fetch('/masterpage_sys/member/api/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error('회원 등록에 실패했습니다.');
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // 파일 이동 처리
+                    const uploadedFiles = [];
+                    if (mainImgFile?.dataset.uploadedFileName) {
+                        uploadedFiles.push(mainImgFile.dataset.uploadedFileName);
+                    }
+                    if (subImgFile?.dataset.uploadedFileName) {
+                        uploadedFiles.push(subImgFile.dataset.uploadedFileName);
+                    }
+                    if (logoFile?.dataset.uploadedFileName) {
+                        uploadedFiles.push(logoFile.dataset.uploadedFileName);
+                    }
+
+                    // 업로드된 파일들을 temp에서 member 폴더로 이동
+                    for (const fileName of uploadedFiles) {
+                        try {
+                            const moveResponse = await fetch(`/api/v1/files/move/member/${fileName}`, {
+                                method: 'POST'
+                            });
+                            
+                            if (!moveResponse.ok) {
+                                console.error(`파일 이동 실패: ${fileName}`);
+                                throw new Error('파일 이동에 실패했습니다.');
+                            }
+
+                            const moveResult = await moveResponse.json();
+                            if (!moveResult.success) {
+                                throw new Error(moveResult.message || '파일 이동에 실패했습니다.');
+                            }
+                        } catch (error) {
+                            console.error('파일 이동 중 오류 발생:', error);
+                            throw new Error('파일 이동 중 오류가 발생했습니다.');
+                        }
                     }
 
                     const userTypeText = {
@@ -707,11 +760,11 @@ const MemberModule = {
                     alert(`${userTypeText} 등록 완료.`);
                     window.location.href = `/masterpage_sys/member/${data.userType.toLowerCase()}/`;
                 } else {
-                    alert(response.message || '회원 등록에 실패했습니다.');
+                    alert(result.message || '회원 등록에 실패했습니다.');
                 }
             } catch (error) {
                 console.error('회원 등록 에러:', error);
-                alert('회원 등록에 실패했습니다.');
+                alert(error.message || '회원 등록에 실패했습니다.');
             }
         },
 
@@ -918,6 +971,135 @@ const MemberModule = {
         },
     },
 
+    // 파일 업로드 관련 핸들러 추가
+    fileHandlers: {
+        // 메인 이미지 파일 업로드
+        handleMainImageUpload: async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                alert('이미지 파일만 업로드 가능합니다.');
+                e.target.value = '';
+                return;
+            }
+
+            if (file.size > 10 * 1024 * 1024) {
+                alert('파일 크기는 10MB를 초과할 수 없습니다.');
+                e.target.value = '';
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/api/v1/files/upload/temp/member', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('파일 업로드에 실패했습니다.');
+                }
+
+                const data = await response.json();
+                e.target.dataset.uploadedFileName = data.fileName;
+                e.target.dataset.originalFileName = file.name;
+                
+                console.log('메인 이미지 업로드 성공:', data);
+            } catch (error) {
+                console.error('메인 이미지 업로드 중 오류 발생:', error);
+                alert('파일 업로드에 실패했습니다.');
+                e.target.value = '';
+            }
+        },
+
+        // 서브 이미지 파일 업로드
+        handleSubImageUpload: async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                alert('이미지 파일만 업로드 가능합니다.');
+                e.target.value = '';
+                return;
+            }
+
+            if (file.size > 10 * 1024 * 1024) {
+                alert('파일 크기는 10MB를 초과할 수 없습니다.');
+                e.target.value = '';
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/api/v1/files/upload/temp/member', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('파일 업로드에 실패했습니다.');
+                }
+
+                const data = await response.json();
+                e.target.dataset.uploadedFileName = data.fileName;
+                e.target.dataset.originalFileName = file.name;
+                
+                console.log('서브 이미지 업로드 성공:', data);
+            } catch (error) {
+                console.error('서브 이미지 업로드 중 오류 발생:', error);
+                alert('파일 업로드에 실패했습니다.');
+                e.target.value = '';
+            }
+        },
+
+        // 로고 파일 업로드
+        handleLogoUpload: async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                alert('이미지 파일만 업로드 가능합니다.');
+                e.target.value = '';
+                return;
+            }
+
+            if (file.size > 10 * 1024 * 1024) {
+                alert('파일 크기는 10MB를 초과할 수 없습니다.');
+                e.target.value = '';
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/api/v1/files/upload/temp/member', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('파일 업로드에 실패했습니다.');
+                }
+
+                const data = await response.json();
+                e.target.dataset.uploadedFileName = data.fileName;
+                e.target.dataset.originalFileName = file.name;
+                
+                console.log('로고 이미지 업로드 성공:', data);
+            } catch (error) {
+                console.error('로고 이미지 업로드 중 오류 발생:', error);
+                alert('파일 업로드에 실패했습니다.');
+                e.target.value = '';
+            }
+        }
+    },
+
     // 초기화 함수
     init: async function() {
         try {
@@ -1072,79 +1254,20 @@ const MemberModule = {
                 searchMoreBtn.addEventListener('click', this.handlers.toggleDetailSearch);
             }
 
-            // 파일 업로드 처리 (메인 이미지)
-            const mainImgFileInput = document.querySelector('#mainImgFile');
-            const subImgFileInput = document.querySelector('#subImgFile');
+            // 파일 업로드 이벤트 리스너 등록
+            const mainImgFile = document.getElementById('mainImgFile');
+            const subImgFile = document.getElementById('subImgFile');
+            const logoFile = document.getElementById('fnameLogo');
 
-            if (mainImgFileInput) {
-                mainImgFileInput.addEventListener('change', async function(e) {
-                    const file = e.target.files[0];
-                    if (file) {
-                        const formData = new FormData();
-                        formData.append('file', file);
-                        
-                        try {
-                            const response = await fetch('/api/v1/files/upload/temp', {
-                                method: 'POST',
-                                body: formData
-                            });
-                            
-                            if (!response.ok) {
-                                throw new Error('메인 이미지 업로드 실패');
-                            }
-                            
-                            const data = await response.json();
-                            
-                            // UUID 파일명과 원본 파일명 저장
-                            document.getElementById('mainImg').value = data.fileName;      // UUID 파일명
-                            document.getElementById('mainImgName').value = file.name;      // 원본 파일명
-                            
-                            console.log('메인 이미지 업로드 완료:', data.fileName);
-                            console.log('원본 파일명:', file.name);
-                        } catch (error) {
-                            console.error('메인 이미지 업로드 중 오류:', error);
-                            alert('메인 이미지 업로드에 실패했습니다.');
-                            e.target.value = '';
-                        }
-                    }
-                });
+            if (mainImgFile) {
+                mainImgFile.addEventListener('change', this.fileHandlers.handleMainImageUpload);
             }
-
-            // 파일 업로드 처리 (서브 이미지)
-            if (subImgFileInput) {
-                subImgFileInput.addEventListener('change', async function(e) {
-                    const file = e.target.files[0];
-                    if (file) {
-                        const formData = new FormData();
-                        formData.append('file', file);
-                        
-                        try {
-                            const response = await fetch('/api/v1/files/upload/temp', {
-                                method: 'POST',
-                                body: formData
-                            });
-                            
-                            if (!response.ok) {
-                                throw new Error('서브 이미지 업로드 실패');
-                            }
-                            
-                            const data = await response.json();
-                            
-                            // UUID 파일명과 원본 파일명 저장
-                            document.getElementById('subImg').value = data.fileName;       // UUID 파일명
-                            document.getElementById('subImgName').value = file.name;       // 원본 파일명
-                            
-                            console.log('서브 이미지 업로드 완료:', data.fileName);
-                            console.log('원본 파일명:', file.name);
-                        } catch (error) {
-                            console.error('서브 이미지 업로드 중 오류:', error);
-                            alert('서브 이미지 업로드에 실패했습니다.');
-                            e.target.value = '';
-                        }
-                    }
-                });
+            if (subImgFile) {
+                subImgFile.addEventListener('change', this.fileHandlers.handleSubImageUpload);
             }
-
+            if (logoFile) {
+                logoFile.addEventListener('change', this.fileHandlers.handleLogoUpload);
+            }
         } catch (error) {
             console.error('초기화 에러:', error);
             alert('데이터를 불러오는데 실패했습니다.');
@@ -1152,7 +1275,7 @@ const MemberModule = {
     }
 };
 
-// 페이지 로드 시 초기화
+// 모듈 초기화
 document.addEventListener('DOMContentLoaded', () => {
     MemberModule.init();
 });

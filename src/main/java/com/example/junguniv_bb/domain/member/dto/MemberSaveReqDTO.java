@@ -160,12 +160,15 @@ public record MemberSaveReqDTO(
     String companyHomepageUse, // 기업 홈페이지 사용 여부
     String companyUrl, // 기업 홈페이지 URL
     String fnameLogo, // 로고 파일
+    String fnameLogoName, // 로고 원본 파일명
     String counselNumber, // 상담번호
     String counselTime, // 상담시간
     String mainImg, // 메인 상단 이미지
+    String mainImgName, // 메인 상단 이미지 원본 파일명
     String subImg, // 서브 상단 이미지
+    String subImgName, // 서브 상단 이미지 원본 파일명
     MultipartFile mainImgFile, // 메인 이미지 파일(임시)
-    MultipartFile subImgFile // 서브 이미지 파일(임시)
+    MultipartFile subImgFile // 서브 이미지 파일
 ) {
     public Member toEntity(String encodedPwd) {
         return Member.builder()
@@ -314,10 +317,13 @@ public record MemberSaveReqDTO(
                 .companyHomepageUse(companyHomepageUse)
                 .companyUrl(companyUrl)
                 .fnameLogo(fnameLogo)
+                .fnameLogoName(fnameLogoName)
                 .counselNumber(counselNumber)
                 .counselTime(counselTime)
                 .mainImg(mainImg)
+                .mainImgName(mainImgName)
                 .subImg(subImg)
+                .subImgName(subImgName)
                 .build();
     }
 }

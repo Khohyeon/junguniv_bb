@@ -14,8 +14,8 @@
 	<!-- 헤더에서 상단 메뉴 포함 -->
 	<th:block th:replace="fragments/header :: header"></th:block>
 
-
 	<input type="hidden" name="userType" id="userType" value="COMPANY">
+
 
 	<div class="inner">
 		<form id="companySaveForm">
@@ -289,7 +289,7 @@
 						<div class="con flex">
 							<input type="file" name="fnameLogo" id="fnameLogo">
 							<label class="c-input ci-check">
-								<input type="checkbox"> 삭제
+								<input type="checkbox" name="deleteFnameLogo"> 삭제
 								<div class="ci-show"></div>
 							</label>
 							<div class="info">가로 265px X 세로55px</div>

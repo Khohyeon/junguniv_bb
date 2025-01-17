@@ -166,6 +166,7 @@ public class FileUtils {
         } catch (IOException e) {
             log.error("디렉토리 정리 중 오류 발생: {}", e.getMessage());
         }
+
     }
 
     /**
