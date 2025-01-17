@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="ko">
 <head>
+
+    <link rel="stylesheet" th:href="@{/css/board/managerForm.css}">
+    <script th:src="@{/js/board/managerForm.js}"></script>
+
     <!-- 헤더에서 CSS 포함 -->
     <th:block th:replace="fragments/header :: head"></th:block>
 </head>
@@ -27,69 +31,116 @@
     <div class="btn-wrap">
         <a href="#none" class="jv-btn jb-fill01-lg">검색</a>
     </div>
+
+    <form id="bbsForm" class="form-container">
+        <div>
+            <label for="bbsGroupName">게시판명 :</label>
+            <input id="bbsGroupName" name="bbsGroupName" type="text" size="20" autocomplete="new-password" required>
+        </div>
+        <div>
+            <label for="bbsId">게시판코드 :</label>
+            <input id="bbsId" name="bbsId" type="text" size="20" autocomplete="new-password" required>
+        </div>
+        <div>
+            <input type="button" value="게시판등록" id="submitBtn">
+        </div>
+    </form>
+
+    <div class="button-container">
+        <input type="button" value="정보변경" id="updateBtn">
+    </div>
+
+
     <table class="table01 T_center board-manage mt50">
         <colgroup>
             <col width="5%">
             <col width="15%">
-            <col width="15%">
             <col width="10%">
             <col width="15%">
-            <col width="40%">
+            <col width="10%">
+            <col width="10%">
+            <col width="5%">
+            <col width="30%">
         </colgroup>
         <thead>
         <tr>
             <th>NO</th>
-            <th>게시판 유형</th>
-            <th>메뉴명</th>
+            <th>게시판명</th>
+            <th>게시판코드</th>
+            <th>카테고리</th>
             <th>첨부파일 갯수</th>
+            <th>리스트형태</th>
             <th>유형 옵션</th>
             <th>권한 설정</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="bbsGroup : ${bbsGroupPage}">
+        <tr th:each="bbsGroup : ${bbsGroupPage}" th:id="'row-' + ${bbsGroup.bbsGroupIdx()}">
             <!-- 순번 -->
             <td th:text="${bbsGroup.bbsGroupIdx()}">1</td>
 
-            <!-- 게시판 종류 -->
-            <td th:text="${bbsGroup.bbsId()}">일반게시판</td>
-
             <!-- 게시판 이름 -->
-            <td th:text="${bbsGroup.bbsGroupName()}">공지사항</td>
-
-            <!-- 셀렉트 박스 -->
             <td>
-                <select>
-                    <!-- 기본 옵션 -->
-                    <option>선택</option>
-                    <!-- 옵션 1~5 생성 -->
-                    <option th:each="i : ${#numbers.sequence(1, 5)}"
-                            th:value="${i}"
-                            th:text="${i}"
-                            th:selected="${bbsGroup.fileNum() == i}">
-                    </option>
-                </select>
-
+                <input type="text" class="bbsGroupName" th:value="${bbsGroup.bbsGroupName()}" />
             </td>
 
-            <!-- 옵션 체크박스 -->
+            <!-- 게시판 코드 -->
+            <td>
+                <input type="text" class="bbsId" th:value="${bbsGroup.bbsId()}" />
+            </td>
+
+            <!-- 카테고리 -->
+            <td>
+<!--                <p>콤마(,)를 사용하여 적으시면 됩니다.</p>-->
+                <input type="text" class="category" placeholder="콤마(,)를 사용하여 적어주세요." th:value="${bbsGroup.category}"></input>
+            </td>
+
+            <!-- 파일 갯수 -->
+            <td>
+                <!-- fileNum 값을 선택할 수 있는 셀렉트 박스 -->
+                <select class="fileNum">
+                    <option value="0" th:selected="${bbsGroup.fileNum == null || bbsGroup.fileNum == 0}">0</option>
+                    <option value="1" th:selected="${bbsGroup.fileNum == 1}">1</option>
+                    <option value="2" th:selected="${bbsGroup.fileNum == 2}">2</option>
+                    <option value="3" th:selected="${bbsGroup.fileNum == 3}">3</option>
+                    <option value="4" th:selected="${bbsGroup.fileNum == 4}">4</option>
+                    <option value="5" th:selected="${bbsGroup.fileNum == 5}">5</option>
+                    <option value="6" th:selected="${bbsGroup.fileNum == 6}">6</option>
+                </select>
+            </td>
+
+
+            <!-- 리스트 형태 -->
+            <td>
+                <select class="skin">
+                    <option th:selected="${bbsGroup.skin() == 'board'}" value="board">게시판형</option>
+                    <option th:selected="${bbsGroup.skin() == 'schedule'}" value="schedule">스케줄형</option>
+                    <option th:selected="${bbsGroup.skin() == 'faq'}" value="faq">FAQ</option>
+                    <option th:selected="${bbsGroup.skin() == 'card'}" value="card">카드형</option>
+                </select>
+            </td>
+
+            <!-- 권한 체크박스 -->
             <td>
                 <ul class="option">
                     <li>
                         <label class="c-input ci-check">
-                            답변 <input type="checkbox">
+                            답변
+                            <input type="checkbox" class="allowReply" th:checked="${bbsGroup.optionReplyAuth() == 'Y'}">
                             <div class="ci-show"></div>
                         </label>
                     </li>
                     <li>
                         <label class="c-input ci-check">
-                            비밀 <input type="checkbox">
+                            비밀
+                            <input type="checkbox" class="allowSecret" th:checked="${bbsGroup.optionSecretAuth() == 'Y'}">
                             <div class="ci-show"></div>
                         </label>
                     </li>
                     <li>
                         <label class="c-input ci-check">
-                            댓글 <input type="checkbox">
+                            댓글
+                            <input type="checkbox" class="allowComment" th:checked="${bbsGroup.optionCommentAuth() == 'Y'}">
                             <div class="ci-show"></div>
                         </label>
                     </li>
@@ -103,19 +154,23 @@
                         <div class="tit">비회원 :</div>
                         <div class="list">
                             <label class="c-input ci-check">
-                                <input type="checkbox"> 조회
+                                <input type="checkbox" class="auth-checkbox" data-group="guest" data-auth="readAuth"
+                                       th:checked="${bbsGroup.readAuth?.contains('guest')}"> 조회
                                 <div class="ci-show"></div>
                             </label>
                             <label class="c-input ci-check">
-                                <input type="checkbox"> 쓰기
+                                <input type="checkbox" class="auth-checkbox" data-group="guest" data-auth="writeAuth"
+                                       th:checked="${bbsGroup.writeAuth?.contains('guest')}"> 쓰기
                                 <div class="ci-show"></div>
                             </label>
                             <label class="c-input ci-check">
-                                <input type="checkbox"> 댓글
+                                <input type="checkbox" class="auth-checkbox" data-group="guest" data-auth="commentAuth"
+                                       th:checked="${bbsGroup.commentAuth?.contains('guest')}"> 댓글
                                 <div class="ci-show"></div>
                             </label>
                             <label class="c-input ci-check">
-                                <input type="checkbox"> 답변
+                                <input type="checkbox" class="auth-checkbox" data-group="guest" data-auth="replyAuth"
+                                       th:checked="${bbsGroup.replyAuth?.contains('guest')}"> 답변
                                 <div class="ci-show"></div>
                             </label>
                         </div>
@@ -124,19 +179,23 @@
                         <div class="tit">수강생(회원) :</div>
                         <div class="list">
                             <label class="c-input ci-check">
-                                <input type="checkbox"> 조회
+                                <input type="checkbox" class="auth-checkbox" data-group="member" data-auth="readAuth"
+                                       th:checked="${bbsGroup.readAuth?.contains('member')}"> 조회
                                 <div class="ci-show"></div>
                             </label>
                             <label class="c-input ci-check">
-                                <input type="checkbox"> 쓰기
+                                <input type="checkbox" class="auth-checkbox" data-group="member" data-auth="writeAuth"
+                                       th:checked="${bbsGroup.writeAuth?.contains('member')}"> 쓰기
                                 <div class="ci-show"></div>
                             </label>
                             <label class="c-input ci-check">
-                                <input type="checkbox"> 댓글
+                                <input type="checkbox" class="auth-checkbox" data-group="member" data-auth="commentAuth"
+                                       th:checked="${bbsGroup.commentAuth?.contains('member')}"> 댓글
                                 <div class="ci-show"></div>
                             </label>
                             <label class="c-input ci-check">
-                                <input type="checkbox"> 답변
+                                <input type="checkbox" class="auth-checkbox" data-group="member" data-auth="replyAuth"
+                                       th:checked="${bbsGroup.replyAuth?.contains('member')}"> 답변
                                 <div class="ci-show"></div>
                             </label>
                         </div>
@@ -145,19 +204,23 @@
                         <div class="tit">위탁기업 :</div>
                         <div class="list">
                             <label class="c-input ci-check">
-                                <input type="checkbox"> 조회
+                                <input type="checkbox" class="auth-checkbox" data-group="company" data-auth="readAuth"
+                                       th:checked="${bbsGroup.readAuth?.contains('company')}"> 조회
                                 <div class="ci-show"></div>
                             </label>
                             <label class="c-input ci-check">
-                                <input type="checkbox"> 쓰기
+                                <input type="checkbox" class="auth-checkbox" data-group="company" data-auth="writeAuth"
+                                       th:checked="${bbsGroup.writeAuth?.contains('company')}"> 쓰기
                                 <div class="ci-show"></div>
                             </label>
                             <label class="c-input ci-check">
-                                <input type="checkbox"> 댓글
+                                <input type="checkbox" class="auth-checkbox" data-group="company" data-auth="commentAuth"
+                                       th:checked="${bbsGroup.commentAuth?.contains('company')}"> 댓글
                                 <div class="ci-show"></div>
                             </label>
                             <label class="c-input ci-check">
-                                <input type="checkbox"> 답변
+                                <input type="checkbox" class="auth-checkbox" data-group="company" data-auth="replyAuth"
+                                       th:checked="${bbsGroup.replyAuth?.contains('company')}"> 답변
                                 <div class="ci-show"></div>
                             </label>
                         </div>
@@ -166,19 +229,23 @@
                         <div class="tit">내용전문가 :</div>
                         <div class="list">
                             <label class="c-input ci-check">
-                                <input type="checkbox"> 조회
+                                <input type="checkbox" class="auth-checkbox" data-group="teacher" data-auth="readAuth"
+                                       th:checked="${bbsGroup.readAuth?.contains('teacher')}"> 조회
                                 <div class="ci-show"></div>
                             </label>
                             <label class="c-input ci-check">
-                                <input type="checkbox"> 쓰기
+                                <input type="checkbox" class="auth-checkbox" data-group="teacher" data-auth="writeAuth"
+                                       th:checked="${bbsGroup.writeAuth?.contains('teacher')}"> 쓰기
                                 <div class="ci-show"></div>
                             </label>
                             <label class="c-input ci-check">
-                                <input type="checkbox"> 댓글
+                                <input type="checkbox" class="auth-checkbox" data-group="teacher" data-auth="commentAuth"
+                                       th:checked="${bbsGroup.commentAuth?.contains('teacher')}"> 댓글
                                 <div class="ci-show"></div>
                             </label>
                             <label class="c-input ci-check">
-                                <input type="checkbox"> 답변
+                                <input type="checkbox" class="auth-checkbox" data-group="teacher" data-auth="replyAuth"
+                                       th:checked="${bbsGroup.replyAuth?.contains('teacher')}"> 답변
                                 <div class="ci-show"></div>
                             </label>
                         </div>
@@ -187,19 +254,23 @@
                         <div class="tit">교강사 :</div>
                         <div class="list">
                             <label class="c-input ci-check">
-                                <input type="checkbox"> 조회
+                                <input type="checkbox" class="auth-checkbox" data-group="tutor" data-auth="readAuth"
+                                       th:checked="${bbsGroup.readAuth?.contains('tutor')}"> 조회
                                 <div class="ci-show"></div>
                             </label>
                             <label class="c-input ci-check">
-                                <input type="checkbox"> 쓰기
+                                <input type="checkbox" class="auth-checkbox" data-group="tutor" data-auth="writeAuth"
+                                       th:checked="${bbsGroup.writeAuth?.contains('tutor')}"> 쓰기
                                 <div class="ci-show"></div>
                             </label>
                             <label class="c-input ci-check">
-                                <input type="checkbox" disabled> 댓글
+                                <input type="checkbox" class="auth-checkbox" data-group="tutor" data-auth="commentAuth"
+                                       th:checked="${bbsGroup.commentAuth?.contains('tutor')}"> 댓글
                                 <div class="ci-show"></div>
                             </label>
                             <label class="c-input ci-check">
-                                <input type="checkbox" disabled> 답변
+                                <input type="checkbox" class="auth-checkbox" data-group="tutor" data-auth="replyAuth"
+                                       th:checked="${bbsGroup.replyAuth?.contains('tutor')}"> 답변
                                 <div class="ci-show"></div>
                             </label>
                         </div>

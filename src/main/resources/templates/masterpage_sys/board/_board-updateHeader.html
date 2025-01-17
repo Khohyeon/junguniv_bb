@@ -18,9 +18,11 @@
                 <div class="tit">카테고리</div>
                 <div class="con">
                     <select name="category" id="category">
-                        <option value="" th:selected="${board.category() == null}">선택</option>
-                        <option value="수강신청" th:selected="${board.category() == '수강신청'}">수강신청</option>
-                        <option value="입학원서" th:selected="${board.category() == '입학원서'}">입학원서</option>
+                        <option value="" th:selected="${selectedCategory == null}">선택</option>
+                        <option th:each="category : ${categories}"
+                                th:value="${category}"
+                                th:text="${category}"
+                                th:selected="${category == selectedCategory}"></option>
                     </select>
                 </div>
             </div>

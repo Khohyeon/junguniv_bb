@@ -78,3 +78,4 @@ function deleteSelectedBoard(boardId, redirectUrl) {
             console.error('Error:', error);
         });
 }
+
