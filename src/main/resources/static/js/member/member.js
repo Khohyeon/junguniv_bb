@@ -222,7 +222,9 @@ const MemberModule = {
                                 </label>
                             </td>
                             <td>${startNumber - index}</td>
-                            <td>${member.jobName || '-'}</td>
+                            <td>
+                                <a href="/masterpage_sys/member/company/${member.memberIdx}" class="jv-btn underline01">${member.jobName || '-'}</a>
+                            </td>
                             <td>${member.userId || '-'}</td>
                             <td>${member.contractorName || '-'}</td>
                             <td>
@@ -1012,13 +1014,54 @@ const MemberModule = {
                     loginMemberCount: document.getElementById('loginMemberCount')?.value,
                     jobPosition: document.getElementById('jobPosition')?.value,
 
-                    // 이미지 파일 정보
-                    mainImg: document.getElementById('mainImg')?.value,
-                    mainImgName: document.getElementById('mainImg')?.dataset?.originalFileName,
-                    subImg: document.getElementById('subImg')?.value,
-                    subImgName: document.getElementById('subImg')?.dataset?.originalFileName,
+                    // 기업 전용 필드
+                    jobName: document.getElementById('jobName')?.value,
+                    jobCeo: document.getElementById('jobCeo')?.value,
+                    jobScale: document.querySelector('input[name="jobScale"]:checked')?.value,
+                    corporationCode: document.querySelector('input[name="corporationCode"]:checked')?.value,
+                    masterId: document.getElementById('masterId')?.value,
+                    contractorName: document.getElementById('contractorName')?.value,
+                    
+                    // 기업 전화번호
+                    jobTelOffice: document.getElementById('jobTelOffice1')?.value && document.getElementById('jobTelOffice2')?.value && document.getElementById('jobTelOffice3')?.value
+                        ? document.getElementById('jobTelOffice1')?.value + '-' + document.getElementById('jobTelOffice2')?.value + '-' + document.getElementById('jobTelOffice3')?.value
+                        : null,
+                    
+                    // 사업자번호
+                    jobNumber: document.getElementById('jobNumber1')?.value && document.getElementById('jobNumber2')?.value && document.getElementById('jobNumber3')?.value
+                        ? document.getElementById('jobNumber1')?.value + '-' + document.getElementById('jobNumber2')?.value + '-' + document.getElementById('jobNumber3')?.value
+                        : null,
+                    
+                    // 고용보험관리번호
+                    jobInsuranceNumber: document.getElementById('jobInsuranceNumber1')?.value && document.getElementById('jobInsuranceNumber2')?.value && document.getElementById('jobInsuranceNumber3')?.value && document.getElementById('jobInsuranceNumber4')?.value
+                        ? document.getElementById('jobInsuranceNumber1')?.value + '-' + document.getElementById('jobInsuranceNumber2')?.value + '-' + document.getElementById('jobInsuranceNumber3')?.value + '-' + document.getElementById('jobInsuranceNumber4')?.value
+                        : null,
+
+                    // 주소
+                    zipcode: document.getElementById('zipcode')?.value,
+                    addr1: document.getElementById('addr1')?.value,
+                    addr2: document.getElementById('addr2')?.value,
+
+                    // 기업 전용 홈페이지 설정
+                    companyHomepageUse: document.querySelector('input[name="companyHomepageUse"]:checked')?.value,
+                    companyUrl: document.getElementById('companyUrl')?.value,
+                    counselNumber: document.getElementById('counselNumber')?.value,
+                    counselTime: document.getElementById('counselTime1')?.value && document.getElementById('counselTime2')?.value
+                        ? `${document.getElementById('counselTime1')?.value}-${document.getElementById('counselTime2')?.value}`
+                        : null,
+
+                    // 이미지 정보
+                    mainImg: document.querySelector('input[name="mainImg"]:checked')?.value,
+                    subImg: document.querySelector('input[name="subImg"]:checked')?.value,
                     fnameLogo: document.getElementById('fnameLogo')?.value,
-                    fnameLogoName: document.getElementById('fnameLogo')?.dataset?.originalFileName
+
+                    // 교육담당자 연락처 (기업 회원)
+                    contractorTel: document.getElementById('telMobile1')?.value && document.getElementById('telMobile2')?.value && document.getElementById('telMobile3')?.value
+                        ? `${document.getElementById('telMobile1')?.value}-${document.getElementById('telMobile2')?.value}-${document.getElementById('telMobile3')?.value}`
+                        : null,
+                    contractorEtc: document.getElementById('email1')?.value && document.getElementById('email2')?.value
+                        ? `${document.getElementById('email1')?.value}@${document.getElementById('email2')?.value}`
+                        : null
                 };
 
                 // 비밀번호가 입력된 경우에만 추가
@@ -1035,7 +1078,9 @@ const MemberModule = {
                     case 'ADMIN':
                         requiredFields.push('name', 'authLevel');
                         break;
-                    // 다른 회원 타입에 대한 검증은 추후 추가
+                    case 'COMPANY':
+                        requiredFields.push('jobName', 'contractorName');
+                        break;
                 }
 
                 // 기본 필드 검증
@@ -1117,9 +1162,6 @@ const MemberModule = {
                     }[data.userType];
                     
                     alert(`${userTypeText} 수정이 완료되었습니다.`);
-
-                    // 수정 완료 후 리스트 페이지로 이동
-                    // window.location.href = `/masterpage_sys/member/${data.userType.toLowerCase()}/`;
                     window.location.reload();
                 } else {
                     alert(result.message || '회원 수정에 실패했습니다.');
@@ -1164,8 +1206,16 @@ const MemberModule = {
                 }
 
                 const data = await response.json();
+                // 기존 데이터 초기화 후 새로운 데이터 설정
+                e.target.value = '';  // 파일 input 초기화
                 e.target.dataset.uploadedFileName = data.fileName;
                 e.target.dataset.originalFileName = file.name;
+                
+                // 파일명 표시 업데이트
+                const fileNameDisplay = e.target.parentElement.querySelector('.file-name');
+                if (fileNameDisplay) {
+                    fileNameDisplay.textContent = file.name;
+                }
                 
                 console.log('메인 이미지 업로드 성공:', data);
             } catch (error) {
@@ -1206,8 +1256,16 @@ const MemberModule = {
                 }
 
                 const data = await response.json();
+                // 기존 데이터 초기화 후 새로운 데이터 설정
+                e.target.value = '';  // 파일 input 초기화
                 e.target.dataset.uploadedFileName = data.fileName;
                 e.target.dataset.originalFileName = file.name;
+                
+                // 파일명 표시 업데이트
+                const fileNameDisplay = e.target.parentElement.querySelector('.file-name');
+                if (fileNameDisplay) {
+                    fileNameDisplay.textContent = file.name;
+                }
                 
                 console.log('서브 이미지 업로드 성공:', data);
             } catch (error) {
@@ -1248,8 +1306,16 @@ const MemberModule = {
                 }
 
                 const data = await response.json();
+                // 기존 데이터 초기화 후 새로운 데이터 설정
+                e.target.value = '';  // 파일 input 초기화
                 e.target.dataset.uploadedFileName = data.fileName;
                 e.target.dataset.originalFileName = file.name;
+                
+                // 파일명 표시 업데이트
+                const fileNameDisplay = e.target.parentElement.querySelector('.file-name');
+                if (fileNameDisplay) {
+                    fileNameDisplay.textContent = file.name;
+                }
                 
                 console.log('로고 이미지 업로드 성공:', data);
             } catch (error) {

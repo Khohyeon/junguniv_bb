@@ -24,6 +24,19 @@ public class MemberController {
     /**
      * 회원관리 - 상세보기
      */
+    /* 회원관리 > 회원정보관리 > 위탁기업 상세보기 */
+    @GetMapping("/company/{id}")
+    public String companyDetailForm(@PathVariable Long id, Model model, CustomUserDetails customUserDetails) {
+
+        // DB 조회
+        MemberDetailResDTO memberDetailResDTO = memberService.memberDetail(id);
+
+        // 모델 추가
+        model.addAttribute("member", memberDetailResDTO);
+
+        return "/masterpage_sys/member/companyDetailForm";
+    }
+
     /* 회원관리 > 회원정보관리 > 관리자 상세보기 */
     @GetMapping("/admin/{id}")
     public String adminDetailForm(@PathVariable Long id, Model model, CustomUserDetails customUserDetails) {
