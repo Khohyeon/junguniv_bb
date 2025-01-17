@@ -2,18 +2,15 @@ package com.example.junguniv_bb.domain.agreement.service;
 
 import com.example.junguniv_bb._core.exception.Exception400;
 import com.example.junguniv_bb._core.exception.ExceptionMessage;
-import com.example.junguniv_bb.domain.agreement.dto.AgreementDetailResDTO;
-import com.example.junguniv_bb.domain.agreement.dto.AgreementPageResDTO;
-import com.example.junguniv_bb.domain.agreement.dto.AgreementUpdateReqDTO;
+import com.example.junguniv_bb.domain.agreement.dto.*;
 import com.example.junguniv_bb.domain.agreement.model.Agreement;
 import com.example.junguniv_bb.domain.agreement.model.AgreementRepository;
-import com.example.junguniv_bb.domain.popup.dto.PopupDetailResDTO;
-import com.example.junguniv_bb.domain.popup.dto.PopupPageResDTO;
-import com.example.junguniv_bb.domain.popup.model.Popup;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,18 +20,21 @@ public class AgreementService {
 
     /**
      * 회원가입약관 리스트 조회
-     * 응답 형태 : Page<AgreementPageResDTO>
+     * 응답 형태 : List<AgreementJoinListResDTO>
      */
-    public Page<AgreementPageResDTO> getAgreementPage(Pageable pageable) {
-        Page<Agreement> agreementPage = agreementRepository.findAll(pageable);
+    public List<AgreementJoinListResDTO> getAgreementJoinList() {
+        List<Agreement> agreementList = agreementRepository.findAllByAgreementType("JOIN");
 
-        return agreementPage.map(agreement ->
-                new AgreementPageResDTO(
+        return agreementList.stream()
+                .map(agreement -> new AgreementJoinListResDTO(
                         agreement.getAgreementIdx(),
+                        agreement.getTrainingCenterName(),
+                        agreement.getTrainingCenterUrl(),
                         agreement.getAgreementTitle(),
                         agreement.getAgreementContents(),
                         agreement.getOpenYn()
-                ));
+                ))
+                .toList();
     }
 
     /**
@@ -57,7 +57,52 @@ public class AgreementService {
      * 회원가입약관 수정
      * 요청 타입 : AgreementUpdateReqDTO
      */
-    public void agreementUpdate(AgreementUpdateReqDTO agreementUpdateReqDTO) {
-            agreementRepository.save(agreementUpdateReqDTO.updateJoinEntity());
+    @Transactional
+    public void agreementUpdate(AgreementJoinUpdateReqDTO agreementJoinUpdateReqDTO) {
+            agreementRepository.save(agreementJoinUpdateReqDTO.updateJoinEntity());
+    }
+
+    public List<AgreementListResDTO> getAgreementCourseList() {
+        List<Agreement> agreementList = agreementRepository.findAllByAgreementType("COURSE");
+        if (agreementList.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return agreementList.stream()
+                .map(agreement -> new AgreementListResDTO(
+                        agreement.getAgreementIdx(),
+                        agreement.getAgreementContents(),
+                        agreement.getOpenYn()
+                ))
+                .toList();
+    }
+
+    public List<AgreementListResDTO> getAgreementRefundList() {
+        List<Agreement> agreementList = agreementRepository.findAllByAgreementType("REFUND");
+        if (agreementList.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return agreementList.stream()
+                .map(agreement -> new AgreementListResDTO(
+                        agreement.getAgreementIdx(),
+                        agreement.getAgreementContents(),
+                        agreement.getOpenYn()
+                ))
+                .toList();
+    }
+
+    @Transactional
+    public void agreementUpdate2(List<AgreementUpdateReqDTO> agreementUpdateReqDTOList) {
+        for (AgreementUpdateReqDTO agreementUpdateReqDTO : agreementUpdateReqDTOList) {
+            if (agreementUpdateReqDTO.agreementIdx() != null) {
+                agreementRepository.save(agreementUpdateReqDTO.updateEntity());
+            } else {
+                agreementRepository.save(agreementUpdateReqDTO.saveEntity());
+            }
+        }
+    }
+
+    @Transactional
+    public void deleteAgreement(Long agreementIdx) {
+        agreementRepository.deleteById(agreementIdx);
     }
 }

@@ -1,0 +1,33 @@
+<div th:fragment="agreement-header" class="inner">
+    <div class="form-wrap">
+        <div class="column-tc-wrap">
+            <div class="column-tc">
+                <div class="tit">사용여부</div>
+                <div class="con">
+                    <label class="c-input ci-radio">
+                        <input type="radio" name="openYn" value="Y" th:checked="${agreement != null and agreement.openYn == 'Y'}"> 사용함
+                        <div class="ci-show"></div>
+                    </label>
+                    <label class="c-input ci-radio">
+                        <input type="radio" name="openYn" value="N" th:checked="${agreement != null and agreement.openYn == 'N'}"> 사용안함
+                        <div class="ci-show"></div>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-wrap2">
+        <h2 class="form-tit">약관 미리보기</h2>
+        <ul class="list01">
+            <!-- Agreement 리스트가 비어있는 경우 처리 -->
+            <li th:if="${agreementList == null or agreementList.isEmpty()}" class="empty-message">
+                약관 데이터가 없습니다.
+            </li>
+            <!-- Agreement 리스트를 순회하며 <li> 생성 -->
+            <li th:each="item : ${agreementList}" th:text="${item.agreementContents}"></li>
+        </ul>
+    </div>
+    <div class="btn-wrap mt50">
+        <a href="#" id="detailForm" class="jv-btn fill04-lg" th:if="${agreementList != null and not agreementList.isEmpty()}">수정</a>
+    </div>
+</div>

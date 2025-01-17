@@ -1,0 +1,34 @@
+.form-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px auto;
+}
+
+.form-container label {
+    margin-right: 10px;
+}
+
+.form-container input[type="text"] {
+    padding: 5px;
+    width: 200px;
+}
+
+.form-container input[type="submit"] {
+    padding: 5px 15px;
+    cursor: pointer;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    margin-top: 10px; /* 원하는 상단 여백 */
+    width: 100px;
+}
+
+#updateBtn {
+    cursor: pointer;
+    color: white;
+    background-color: red;
+}

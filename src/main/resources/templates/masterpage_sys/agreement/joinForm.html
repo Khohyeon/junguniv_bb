@@ -14,13 +14,13 @@
             <div class="column-tc">
                 <div class="tit">교육원 이름</div>
                 <div class="con">
-                    <input type="text" value="정유니브아카데미" readonly>
+                    <input type="text" th:value="${agreementList.get(0).trainingCenterName()}" readonly>
                 </div>
             </div>
             <div class="column-tc">
                 <div class="tit">교육원 URL</div>
                 <div class="con">
-                    <input type="text" value="univ2022.uzn.kr" readonly>
+                    <input type="text" th:value="${agreementList.get(0).trainingCenterUrl()}" readonly>
                 </div>
             </div>
         </div>
@@ -33,7 +33,7 @@
         <div class="ci-show"></div>
     </label>
     <div class="form-wrap2 agree-join mt15">
-        <div th:each="agreement : ${agreementPage}" class="agree-join-sect">
+        <div th:each="agreement : ${agreementList}" class="agree-join-sect">
             <div class="table-util">
                 <div class="left">
                     <h2 class="form-tit mbt0" th:text="${agreement.agreementTitle()}">약관 제목</h2>

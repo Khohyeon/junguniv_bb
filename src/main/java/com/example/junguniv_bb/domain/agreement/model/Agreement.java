@@ -23,6 +23,12 @@ public class Agreement extends BaseTime {
     @Column(name = "AGREEMENT_TITLE")
     private String agreementTitle;
 
+    @Column(name = "TRAINING_CENTER_NAME")
+    private String trainingCenterName;
+
+    @Column(name = "TRAINING_CENTER_URL")
+    private String trainingCenterUrl;
+
     @Column(name = "AGREEMENT_CONTENTS")
     @Lob
     private String agreementContents;
@@ -33,4 +39,10 @@ public class Agreement extends BaseTime {
     @Column(name = "AGREEMENT_TYPE")
     private String agreementType; // (JOIN, COURSE, REFUND)
 
+    public Agreement(Long agreementIdx, String agreementContents, String agreementType, String openYn) {
+        this.agreementIdx = agreementIdx;
+        this.agreementContents = agreementContents;
+        this.agreementType = agreementType;
+        this.openYn = openYn;
+    }
 }

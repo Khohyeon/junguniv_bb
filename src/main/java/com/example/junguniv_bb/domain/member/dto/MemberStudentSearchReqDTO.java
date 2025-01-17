@@ -1,25 +1,30 @@
 package com.example.junguniv_bb.domain.member.dto;
 
-public record MemberStudentSearchReqDTO(
-    String name,                    // 이름
-    String userId,                  // 아이디
-    String birthYear,               // 생년
-    String birthMonth,              // 생월
-    String birthDay,                // 생일
-    String telMobile,               // 휴대폰
-    String email,                   // 이메일
-    String chkDormant,              // 휴면계정 여부 (Y/N)
-    String loginPass,               // 로그인 제한 여부 (Y/N)
-    String chkForeigner,            // 외국인 여부 (Y/N)
-    String sex,                     // 성별 (M/F)
-    String jobName,                 // 근무회사
-    String jobWorkState,            // 근무상태
-    String jobDept,                 // 근무부서
-    String chkSmsReceive,           // 마케팅 수신(문자) (Y/N)
-    String chkMailReceive,          // 마케팅 수신(이메일) (Y/N)
-    String chkIdentityVerification, // 인증예외 (Y/N)
-    String loginClientIp            // 로그인ID(IP)
-) {
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class MemberStudentSearchReqDTO {
+    private String name;                    // 이름
+    private String userId;                  // 아이디
+    private String birthYear;               // 생년
+    private String birthMonth;              // 생월
+    private String birthDay;                // 생일
+    private String telMobile;               // 휴대폰
+    private String email;                   // 이메일
+    private String chkDormant;              // 휴면계정 여부 (Y/N)
+    private String loginPass;               // 로그인 제한 여부 (Y/N)
+    private String chkForeigner;            // 외국인 여부 (Y/N)
+    private String sex;                     // 성별 (M/F)
+    private String jobName;                 // 근무회사
+    private String jobWorkState;            // 근무상태
+    private String jobDept;                 // 근무부서
+    private String chkSmsReceive;           // 마케팅 수신(문자) (Y/N)
+    private String chkMailReceive;          // 마케팅 수신(이메일) (Y/N)
+    private String chkIdentityVerification; // 인증예외 (Y/N)
+    private String loginClientIp;           // 로그인ID(IP)
+
     // 생년월일 조합 메서드
     public String getBirthday() {
         if (birthYear == null || birthYear.isEmpty() || 

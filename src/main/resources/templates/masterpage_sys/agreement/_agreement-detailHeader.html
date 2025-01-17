@@ -1,0 +1,25 @@
+<div th:fragment="agreement-header" class="inner">
+    <form id="agreementform" class="formular">
+        <div class="form-wrap2 agree-edit">
+            <h2 class="form-tit">약관 수정하기</h2>
+            <div class="add-btn">
+                <button type="button" id="addRow" class="jv-btn fill01">항목추가</button>
+            </div>
+            <ul id="ul_list" class="list01">
+                <!-- reList 데이터를 반복하여 각 항목을 렌더링 -->
+                <li th:each="item, iterStat : ${agreementList}" id="re_list">
+                    <!-- Hidden 필드로 agreementIdx -->
+                    <input type="hidden" name="agreementUpdateReqDTOList[__index__].agreementIdx" th:value="${item.agreementIdx()}">
+                    <!-- Text 필드로 agreeData -->
+                    <input type="text" class="re_agree_data" name="agreementUpdateReqDTOList[__index__].agreementContents" th:value="${item.agreementContents()}">
+
+                    <!-- 삭제 버튼 -->
+                    <button type="button" class="deleteRow jv-btn fill05-icon-trash">삭제</button>
+                </li>
+            </ul>
+        </div>
+        <div class="btn-wrap mt50">
+            <button type="button" id="saveForm" class="jv-btn fill04-lg" style="position: relative;height: 48px;line-height: 25px;width:5%;">저장</button>
+        </div>
+    </form>
+</div>

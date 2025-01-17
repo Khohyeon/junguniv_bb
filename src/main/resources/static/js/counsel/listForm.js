@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 선택된 상담 상태 반환
     function getSelectedCounselState() {
-        let selectedState = '';
+        let selectedState = '0';
         counselStateRadios.forEach(radio => {
             if (radio.checked) {
                 selectedState = radio.value; // value="0", "1", "2" 사용

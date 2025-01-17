@@ -3,7 +3,9 @@ package com.example.junguniv_bb.domain.member.controller;
 import com.example.junguniv_bb._core.exception.Exception400;
 import com.example.junguniv_bb._core.security.CustomUserDetails;
 import com.example.junguniv_bb._core.util.APIUtils;
+
 import com.example.junguniv_bb.domain.member.dto.*;
+
 import com.example.junguniv_bb.domain.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
