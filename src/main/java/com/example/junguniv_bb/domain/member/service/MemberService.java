@@ -169,6 +169,49 @@ public class MemberService {
         return ResponseEntity.ok(new MemberStudentPageResDTO(memberPagePS));
     }
 
+    /* 회원 이미지 파일 삭제 */
+    private void deleteAllMemberFiles(Member member) {
+        // 메인 이미지 삭제
+        if (member.getMainImg() != null) {
+            FileUtils.deleteFile(member.getMainImg(), uploadDirPath);
+        }
+        
+        // 서브 이미지 삭제
+        if (member.getSubImg() != null) {
+            FileUtils.deleteFile(member.getSubImg(), uploadDirPath);
+        }
+        
+        // 증명사진 삭제
+        if (member.getFnamePicture() != null) {
+            FileUtils.deleteFile(member.getFnamePicture(), uploadDirPath);
+        }
+        
+        // 사업자등록증 삭제
+        if (member.getFnameSaup() != null) {
+            FileUtils.deleteFile(member.getFnameSaup(), uploadDirPath);
+        }
+        
+        // 로고 삭제
+        if (member.getFnameLogo() != null) {
+            FileUtils.deleteFile(member.getFnameLogo(), uploadDirPath);
+        }
+        
+        // 첨부파일2 삭제
+        if (member.getFname2() != null) {
+            FileUtils.deleteFile(member.getFname2(), uploadDirPath);
+        }
+        
+        // 첨부파일3 삭제
+        if (member.getFname3() != null) {
+            FileUtils.deleteFile(member.getFname3(), uploadDirPath);
+        }
+        
+        // 첨부파일4 삭제
+        if (member.getFname4() != null) {
+            FileUtils.deleteFile(member.getFname4(), uploadDirPath);
+        }
+    }
+
     /* 다중삭제 */
     @Transactional
     public void memberDeleteList(List<Long> idList) {
@@ -178,6 +221,11 @@ public class MemberService {
 
         if(memberListPS.size() != idList.size()) {
             throw new Exception400(ExceptionMessage.NOT_FOUND_MEMBER.getMessage());
+        }
+
+        // 각 회원의 이미지 파일들 삭제
+        for (Member member : memberListPS) {
+            deleteAllMemberFiles(member);
         }
 
         // 모두 삭제
@@ -191,6 +239,9 @@ public class MemberService {
         // DB조회
         Member memberPS = memberRepository.findById(id)
                 .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_MEMBER.getMessage()));
+
+        // 회원의 이미지 파일들 삭제
+        deleteAllMemberFiles(memberPS);
 
         // 삭제
         memberRepository.delete(memberPS);
