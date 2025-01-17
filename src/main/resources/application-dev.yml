@@ -37,8 +37,10 @@ file:
   upload:
     base-dir: upload
     directories:
-      board: C:/upload/board
-      board-temp: C:/upload/board/temp  # 임시 저장 경로 추가
+      board: ${file.upload.base-dir}/board
+      board-temp: ${file.upload.base-dir}/board/temp
+      member: ${file.upload.base-dir}/member
+      member-temp: ${file.upload.base-dir}/member/temp
       # 아래 처럼 사용하면됨.
       # board: ${file.upload.base-dir}/board
       # profile: ${file.upload.base-dir}/profile

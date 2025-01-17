@@ -288,4 +288,9 @@ public class BoardService {
                 attachments
         );
     }
+
+    public String getBoardCategory(String boardType) {
+        BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(boardType);
+        return bbsGroup.getCategory();
+    }
 }
