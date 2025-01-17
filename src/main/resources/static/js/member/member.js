@@ -700,6 +700,13 @@ const MemberModule = {
                     }
                 
             
+                // 빈 값이나 null 값을 가진 속성 제거
+                Object.keys(data).forEach(key => {
+                    if (data[key] === null || data[key] === '' || data[key] === undefined) {
+                        delete data[key];
+                    }
+                });
+
                 // API 호출
                 const response = await fetch('/masterpage_sys/member/api/', {
                     method: 'POST',
@@ -967,6 +974,154 @@ const MemberModule = {
             if (hiddenArea && toggleBtn) {
                 hiddenArea.classList.toggle('show');
                 toggleBtn.classList.toggle('active');
+            }
+        },
+
+        // 회원 수정 폼 제출 핸들러 (공통)
+        submitMemberUpdateForm: async function(event) {
+            event.preventDefault();
+            
+            try {
+                const data = {
+                    // 공통 필드
+                    memberIdx: document.getElementById('memberIdx')?.value,
+                    userType: document.getElementById('userType')?.value,
+                    userId: document.getElementById('userId')?.value,
+                    name: document.getElementById('name')?.value,
+                    chkDormant: document.getElementById('chkDormant')?.checked ? 'N' : 'Y',
+                    memberState: document.getElementById('memberState')?.checked ? 'N' : 'Y',
+                    
+                    // 휴대폰
+                    telMobile: document.getElementById('telMobile1')?.value && document.getElementById('telMobile2')?.value && document.getElementById('telMobile3')?.value
+                        ? document.getElementById('telMobile1')?.value + '-' + document.getElementById('telMobile2')?.value + '-' + document.getElementById('telMobile3')?.value
+                        : null,
+                    
+                    // 이메일
+                    email: document.getElementById('email1')?.value && document.getElementById('email2')?.value
+                        ? document.getElementById('email1')?.value + '@' + document.getElementById('email2')?.value
+                        : null,
+
+                    // 관리자 전용 필드
+                    authLevel: document.getElementById('authLevel')?.value,
+                    jobWorkState: document.getElementById('jobWorkState')?.value,
+                    jobDuty: document.getElementById('jobDuty')?.value,
+                    jobCourseDuty: document.querySelector('input[name="jobCourseDuty"]:checked')?.value,
+                    loginDenyIp: document.getElementById('loginDenyIp')?.value,
+                    loginMemberCount: document.getElementById('loginMemberCount')?.value,
+                    jobPosition: document.getElementById('jobPosition')?.value,
+
+                    // 이미지 파일 정보
+                    mainImg: document.getElementById('mainImg')?.value,
+                    mainImgName: document.getElementById('mainImg')?.dataset?.originalFileName,
+                    subImg: document.getElementById('subImg')?.value,
+                    subImgName: document.getElementById('subImg')?.dataset?.originalFileName,
+                    fnameLogo: document.getElementById('fnameLogo')?.value,
+                    fnameLogoName: document.getElementById('fnameLogo')?.dataset?.originalFileName
+                };
+
+                // 비밀번호가 입력된 경우에만 추가
+                const pwdValue = document.getElementById('pwd')?.value;
+                if (pwdValue && pwdValue.trim() !== '') {
+                    data.pwd = pwdValue;
+                }
+
+                // 필수 입력값 검증
+                const requiredFields = ['memberIdx', 'userId'];
+                
+                // userType에 따른 추가 필수 필드
+                switch(data.userType) {
+                    case 'ADMIN':
+                        requiredFields.push('name', 'authLevel');
+                        break;
+                    // 다른 회원 타입에 대한 검증은 추후 추가
+                }
+
+                // 기본 필드 검증
+                for (const field of requiredFields) {
+                    if (!data[field]) {
+                        const fieldName = MemberModule.state.fieldNames[field] || field;
+                        alert(`${fieldName}은(는) 필수 입력 항목입니다.`);
+                        document.getElementById(field)?.focus();
+                        return;
+                    }
+                }
+
+                // 빈 값이나 null 값을 가진 속성 제거
+                Object.keys(data).forEach(key => {
+                    if (data[key] === null || data[key] === '' || data[key] === undefined) {
+                        delete data[key];
+                    }
+                });
+
+                // API 호출
+                const response = await fetch(`/masterpage_sys/member/api/${data.memberIdx}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error('회원 수정에 실패했습니다.');
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // 파일 이동 처리
+                    const uploadedFiles = [];
+                    const mainImgFile = document.getElementById('mainImgFile');
+                    const subImgFile = document.getElementById('subImgFile');
+                    const logoFile = document.getElementById('fnameLogo');
+
+                    if (mainImgFile?.dataset.uploadedFileName) {
+                        uploadedFiles.push(mainImgFile.dataset.uploadedFileName);
+                    }
+                    if (subImgFile?.dataset.uploadedFileName) {
+                        uploadedFiles.push(subImgFile.dataset.uploadedFileName);
+                    }
+                    if (logoFile?.dataset.uploadedFileName) {
+                        uploadedFiles.push(logoFile.dataset.uploadedFileName);
+                    }
+
+                    // 업로드된 파일들을 temp에서 member 폴더로 이동
+                    for (const fileName of uploadedFiles) {
+                        try {
+                            const moveResponse = await fetch(`/api/v1/files/move/member/${fileName}`, {
+                                method: 'POST'
+                            });
+                            
+                            if (!moveResponse.ok) {
+                                console.error(`파일 이동 실패: ${fileName}`);
+                                throw new Error('파일 이동에 실패했습니다.');
+                            }
+
+                            const moveResult = await moveResponse.json();
+                            if (!moveResult.success) {
+                                throw new Error(moveResult.message || '파일 이동에 실패했습니다.');
+                            }
+                        } catch (error) {
+                            console.error('파일 이동 중 오류 발생:', error);
+                            throw new Error('파일 이동 중 오류가 발생했습니다.');
+                        }
+                    }
+
+                    const userTypeText = {
+                        'STUDENT': '학생',
+                        'TEACHER': '교강사',
+                        'COMPANY': '기업',
+                        'ADMIN': '관리자'
+                    }[data.userType];
+                    
+                    alert(`${userTypeText} 수정이 완료되었습니다.`);
+                    window.location.href = `/masterpage_sys/member/${data.userType.toLowerCase()}/`;
+                } else {
+                    alert(result.message || '회원 수정에 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('회원 수정 에러:', error);
+                alert(error.message || '회원 수정에 실패했습니다.');
             }
         },
     },
@@ -1267,6 +1422,27 @@ const MemberModule = {
             }
             if (logoFile) {
                 logoFile.addEventListener('change', this.fileHandlers.handleLogoUpload);
+            }
+
+            // 회원 수정 폼 제출 이벤트 리스너 (모든 타입 공통)
+            const updateForms = ['studentDetailForm', 'teacherDetailForm', 'companyDetailForm', 'adminDetailForm'];
+            updateForms.forEach(formId => {
+                const form = document.getElementById(formId);
+                if (form) {
+                    form.addEventListener('submit', this.handlers.submitMemberUpdateForm.bind(this));
+                }
+            });
+
+            // 수정 버튼 클릭 이벤트 리스너 (폼 제출 대체)
+            const btnUpdate = document.getElementById('btnUpdate');
+            if (btnUpdate) {
+                btnUpdate.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const form = document.querySelector('form[id$="DetailForm"]');
+                    if (form) {
+                        form.dispatchEvent(new Event('submit'));
+                    }
+                });
             }
         } catch (error) {
             console.error('초기화 에러:', error);

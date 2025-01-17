@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<!-- 헤더에서 CSS 포함 -->
+	<th:block th:replace="fragments/header :: head"></th:block>
+
+	<!-- 카카오 주소 API 스크립트 추가 -->
+	<script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
+
+	<title>LMS관리자 상세보기</title>
+</head>
+<body>
+	<!-- 헤더에서 상단 메뉴 포함 -->
+	<th:block th:replace="fragments/header :: header"></th:block>
+
+	<div class="inner">
+		<form id="adminDetailForm">
+			<input type="hidden" name="userType" id="userType" value="ADMIN">
+			<input type="hidden" name="memberIdx" id="memberIdx" th:value="${member.memberIdx}">
+
+			<div class="form-wrap2">
+				<h2 class="form-tit">기본정보 <span class="required-txt">표시 항목은 필수 입력 사항입니다.</span></h2>
+				<div class="column-tc-wrap column-tc-wrap2 part2">
+					<div class="column-tc">
+						<div class="con flex2">
+							<div>
+								<div class="tit"><span class="required">ID</span></div>
+								<div class="con">
+									<input type="text" name="userId" id="userId" th:value="${member.userId}" readonly>
+								</div>
+							</div>
+							<div>
+								<div class="tit"><span class="required">비밀번호</span></div>
+								<div class="con">
+									<input type="password" name="pwd" id="pwd" placeholder="변경시에만 입력해주세요">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="column-tc">
+						<div class="con flex2">
+							<div>
+								<div class="tit">휴면계정</div>
+								<div class="con mt10">
+									<label class="c-input ci-check">
+										<input type="checkbox" name="chkDormant" id="chkDormant" value="N" th:checked="${member.chkDormant == 'N'}"> 적용 시 체크
+										<div class="ci-show"></div>
+									</label>
+								</div>
+							</div>
+							<div>
+								<div class="tit">로그인제한</div>
+								<div class="con mt10">
+									<label class="c-input ci-check">
+										<input type="checkbox" name="memberState" id="memberState" value="N" th:checked="${member.memberState == 'N'}"> 적용 시 체크
+										<div class="ci-show"></div>
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="column-tc">
+						<div class="con flex2">
+							<div>
+								<div class="tit">근무상태</div>
+								<div class="con">
+									<select name="jobWorkState" id="jobWorkState">
+										<option value="">선택</option>
+										<option value="001" th:selected="${member.jobWorkState == '001'}">근무</option>
+										<option value="002" th:selected="${member.jobWorkState == '002'}">휴직</option>
+										<option value="003" th:selected="${member.jobWorkState == '003'}">기타</option>
+										<option value="004" th:selected="${member.jobWorkState == '004'}">퇴사</option>
+									</select>
+								</div>
+							</div>
+							<div>
+								<div class="tit">담당업무</div>
+								<div class="con">
+									<input type="text" name="jobDuty" id="jobDuty" th:value="${member.jobDuty}" placeholder="업무내용을 입력해주세요">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="column-tc">
+						<div class="con flex2 align-start">
+							<div>
+								<div class="tit">환급/일반 담당</div>
+								<div class="con mt10">
+									<div>
+										<label class="c-input ci-radio">
+											<input type="radio" name="jobCourseDuty" id="jobCourseDuty1" value="1" th:checked="${member.jobCourseDuty == '1'}"> 환급과정 담당
+											<div class="ci-show"></div>
+										</label>
+										<label class="c-input ci-radio">
+											<input type="radio" name="jobCourseDuty" id="jobCourseDuty2" value="2" th:checked="${member.jobCourseDuty == '2'}"> 일반과정 담당
+											<div class="ci-show"></div>
+										</label>
+									</div>
+									<div class="color05 fs14 mt20">* 선택한 담당 항목에 따라 우측의 관리자 권한 설정이 가능합니다.</div>
+								</div>
+							</div>
+							<div>
+								<div class="tit"><span class="required">관리자 권한</span></div>
+								<div class="con flex2">
+									<div>
+										<select name="authLevel" id="authLevel">
+											<option value="">선택</option>
+											<option value="1" th:selected="${member.authLevel == 1}">1</option>
+											<option value="2" th:selected="${member.authLevel == 2}">2</option>
+										</select>
+										<div class="color05 fs14 mt5">* 권한명을 택1 해주세요.</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="column-tc">
+						<div class="con flex2">
+							<div>
+								<div class="tit">접속제한IP</div>
+								<div class="con">
+									<input type="text" name="loginDenyIp" id="loginDenyIp" th:value="${member.loginDenyIp}" placeholder="IP입력 시, 설정된 IP에서만 관리자모드 접속이 가능합니다.">
+								</div>
+							</div>
+							<div>
+								<div class="tit">동시접속허용수</div>
+								<div class="con">
+									<input type="text" name="loginMemberCount" id="loginMemberCount" th:value="${member.loginMemberCount}" placeholder="ID 기준으로 동시접속 허용 가능 인원을 설정해주세요">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="column-tc">
+						<div class="con flex2">
+							<div>
+								<div class="tit"><span class="required">이름</span></div>
+								<div class="con">
+									<input type="text" name="name" id="name" th:value="${member.name}" placeholder="이름을 입력해주세요">
+								</div>
+							</div>
+							<div>
+								<div class="tit">직위</div>
+								<div class="con">
+									<input type="text" name="jobPosition" id="jobPosition" th:value="${member.jobPosition}" placeholder="직위를 입력해주세요">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="column-tc">
+						<div class="con flex2">
+							<div>
+								<div class="tit">휴대폰</div>
+								<div class="con flex">
+									<select name="telMobile1" id="telMobile1">
+										<option value="010" th:selected="${member.telMobile != null && #strings.substring(member.telMobile, 0, 3) == '010'}">010</option>
+										<option value="011" th:selected="${member.telMobile != null && #strings.substring(member.telMobile, 0, 3) == '011'}">011</option>
+										<option value="016" th:selected="${member.telMobile != null && #strings.substring(member.telMobile, 0, 3) == '016'}">016</option>
+										<option value="017" th:selected="${member.telMobile != null && #strings.substring(member.telMobile, 0, 3) == '017'}">017</option>
+										<option value="019" th:selected="${member.telMobile != null && #strings.substring(member.telMobile, 0, 3) == '019'}">019</option>
+									</select>
+									<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
+									<input type="text" name="telMobile2" id="telMobile2" maxlength="4" th:value="${member.telMobile != null ? #strings.substring(member.telMobile, 4, 8) : ''}">
+									<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
+									<input type="text" name="telMobile3" id="telMobile3" maxlength="4" th:value="${member.telMobile != null ? #strings.substring(member.telMobile, 9, 13) : ''}">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="column-tc">
+						<div class="tit">이메일</div>
+						<div class="con flex">
+							<input type="text" name="email1" id="email1" th:value="${member.email != null ? #strings.substringBefore(member.email, '@') : ''}">
+							<span>&nbsp;&nbsp;@&nbsp;&nbsp;</span>
+							<input type="text" name="email2" id="email2" th:value="${member.email != null ? #strings.substringAfter(member.email, '@') : ''}">
+							<select name="email2Select" id="email2Select">
+								<option value="">직접입력</option>
+								<option value="naver.com">naver.com</option>
+								<option value="gmail.com">gmail.com</option>
+								<option value="daum.net">daum.net</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+
+		<div class="btn-wrap mt50">
+			<a href="/masterpage_sys/member/admin/" class="jv-btn fill01-lg">목록</a>
+			<button type="submit" class="jv-btn fill01-lg" id="btnUpdate">수정</button>
+		</div>
+	</div>
+
+	<script th:src="@{/js/member/member.js}"></script>
+</body>
+</html> 

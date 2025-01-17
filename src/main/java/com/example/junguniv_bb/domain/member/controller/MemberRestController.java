@@ -109,7 +109,7 @@ public class MemberRestController {
     @GetMapping("/{id}")
     public ResponseEntity<?> memberDetail(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         // 서비스 호출
-        MemberDetailResDTO responseDTO = memberService.memberDetail(id, customUserDetails);
+        MemberDetailResDTO responseDTO = memberService.memberDetail(id);
 
         return ResponseEntity.ok(responseDTO);
     }

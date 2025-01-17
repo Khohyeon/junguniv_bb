@@ -151,10 +151,13 @@ public record MemberDetailResDTO(
     String companyHomepageUse, // 기업 홈페이지 사용 여부
     String companyUrl, // 기업 홈페이지 URL
     String fnameLogo, // 로고 파일
+    String fnameLogoName, // 로고 원본 파일명
     String counselNumber, // 상담번호
     String counselTime, // 상담시간
     String mainImg, // 메인 상단 이미지
-    String subImg // 서브 상단 이미지
+    String mainImgName, // 메인 상단 이미지 원본 파일명
+    String subImg, // 서브 상단 이미지
+    String subImgName // 서브 상단 이미지 원본 파일명
 ) {
     public static MemberDetailResDTO from(Member member) {
         return new MemberDetailResDTO(
@@ -303,10 +306,13 @@ public record MemberDetailResDTO(
             member.getCompanyHomepageUse(),
             member.getCompanyUrl(),
             member.getFnameLogo(),
+            member.getFnameLogoName(),
             member.getCounselNumber(),
             member.getCounselTime(),
             member.getMainImg(),
-            member.getSubImg()
+            member.getMainImgName(),
+            member.getSubImg(),
+            member.getSubImgName()
         );
     }
 }

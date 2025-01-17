@@ -2,6 +2,7 @@ package com.example.junguniv_bb.domain.member.service;
 
 import com.example.junguniv_bb._core.exception.Exception400;
 import com.example.junguniv_bb._core.exception.ExceptionMessage;
+import com.example.junguniv_bb._core.exception.ValidExceptionMessage;
 import com.example.junguniv_bb._core.security.CustomUserDetails;
 import com.example.junguniv_bb._core.util.FileUtils;
 import com.example.junguniv_bb.domain.member._enum.UserType;
@@ -256,24 +257,31 @@ public class MemberService {
                 .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_MEMBER.getMessage()));
 
         // 비밀번호가 입력된 경우에만 암호화하여 업데이트
-        String encodedPwd = reqDTO.pwd() != null && !reqDTO.pwd().isEmpty()
-        ? passwordEncoder.encode(reqDTO.pwd())
-        : memberPS.getPwd();
+        String encodedPwd = null;
+        if (reqDTO.pwd() != null && !reqDTO.pwd().isEmpty()) {
+            // 비밀번호 유효성 검사
+            if (reqDTO.pwd().length() < 4 || reqDTO.pwd().length() > 20) {
+                throw new Exception400(ValidExceptionMessage.Message.INVALID_PASSWORD);
+            }
+            encodedPwd = passwordEncoder.encode(reqDTO.pwd());
+        } else {
+            encodedPwd = memberPS.getPwd();
+        }
 
         // 트랜잭션 처리
         reqDTO.updateEntity(memberPS, encodedPwd);
     }
 
     /* 조회 */
-    public MemberDetailResDTO memberDetail(Long id, CustomUserDetails customUserDetails) {
+    public MemberDetailResDTO memberDetail(Long id) {
 
         // DB조회
         Member memberPS = memberRepository.findById(id)
                 .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_MEMBER.getMessage()));
 
-        // CustomUserDetails에서 현재 메뉴 IDX와 권한 레벨을 가져옴
-        Long menuIdx = customUserDetails.getCurrentMenuIdx();
-        Long authLevelIdx = customUserDetails.getAuthLevel();
+        // // CustomUserDetails에서 현재 메뉴 IDX와 권한 레벨을 가져옴
+        // Long menuIdx = customUserDetails.getCurrentMenuIdx();
+        // Long authLevelIdx = customUserDetails.getAuthLevel();
 
         // // 개인정보 접근 권한 확인
         // boolean hasPrivacyAccess = authLevelService.hasPrivacyAccessPermission(menuIdx, authLevelIdx);
