@@ -35,12 +35,12 @@ public class MemberRestController {
     private final MemberService memberService;
 
     /* 학생 검색 */
-    @GetMapping("/student/search")
-    public ResponseEntity<?> searchStudents(
-            @ModelAttribute MemberStudentSearchReqDTO searchDTO,
-            @PageableDefault(size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        return memberService.searchStudents(searchDTO, pageable);
-    }
+//    @GetMapping("/student/search")
+//    public ResponseEntity<?> searchStudents(
+//            @ModelAttribute MemberStudentSearchReqDTO searchDTO,
+//            @PageableDefault(size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+//        return memberService.searchStudents(searchDTO, pageable);
+//    }
 
     /* 아이디 중복 체크 */
     @GetMapping("/idCheck")
