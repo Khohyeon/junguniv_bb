@@ -465,7 +465,7 @@ public class Member extends BaseTime {
     @Column(name = "FNAME_LOGO", length = 255)
     private String fnameLogo; // 로고 파일명
 
-    @Column(name = "FNAME_LOGO_NAME", length = 100)
+    @Column(name = "FNAME_LOGO_NAME", length = 20)
     private String fnameLogoName; // 로고 파일명 원본
 
     @Column(name = "COUNSEL_NUMBER", length = 100)
@@ -477,12 +477,15 @@ public class Member extends BaseTime {
     @Column(name = "MAIN_IMG", length = 255)
     private String mainImg; // 메인 상단 이미지명
 
-    @Column(name = "MAIN_IMG_NAME", length = 100)
+    @Column(name = "MAIN_IMG_NAME", length = 20)
     private String mainImgName; // 메인 상단 이미지명 원본
     
     @Column(name = "SUB_IMG", length = 255)
     private String subImg; // 서브 상단 이미지명
 
-    @Column(name = "SUB_IMG_NAME", length = 100)
+    @Column(name = "SUB_IMG_NAME", length = 20)
     private String subImgName; // 서브 상단 이미지명 원본
+
+    @Column(name = "FNAME_SAUP_NAME", length = 20)
+    private String fnameSaupName; // 사업자등록증 사본 원본
 }

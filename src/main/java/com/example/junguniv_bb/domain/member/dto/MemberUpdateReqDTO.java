@@ -167,6 +167,7 @@ public record MemberUpdateReqDTO(
     String mainImgName, // 메인 상단 이미지명
     String subImg, // 서브 상단 이미지
     String subImgName, // 서브 상단 이미지명
+    String fnameSaupName, // 사업자등록증 사본 원본 파일명
     MultipartFile mainImgFile, // 메인 이미지 파일(임시)
     MultipartFile subImgFile, // 서브 이미지 파일(임시)
     MultipartFile fnameLogoFile // 로고 이미지 파일(임시)
@@ -324,6 +325,7 @@ public record MemberUpdateReqDTO(
         if (mainImgName != null) member.setMainImgName(mainImgName);
         if (subImg != null) member.setSubImg(subImg);
         if (subImgName != null) member.setSubImgName(subImgName);
+        if (fnameSaupName != null) member.setFnameSaupName(fnameSaupName);
     }
 }
 

@@ -12,6 +12,7 @@ import java.nio.file.attribute.FileTime;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;
+import java.io.File;
 
 @Slf4j
 public class FileUtils {
@@ -200,5 +201,57 @@ public class FileUtils {
             log.error("파일 이동 실패: {}", e.getMessage(), e);
             return false;
         }
+    }
+
+    /**
+     * 파일 다운로드를 위한 Resource 생성
+     * @param fileName 파일명
+     * @param directory 디렉토리 경로
+     * @return 파일 Path
+     * @throws IOException 파일을 찾을 수 없거나 접근할 수 없는 경우
+     */
+    public static Path getFileAsResource(String fileName, String directory) throws IOException {
+        Path filePath = Paths.get(directory).resolve(fileName).normalize();
+        
+        if (!Files.exists(filePath)) {
+            throw new IOException("파일을 찾을 수 없습니다: " + fileName);
+        }
+
+        // 디렉토리 탐색 방지
+        if (!filePath.toFile().getCanonicalPath().startsWith(new File(directory).getCanonicalPath())) {
+            throw new IOException("잘못된 파일 경로입니다.");
+        }
+
+        return filePath;
+    }
+
+    /**
+     * Content-Type 결정
+     * @param filePath 파일 경로
+     * @return Content-Type 문자열
+     */
+    public static String determineContentType(Path filePath) {
+        String contentType;
+        try {
+            contentType = Files.probeContentType(filePath);
+            if (contentType == null) {
+                // 확장자로 Content-Type 추측
+                String fileName = filePath.getFileName().toString().toLowerCase();
+                if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
+                    contentType = "image/jpeg";
+                } else if (fileName.endsWith(".png")) {
+                    contentType = "image/png";
+                } else if (fileName.endsWith(".gif")) {
+                    contentType = "image/gif";
+                } else if (fileName.endsWith(".pdf")) {
+                    contentType = "application/pdf";
+                } else {
+                    contentType = "application/octet-stream";
+                }
+            }
+        } catch (IOException e) {
+            contentType = "application/octet-stream";
+        }
+        return contentType;
     }
 } 

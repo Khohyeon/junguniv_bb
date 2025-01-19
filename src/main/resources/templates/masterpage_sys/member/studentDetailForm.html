@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<!-- 헤더에서 CSS 포함 -->
+	<th:block th:replace="fragments/header :: head"></th:block>
+
+	<!-- 카카오 주소 API 스크립트 추가 -->
+	<script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
+
+	<title>수강생 상세보기</title>
+</head>
+<body>
+	<!-- 헤더에서 상단 메뉴 포함 -->
+	<th:block th:replace="fragments/header :: header"></th:block>
+
+	<div class="inner">
+		<form id="studentDetailForm">
+			<input type="hidden" name="userType" id="userType" value="STUDENT">
+			<input type="hidden" name="memberIdx" id="memberIdx" th:value="${member.memberIdx}">
+
+			<div class="form-wrap2">
+				<h2 class="form-tit">기본정보 <span class="required-txt">표시가 된 항목은 필수 입력 사항이며, <span class="required"></span><span class="required"></span>표시가 있는 주민등록번호는 환급교육 과정을 1과정 이상 수강하는 회원만 필수 입니다.</span></h2>
+				<div class="column-tc-wrap column-tc-wrap2 part2">
+					<div class="column-tc">
+						<div class="tit">
+							<span class="required">ID</span>
+						</div>
+						<div class="con">
+							<input type="text" name="userId" id="userId" th:value="${member.userId}" readonly>
+						</div>
+					</div>
+					<div class="column-tc">
+						<div class="tit">
+							<span class="required">비밀번호</span>
+						</div>
+						<div class="con">
+							<input type="password" name="pwd" id="pwd" minlength="8" autocomplete="off" placeholder="변경시에만 입력해주세요">
+						</div>
+					</div>
+					<div class="column-tc">
+						<div class="con flex2">
+							<div>
+								<div class="tit">휴면계정</div>
+								<div class="con">
+									<label class="c-input ci-check">
+										<input type="checkbox" name="chkDormant" id="chkDormant" value="N" th:checked="${member.chkDormant == 'N'}"> 적용 시 체크
+										<div class="ci-show"></div>
+									</label>
+								</div>
+							</div>
+							<div>
+								<div class="tit">로그인제한</div>
+								<div class="con">
+									<label class="c-input ci-check">
+										<input type="checkbox" name="memberState" id="memberState" value="N" th:checked="${member.memberState == 'N'}"> 적용 시 체크
+										<div class="ci-show"></div>
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="column-tc">
+						<div class="con flex2">
+							<div>
+								<div class="tit">약관동의일</div>
+								<div class="con">
+									<input type="date" name="agreeDate" id="agreeDate" th:value="${member.agreeDate}" readonly>
+								</div>
+							</div>
+							<div>
+								<div class="tit">본인인증일</div>
+								<div class="con">
+									<input type="date" name="realDate" id="realDate" th:value="${member.realDate}" readonly>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="column-tc">
+						<div class="con flex2">
+							<div>
+								<div class="tit">
+									<span class="required">이름</span>
+								</div>
+								<div class="con">
+									<input type="text" name="name" id="name" th:value="${member.name}">
+								</div>
+							</div>
+							<div>
+								<div class="tit">외국인 여부</div>
+								<div class="con">
+									<label class="c-input ci-check">
+										<input type="checkbox" name="chkForeigner" id="chkForeigner" value="N" th:checked="${member.chkForeigner == 'N'}"> 적용 시 체크
+										<div class="ci-show"></div>
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="column-tc">
+						<div class="tit">외국인 등록 이름</div>
+						<div class="con">
+							<input type="text" name="engName" id="engName" th:value="${member.engName}">
+						</div>
+					</div>
+					<div class="column-tc">
+						<div class="con flex2">
+							<div>
+								<div class="tit">
+									<span class="required">생년월일</span>
+								</div>
+								<div class="con">
+									<input type="date" name="birthday" id="birthday" th:value="${member.birthday}">
+								</div>
+							</div>
+							<div>
+								<div class="tit">성별</div>
+								<div class="con">
+									<label class="c-input ci-radio">
+										<input type="radio" name="sex" value="M" th:checked="${member.sex == 'M'}"> 남
+										<div class="ci-show"></div>
+									</label>
+									<label class="c-input ci-radio">
+										<input type="radio" name="sex" value="F" th:checked="${member.sex == 'F'}"> 여
+										<div class="ci-show"></div>
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="column-tc">
+						<div class="tit">
+							<span class="required"></span><span class="required">주민등록번호</span>
+						</div>
+						<div class="con flex">
+							<input type="text" maxlength="6" name="residentNumber1" id="residentNumber1"
+							       th:value="${member.residentNumber != null and #strings.length(member.residentNumber) > 7 ?
+								#strings.substring(member.residentNumber, 0, 6) : ''}">
+							<span>&nbsp;&nbsp;~&nbsp;&nbsp;</span>
+							<input type="text" maxlength="1" name="residentNumber2" id="residentNumber2"
+							       th:value="${member.residentNumber != null and #strings.length(member.residentNumber) > 7 ?
+								#strings.substring(member.residentNumber, 7, 8) : ''}">&nbsp;
+							<input type="text" maxlength="6" name="residentNumber3" id="residentNumber3"
+							       th:value="${member.residentNumber != null and #strings.length(member.residentNumber) > 8 ?
+								#strings.substring(member.residentNumber, 8) : ''}">
+						</div>
+					</div>
+					<div class="column-tc">
+						<div class="tit">
+							<span class="required">휴대폰</span>
+						</div>
+						<div class="con flex">
+							<select name="telMobile1" id="telMobile1" th:with="tel=${#strings.arraySplit(member.telMobile,'-')}">
+								<option value="010" th:selected="${tel != null and tel[0] == '010'}">010</option>
+								<option value="011" th:selected="${tel != null and tel[0] == '011'}">011</option>
+								<option value="016" th:selected="${tel != null and tel[0] == '016'}">016</option>
+								<option value="017" th:selected="${tel != null and tel[0] == '017'}">017</option>
+								<option value="019" th:selected="${tel != null and tel[0] == '019'}">019</option>
+							</select>
+							<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
+							<input type="text" name="telMobile2" id="telMobile2" maxlength="4"
+							       th:value="${member.telMobile != null and #strings.length(member.telMobile) > 2 ?
+                                      #strings.arraySplit(member.telMobile, '-')[1] : ''}">
+							<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
+							<input type="text" name="telMobile3" id="telMobile3" maxlength="4"
+							       th:value="${member.telMobile != null and #strings.length(member.telMobile) > 2 ?
+                                      #strings.arraySplit(member.telMobile, '-')[2] : ''}">
+						</div>
+					</div>
+					<div class="column-tc">
+						<div class="tit"><span class="required">이메일</span></div>
+						<div class="con flex">
+							<input type="text" name="email1" id="email1" th:value="${#strings.arraySplit(member.email,'@')[0]}">
+							<span>&nbsp;&nbsp;@&nbsp;&nbsp;</span>
+							<input type="text" name="email2" id="email2" th:value="${#strings.arraySplit(member.email,'@')[1]}">
+							<select name="email2Select" id="email2Select">
+								<option value="">직접입력</option>
+								<option value="naver.com">naver.com</option>
+								<option value="gmail.com">gmail.com</option>
+								<option value="daum.net">daum.net</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-wrap2">
+				<h2 class="form-tit">근무정보<span class="required-txt">표시가 된 항목은 환급교육 과정을 1과정 이상 수강하는 회원인 경우에만 필수 입력 사항입니다.</span></h2>
+				<div class="column-tc-wrap column-tc-wrap2 part2">
+					<div class="column-tc">
+						<div class="tit">
+							<span class="required">근무회사</span>
+						</div>
+						<div class="con flex">
+							<input type="text" name="jobName" id="jobName" th:value="${member.jobName}" readonly>
+							<a href="#none" class="jv-btn fill01" id="companySearchBtn">회사찾기</a>
+						</div>
+					</div>
+					<div class="column-tc">
+						<div class="tit">사업자번호</div>
+						<div class="con flex">
+							<input type="text" name="jobNumber1" id="jobNumber1"
+							       th:value="${member.jobNumber != null and #strings.length(member.jobNumber) > 2 ?
+									         #strings.arraySplit(member.jobNumber, '-')[0] : ''}" readonly>
+							<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
+							<input type="text" name="jobNumber2" id="jobNumber2"
+							       th:value="${member.jobNumber != null and #strings.length(member.jobNumber) > 2 ?
+									         #strings.arraySplit(member.jobNumber, '-')[1] : ''}" readonly>
+							<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
+							<input type="text" name="jobNumber3" id="jobNumber3"
+							       th:value="${member.jobNumber != null and #strings.length(member.jobNumber) > 2 ?
+									         #strings.arraySplit(member.jobNumber, '-')[2] : ''}" readonly>
+						</div>
+					</div>
+					<div class="column-tc">
+						<div class="tit">고용보험관리번호</div>
+						<div class="con flex">
+							<input type="text" name="jobInsuranceNumber1" id="jobInsuranceNumber1"
+							       th:value="${member.jobInsuranceNumber != null and #strings.length(member.jobInsuranceNumber) > 0 ?
+									         #strings.arraySplit(member.jobInsuranceNumber, '-')[0] : ''}" readonly>
+							<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
+							<input type="text" name="jobInsuranceNumber2" id="jobInsuranceNumber2"
+							       th:value="${member.jobInsuranceNumber != null and #strings.length(member.jobInsuranceNumber) > 0 ?
+									         #strings.arraySplit(member.jobInsuranceNumber, '-')[1] : ''}" readonly>
+							<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
+							<input type="text" name="jobInsuranceNumber3" id="jobInsuranceNumber3"
+							       th:value="${member.jobInsuranceNumber != null and #strings.length(member.jobInsuranceNumber) > 0 ?
+									         #strings.arraySplit(member.jobInsuranceNumber, '-')[2] : ''}" readonly>
+							<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
+							<input type="text" name="jobInsuranceNumber4" id="jobInsuranceNumber4"
+							       th:value="${member.jobInsuranceNumber != null and #strings.length(member.jobInsuranceNumber) > 0 ?
+									         #strings.arraySplit(member.jobInsuranceNumber, '-')[3] : ''}" readonly>
+						</div>
+					</div>
+					<div class="column-tc">
+						<div class="con flex2">
+							<div>
+								<div class="tit">근무상태</div>
+								<div class="con">
+									<select name="jobWorkState" id="jobWorkState">
+										<option value="">선택</option>
+										<option value="001" th:selected="${member.jobWorkState == '001'}">근무</option>
+										<option value="002" th:selected="${member.jobWorkState == '002'}">휴직</option>
+										<option value="003" th:selected="${member.jobWorkState == '003'}">기타</option>
+										<option value="004" th:selected="${member.jobWorkState == '004'}">퇴사</option>
+									</select>
+								</div>
+							</div>
+							<div>
+								<div class="tit">근무부서</div>
+								<div class="con">
+									<input type="text" name="jobDept" id="jobDept" th:value="${member.jobDept}">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="column-tc">
+						<div class="tit">
+							<span class="required">훈련생 구분</span>
+						</div>
+						<div class="con">
+							<select name="trneeSe" id="trneeSe">
+								<option value="">선택</option>
+								<option value="001" th:selected="${member.trneeSe == '001'}">자사근로자</option>
+								<option value="002" th:selected="${member.trneeSe == '002'}">구직자</option>
+								<option value="003" th:selected="${member.trneeSe == '003'}">채용예정자</option>
+								<option value="004" th:selected="${member.trneeSe == '004'}">전직/이직예정자</option>
+								<option value="005" th:selected="${member.trneeSe == '005'}">타사근로자</option>
+								<option value="006" th:selected="${member.trneeSe == '006'}">일용근로자</option>
+								<option value="007" th:selected="${member.trneeSe == '007'}">취득예정자(일용포함)</option>
+								<option value="008" th:selected="${member.trneeSe == '008'}">고용유지훈련</option>
+								<option value="009" th:selected="${member.trneeSe == '009'}">적용제외근로자</option>
+							</select>
+						</div>
+					</div>
+					<div class="column-tc">
+						<div class="tit">
+							<span class="required">비정규직 구분</span>
+						</div>
+						<div class="con">
+							<select name="irglbrSe" id="irglbrSe">
+								<option value="">선택</option>
+								<option value="000" th:selected="${member.irglbrSe == '000'}">비정규직해당없음, 정규직포함</option>
+								<option value="001" th:selected="${member.irglbrSe == '001'}">파견근로자</option>
+								<option value="002" th:selected="${member.irglbrSe == '002'}">일용근로자</option>
+								<option value="003" th:selected="${member.irglbrSe == '003'}">기간제근로자</option>
+								<option value="004" th:selected="${member.irglbrSe == '004'}">단기간근로자</option>
+								<option value="005" th:selected="${member.irglbrSe == '005'}">무급휴업/휴직자</option>
+								<option value="006" th:selected="${member.irglbrSe == '006'}">임의가입자영업자</option>
+								<option value="007" th:selected="${member.irglbrSe == '007'}">분류불능</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-wrap2 member-add-info">
+				<h2 class="form-tit">추가정보</h2>
+				<div class="column-tc-wrap column-tc-wrap2 part1">
+					<div class="column-tc">
+						<div class="tit">주소</div>
+						<div class="con flex address">
+							<input type="text" name="zipcode" id="zipcode" th:value="${member.zipcode}" readonly class="zipcode">&nbsp;
+							<input type="text" name="addr1" id="addr1" th:value="${member.addr1}" readonly class="add01">
+							<a href="#none" class="jv-btn fill01" id="btnZipcode">우편번호찾기</a>&nbsp;&nbsp;
+							<input type="text" name="addr2" id="addr2" th:value="${member.addr2}" class="add02">
+						</div>
+					</div>
+				</div>
+				<div class="column-tc-wrap column-tc-wrap2 part2">
+					<div class="column-tc">
+						<div class="tit">계좌 은행명</div>
+						<div class="con">
+							<select name="bankName" id="bankName">
+								<option value="">은행명을 선택해주세요</option>
+								<option value="001" th:selected="${member.bankName == '001'}">우리은행</option>
+								<option value="002" th:selected="${member.bankName == '002'}">국민은행</option>
+								<option value="003" th:selected="${member.bankName == '003'}">신한은행</option>
+								<option value="004" th:selected="${member.bankName == '004'}">하나은행</option>
+								<option value="005" th:selected="${member.bankName == '005'}">카카오뱅크</option>
+							</select>
+						</div>
+					</div>
+					<div class="column-tc">
+						<div class="tit">환불계좌</div>
+						<div class="con">
+							<input type="text" name="bankNumber" id="bankNumber" th:value="${member.bankNumber}">
+						</div>
+					</div>
+					<div class="column-tc">
+						<div class="tit">로그인ID</div>
+						<div class="con">
+							<input type="text" name="applyUserId" id="applyUserId" th:value="${member.applyUserId}">
+						</div>
+					</div>
+					<div class="column-tc">
+						<div class="tit">동시접속허용수</div>
+						<div class="con">
+							<input type="text" name="loginMemberCount" id="loginMemberCount" th:value="${member.loginMemberCount}">
+						</div>
+					</div>
+				</div>
+				<div class="column-tc-wrap column-tc-wrap2 part2">
+					<div class="column-tc">
+						<div class="con flex2">
+							<div>
+								<div class="tit">본인인증 예외 처리</div>
+								<div class="con">
+									<label class="c-input ci-radio">
+										<input type="radio" name="chkIdentityVerification" value="Y" th:checked="${member.chkIdentityVerification == 'Y'}"> Y
+										<div class="ci-show"></div>
+									</label>
+									<label class="c-input ci-radio">
+										<input type="radio" name="chkIdentityVerification" value="N" th:checked="${member.chkIdentityVerification == 'N'}"> N
+										<div class="ci-show"></div>
+									</label>
+								</div>
+							</div>
+							<div>
+								<div class="tit">비밀번호 변경 예외 처리</div>
+								<div class="con">
+									<label class="c-input ci-radio">
+										<input type="radio" name="chkPwdChange" value="Y" th:checked="${member.chkPwdChange == 'Y'}"> Y
+										<div class="ci-show"></div>
+									</label>
+									<label class="c-input ci-radio">
+										<input type="radio" name="chkPwdChange" value="N" th:checked="${member.chkPwdChange == 'N'}"> N
+										<div class="ci-show"></div>
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="column-tc">
+						<div class="con flex2 mt5">
+							<div>
+								<div class="tit">SMS 문자 수신 허용 여부</div>
+								<div class="con">
+									<label class="c-input ci-radio">
+										<input type="radio" name="chkSmsReceive" value="Y" th:checked="${member.chkSmsReceive == 'Y'}"> 수신 허용
+										<div class="ci-show"></div>
+									</label>
+									<label class="c-input ci-radio">
+										<input type="radio" name="chkSmsReceive" value="N" th:checked="${member.chkSmsReceive == 'N'}"> 수신 안함
+										<div class="ci-show"></div>
+									</label>
+								</div>
+							</div>
+							<div>
+								<div class="tit">이메일 수신 허용 여부</div>
+								<div class="con">
+									<label class="c-input ci-radio">
+										<input type="radio" name="chkMailReceive" value="Y" th:checked="${member.chkMailReceive == 'Y'}"> 수신 허용
+										<div class="ci-show"></div>
+									</label>
+									<label class="c-input ci-radio">
+										<input type="radio" name="chkMailReceive" value="N" th:checked="${member.chkMailReceive == 'N'}"> 수신 안함
+										<div class="ci-show"></div>
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="btn-wrap mt50">
+		<a class="jv-btn fill01-lg" href="/masterpage_sys/member/student/">목록</a>
+		<button type="button" class="jv-btn fill01-lg" id="btnUpdate">수정</button>
+	</div>
+
+	<script th:src="@{/js/member/member.js}"></script>
+</body>
+</html>

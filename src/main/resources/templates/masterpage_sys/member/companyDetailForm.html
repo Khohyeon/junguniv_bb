@@ -4,11 +4,14 @@
 	<meta charset="UTF-8">
 	<!-- 헤더에서 CSS 포함 -->
 	<th:block th:replace="fragments/header :: head"></th:block>
+	<!-- member.css 추가 -->
+	<link rel="stylesheet" th:href="@{/css/member/member.css}">
 
 	<!-- 카카오 주소 API 스크립트 추가 -->
 	<script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
 
 	<title>위탁기업 상세보기</title>
+
 </head>
 <body>
 	<!-- 헤더에서 상단 메뉴 포함 -->
@@ -100,7 +103,7 @@
 										<input type="radio" name="corporationCode" id="corporationCode2" value="002" th:checked="${member.corporationCode == '002'}"> 지사
 										<div class="ci-show"></div>
 									</label>
-									<input type="text" name="masterId" id="masterId" th:value="${member.masterId}" placeholder="본사 ID를 입력해주세요" style="width:200px">
+									<input type="text" name="masterId" id="masterId" th:value="${member.masterId}" placeholder="본사 ID를 입력해주세요" class="masterId-input">
 								</div>
 							</div>
 						</div>
@@ -108,23 +111,37 @@
 					<div class="column-tc">
 						<div class="tit">사업자번호</div>
 						<div class="con flex">
-							<input type="text" name="jobNumber1" id="jobNumber1" th:value="${#strings.arraySplit(member.jobNumber, '-')[0]}">
+							<input type="text" name="jobNumber1" id="jobNumber1" 
+								   th:value="${member.jobNumber != null and #strings.length(member.jobNumber) > 2 ? 
+									         #strings.arraySplit(member.jobNumber, '-')[0] : ''}">
 							<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
-							<input type="text" name="jobNumber2" id="jobNumber2" th:value="${#strings.arraySplit(member.jobNumber, '-')[1]}">
+							<input type="text" name="jobNumber2" id="jobNumber2" 
+								   th:value="${member.jobNumber != null and #strings.length(member.jobNumber) > 2 ? 
+									         #strings.arraySplit(member.jobNumber, '-')[1] : ''}">
 							<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
-							<input type="text" name="jobNumber3" id="jobNumber3" th:value="${#strings.arraySplit(member.jobNumber, '-')[2]}">
+							<input type="text" name="jobNumber3" id="jobNumber3" 
+								   th:value="${member.jobNumber != null and #strings.length(member.jobNumber) > 2 ? 
+									         #strings.arraySplit(member.jobNumber, '-')[2] : ''}">
 						</div>
 					</div>
 					<div class="column-tc">
 						<div class="tit">고용보험관리번호</div>
 						<div class="con flex">
-							<input type="text" name="jobInsuranceNumber1" id="jobInsuranceNumber1" th:value="${#strings.arraySplit(member.jobInsuranceNumber, '-')[0]}">
+							<input type="text" name="jobInsuranceNumber1" id="jobInsuranceNumber1" 
+								   th:value="${member.jobInsuranceNumber != null and #strings.length(member.jobInsuranceNumber) > 0 ? 
+									         #strings.arraySplit(member.jobInsuranceNumber, '-')[0] : ''}">
 							<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
-							<input type="text" name="jobInsuranceNumber2" id="jobInsuranceNumber2" th:value="${#strings.arraySplit(member.jobInsuranceNumber, '-')[1]}">
+							<input type="text" name="jobInsuranceNumber2" id="jobInsuranceNumber2" 
+								   th:value="${member.jobInsuranceNumber != null and #strings.length(member.jobInsuranceNumber) > 0 ? 
+									         #strings.arraySplit(member.jobInsuranceNumber, '-')[1] : ''}">
 							<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
-							<input type="text" name="jobInsuranceNumber3" id="jobInsuranceNumber3" th:value="${#strings.arraySplit(member.jobInsuranceNumber, '-')[2]}">
+							<input type="text" name="jobInsuranceNumber3" id="jobInsuranceNumber3" 
+								   th:value="${member.jobInsuranceNumber != null and #strings.length(member.jobInsuranceNumber) > 0 ? 
+									         #strings.arraySplit(member.jobInsuranceNumber, '-')[2] : ''}">
 							<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
-							<input type="text" name="jobInsuranceNumber4" id="jobInsuranceNumber4" th:value="${#strings.arraySplit(member.jobInsuranceNumber, '-')[3]}">
+							<input type="text" name="jobInsuranceNumber4" id="jobInsuranceNumber4" 
+								   th:value="${member.jobInsuranceNumber != null and #strings.length(member.jobInsuranceNumber) > 0 ? 
+									         #strings.arraySplit(member.jobInsuranceNumber, '-')[3] : ''}">
 						</div>
 					</div>
 				</div>
@@ -146,11 +163,14 @@
 					<div class="column-tc b-num">
 						<div class="tit">사업자등록증</div>
 						<div class="con flex">
-							<input type="file" name="fnameSaup" id="fnameSaup">
-							<label class="c-input ci-check">
-								<input type="checkbox" name="deleteFnameSaup" id="deleteFnameSaup"> 삭제
-								<div class="ci-show"></div>
-							</label>
+							<div class="file-upload-container">
+								<input type="text" id="fnameSaupDisplay" class="text-input" readonly th:value="${member.fnameSaupName != null ? member.fnameSaupName : member.fnameSaup}">
+								<input type="hidden" id="fnameSaupUserFile" th:value="${member.fnameSaup}">
+								<input type="file" id="fnameSaupFile" class="hidden-file-input" accept="image/*">
+								<button type="button" class="jv-btn fill01 btn-upload" data-target="fnameSaup">업로드</button>
+								<button type="button" class="jv-btn fill01 btn-view" th:data-filename="${member.fnameSaup}">열람</button>
+								<button type="button" class="jv-btn fill01 btn-delete" data-target="fnameSaup">삭제</button>
+							</div>
 						</div>
 					</div>
 					<div class="column-tc">
@@ -195,7 +215,9 @@
 					<div class="column-tc">
 						<div class="tit">직통번호</div>
 						<div class="con flex">
-							<select name="jobTelOffice1" id="jobTelOffice1" th:value="${#strings.arraySplit(member.jobTelOffice, '-')[0]}">
+							<select name="jobTelOffice1" id="jobTelOffice1" 
+									th:value="${member.jobTelOffice != null and #strings.length(member.jobTelOffice) > 2 ? 
+											  #strings.arraySplit(member.jobTelOffice, '-')[0] : ''}">
 								<option>선택</option>
 								<option>02</option>
 								<option>031</option>
@@ -216,9 +238,13 @@
 								<option>064</option>
 							</select>
 							<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
-							<input type="text" name="jobTelOffice2" id="jobTelOffice2" th:value="${#strings.arraySplit(member.jobTelOffice, '-')[1]}">
+							<input type="text" name="jobTelOffice2" id="jobTelOffice2" 
+								   th:value="${member.jobTelOffice != null and #strings.length(member.jobTelOffice) > 2 ? 
+									         #strings.arraySplit(member.jobTelOffice, '-')[1] : ''}">
 							<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
-							<input type="text" name="jobTelOffice3" id="jobTelOffice3" th:value="${#strings.arraySplit(member.jobTelOffice, '-')[2]}">
+							<input type="text" name="jobTelOffice3" id="jobTelOffice3" 
+								   th:value="${member.jobTelOffice != null and #strings.length(member.jobTelOffice) > 2 ? 
+									         #strings.arraySplit(member.jobTelOffice, '-')[2] : ''}">
 						</div>
 					</div>
 				</div>
@@ -226,7 +252,9 @@
 					<div class="column-tc">
 						<div class="tit"><span class="required">휴대폰</span></div>
 						<div class="con flex">
-							<select name="contractorTel1" id="telMobile1" th:value="${#strings.arraySplit(member.contractorTel, '-')[0]}">
+							<select name="contractorTel1" id="telMobile1" 
+									th:value="${member.contractorTel != null and #strings.length(member.contractorTel) > 2 ? 
+											  #strings.arraySplit(member.contractorTel, '-')[0] : '010'}">
 								<option>010</option>
 								<option>011</option>
 								<option>016</option>
@@ -234,17 +262,25 @@
 								<option>019</option>
 							</select>
 							<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
-							<input type="text" name="contractorTel2" id="telMobile2" maxlength="4" th:value="${#strings.arraySplit(member.contractorTel, '-')[1]}">
+							<input type="text" name="contractorTel2" id="telMobile2" maxlength="4" 
+								   th:value="${member.contractorTel != null and #strings.length(member.contractorTel) > 2 ? 
+									         #strings.arraySplit(member.contractorTel, '-')[1] : ''}">
 							<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
-							<input type="text" name="contractorTel3" id="telMobile3" maxlength="4" th:value="${#strings.arraySplit(member.contractorTel, '-')[2]}">
+							<input type="text" name="contractorTel3" id="telMobile3" maxlength="4" 
+								   th:value="${member.contractorTel != null and #strings.length(member.contractorTel) > 2 ? 
+									         #strings.arraySplit(member.contractorTel, '-')[2] : ''}">
 						</div>
 					</div>
 					<div class="column-tc">
 						<div class="tit"><span class="required">이메일</span></div>
 						<div class="con flex">
-							<input type="text" name="contractorEtc1" id="email1" th:value="${#strings.arraySplit(member.contractorEtc, '@')[0]}">
+							<input type="text" name="contractorEtc1" id="email1" 
+								   th:value="${member.contractorEtc != null and #strings.length(member.contractorEtc) > 0 ? 
+									         #strings.arraySplit(member.contractorEtc, '@')[0] : ''}">
 							<span>&nbsp;&nbsp;@&nbsp;&nbsp;</span>
-							<input type="text" name="email2" id="email2" th:value="${#strings.arraySplit(member.contractorEtc, '@')[1]}">
+							<input type="text" name="email2" id="email2" 
+								   th:value="${member.contractorEtc != null and #strings.length(member.contractorEtc) > 0 ? 
+									         #strings.arraySplit(member.contractorEtc, '@')[1] : ''}">
 							<select name="contractorEtc2" id="email2Select">
 								<option value="">직접입력</option>
 								<option value="naver.com">naver.com</option>
@@ -274,18 +310,21 @@
 					<div class="column-tc url">
 						<div class="tit">URL주소</div>
 						<div class="con flex">
-							<span>https://교육원도메인/</span>
+							<span class="url-prefix">https://교육원도메인/</span>
 							<input type="text" name="companyUrl" id="companyUrl" th:value="${member.companyUrl}">
 						</div>
 					</div>
 					<div class="column-tc logo">
 						<div class="tit">로고 파일</div>
 						<div class="con flex">
-							<input type="file" name="fnameLogo" id="fnameLogo">
-							<label class="c-input ci-check">
-								<input type="checkbox" name="deleteFnameLogo"> 삭제
-								<div class="ci-show"></div>
-							</label>
+							<div class="file-upload-container">
+								<input type="text" id="fnameLogoDisplay" class="text-input" readonly th:value="${member.fnameLogoName != null ? member.fnameLogoName : member.fnameLogo}">
+								<input type="hidden" id="fnameLogoUserFile" th:value="${member.fnameLogo}">
+								<input type="file" id="fnameLogoFile" class="hidden-file-input" accept="image/*">
+								<button type="button" class="jv-btn fill01 btn-upload" data-target="fnameLogo">업로드</button>
+								<button type="button" class="jv-btn fill01 btn-view" th:data-filename="${member.fnameLogo}">열람</button>
+								<button type="button" class="jv-btn fill01 btn-delete" data-target="fnameLogo">삭제</button>
+							</div>
 							<div class="info">가로 265px X 세로55px</div>
 						</div>
 					</div>
@@ -340,16 +379,17 @@
 								</div>
 							</label>
 							<label class="ci-card">
-								<input type="radio" name="mainImg" class="ci-card-input" th:value="${member.mainImg}" th:checked="${member.mainImg != null and member.mainImg != '' and member.mainImg != 'sample01.jpg' and member.mainImg != 'sample02.jpg' and member.mainImg != 'sample03.jpg'}">
+								<input type="radio" name="mainImg" class="ci-card-input" value="custom" th:checked="${member.mainImg != null and member.mainImg != '' and member.mainImg != 'sample01.jpg' and member.mainImg != 'sample02.jpg' and member.mainImg != 'sample03.jpg'}">
 								<div class="ci-card-body">
 									<div class="body-tit">이미지 파일 첨부</div>
 									<div class="body-con">
-										<div class="flex-spaceB">
-											<input type="file" name="mainImgFile" id="mainImgFile" accept="image/*">
-											<label class="c-input ci-check ml5">
-												<input type="checkbox" name="deleteMainImg"> 삭제
-												<div class="ci-show"></div>
-											</label>
+										<div class="file-upload-container">
+											<input type="text" id="mainImgDisplay" class="text-input" readonly th:value="${member.mainImgName != null ? member.mainImgName : member.mainImg}">
+											<input type="hidden" id="mainImgUserFile" th:value="${member.mainImg}">
+											<input type="file" id="mainImgFile" class="hidden-file-input" accept="image/*">
+											<button type="button" class="jv-btn fill01 btn-upload" data-target="mainImg">업로드</button>
+											<button type="button" class="jv-btn fill01 btn-view" th:data-filename="${member.mainImg}">열람</button>
+											<button type="button" class="jv-btn fill01 btn-delete" data-target="mainImg">삭제</button>
 										</div>
 										<div class="info mt10">가로 1270px X 세로 560px</div>
 									</div>
@@ -388,16 +428,17 @@
 								</div>
 							</label>
 							<label class="ci-card">
-								<input type="radio" name="subImg" class="ci-card-input" th:value="${member.subImg}" th:checked="${member.subImg != null and member.subImg != '' and member.subImg != 'sample01.jpg' and member.subImg != 'sample02.jpg' and member.subImg != 'sample03.jpg'}">
+								<input type="radio" name="subImg" class="ci-card-input" value="custom" th:checked="${member.subImg != null and member.subImg != '' and member.subImg != 'sample01.jpg' and member.subImg != 'sample02.jpg' and member.subImg != 'sample03.jpg'}">
 								<div class="ci-card-body">
 									<div class="body-tit">이미지 파일 첨부</div>
 									<div class="body-con">
-										<div class="flex-spaceB">
-											<input type="file" name="subImgFile" id="subImgFile" accept="image/*">
-											<label class="c-input ci-check ml5">
-												<input type="checkbox" name="deleteSubImg"> 삭제
-												<div class="ci-show"></div>
-											</label>
+										<div class="file-upload-container">
+											<input type="text" id="subImgDisplay" class="text-input" readonly th:value="${member.subImgName != null ? member.subImgName : member.subImg}">
+											<input type="hidden" id="subImgUserFile" th:value="${member.subImg}">
+											<input type="file" id="subImgFile" class="hidden-file-input" accept="image/*">
+											<button type="button" class="jv-btn fill01 btn-upload" data-target="subImg">업로드</button>
+											<button type="button" class="jv-btn fill01 btn-view" th:data-filename="${member.subImg}">열람</button>
+											<button type="button" class="jv-btn fill01 btn-delete" data-target="subImg">삭제</button>
 										</div>
 										<div class="info mt10">가로 1270px X 세로 560px</div>
 									</div>

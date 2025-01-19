@@ -241,6 +241,25 @@ const MemberModule = {
                 throw error;
             }
         },
+
+        // 파일 열람
+        viewFile: async function(type, fileName) {
+            if (!fileName) {
+                alert('파일이 존재하지 않습니다.');
+                return;
+            }
+            
+            try {
+                // 파일 다운로드 URL 생성
+                const url = `/api/v1/files/download/${type}/${fileName}`;
+                
+                // 새 창에서 파일 열기
+                window.open(url, '_blank');
+            } catch (error) {
+                console.error('파일 열람 에러:', error);
+                alert('파일 열람에 실패했습니다.');
+            }
+        },
     },
 
     // UI 렌더링 함수들
@@ -270,7 +289,9 @@ const MemberModule = {
                                 </label>
                             </td>
                             <td>${startNumber - index}</td>
-                            <td>${member.name || '-'}</td>
+                            <td>
+                                <a href="/masterpage_sys/member/teacher/${member.memberIdx}" class="jv-btn underline01">${member.name || '-'}</a>
+                            </td>
                             <td>${member.userId || '-'}</td>
                             <td>
                                 ${member.telMobile ? `<label class="c-input ci-check">
@@ -408,7 +429,9 @@ const MemberModule = {
                                 </label>
                             </td>
                             <td>${startNumber - index}</td>
-                            <td>${member.name || '-'}</td>
+                            <td>
+                                <a href="/masterpage_sys/member/student/${member.memberIdx}" class="jv-btn underline01">${member.name || '-'}</a>
+                            </td>
                             <td>${member.userId || '-'}</td>
                             <td>${member.birthday || '-'}</td>
                             <td>
@@ -585,6 +608,7 @@ const MemberModule = {
                     chkForeigner: document.getElementById('chkForeigner')?.checked ? 'N' : 'Y',
                     agreeDate: document.getElementById('agreeDate')?.value,
                     realDate: document.getElementById('realDate')?.value,
+                    jobDept: document.getElementById('jobDept')?.value,
                     
                     // 휴대폰
                     telMobile: document.getElementById('telMobile1')?.value && document.getElementById('telMobile2')?.value && document.getElementById('telMobile3')?.value
@@ -646,7 +670,7 @@ const MemberModule = {
                         : null,
 
                     // 훈련생 구분 (학생 전용)
-                    trnee_se: document.getElementById('trnee_se')?.value,
+                    trneeSe: document.getElementById('trneeSe')?.value,
                     irglbrSe: document.getElementById('irglbrSe')?.value,
 
                     // SMS/이메일 수신 여부
@@ -666,9 +690,14 @@ const MemberModule = {
                         : null,
 
                     // 이미지 처리
-                    mainImg: document.getElementById('mainImg')?.value,
-                    subImg: document.getElementById('subImg')?.value,
-                    fnameLogo: document.getElementById('fnameLogo')?.value
+                    mainImg: document.getElementById('mainImgUserFile')?.value,
+                    mainImgName: document.getElementById('mainImgDisplay')?.value,
+                    subImg: document.getElementById('subImgUserFile')?.value,
+                    subImgName: document.getElementById('subImgDisplay')?.value,
+                    fnameSaup: document.getElementById('fnameSaupUserFile')?.value,
+                    fnameSaupName: document.getElementById('fnameSaupDisplay')?.value,
+                    fnameLogo: document.getElementById('fnameLogoUserFile')?.value,
+                    fnameLogoName: document.getElementById('fnameLogoDisplay')?.value,
                 };
 
                 // 필수 입력값 검증
@@ -677,7 +706,7 @@ const MemberModule = {
                 // userType에 따른 추가 필수 필드
                 switch(data.userType) {
                     case 'STUDENT':
-                        requiredFields.push('name', 'birthday', 'residentNumber', 'jobName', 'trnee_se', 'irglbrSe');
+                        requiredFields.push('name', 'birthday', 'residentNumber', 'jobName', 'trneeSe', 'irglbrSe');
                         break;
                     case 'TEACHER':
                         requiredFields.push('name');
@@ -808,15 +837,15 @@ const MemberModule = {
                 if (result.success) {
                     // 파일 이동 처리
                     const uploadedFiles = [];
-                    if (mainImgFile?.dataset.uploadedFileName) {
-                        uploadedFiles.push(mainImgFile.dataset.uploadedFileName);
-                    }
-                    if (subImgFile?.dataset.uploadedFileName) {
-                        uploadedFiles.push(subImgFile.dataset.uploadedFileName);
-                    }
-                    if (logoFile?.dataset.uploadedFileName) {
-                        uploadedFiles.push(logoFile.dataset.uploadedFileName);
-                    }
+                    const mainImgUserFile = document.getElementById('mainImgUserFile')?.value;
+                    const subImgUserFile = document.getElementById('subImgUserFile')?.value;
+                    const fnameSaupUserFile = document.getElementById('fnameSaupUserFile')?.value;
+                    const fnameLogoUserFile = document.getElementById('fnameLogoUserFile')?.value;
+
+                    if (mainImgUserFile) uploadedFiles.push(mainImgUserFile);
+                    if (subImgUserFile) uploadedFiles.push(subImgUserFile);
+                    if (fnameSaupUserFile) uploadedFiles.push(fnameSaupUserFile);
+                    if (fnameLogoUserFile) uploadedFiles.push(fnameLogoUserFile);
 
                     // 업로드된 파일들을 temp에서 member 폴더로 이동
                     for (const fileName of uploadedFiles) {
@@ -1115,8 +1144,22 @@ const MemberModule = {
                     userType: document.getElementById('userType')?.value,
                     userId: document.getElementById('userId')?.value,
                     name: document.getElementById('name')?.value,
+                    birthday: document.getElementById('birthday')?.value,
+                    sex: document.querySelector('input[name="sex"]:checked')?.value,
                     chkDormant: document.getElementById('chkDormant')?.checked ? 'N' : 'Y',
                     memberState: document.getElementById('memberState')?.checked ? 'N' : 'Y',
+                    engName: document.getElementById('engName')?.value,
+                    chkForeigner: document.getElementById('chkForeigner')?.checked ? 'N' : 'Y',
+                    agreeDate: document.getElementById('agreeDate')?.value,
+                    realDate: document.getElementById('realDate')?.value,
+                    applyUserId: document.getElementById('applyUserId')?.value,
+                    jobDept: document.getElementById('jobDept')?.value,
+
+
+                    // 주민등록번호 (학생 전용)
+                    residentNumber: document.getElementById('residentNumber1')?.value && document.getElementById('residentNumber2')?.value && document.getElementById('residentNumber3')?.value
+                        ? `${document.getElementById('residentNumber1')?.value}-${document.getElementById('residentNumber2')?.value}${document.getElementById('residentNumber3')?.value}`
+                        : null,
 
                     // 휴대폰
                     telMobile: document.getElementById('telMobile1')?.value && document.getElementById('telMobile2')?.value && document.getElementById('telMobile3')?.value
@@ -1127,6 +1170,10 @@ const MemberModule = {
                     email: document.getElementById('email1')?.value && document.getElementById('email2')?.value
                         ? document.getElementById('email1')?.value + '@' + document.getElementById('email2')?.value
                         : null,
+
+                    // 계좌정보
+                    bankName: document.getElementById('bankName')?.value,
+                    bankNumber: document.getElementById('bankNumber')?.value,
 
                     // 관리자 전용 필드
                     authLevel: document.getElementById('authLevel')?.value,
@@ -1174,9 +1221,14 @@ const MemberModule = {
                         : null,
 
                     // 이미지 정보
-                    mainImg: document.querySelector('input[name="mainImg"]:checked')?.value,
-                    subImg: document.querySelector('input[name="subImg"]:checked')?.value,
-                    fnameLogo: document.getElementById('fnameLogo')?.value,
+                    mainImg: document.getElementById('mainImgUserFile')?.value,
+                    mainImgName: document.getElementById('mainImgDisplay')?.value,
+                    subImg: document.getElementById('subImgUserFile')?.value,
+                    subImgName: document.getElementById('subImgDisplay')?.value,
+                    fnameSaup: document.getElementById('fnameSaupUserFile')?.value,
+                    fnameSaupName: document.getElementById('fnameSaupDisplay')?.value,
+                    fnameLogo: document.getElementById('fnameLogoUserFile')?.value,
+                    fnameLogoName: document.getElementById('fnameLogoDisplay')?.value,
 
                     // 교육담당자 연락처 (기업 회원)
                     contractorTel: document.getElementById('telMobile1')?.value && document.getElementById('telMobile2')?.value && document.getElementById('telMobile3')?.value
@@ -1184,7 +1236,19 @@ const MemberModule = {
                         : null,
                     contractorEtc: document.getElementById('email1')?.value && document.getElementById('email2')?.value
                         ? `${document.getElementById('email1')?.value}@${document.getElementById('email2')?.value}`
-                        : null
+                        : null,
+
+                    // 학생 전용 필드
+                    trneeSe: document.getElementById('trneeSe')?.value,
+                    irglbrSe: document.getElementById('irglbrSe')?.value,
+
+                    // SMS/이메일 수신 여부
+                    chkSmsReceive: document.querySelector('input[name="chkSmsReceive"]:checked')?.value,
+                    chkMailReceive: document.querySelector('input[name="chkMailReceive"]:checked')?.value,
+
+                    // 본인인증/비밀번호 변경 예외처리
+                    chkIdentityVerification: document.querySelector('input[name="chkIdentityVerification"]:checked')?.value,
+                    chkPwdChange: document.querySelector('input[name="chkPwdChange"]:checked')?.value
                 };
 
                 // 비밀번호가 입력된 경우에만 추가
@@ -1241,19 +1305,15 @@ const MemberModule = {
                 if (result.success) {
                     // 파일 이동 처리
                     const uploadedFiles = [];
-                    const mainImgFile = document.getElementById('mainImgFile');
-                    const subImgFile = document.getElementById('subImgFile');
-                    const logoFile = document.getElementById('fnameLogo');
+                    const mainImgUserFile = document.getElementById('mainImgUserFile')?.value;
+                    const subImgUserFile = document.getElementById('subImgUserFile')?.value;
+                    const fnameSaupUserFile = document.getElementById('fnameSaupUserFile')?.value;
+                    const fnameLogoUserFile = document.getElementById('fnameLogoUserFile')?.value;
 
-                    if (mainImgFile?.dataset.uploadedFileName) {
-                        uploadedFiles.push(mainImgFile.dataset.uploadedFileName);
-                    }
-                    if (subImgFile?.dataset.uploadedFileName) {
-                        uploadedFiles.push(subImgFile.dataset.uploadedFileName);
-                    }
-                    if (logoFile?.dataset.uploadedFileName) {
-                        uploadedFiles.push(logoFile.dataset.uploadedFileName);
-                    }
+                    if (mainImgUserFile) uploadedFiles.push(mainImgUserFile);
+                    if (subImgUserFile) uploadedFiles.push(subImgUserFile);
+                    if (fnameSaupUserFile) uploadedFiles.push(fnameSaupUserFile);
+                    if (fnameLogoUserFile) uploadedFiles.push(fnameLogoUserFile);
 
                     // 업로드된 파일들을 temp에서 member 폴더로 이동
                     for (const fileName of uploadedFiles) {
@@ -1293,6 +1353,20 @@ const MemberModule = {
                 console.error('회원 수정 에러:', error);
                 alert(error.message || '회원 수정에 실패했습니다.');
             }
+        },
+
+        // 파일 열람 버튼 클릭 이벤트 핸들러
+        onViewFileClick: function(event) {
+            const button = event.target;
+            const type = 'member'; // 회원 관련 파일은 모두 member 타입
+            const fileName = button.dataset.filename;
+            
+            if (!fileName) {
+                alert('파일이 존재하지 않습니다.');
+                return;
+            }
+            
+            MemberModule.api.viewFile(type, fileName);
         },
     },
 
@@ -1335,7 +1409,7 @@ const MemberModule = {
                 e.target.dataset.originalFileName = file.name;
 
                 // 파일명 표시 업데이트
-                const fileNameDisplay = e.target.parentElement.querySelector('.file-name');
+                const fileNameDisplay = e.target.parentElement.querySelector('.selected-file');
                 if (fileNameDisplay) {
                     fileNameDisplay.textContent = file.name;
                 }
@@ -1385,7 +1459,7 @@ const MemberModule = {
                 e.target.dataset.originalFileName = file.name;
 
                 // 파일명 표시 업데이트
-                const fileNameDisplay = e.target.parentElement.querySelector('.file-name');
+                const fileNameDisplay = e.target.parentElement.querySelector('.selected-file');
                 if (fileNameDisplay) {
                     fileNameDisplay.textContent = file.name;
                 }
@@ -1435,7 +1509,7 @@ const MemberModule = {
                 e.target.dataset.originalFileName = file.name;
 
                 // 파일명 표시 업데이트
-                const fileNameDisplay = e.target.parentElement.querySelector('.file-name');
+                const fileNameDisplay = e.target.parentElement.querySelector('.selected-file');
                 if (fileNameDisplay) {
                     fileNameDisplay.textContent = file.name;
                 }
@@ -1636,13 +1710,13 @@ const MemberModule = {
             const logoFile = document.getElementById('fnameLogo');
 
             if (mainImgFile) {
-                mainImgFile.addEventListener('change', this.fileHandlers.handleMainImageUpload);
+                mainImgFile.removeEventListener('change', this.fileHandlers.handleMainImageUpload);
             }
             if (subImgFile) {
-                subImgFile.addEventListener('change', this.fileHandlers.handleSubImageUpload);
+                subImgFile.removeEventListener('change', this.fileHandlers.handleSubImageUpload);
             }
             if (logoFile) {
-                logoFile.addEventListener('change', this.fileHandlers.handleLogoUpload);
+                logoFile.removeEventListener('change', this.fileHandlers.handleLogoUpload);
             }
 
             // 회원 수정 폼 제출 이벤트 리스너 (모든 타입 공통)
@@ -1665,6 +1739,11 @@ const MemberModule = {
                     }
                 });
             }
+
+            // 파일 열람 버튼 이벤트 리스너
+            document.querySelectorAll('.btn-view').forEach(button => {
+                button.addEventListener('click', this.handlers.onViewFileClick);
+            });
         } catch (error) {
             console.error('초기화 에러:', error);
             alert('데이터를 불러오는데 실패했습니다.');
@@ -1675,4 +1754,202 @@ const MemberModule = {
 // 모듈 초기화
 document.addEventListener('DOMContentLoaded', () => {
     MemberModule.init();
+});
+
+// 파일 선택 시 파일명 표시
+document.addEventListener('DOMContentLoaded', function() {
+    // 메인 이미지 파일 선택 시
+    const mainImgFile = document.getElementById('mainImgFile');
+    if(mainImgFile) {
+        mainImgFile.addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name;
+            const fileLabel = document.createElement('div');
+            fileLabel.className = 'selected-file';
+            fileLabel.textContent = '선택된 파일: ' + (fileName || '없음');
+            
+            // 이전에 표시된 선택 파일명이 있다면 제거
+            const prevLabel = this.parentElement.querySelector('.selected-file');
+            if(prevLabel) {
+                prevLabel.remove();
+            }
+            
+            // 새로운 파일명 표시
+            this.parentElement.appendChild(fileLabel);
+        });
+    }
+
+    // 서브 이미지 파일 선택 시
+    const subImgFile = document.getElementById('subImgFile');
+    if(subImgFile) {
+        subImgFile.addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name;
+            const fileLabel = document.createElement('div');
+            fileLabel.className = 'selected-file';
+            fileLabel.textContent = '선택된 파일: ' + (fileName || '없음');
+            
+            // 이전에 표시된 선택 파일명이 있다면 제거
+            const prevLabel = this.parentElement.querySelector('.selected-file');
+            if(prevLabel) {
+                prevLabel.remove();
+            }
+            
+            // 새로운 파일명 표시
+            this.parentElement.appendChild(fileLabel);
+        });
+    }
+
+    // 로고 파일 선택 시
+    const logoFile = document.getElementById('fnameLogo');
+    if(logoFile) {
+        logoFile.addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name;
+            const fileLabel = document.createElement('div');
+            fileLabel.className = 'selected-file';
+            fileLabel.textContent = '선택된 파일: ' + (fileName || '없음');
+            
+            // 이전에 표시된 선택 파일명이 있다면 제거
+            const prevLabel = this.parentElement.querySelector('.selected-file');
+            if(prevLabel) {
+                prevLabel.remove();
+            }
+            
+            // 새로운 파일명 표시
+            this.parentElement.appendChild(fileLabel);
+        });
+    }
+
+    // 사업자등록증 파일 선택 시
+    const saupFile = document.getElementById('fnameSaup');
+    if(saupFile) {
+        saupFile.addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name;
+            const fileLabel = document.createElement('div');
+            fileLabel.className = 'selected-file';
+            fileLabel.textContent = '선택된 파일: ' + (fileName || '없음');
+            
+            // 이전에 표시된 선택 파일명이 있다면 제거
+            const prevLabel = this.parentElement.querySelector('.selected-file');
+            if(prevLabel) {
+                prevLabel.remove();
+            }
+            
+            // 새로운 파일명 표시
+            this.parentElement.appendChild(fileLabel);
+        });
+    }
+});
+
+// 파일 관련 이벤트 핸들러 추가 (하나의 이벤트 리스너로 통합)
+document.addEventListener('DOMContentLoaded', function() {
+    // 파일 업로드 버튼 클릭 이벤트
+    document.querySelectorAll('.btn-upload').forEach(button => {
+        button.addEventListener('click', function() {
+            const target = this.dataset.target;
+            const fileInput = document.getElementById(target + 'File');
+            if (fileInput) {
+                fileInput.click();
+            }
+        });
+    });
+
+    // 파일 선택 시 이벤트 (통합된 핸들러)
+    document.querySelectorAll('.hidden-file-input').forEach(input => {
+        input.addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const target = this.id.replace('File', '');
+            const displayInput = document.getElementById(target + 'Display');
+            const userFileInput = document.getElementById(target + 'UserFile');
+
+            if (!file.type.startsWith('image/')) {
+                alert('이미지 파일만 업로드 가능합니다.');
+                this.value = '';
+                return;
+            }
+
+            if (file.size > 10 * 1024 * 1024) {
+                alert('파일 크기는 10MB를 초과할 수 없습니다.');
+                this.value = '';
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('type', 'member');
+
+            try {
+                const response = await fetch('/api/v1/files/upload/temp/member', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error('파일 업로드에 실패했습니다.');
+
+                const data = await response.json();
+                
+                // 파일 정보 저장
+                if (displayInput) displayInput.value = file.name;
+                if (userFileInput) userFileInput.value = data.fileName;
+
+                // mainImg나 subImg인 경우 라디오 버튼 체크
+                if (target === 'mainImg' || target === 'subImg') {
+                    const radio = document.querySelector(`input[name="${target}"][value="custom"]`);
+                    if (radio) radio.checked = true;
+                }
+                
+                // 파일명 표시 업데이트
+                const fileNameDisplay = this.parentElement.querySelector('.selected-file');
+                if (fileNameDisplay) {
+                    fileNameDisplay.textContent = '현재 파일: ' + file.name;
+                } else {
+                    const newFileNameDisplay = document.createElement('div');
+                    newFileNameDisplay.className = 'selected-file';
+                    newFileNameDisplay.textContent = '현재 파일: ' + file.name;
+                    this.parentElement.appendChild(newFileNameDisplay);
+                }
+                
+                console.log('파일 업로드 성공:', data);
+            } catch (error) {
+                console.error('파일 업로드 중 오류 발생:', error);
+                alert('파일 업로드에 실패했습니다.');
+                this.value = '';
+            }
+        });
+    });
+
+    // 파일 삭제 버튼 클릭 이벤트
+    document.querySelectorAll('.btn-delete').forEach(button => {
+        button.addEventListener('click', async function() {
+            const target = this.dataset.target;
+            const fileInput = document.getElementById(target + 'File');
+            const displayInput = document.getElementById(target + 'Display');
+            const userFileInput = document.getElementById(target + 'UserFile');
+            
+            if (!displayInput.value) {
+                alert('삭제할 파일이 없습니다.');
+                return;
+            }
+
+            if (confirm('파일을 삭제하시겠습니다?')) {
+                try {
+                    // 서버에 삭제 요청
+                    const response = await fetch(`/api/v1/files/delete/member/${userFileInput.value}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (!response.ok) throw new Error('파일 삭제에 실패했습니다.');
+
+                    // UI 초기화
+                    fileInput.value = '';
+                    displayInput.value = '';
+                    userFileInput.value = '';
+                    alert('파일이 삭제되었습니다.');
+                } catch (error) {
+                    console.error('파일 삭제 중 오류 발생:', error);
+                    alert('파일 삭제에 실패했습니다.');
+                }
+            }
+        });
+    });
 });
