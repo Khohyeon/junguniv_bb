@@ -241,12 +241,12 @@
 							<span class="required">훈련생 구분</span>
 						</div>
 						<div class="con">
-							<select name="trnee_se" id="trnee_se">
+							<select name="trneeSe" id="trneeSe">
 								<option value="">선택</option>
 								<option value="001">자사근로자</option>
 								<option value="002">구직자</option>
 								<option value="003">채용예정자</option>
-								<option value="004">전직/이직예정자</option>
+								<option value="004">전직/이직예정자</option> 
 								<option value="005">타사근로자</option>
 								<option value="006">일용근로자</option>
 								<option value="007">취득예정자(일용포함)</option>
@@ -294,11 +294,11 @@
 						<div class="con">
 							<select name="bankName" id="bankName">
 								<option value="">은행명을 선택해주세요</option>
-								<option>우리은행</option>
-								<option>국민은행</option>
-								<option>신한은행</option>
-								<option>하나은행</option>
-								<option>카카오뱅크</option>
+								<option value="001">우리은행</option>
+								<option value="002">국민은행</option>
+								<option value="003">신한은행</option>
+								<option value="004">하나은행</option>
+								<option value="005">카카오뱅크</option>
 							</select>
 						</div>
 					</div>
@@ -332,7 +332,7 @@
 										<div class="ci-show"></div>
 									</label>
 									<label class="c-input ci-radio">
-										<input type="radio" name="chkIdentityVerification"> N
+										<input type="radio" name="chkIdentityVerification" value="N" checked> N
 										<div class="ci-show"></div>
 									</label>
 								</div>
@@ -345,7 +345,7 @@
 										<div class="ci-show"></div>
 									</label>
 									<label class="c-input ci-radio">
-										<input type="radio" name="chkPwdChange"> N
+										<input type="radio" name="chkPwdChange" value="N" checked> N
 										<div class="ci-show"></div>
 									</label>
 								</div>

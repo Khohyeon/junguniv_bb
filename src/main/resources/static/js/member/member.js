@@ -289,7 +289,9 @@ const MemberModule = {
                                 </label>
                             </td>
                             <td>${startNumber - index}</td>
-                            <td>${member.name || '-'}</td>
+                            <td>
+                                <a href="/masterpage_sys/member/teacher/${member.memberIdx}" class="jv-btn underline01">${member.name || '-'}</a>
+                            </td>
                             <td>${member.userId || '-'}</td>
                             <td>
                                 ${member.telMobile ? `<label class="c-input ci-check">
@@ -427,7 +429,9 @@ const MemberModule = {
                                 </label>
                             </td>
                             <td>${startNumber - index}</td>
-                            <td>${member.name || '-'}</td>
+                            <td>
+                                <a href="/masterpage_sys/member/student/${member.memberIdx}" class="jv-btn underline01">${member.name || '-'}</a>
+                            </td>
                             <td>${member.userId || '-'}</td>
                             <td>${member.birthday || '-'}</td>
                             <td>
@@ -604,6 +608,7 @@ const MemberModule = {
                     chkForeigner: document.getElementById('chkForeigner')?.checked ? 'N' : 'Y',
                     agreeDate: document.getElementById('agreeDate')?.value,
                     realDate: document.getElementById('realDate')?.value,
+                    jobDept: document.getElementById('jobDept')?.value,
                     
                     // 휴대폰
                     telMobile: document.getElementById('telMobile1')?.value && document.getElementById('telMobile2')?.value && document.getElementById('telMobile3')?.value
@@ -665,7 +670,7 @@ const MemberModule = {
                         : null,
 
                     // 훈련생 구분 (학생 전용)
-                    trnee_se: document.getElementById('trnee_se')?.value,
+                    trneeSe: document.getElementById('trneeSe')?.value,
                     irglbrSe: document.getElementById('irglbrSe')?.value,
 
                     // SMS/이메일 수신 여부
@@ -701,7 +706,7 @@ const MemberModule = {
                 // userType에 따른 추가 필수 필드
                 switch(data.userType) {
                     case 'STUDENT':
-                        requiredFields.push('name', 'birthday', 'residentNumber', 'jobName', 'trnee_se', 'irglbrSe');
+                        requiredFields.push('name', 'birthday', 'residentNumber', 'jobName', 'trneeSe', 'irglbrSe');
                         break;
                     case 'TEACHER':
                         requiredFields.push('name');
@@ -1139,8 +1144,22 @@ const MemberModule = {
                     userType: document.getElementById('userType')?.value,
                     userId: document.getElementById('userId')?.value,
                     name: document.getElementById('name')?.value,
+                    birthday: document.getElementById('birthday')?.value,
+                    sex: document.querySelector('input[name="sex"]:checked')?.value,
                     chkDormant: document.getElementById('chkDormant')?.checked ? 'N' : 'Y',
                     memberState: document.getElementById('memberState')?.checked ? 'N' : 'Y',
+                    engName: document.getElementById('engName')?.value,
+                    chkForeigner: document.getElementById('chkForeigner')?.checked ? 'N' : 'Y',
+                    agreeDate: document.getElementById('agreeDate')?.value,
+                    realDate: document.getElementById('realDate')?.value,
+                    applyUserId: document.getElementById('applyUserId')?.value,
+                    jobDept: document.getElementById('jobDept')?.value,
+
+
+                    // 주민등록번호 (학생 전용)
+                    residentNumber: document.getElementById('residentNumber1')?.value && document.getElementById('residentNumber2')?.value && document.getElementById('residentNumber3')?.value
+                        ? `${document.getElementById('residentNumber1')?.value}-${document.getElementById('residentNumber2')?.value}${document.getElementById('residentNumber3')?.value}`
+                        : null,
 
                     // 휴대폰
                     telMobile: document.getElementById('telMobile1')?.value && document.getElementById('telMobile2')?.value && document.getElementById('telMobile3')?.value
@@ -1151,6 +1170,10 @@ const MemberModule = {
                     email: document.getElementById('email1')?.value && document.getElementById('email2')?.value
                         ? document.getElementById('email1')?.value + '@' + document.getElementById('email2')?.value
                         : null,
+
+                    // 계좌정보
+                    bankName: document.getElementById('bankName')?.value,
+                    bankNumber: document.getElementById('bankNumber')?.value,
 
                     // 관리자 전용 필드
                     authLevel: document.getElementById('authLevel')?.value,
@@ -1202,12 +1225,8 @@ const MemberModule = {
                     mainImgName: document.getElementById('mainImgDisplay')?.value,
                     subImg: document.getElementById('subImgUserFile')?.value,
                     subImgName: document.getElementById('subImgDisplay')?.value,
-
-                    // 사업자등록증 파일 정보
                     fnameSaup: document.getElementById('fnameSaupUserFile')?.value,
                     fnameSaupName: document.getElementById('fnameSaupDisplay')?.value,
-
-                    // 로고 파일 정보
                     fnameLogo: document.getElementById('fnameLogoUserFile')?.value,
                     fnameLogoName: document.getElementById('fnameLogoDisplay')?.value,
 
@@ -1217,7 +1236,19 @@ const MemberModule = {
                         : null,
                     contractorEtc: document.getElementById('email1')?.value && document.getElementById('email2')?.value
                         ? `${document.getElementById('email1')?.value}@${document.getElementById('email2')?.value}`
-                        : null
+                        : null,
+
+                    // 학생 전용 필드
+                    trneeSe: document.getElementById('trneeSe')?.value,
+                    irglbrSe: document.getElementById('irglbrSe')?.value,
+
+                    // SMS/이메일 수신 여부
+                    chkSmsReceive: document.querySelector('input[name="chkSmsReceive"]:checked')?.value,
+                    chkMailReceive: document.querySelector('input[name="chkMailReceive"]:checked')?.value,
+
+                    // 본인인증/비밀번호 변경 예외처리
+                    chkIdentityVerification: document.querySelector('input[name="chkIdentityVerification"]:checked')?.value,
+                    chkPwdChange: document.querySelector('input[name="chkPwdChange"]:checked')?.value
                 };
 
                 // 비밀번호가 입력된 경우에만 추가
