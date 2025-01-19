@@ -100,4 +100,21 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
                             @Param("userId") String userId,
                             @Param("jobCourseDuty") String jobCourseDuty,
                             Pageable pageable);
+
+    /* 주소록 검색 */
+    @Query("SELECT m FROM Member m WHERE " +
+           "(:name IS NULL OR m.name LIKE %:name%) AND " +
+           "(:userId IS NULL OR m.userId LIKE %:userId%) AND " +
+           "(:address IS NULL OR m.addr1 LIKE %:address% OR m.addr2 LIKE %:address%) AND " +
+           "(:telMobile IS NULL OR m.telMobile LIKE %:telMobile%) AND " +
+           "(:email IS NULL OR m.email LIKE %:email%) AND " +
+           "(:jobName IS NULL OR m.jobName LIKE %:jobName%)")
+    Page<Member> searchAddress(
+            @Param("name") String name,
+            @Param("userId") String userId,
+            @Param("address") String address,
+            @Param("telMobile") String telMobile,
+            @Param("email") String email,
+            @Param("jobName") String jobName,
+            Pageable pageable);
 }

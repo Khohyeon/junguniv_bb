@@ -10,6 +10,7 @@ import com.example.junguniv_bb.domain.member.dto.MemberUpdateReqDTO;
 import com.example.junguniv_bb.domain.member.dto.MemberStudentSearchReqDTO;
 import com.example.junguniv_bb.domain.member.dto.MemberTeacherSearchReqDTO;
 import com.example.junguniv_bb.domain.member.dto.MemberAdminSearchReqDTO;
+import com.example.junguniv_bb.domain.member.dto.MemberAddressSearchReqDTO;
 
 import com.example.junguniv_bb.domain.member.dto.*;
 
@@ -27,6 +28,10 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.data.domain.PageRequest;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -37,13 +42,31 @@ public class MemberRestController {
     /* DI */
     private final MemberService memberService;
 
+    /* 회원관리 > 주소록 페이지 */
+    @GetMapping("/address")
+    public ResponseEntity<?> addressPage(
+            @PageableDefault(size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable,
+            HttpServletRequest request) {
+
+        return memberService.memberPage(request.getHeader("Referer"), pageable);
+    }
+
+    /* 회원관리 > 주소록 검색 */
+    @GetMapping("/address/search")
+    public ResponseEntity<?> searchAddress(
+            @ModelAttribute MemberAddressSearchReqDTO searchDTO,
+            @PageableDefault(size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        return memberService.searchMemberAddress(searchDTO, pageable);
+    }
+
     /* 학생 검색 */
-   @GetMapping("/student/search")
-   public ResponseEntity<?> searchStudents(
-           @ModelAttribute MemberStudentSearchReqDTO searchDTO,
-           @PageableDefault(size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
-       return memberService.searchStudents(searchDTO, pageable);
-   }
+    @GetMapping("/student/search")
+    public ResponseEntity<?> searchStudents(
+            @ModelAttribute MemberStudentSearchReqDTO searchDTO,
+            @PageableDefault(size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        return memberService.searchStudents(searchDTO, pageable);
+    }
 
     /* 교강사 검색 */
     @GetMapping("/teacher/search")
@@ -146,5 +169,11 @@ public class MemberRestController {
          * 이후 반환값을 메세지로 수정
          */
         return ResponseEntity.ok((APIUtils.success("회원 등록 완료.")));
+    }
+
+    /* 주소록 일괄 출력 */
+    @PostMapping("/address/print")
+    public ResponseEntity<?> printAddressLabels(@RequestBody List<Long> memberIds) {
+        return memberService.getAddressLabels(memberIds);
     }
 }

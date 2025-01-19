@@ -46,7 +46,7 @@ INSERT INTO UZN_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX) VALUES
 ('LMS관리자', 4, 'Y', '/masterpage_sys/member/admin/', 5),
 ('관리자권한설정', 1, 'Y', '#', 6),
 ('홈페이지게시판', 2, 'Y', '/masterpage_sys/board/managerForm', 6),
-('주소록출력', 1, 'Y', '#', 7),
+('주소록출력', 1, 'Y', '/masterpage_sys/member/address/', 7),
 ('메인팝업', 1, 'Y', '/masterpage_sys/popup/listForm', 8),
 ('상단팝업', 2, 'N', '/masterpage_sys/board/mainpopup', 8),
 ('회원가입약관', 1, 'Y', '/masterpage_sys/agreement/join/listForm', 9),

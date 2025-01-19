@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<!-- 헤더에서 CSS 포함 -->
+	<th:block th:replace="fragments/header :: head"></th:block>
+	<title>주소록 출력</title>
+</head>
+<body>
+	<!-- 헤더에서 상단 메뉴 포함 -->
+	<th:block th:replace="fragments/header :: header"></th:block>
+
+	<div class="inner">
+			<div class="form-wrap search-more">
+				<div class="inner">
+					<div class="group01">
+						<div class="tit">검색</div>
+						<div class="con">
+							<div class="column-tc-wrap">
+								<div class="column-tc">
+									<div class="tit">이름</div>
+									<div class="con">
+										<input type="text" name="name" value="" placeholder="이름을 입력해주세요">
+									</div>
+									<div class="tit">ID</div>
+									<div class="con">
+										<input type="text" name="userid" value="" placeholder="ID를 입력해주세요">
+									</div>
+								</div>
+								<div class="column-tc">
+									<div class="tit">주소</div>
+									<div class="con">
+										<input type="text" name="address" value="" placeholder="주소지를 입력해주세요">
+									</div>
+								</div>
+								<div class="column-tc">
+									<div class="tit">휴대폰</div>
+									<div class="con">
+										<input type="text" name="telMobile" value="" placeholder="번호를 입력해주세요">
+									</div>
+								</div>
+								<div class="column-tc">
+									<div class="tit">이메일</div>
+									<div class="con flex">
+										<input type="text" name="email1" value="" placeholder="이메일을 입력해주세요">
+										<span>&nbsp;&nbsp;@&nbsp;&nbsp;</span>
+										<select name="email2">
+											<option value="1" selected="">선택</option>
+											<option value="naver.com">naver.com</option>
+											<option value="daum.net">daum.net</option>
+											<option value="hanmail.net">hanmail.net</option>
+											<option value="gmail.com">gmail.com</option>
+											<option value="nate.com">nate.com</option>
+											<option value="hotmail.com">hotmail.com</option>
+											<option value="dreamwiz.com">dreamwiz.com</option>
+											<option value="freechal.com">freechal.com</option>
+											<option value="hanmir.com">hanmir.com</option>
+										</select>
+									</div>
+								</div>
+								<div class="column-tc">
+									<div class="tit">근무회사</div>
+									<div class="con flex">
+										<input type="text" name="jobName" id="jobName" value="" readonly="">
+										<a href="#none" class="jv-btn fill01" id="companySearchBtn">회사찾기</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="btn-wrap">
+				<a href="#none" class="jv-btn jb-fill01-lg" id="searchBtn">검색</a>
+			</div>
+
+			<div class="table-util mt50">
+				<div class="left">
+				<a href="javascript:" class="jv-btn icon-excel" onclick="SaveExcel();">엑셀</a>
+					<div class="page-view flex">
+						<span>페이지수</span>
+						<select>
+							<option>선택</option>
+							<option>10</option>
+							<option>20</option>
+							<option>30</option>
+							<option>40</option>
+							<option>50</option>
+						</select>
+					</div>
+					<div class="count">
+						<span class="Pretd_B">123</span>건 검색되었습니다.
+					</div>
+				</div>
+
+				<div class="right">
+					<div class="right">
+						<a href="javascript:" class="jv-btn fill04 print-label-btn">주소록 일괄 출력</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="table_wrap" name="PrintLayer" id="PrintLayer">
+				<table class="table01 T_center">
+					<thead>
+						<tr>
+							<th><label class="c-input ci-check single"><input type="checkbox" name="chk" value="" onclick="checkAllInstr(document.searchform,this.checked,'vidx');"><div class="ci-show"></div>
+							</label></th>
+							<th>NO</th>
+							<th>이름</th>
+							<th>ID</th>
+							<th>휴대폰</th>
+							<th>우편번호</th>
+							<th>주소</th>
+						</tr>
+					</thead>
+					<tbody>
+						<td colspan="7">데이터를 불러오는 중입니다.</td>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="pagination" id="paginationMember">
+				<!-- 페이지네이션 버튼은 JavaScript로 렌더링됩니다 -->
+			</div>
+		</form>
+
+		<script th:src="@{/js/member/address.js}"></script>
+	</div>
+
+</body>
+</html>

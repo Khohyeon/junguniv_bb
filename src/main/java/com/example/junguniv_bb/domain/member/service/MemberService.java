@@ -4,6 +4,7 @@ import com.example.junguniv_bb._core.exception.Exception400;
 import com.example.junguniv_bb._core.exception.ExceptionMessage;
 import com.example.junguniv_bb._core.exception.ValidExceptionMessage;
 import com.example.junguniv_bb._core.security.CustomUserDetails;
+import com.example.junguniv_bb._core.util.APIUtils;
 import com.example.junguniv_bb._core.util.FileUtils;
 import com.example.junguniv_bb.domain.member._enum.UserType;
 import com.example.junguniv_bb.domain.member.dto.*;
@@ -29,8 +30,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
-
-import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -98,7 +98,6 @@ public class MemberService {
     }
 
     /* 페이징 */
-    // TODO 검색 기능 및 권한 조건 추가 해야함.
     public ResponseEntity<?> memberPage(String referer, Pageable pageable) {
         // 페이지 조회
         Page<Member> memberPagePS;
@@ -107,6 +106,12 @@ public class MemberService {
         UserType userType = null;
 
         if (referer != null) {
+            // 주소록 페이지인 경우
+            if (referer.contains("/address/")) {
+                memberPagePS = memberRepository.findAll(pageable);
+                return ResponseEntity.ok(memberPagePS.map(MemberAddressPageResDTO::from));
+            }
+
             if (referer.contains("/student/")) {
                 userType = UserType.STUDENT;
             } else if (referer.contains("/teacher/")) {
@@ -222,6 +227,43 @@ public class MemberService {
             log.error("관리자 검색 중 오류 발생: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("관리자 검색 중 오류가 발생했습니다.");
         }
+    }
+
+    /* 주소록 검색 */
+    @Transactional(readOnly = true)
+    public ResponseEntity<?> searchMemberAddress(MemberAddressSearchReqDTO searchDTO, Pageable pageable) {
+        try {
+            // 모든 검색 조건이 비어있으면 전체 목록 반환
+            if (isEmptySearchCondition(searchDTO)) {
+                Page<Member> memberPagePS = memberRepository.findAll(pageable);
+                return ResponseEntity.ok(memberPagePS.map(MemberAddressPageResDTO::from));
+            }
+
+            // 검색 조건이 있는 경우 검색 실행
+            Page<Member> memberPagePS = memberRepository.searchAddress(
+                searchDTO.name(),
+                searchDTO.userId(),
+                searchDTO.address(),
+                searchDTO.telMobile(),
+                searchDTO.email(),
+                searchDTO.jobName(),
+                pageable
+            );
+            return ResponseEntity.ok(memberPagePS.map(MemberAddressPageResDTO::from));
+        } catch (Exception e) {
+            log.error("주소록 검색 중 오류 발생: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("주소록 검색 중 오류가 발생했습니다.");
+        }
+    }
+
+    // 검색 조건이 모두 비어있는지 확인하는 메서드
+    private boolean isEmptySearchCondition(MemberAddressSearchReqDTO searchDTO) {
+        return (searchDTO.name() == null || searchDTO.name().trim().isEmpty()) &&
+               (searchDTO.userId() == null || searchDTO.userId().trim().isEmpty()) &&
+               (searchDTO.address() == null || searchDTO.address().trim().isEmpty()) &&
+               (searchDTO.telMobile() == null || searchDTO.telMobile().trim().isEmpty()) &&
+               (searchDTO.email() == null || searchDTO.email().trim().isEmpty()) &&
+               (searchDTO.jobName() == null || searchDTO.jobName().trim().isEmpty());
     }
 
     /* 회원 이미지 파일 삭제 */
@@ -409,6 +451,32 @@ public class MemberService {
             log.error("회원 저장 중 오류 발생: {}", e.getMessage(), e);
             throw new RuntimeException("회원 저장에 실패했습니다: " + e.getMessage());
         }
+    }
+
+    /* 주소록 일괄 출력용 데이터 조회 */
+    public ResponseEntity<?> getAddressLabels(List<Long> memberIds) {
+        if (memberIds == null || memberIds.isEmpty()) {
+            throw new Exception400("선택된 회원이 없습니다.");
+        }
+
+        List<Member> members = memberRepository.findAllById(memberIds);
+        
+        if (members.size() != memberIds.size()) {
+            throw new Exception400("일부 회원 정보를 찾을 수 없습니다.");
+        }
+
+        // null-safe 정렬
+        members.sort((a, b) -> {
+            String nameA = a.getName() != null ? a.getName() : "";
+            String nameB = b.getName() != null ? b.getName() : "";
+            return nameA.compareTo(nameB);
+        });
+
+        List<MemberAddressLabelDTO> labels = members.stream()
+            .map(MemberAddressLabelDTO::from)
+            .collect(Collectors.toList());
+
+        return ResponseEntity.ok(APIUtils.success(labels));
     }
 }
 

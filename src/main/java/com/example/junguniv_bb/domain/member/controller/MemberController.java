@@ -20,6 +20,18 @@ public class MemberController {
     /* DI */
     private final MemberService memberService;
 
+    /**
+     * 회원관리 - 주소록 출력
+     */
+    @GetMapping("/address/")
+    public String memberAddressForm(Model model) {
+
+        
+
+        return "/masterpage_sys/member/addressForm";
+    }
+
+
 
     /**
      * 회원관리 - 상세보기

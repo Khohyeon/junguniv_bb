@@ -1931,7 +1931,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            if (confirm('파일을 삭제하시겠습니까?')) {
+            if (confirm('파일을 삭제하시겠습니다?')) {
                 try {
                     // 서버에 삭제 요청
                     const response = await fetch(`/api/v1/files/delete/member/${userFileInput.value}`, {
