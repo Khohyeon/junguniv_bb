@@ -157,7 +157,8 @@ public record MemberDetailResDTO(
     String mainImg, // 메인 상단 이미지
     String mainImgName, // 메인 상단 이미지 원본 파일명
     String subImg, // 서브 상단 이미지
-    String subImgName // 서브 상단 이미지 원본 파일명
+    String subImgName, // 서브 상단 이미지 원본 파일명
+    String fnameSaupName // 사업자등록증 사본 원본 파일명
 ) {
     public static MemberDetailResDTO from(Member member) {
         return new MemberDetailResDTO(
@@ -312,7 +313,8 @@ public record MemberDetailResDTO(
             member.getMainImg(),
             member.getMainImgName(),
             member.getSubImg(),
-            member.getSubImgName()
+            member.getSubImgName(),
+            member.getFnameSaupName()
         );
     }
 }

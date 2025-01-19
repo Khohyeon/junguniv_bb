@@ -29,7 +29,7 @@ public class Agreement extends BaseTime {
     @Column(name = "TRAINING_CENTER_URL")
     private String trainingCenterUrl;
 
-    @Column(name = "AGREEMENT_CONTENTS")
+    @Column(name = "AGREEMENT_CONTENTS", columnDefinition = "LONGTEXT")
     @Lob
     private String agreementContents;
 

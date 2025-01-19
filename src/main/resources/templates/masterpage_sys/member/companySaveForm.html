@@ -4,6 +4,8 @@
 	<meta charset="UTF-8">
 	<!-- 헤더에서 CSS 포함 -->
 	<th:block th:replace="fragments/header :: head"></th:block>
+	<!-- member.css 추가 -->
+	<link rel="stylesheet" th:href="@{/css/member/member.css}">
 
 	<!-- 카카오 주소 API 스크립트 추가 -->
 	<script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
@@ -149,11 +151,14 @@
 					<div class="column-tc b-num">
 						<div class="tit">사업자등록증</div>
 						<div class="con flex">
-							<input type="file" name="fnameSaup" id="fnameSaup">
-							<label class="c-input ci-check">
-								<input type="checkbox" name="deleteFnameSaup" id="deleteFnameSaup"> 삭제
-								<div class="ci-show"></div>
-							</label>
+							<div class="file-upload-container">
+								<input type="text" id="fnameSaupDisplay" class="text-input" readonly>
+								<input type="hidden" id="fnameSaupUserFile">
+								<input type="file" id="fnameSaupFile" class="hidden-file-input" accept="image/*">
+								<button type="button" class="jv-btn fill01 btn-upload" data-target="fnameSaup">업로드</button>
+								<button type="button" class="jv-btn fill01 btn-view" data-filename="">열람</button>
+								<button type="button" class="jv-btn fill01 btn-delete" data-target="fnameSaup">삭제</button>
+							</div>
 						</div>
 					</div>
 					<div class="column-tc">
@@ -287,11 +292,14 @@
 					<div class="column-tc logo">
 						<div class="tit">로고 파일</div>
 						<div class="con flex">
-							<input type="file" name="fnameLogo" id="fnameLogo">
-							<label class="c-input ci-check">
-								<input type="checkbox" name="deleteFnameLogo"> 삭제
-								<div class="ci-show"></div>
-							</label>
+							<div class="file-upload-container">
+								<input type="text" id="fnameLogoDisplay" class="text-input" readonly>
+								<input type="hidden" id="fnameLogoUserFile">
+								<input type="file" id="fnameLogoFile" class="hidden-file-input" accept="image/*">
+								<button type="button" class="jv-btn fill01 btn-upload" data-target="fnameLogo">업로드</button>
+								<button type="button" class="jv-btn fill01 btn-view" data-filename="">열람</button>
+								<button type="button" class="jv-btn fill01 btn-delete" data-target="fnameLogo">삭제</button>
+							</div>
 							<div class="info">가로 265px X 세로55px</div>
 						</div>
 					</div>
@@ -350,14 +358,15 @@
 								<div class="ci-card-body">
 									<div class="body-tit">이미지 파일 첨부</div>
 									<div class="body-con">
-										<div class="flex-spaceB">
-											<input type="file" name="mainImgFile" id="mainImgFile" accept="image/*">
-											<label class="c-input ci-check ml5">
-												<input type="checkbox" name="deleteMainImg"> 삭제
-												<div class="ci-show"></div>
-											</label>
+										<div class="file-upload-container">
+											<input type="text" id="mainImgDisplay" class="text-input" readonly>
+											<input type="hidden" id="mainImgUserFile">
+											<input type="file" id="mainImgFile" class="hidden-file-input" accept="image/*">
+											<button type="button" class="jv-btn fill01 btn-upload" data-target="mainImg">업로드</button>
+											<button type="button" class="jv-btn fill01 btn-view" data-filename="">열람</button>
+											<button type="button" class="jv-btn fill01 btn-delete" data-target="mainImg">삭제</button>
 										</div>
-										<div class="info mt10">가로 1270px X 세로 560px</div>
+										<div class="info">가로 1270px X 세로 560px</div>
 									</div>
 								</div>
 							</label>
@@ -398,14 +407,15 @@
 								<div class="ci-card-body">
 									<div class="body-tit">이미지 파일 첨부</div>
 									<div class="body-con">
-										<div class="flex-spaceB">
-											<input type="file" name="subImgFile" id="subImgFile" accept="image/*">
-											<label class="c-input ci-check ml5">
-												<input type="checkbox" name="deleteSubImg"> 삭제
-												<div class="ci-show"></div>
-											</label>
+										<div class="file-upload-container">
+											<input type="text" id="subImgDisplay" class="text-input" readonly>
+											<input type="hidden" id="subImgUserFile">
+											<input type="file" id="subImgFile" class="hidden-file-input" accept="image/*">
+											<button type="button" class="jv-btn fill01 btn-upload" data-target="subImg">업로드</button>
+											<button type="button" class="jv-btn fill01 btn-view" data-filename="">열람</button>
+											<button type="button" class="jv-btn fill01 btn-delete" data-target="subImg">삭제</button>
 										</div>
-										<div class="info mt10">가로 1270px X 세로 560px</div>
+										<div class="info">가로 1270px X 세로 560px</div>
 									</div>
 								</div>
 							</label>

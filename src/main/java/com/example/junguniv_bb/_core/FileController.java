@@ -4,10 +4,15 @@ import com.example.junguniv_bb._core.util.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -165,6 +170,46 @@ public class FileController {
         } catch (Exception e) {
             log.error("파일 삭제 중 오류 발생: {}", e.getMessage());
             return ResponseEntity.internalServerError().body("파일 삭제 중 오류가 발생했습니다.");
+        }
+    }
+
+    /**
+     * 파일 다운로드 API
+     * 지정된 타입의 디렉토리에서 파일을 다운로드합니다.
+     * 
+     * @param type 파일 타입 (member, board)
+     * @param fileName 다운로드할 파일명
+     * @return ResponseEntity<Resource>
+     */
+    @GetMapping("/download/{type}/{fileName}")
+    public ResponseEntity<?> downloadFile(
+            @PathVariable String type,
+            @PathVariable String fileName) {
+        try {
+            String targetDir = switch (type) {
+                case "member" -> memberDir;
+                case "board" -> boardDir;
+                default -> throw new IllegalArgumentException("잘못된 파일 타입입니다: " + type);
+            };
+
+            // 파일 리소스 가져오기
+            Path filePath = FileUtils.getFileAsResource(fileName, targetDir);
+            
+            // Content-Type 결정
+            String contentType = FileUtils.determineContentType(filePath);
+
+            // 파일 다운로드를 위한 헤더 설정
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + fileName + "\"")
+                    .body(Files.readAllBytes(filePath));
+
+        } catch (IOException e) {
+            log.error("파일 다운로드 중 오류 발생: {}", e.getMessage());
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            log.error("파일 다운로드 중 오류 발생: {}", e.getMessage());
+            return ResponseEntity.internalServerError().body("파일 다운로드 중 오류가 발생했습니다.");
         }
     }
 } 

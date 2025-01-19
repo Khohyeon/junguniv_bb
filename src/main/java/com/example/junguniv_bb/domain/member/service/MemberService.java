@@ -102,10 +102,10 @@ public class MemberService {
     public ResponseEntity<?> memberPage(String referer, Pageable pageable) {
         // 페이지 조회
         Page<Member> memberPagePS;
-        
+
         // Referer URL에서 userType 결정
         UserType userType = null;
-        
+
         if (referer != null) {
             if (referer.contains("/student/")) {
                 userType = UserType.STUDENT;
@@ -122,7 +122,7 @@ public class MemberService {
         memberPagePS = (userType != null) ?
             memberRepository.findByUserType(userType, pageable) :
             memberRepository.findAll(pageable);
-        
+
         // UserType에 따른 DTO 변환 및 반환
         if (userType != null) {
             if (userType == UserType.STUDENT) {
@@ -135,37 +135,37 @@ public class MemberService {
                 return ResponseEntity.ok(new MemberAdminPageResDTO(memberPagePS));
             }
         }
-        
+
         // 기본 DTO 반환
         return ResponseEntity.ok(new MemberPageResDTO(memberPagePS));
     }
 
     /* 학생 검색 */
-//    public ResponseEntity<?> searchStudents(MemberStudentSearchReqDTO searchDTO, Pageable pageable) {
-//        // 검색 실행
-//        Page<Member> memberPagePS = memberRepository.searchStudents(
-//            searchDTO.name(),
-//            searchDTO.userId(),
-//            searchDTO.getBirthday(),
-//            searchDTO.telMobile(),
-//            searchDTO.email(),
-//            searchDTO.chkDormant(),
-//            searchDTO.loginPass(),
-//            searchDTO.chkForeigner(),
-//            searchDTO.sex(),
-//            searchDTO.jobName(),
-//            searchDTO.jobWorkState(),
-//            searchDTO.jobDept(),
-//            searchDTO.chkSmsReceive(),
-//            searchDTO.chkMailReceive(),
-//            searchDTO.chkIdentityVerification(),
-//            searchDTO.loginClientIp(),
-//            pageable
-//        );
-//
-//        // 검색 결과를 DTO로 변환하여 반환
-//        return ResponseEntity.ok(new MemberStudentPageResDTO(memberPagePS));
-//    }
+   public ResponseEntity<?> searchStudents(MemberStudentSearchReqDTO searchDTO, Pageable pageable) {
+       // 검색 실행
+       Page<Member> memberPagePS = memberRepository.searchStudents(
+           searchDTO.name(),
+           searchDTO.userId(),
+           searchDTO.getBirthday(),
+           searchDTO.telMobile(),
+           searchDTO.email(),
+           searchDTO.chkDormant(),
+           searchDTO.loginPass(),
+           searchDTO.chkForeigner(),
+           searchDTO.sex(),
+           searchDTO.jobName(),
+           searchDTO.jobWorkState(),
+           searchDTO.jobDept(),
+           searchDTO.chkSmsReceive(),
+           searchDTO.chkMailReceive(),
+           searchDTO.chkIdentityVerification(),
+           searchDTO.loginClientIp(),
+           pageable
+       );
+
+       // 검색 결과를 DTO로 변환하여 반환
+       return ResponseEntity.ok(new MemberStudentPageResDTO(memberPagePS));
+   }
 
     /* 교강사 검색 */
     @Transactional(readOnly = true)
