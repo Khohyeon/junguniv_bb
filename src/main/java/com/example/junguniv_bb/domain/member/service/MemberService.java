@@ -109,7 +109,7 @@ public class MemberService {
             // 주소록 페이지인 경우
             if (referer.contains("/address/")) {
                 memberPagePS = memberRepository.findAll(pageable);
-                return ResponseEntity.ok(memberPagePS.map(MemberAddressPageResDTO::from));
+                return ResponseEntity.ok(new MemberAddressPageResDTO(memberPagePS));
             }
 
             if (referer.contains("/student/")) {
@@ -236,7 +236,7 @@ public class MemberService {
             // 모든 검색 조건이 비어있으면 전체 목록 반환
             if (isEmptySearchCondition(searchDTO)) {
                 Page<Member> memberPagePS = memberRepository.findAll(pageable);
-                return ResponseEntity.ok(memberPagePS.map(MemberAddressPageResDTO::from));
+                return ResponseEntity.ok(new MemberAddressPageResDTO(memberPagePS));
             }
 
             // 검색 조건이 있는 경우 검색 실행
@@ -249,7 +249,7 @@ public class MemberService {
                 searchDTO.jobName(),
                 pageable
             );
-            return ResponseEntity.ok(memberPagePS.map(MemberAddressPageResDTO::from));
+            return ResponseEntity.ok(new MemberAddressPageResDTO(memberPagePS));
         } catch (Exception e) {
             log.error("주소록 검색 중 오류 발생: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("주소록 검색 중 오류가 발생했습니다.");
