@@ -510,6 +510,7 @@ const MemberModule = {
                     chkForeigner: document.getElementById('chkForeigner')?.checked ? 'N' : 'Y',
                     agreeDate: document.getElementById('agreeDate')?.value,
                     realDate: document.getElementById('realDate')?.value,
+                    jobDept: document.getElementById('jobDept')?.value,
                     
                     // 휴대폰
                     telMobile: document.getElementById('telMobile1')?.value && document.getElementById('telMobile2')?.value && document.getElementById('telMobile3')?.value
@@ -998,6 +999,7 @@ const MemberModule = {
                     name: document.getElementById('name')?.value,
                     chkDormant: document.getElementById('chkDormant')?.checked ? 'N' : 'Y',
                     memberState: document.getElementById('memberState')?.checked ? 'N' : 'Y',
+                    jobDept: document.getElementById('jobDept')?.value,
                     
                     // 휴대폰
                     telMobile: document.getElementById('telMobile1')?.value && document.getElementById('telMobile2')?.value && document.getElementById('telMobile3')?.value
