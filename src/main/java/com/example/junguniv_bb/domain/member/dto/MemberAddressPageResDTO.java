@@ -1,26 +1,65 @@
 package com.example.junguniv_bb.domain.member.dto;
 
 import com.example.junguniv_bb.domain.member.model.Member;
+import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 public record MemberAddressPageResDTO(
-        Long memberIdx,          // 회원 인덱스
-        String name,            // 이름
-        String userId,          // 아이디
-        String telMobile,       // 휴대폰 번호
-        String zipcode,         // 우편번호
-        String addr1,           // 기본 주소
-        String addr2           // 상세 주소
+    List<MemberDTO> memberList,
+    PageableDTO pageable
 ) {
-    // Member 엔티티로부터 DTO를 생성하는 정적 팩토리 메서드
-    public static MemberAddressPageResDTO from(Member member) {
-        return new MemberAddressPageResDTO(
-            member.getMemberIdx(),
-            member.getName(),
-            member.getUserId(),
-            member.getTelMobile(),
-            member.getZipcode(),
-            member.getAddr1(),
-            member.getAddr2()
+    public MemberAddressPageResDTO(Page<Member> memberPage) {
+        this(
+            memberPage.getContent()
+                    .stream()
+                    .map(MemberDTO::new)
+                    .toList(),
+            new PageableDTO(memberPage)
         );
+    }
+
+    public record MemberDTO(
+        Long memberIdx,
+        String name,
+        String userId,
+        String telMobile,
+        String zipcode,
+        String addr1,
+        String addr2
+    ) {
+        public MemberDTO(Member member) {
+            this(
+                member.getMemberIdx(),
+                member.getName(),
+                member.getUserId(),
+                member.getTelMobile(),
+                member.getZipcode(),
+                member.getAddr1(),
+                member.getAddr2()
+            );
+        }
+    }
+
+    public record PageableDTO(
+        int pageNumber,
+        int pageSize,
+        int totalPages,
+        long totalElements,
+        boolean isLast,
+        int numberOfElements,
+        boolean isEmpty
+    ) {
+        public PageableDTO(Page<?> page) {
+            this(
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalPages(),
+                page.getTotalElements(),
+                page.isLast(),
+                page.getNumberOfElements(),
+                page.isEmpty()
+            );
+        }
     }
 }

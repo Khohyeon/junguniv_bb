@@ -26,107 +26,87 @@
     background-color: #f5f5f5;
 }
 
-/* 화면 출력용 스타일 */
-@media screen {
-    .print-label {
-        width: 100%;
-        margin: 20px 0;
-    }
 
-    .print-label ul {
-        list-style: none;
+/* 프린트 라벨 스타일 */
+@media screen {
+    .print-label { 
+        margin-bottom: 20px; 
+    }
+    .print-label ul { 
+        list-style: none; 
         padding: 0;
         margin: 0;
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
+        gap: 10px;
     }
-
     .print-label li {
-        border: 1px solid #ddd;
-        padding: 15px;
-        border-radius: 4px;
-        background: #fff;
-    }
-
-    .print-label .address {
+        border: 1px solid #ccc;
+        padding: 10px;
         margin-bottom: 10px;
     }
-
-    .print-label .zipcode {
-        font-weight: bold;
-        font-size: 1.1em;
-        margin-bottom: 5px;
-        width: auto;
+    .print-label .address { 
+        margin-bottom: 10px; 
     }
-
-    .print-label .add-txt {
-        line-height: 1.4;
-        color: #333;
+    .print-label .zipcode { 
+        font-weight: bold; 
+        margin-bottom: 5px; 
     }
-
-    .print-label .recipient {
-        margin-top: 10px;
-        padding-top: 10px;
-        border-top: 1px dashed #ddd;
+    .print-label .add-txt { 
+        margin-bottom: 5px; 
     }
-
-    .print-label .name {
-        font-weight: bold;
-        font-size: 1.1em;
-        margin-bottom: 5px;
+    .print-label .name { 
+        font-weight: bold; 
+        margin-bottom: 5px; 
     }
-
-    .print-label .phone {
-        color: #666;
+    .print-label .phone { 
+        color: #666; 
     }
 }
 
-/* 인쇄용 스타일 */
+/* 프린트 미디어 스타일 */
 @media print {
     @page {
-        size: A4 portrait;
-        margin: 5mm;
+        size: A4;
+        margin: 14.5mm 5mm 12mm 4mm;  /* top right bottom left */
     }
 
     body * {
         visibility: hidden;
     }
 
-    .print-label,
-    .print-label * {
+    #printArea,
+    #printArea * {
         visibility: visible;
     }
 
-    .print-label {
+    #printArea {
         position: absolute;
         left: 0;
         top: 0;
-        width: 200mm;
-        padding: 0;
-        margin: 5mm;
+        width: 100%;
+    }
+
+    .print-label {
+        width: 100%;
     }
 
     .print-label ul {
         list-style: none;
         padding: 0;
         margin: 0;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 3mm;
-        height: 287mm;
+        width: 100%;
+        border-collapse: collapse;
     }
 
     .print-label li {
-        page-break-inside: avoid;
-        padding: 8mm;
-        height: 47mm;
+        float: left;
+        width: 50%;
+        height: 37.8mm;
+        padding: 5mm;
         box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        background: #fff;
-        border: none;
+        border: none;  /* 외곽선 제거 */
+        page-break-inside: avoid;
     }
 
     .print-label .address {
@@ -134,44 +114,48 @@
     }
 
     .print-label .zipcode {
+        font-size: 12px;
         font-weight: bold;
-        font-size: 12pt;
         margin-bottom: 2mm;
-        width: auto;
     }
 
     .print-label .add-txt {
-        font-size: 10pt;
-        line-height: 1.3;
-        word-break: keep-all;
+        font-size: 12px;
+        line-height: 1.4;
     }
 
     .print-label .recipient {
         margin-top: 3mm;
         padding-top: 3mm;
-        border-top: 1px dashed #999;
+        border-top: none;  /* 구분선 제거 */
     }
 
     .print-label .name {
+        font-size: 12px;
         font-weight: bold;
-        font-size: 11pt;
         margin-bottom: 2mm;
     }
 
     .print-label .phone {
-        font-size: 10pt;
+        font-size: 12px;
     }
 
-    .print-label:nth-child(12n) {
+    /* 18개 라벨마다 페이지 나누기 */
+    .print-label li:nth-child(18n) {
         page-break-after: always;
     }
 
+    /* 인쇄 시 숨길 요소들 */
+    .header,
     .btn-wrap,
     .table-util,
-    .pagination,
-    .header,
-    .footer {
+    .pagination {
         display: none !important;
     }
-}
 
+    /* 테이블 테두리 제거 */
+    table, tr, td {
+        border: none;
+        border-collapse: collapse;
+    }
+}

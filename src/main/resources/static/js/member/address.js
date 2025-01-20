@@ -138,7 +138,7 @@ const AddressModule = {
                 }
 
                 // 테이블 데이터 렌더링
-                const rows = data.content.map((item, index) => `
+                const rows = data.memberList.map((item, index) => `
                     <tr>
                         <td>
                             <label class="c-input ci-check single">
@@ -162,16 +162,16 @@ const AddressModule = {
                 tbody.innerHTML = rows || '<tr><td colspan="7">검색 결과가 없습니다.</td></tr>';
 
                 // 검색 결과 수 업데이트
-                const countElement = document.querySelector('.count .Pretd_B');
+                const countElement = document.querySelector('.result-count');
                 if (countElement) {
-                    countElement.textContent = data.totalElements || 0;
+                    countElement.textContent = data.pageable.totalElements || 0;
                 }
 
                 // 페이지네이션 렌더링
                 AddressModule.render.pagination(paginationDiv, {
-                    totalPages: data.totalPages,
+                    totalPages: data.pageable.totalPages,
                     pageNumber: data.pageable.pageNumber,
-                    totalElements: data.totalElements
+                    totalElements: data.pageable.totalElements
                 });
             } catch (error) {
                 console.error('검색 실패:', error);
@@ -268,41 +268,124 @@ const AddressModule = {
 
         // 프린트 창 생성 및 내용 구성
         createPrintWindow: function(labels) {
-            const printWindow = window.open('', '_blank');
-            const doc = printWindow.document;
+            const printWindow = window.open('', '_blank', 'width=800,height=600');
             
-            // 기본 HTML 구조 생성
-            doc.open();
-            doc.write(`
+            printWindow.document.write(`
                 <!DOCTYPE html>
                 <html>
                 <head>
                     <meta charset="UTF-8">
                     <title>주소록 출력</title>
-                    <link rel="stylesheet" href="/css/member/member.css">
+                    <style>
+                        @media print {
+                            @page {
+                                size: A4;
+                                margin: 14.5mm 5mm 12mm 4mm;
+                            }
+                            
+                            body {
+                                margin: 0;
+                                padding: 0;
+                            }
+                            
+                            .print-label {
+                                width: 100%;
+                            }
+                            
+                            table {
+                                width: 100%;
+                                border-collapse: collapse;
+                                page-break-after: avoid; /* 테이블 내에서 페이지 나눔 방지 */
+                            }
+                            
+                            td {
+                                width: 50%;
+                                height: 50mm; /* 높이 조정 */
+                                padding: 5mm;
+                                box-sizing: border-box;
+                                vertical-align: top;
+                            }
+                            
+                            .zipcode {
+                                font-size: 16px;
+                                font-weight: bold;
+                                margin-bottom: 3mm;
+                            }
+                            
+                            .add-txt {
+                                font-size: 14px;
+                                line-height: 1.6;
+                                margin-bottom: 5mm;
+                            }
+                            
+                            .name {
+                                font-size: 16px;
+                                font-weight: bold;
+                                margin-bottom: 2mm;
+                            }
+                            
+                            .phone {
+                                font-size: 14px;
+                            }
+                        }
+                    </style>
                 </head>
-                <body></body>
+                <body>
+                    <div class="print-label">
+            `);
+
+            // 10개씩 그룹화 (페이지당 5쌍)
+            for (let i = 0; i < labels.length; i += 10) {
+                printWindow.document.write('<table>');
+                // 5쌍의 행 생성
+                for (let j = i; j < Math.min(i + 10, labels.length); j += 2) {
+                    printWindow.document.write('<tr>');
+                    
+                    // 첫 번째 열
+                    if (j < labels.length) {
+                        printWindow.document.write(`
+                            <td>
+                                <div class="zipcode">[${labels[j].zipcode}]</div>
+                                <div class="add-txt">${labels[j].addr1} ${labels[j].addr2}</div>
+                                <div class="name">${labels[j].name}</div>
+                                <div class="phone">${labels[j].telMobile}</div>
+                            </td>
+                        `);
+                    } else {
+                        printWindow.document.write('<td></td>');
+                    }
+                    
+                    // 두 번째 열
+                    if (j + 1 < labels.length) {
+                        printWindow.document.write(`
+                            <td>
+                                <div class="zipcode">[${labels[j+1].zipcode}]</div>
+                                <div class="add-txt">${labels[j+1].addr1} ${labels[j+1].addr2}</div>
+                                <div class="name">${labels[j+1].name}</div>
+                                <div class="phone">${labels[j+1].telMobile}</div>
+                            </td>
+                        `);
+                    } else {
+                        printWindow.document.write('<td></td>');
+                    }
+                    
+                    printWindow.document.write('</tr>');
+                }
+                printWindow.document.write('</table>');
+                
+                // 마지막 테이블이 아닌 경우에만 페이지 나누기 추가
+                if (i + 10 < labels.length) {
+                    printWindow.document.write('<div style="page-break-after: always;"></div>');
+                }
+            }
+
+            printWindow.document.write(`
+                    </div>
+                </body>
                 </html>
             `);
-            doc.close();
             
-            // 페이지별로 라벨 추가
-            for (let i = 0; i < labels.length; i += this.LABELS_PER_PAGE) {
-                const pageLabels = labels.slice(i, i + this.LABELS_PER_PAGE);
-                
-                const printLabel = document.createElement('div');
-                printLabel.className = 'print-label';
-                
-                const ul = document.createElement('ul');
-                
-                pageLabels.forEach(label => {
-                    ul.appendChild(this.createLabelElement(label));
-                });
-                
-                printLabel.appendChild(ul);
-                doc.body.appendChild(printLabel);
-            }
-            
+            printWindow.document.close();
             return printWindow;
         },
 
@@ -336,7 +419,7 @@ const AddressModule = {
                 // response 필드에서 라벨 데이터 가져오기
                 if (!result.success || !result.response) {
                     throw new Error('주소록 데이터 형식이 올바르지 않습니다.');
-                }
+                } 
                 
                 const labels = result.response;
 
@@ -361,17 +444,16 @@ const AddressModule = {
     // 이벤트 바인딩
     bindEvents: function() {
         // 검색 버튼 이벤트 리스너
-        const searchBtn = document.querySelector('.search-btn');
+        const searchBtn = document.getElementById('searchBtn');
         if (searchBtn) {
-            searchBtn.addEventListener('click', (e) => {
-                e.preventDefault();
+            searchBtn.addEventListener('click', () => {
                 this.state.currentPage = 0;
                 this.handlers.search();
             });
         }
 
         // 검색 입력 필드 엔터키 이벤트
-        const searchInputs = document.querySelectorAll('.search-input');
+        const searchInputs = document.querySelectorAll('.column-tc-wrap input[type="text"]');
         searchInputs.forEach(input => {
             input.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
@@ -383,7 +465,7 @@ const AddressModule = {
         });
 
         // 페이지 크기 변경 이벤트
-        const pageSizeSelect = document.querySelector('.page-size-select');
+        const pageSizeSelect = document.querySelector('.page-view select');
         if (pageSizeSelect) {
             pageSizeSelect.addEventListener('change', (e) => {
                 this.state.pageSize = parseInt(e.target.value) || 10;
@@ -393,36 +475,27 @@ const AddressModule = {
         }
 
         // 전체 선택 체크박스 이벤트
-        const checkAll = document.querySelector('.check-all');
+        const checkAll = document.querySelector('table thead input[type="checkbox"]');
         if (checkAll) {
             checkAll.addEventListener('change', (e) => this.handlers.checkAll(e.target.checked));
         }
 
         // 회사찾기 버튼 이벤트 리스너
-        const companySearchBtn = document.querySelector('.company-search-btn');
+        const companySearchBtn = document.getElementById('companySearchBtn');
         if (companySearchBtn) {
-            companySearchBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.handlers.openCompanySearch();
-            });
+            companySearchBtn.addEventListener('click', this.handlers.openCompanySearch);
         }
 
         // 주소록 일괄 출력 버튼 이벤트 리스너
         const printLabelBtn = document.querySelector('.print-label-btn');
         if (printLabelBtn) {
-            printLabelBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.printLabel.print();
-            });
+            printLabelBtn.addEventListener('click', () => this.printLabel.print());
         }
 
         // 엑셀 다운로드 버튼 이벤트 리스너
-        const excelBtn = document.querySelector('.excel-btn');
+        const excelBtn = document.querySelector('.icon-excel');
         if (excelBtn) {
-            excelBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.handlers.saveExcel();
-            });
+            excelBtn.addEventListener('click', this.handlers.saveExcel);
         }
     },
 
@@ -437,7 +510,7 @@ const AddressModule = {
 };
 
 // 회사 선택 콜백 함수 (팝업에서 호출)
-window.handleCompanySelect = (companyData) => {
+const handleCompanySelect = (companyData) => {
     AddressModule.handlers.selectCompany(companyData);
 };
 
