@@ -71,6 +71,118 @@ const MemberModule = {
             }
         },
 
+        // 관리자 검색
+        searchAdmins: async function(searchParams, page = 0, size = 10) {
+            try {
+                const queryString = new URLSearchParams({
+                    ...searchParams,
+                    page: page,
+                    size: size
+                }).toString();
+
+                const response = await fetch(`/masterpage_sys/member/api/admin/search?${queryString}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Referer': window.location.href
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('관리자 검색에 실패했습니다.');
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('관리자 검색 에러:', error);
+                throw error;
+            }
+        },
+
+        // 교강사 검색
+        searchTeachers: async function(searchParams, page = 0, size = 10) {
+            try {
+                const queryString = new URLSearchParams({
+                    ...searchParams,
+                    page: page,
+                    size: size
+                }).toString();
+
+                const response = await fetch(`/masterpage_sys/member/api/teacher/search?${queryString}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Referer': window.location.href
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('교강사 검색에 실패했습니다.');
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('교강사 검색 에러:', error);
+                throw error;
+            }
+        },
+
+        // 학생 검색
+        searchStudents: async function(searchParams, page = 0, size = 10) {
+            try {
+                const queryString = new URLSearchParams({
+                    ...searchParams,
+                    page: page,
+                    size: size
+                }).toString();
+
+                const response = await fetch(`/masterpage_sys/member/api/student/search?${queryString}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Referer': window.location.href
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('학생 검색에 실패했습니다.');
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('학생 검색 에러:', error);
+                throw error;
+            }
+        },
+
+        // 기업 검색
+        searchCompanies: async function(searchParams, page = 0, size = 10) {
+            try {
+                const queryString = new URLSearchParams({
+                    ...searchParams,
+                    page: page,
+                    size: size
+                }).toString();
+
+                const response = await fetch(`/masterpage_sys/member/api/company/search?${queryString}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Referer': window.location.href
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('기업 검색에 실패했습니다.');
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('기업 검색 에러:', error);
+                throw error;
+            }
+        },
+
         // 회원 삭제
         deleteMembers: async function(ids) {
             try {
@@ -130,33 +242,6 @@ const MemberModule = {
                 return await response.json();
             } catch (error) {
                 console.error('아이디 중복 확인 에러:', error);
-                throw error;
-            }
-        },
-
-        // 학생 검색
-        searchStudents: async function(searchParams, page = 0, size = 10) {
-            try {
-                const queryString = new URLSearchParams({
-                    ...searchParams,
-                    page: page,
-                    size: size
-                }).toString();
-
-                const response = await fetch(`/masterpage_sys/member/api/student/search?${queryString}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('검색에 실패했습니다.');
-                }
-
-                return await response.json();
-            } catch (error) {
-                console.error('검색 에러:', error);
                 throw error;
             }
         },
@@ -315,7 +400,15 @@ const MemberModule = {
                             </td>
                             <td>${member.jobDuty || '-'}</td>
                             <td>${member.authLevel || '-'}</td>
-                            <td>${member.jobWorkState || '-'}</td>
+                            <td>${(() => {
+                                switch(member.jobWorkState) {
+                                    case '001': return '근무';
+                                    case '002': return '휴직';
+                                    case '003': return '기타'; 
+                                    case '004': return '퇴사';
+                                    default: return '-';
+                                }
+                            })()}</td>
                             <td>${member.createdDate ? new Date(member.createdDate).toLocaleDateString() : '-'}</td>
                         </tr>
                     `).join('');
@@ -425,7 +518,7 @@ const MemberModule = {
             if (page < 0 || page >= MemberModule.state.totalPages) return;
             
             try {
-                const response = await MemberModule.api.getMembers(page, MemberModule.state.size);
+                const response = MemberModule.api.getMembers(page, MemberModule.state.size);
                 MemberModule.state.members = response.memberList;
                 MemberModule.state.currentPage = response.pageable.pageNumber;
                 MemberModule.state.totalPages = response.pageable.totalPages;
@@ -948,10 +1041,17 @@ const MemberModule = {
                 jobName: document.getElementById('jobName')?.value || null,
                 jobWorkState: document.getElementById('jobWorkState')?.value || null,
                 jobDept: document.getElementById('jobDept')?.value || null,
+                jobScale: document.querySelector('input[name="jobScale"]:checked')?.value || null,
+                jobCourseDuty: document.getElementById('jobCourseDuty')?.value || null,
                 chkSmsReceive: document.querySelector('input[name="chkSmsReceive"]:checked')?.value || null,
                 chkMailReceive: document.querySelector('input[name="chkMailReceive"]:checked')?.value || null,
                 chkIdentityVerification: document.querySelector('input[name="chkIdentityVerification"]:checked')?.value || null,
-                loginClientIp: document.getElementById('loginClientIp')?.value || null
+                loginClientIp: document.getElementById('loginClientIp')?.value || null,
+                contractorName: document.getElementById('contractorName')?.value || null,
+                contractorTel: document.getElementById('contractorTel')?.value || null,
+                contractorEtc: document.getElementById('contractorEtc')?.value || null,
+                jobEmployeeType: document.querySelector('input[name="jobEmployeeType"]:checked')?.value || null,
+                applyUserId: document.getElementById('applyUserId')?.value || null
             };
 
             // 빈 값이나 null 값을 가진 속성 제거
@@ -962,7 +1062,20 @@ const MemberModule = {
             });
 
             try {
-                const response = await MemberModule.api.searchStudents(searchParams, 0, MemberModule.state.size);
+                let response;
+                // 페이지 타입에 따라 다른 API 호출
+                if (MemberModule.state.pageType === 'teacher') {
+                    response = await MemberModule.api.searchTeachers(searchParams, 0, MemberModule.state.size);
+                } else if (MemberModule.state.pageType === 'student') {
+                    response = await MemberModule.api.searchStudents(searchParams, 0, MemberModule.state.size);
+                } else if (MemberModule.state.pageType === 'company') {
+                    response = await MemberModule.api.searchCompanies(searchParams, 0, MemberModule.state.size);
+                } else if (MemberModule.state.pageType === 'admin') {
+                    response = await MemberModule.api.searchAdmins(searchParams, 0, MemberModule.state.size);
+                } else {
+                    response = await MemberModule.api.getMembers(0, MemberModule.state.size);
+                }
+                
                 MemberModule.state.members = response.memberList;
                 MemberModule.state.currentPage = response.pageable.pageNumber;
                 MemberModule.state.totalPages = response.pageable.totalPages;
@@ -1401,6 +1514,37 @@ const MemberModule = {
             this.render.memberTable(this.state.members);
             this.render.pagination(this.state.totalPages);
 
+            // 검색 버튼 클릭 이벤트
+            const searchBtn = document.getElementById('searchBtn');
+            if (searchBtn) {
+                searchBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.handlers.search(e);
+                });
+            }
+
+            // 검색 입력 필드들에 엔터키 이벤트 추가
+            const searchInputs = document.querySelectorAll('.column-tc-wrap input[type="text"]');
+            searchInputs.forEach(input => {
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        this.handlers.search(e);
+                    }
+                });
+            });
+
+            // 검색 셀렉트 박스들에 엔터키 이벤트 추가
+            const searchSelects = document.querySelectorAll('.column-tc-wrap select');
+            searchSelects.forEach(select => {
+                select.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        this.handlers.search(e);
+                    }
+                });
+            });
+
             // 이벤트 리스너 등록
             const headerCheckbox = document.querySelector('table.table01 thead input[type="checkbox"]:not([data-type])');
             if (headerCheckbox) {
@@ -1513,12 +1657,6 @@ const MemberModule = {
                         }
                     });
                 }
-            }
-
-            // 검색 버튼 이벤트 리스너
-            const searchBtn = document.getElementById('searchBtn');
-            if (searchBtn) {
-                searchBtn.addEventListener('click', this.handlers.search);
             }
 
             // 상세검색 토글 버튼 이벤트 리스너

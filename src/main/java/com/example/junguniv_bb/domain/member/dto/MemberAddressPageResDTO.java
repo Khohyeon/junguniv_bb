@@ -1,6 +1,7 @@
 package com.example.junguniv_bb.domain.member.dto;
 
 import com.example.junguniv_bb.domain.member.model.Member;
+import com.example.junguniv_bb.domain.member._enum.UserType;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -26,7 +27,8 @@ public record MemberAddressPageResDTO(
         String telMobile,
         String zipcode,
         String addr1,
-        String addr2
+        String addr2,
+        UserType userType
     ) {
         public MemberDTO(Member member) {
             this(
@@ -36,7 +38,8 @@ public record MemberAddressPageResDTO(
                 member.getTelMobile(),
                 member.getZipcode(),
                 member.getAddr1(),
-                member.getAddr2()
+                member.getAddr2(),
+                member.getUserType()
             );
         }
     }

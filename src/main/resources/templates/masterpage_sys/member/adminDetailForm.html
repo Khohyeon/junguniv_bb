@@ -89,11 +89,11 @@
 								<div class="con mt10">
 									<div>
 										<label class="c-input ci-radio">
-											<input type="radio" name="jobCourseDuty" id="jobCourseDuty1" value="1" th:checked="${member.jobCourseDuty == '1'}"> 환급과정 담당
+											<input type="radio" name="jobCourseDuty" id="jobCourseDuty1" value="REFUND" th:checked="${member.jobCourseDuty == 'REFUND'}"> 환급과정 담당
 											<div class="ci-show"></div>
 										</label>
 										<label class="c-input ci-radio">
-											<input type="radio" name="jobCourseDuty" id="jobCourseDuty2" value="2" th:checked="${member.jobCourseDuty == '2'}"> 일반과정 담당
+											<input type="radio" name="jobCourseDuty" id="jobCourseDuty2" value="NORMAL" th:checked="${member.jobCourseDuty == 'NORMAL'}"> 일반과정 담당
 											<div class="ci-show"></div>
 										</label>
 									</div>

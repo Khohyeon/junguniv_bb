@@ -57,36 +57,70 @@ const AddressModule = {
         pagination: function(paginationDiv, pageInfo) {
             if (!paginationDiv) return;
 
-            const totalPages = pageInfo.totalPages;
-            const currentPage = pageInfo.pageNumber;
             let html = '';
-
+            
             // 이전 페이지 버튼
-            if (currentPage > 0) {
-                html += `<a href="javascript:" class="prev" data-page="${currentPage - 1}">이전</a>`;
+            html += `
+                <button class="prev ${pageInfo.pageNumber === 0 ? 'disabled' : ''}" 
+                        ${pageInfo.pageNumber === 0 ? 'disabled' : ''}>
+                    이전
+                </button>
+            `;
+
+            // 페이지 번호 (최대 10개씩 표시)
+            const startPage = Math.floor(pageInfo.pageNumber / 10) * 10;
+            const endPage = Math.min(startPage + 10, pageInfo.totalPages);
+
+            // 시작 페이지가 0이 아니면 첫 페이지 버튼 표시
+            if (startPage > 0) {
+                html += `
+                    <button class="page-number" data-page="0">1</button>
+                    ${startPage > 1 ? '<span class="page-dots">...</span>' : ''}
+                `;
             }
 
             // 페이지 번호
-            for (let i = 0; i < totalPages; i++) {
-                if (i === currentPage) {
-                    html += `<a href="javascript:" class="active">${i + 1}</a>`;
-                } else {
-                    html += `<a href="javascript:" data-page="${i}">${i + 1}</a>`;
-                }
+            for (let i = startPage; i < endPage; i++) {
+                html += `
+                    <button class="page-number ${pageInfo.pageNumber === i ? 'active' : ''}"
+                            data-page="${i}">
+                        ${i + 1}
+                    </button>
+                `;
+            }
+
+            // 마지막 페이지가 전체 페이지보다 작으면 마지막 페이지 버튼 표시
+            if (endPage < pageInfo.totalPages) {
+                html += `
+                    ${endPage < pageInfo.totalPages - 1 ? '<span class="page-dots">...</span>' : ''}
+                    <button class="page-number" data-page="${pageInfo.totalPages - 1}">
+                        ${pageInfo.totalPages}
+                    </button>
+                `;
             }
 
             // 다음 페이지 버튼
-            if (currentPage < totalPages - 1) {
-                html += `<a href="javascript:" class="next" data-page="${currentPage + 1}">다음</a>`;
-            }
+            html += `
+                <button class="next ${pageInfo.pageNumber === pageInfo.totalPages - 1 ? 'disabled' : ''}"
+                        ${pageInfo.pageNumber === pageInfo.totalPages - 1 ? 'disabled' : ''}>
+                    다음
+                </button>
+            `;
 
             paginationDiv.innerHTML = html;
 
-            // 페이지네이션 클릭 이벤트 추가
-            paginationDiv.querySelectorAll('a[data-page]').forEach(a => {
-                a.addEventListener('click', () => {
-                    const page = parseInt(a.dataset.page);
-                    AddressModule.state.currentPage = page;
+            // 페이지네이션 이벤트 리스너 추가
+            paginationDiv.querySelectorAll('button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    if (button.classList.contains('disabled')) return;
+                    
+                    if (button.classList.contains('prev')) {
+                        AddressModule.state.currentPage = AddressModule.state.currentPage - 1;
+                    } else if (button.classList.contains('next')) {
+                        AddressModule.state.currentPage = AddressModule.state.currentPage + 1;
+                    } else {
+                        AddressModule.state.currentPage = parseInt(button.dataset.page);
+                    }
                     AddressModule.handlers.search();
                 });
             });
@@ -138,7 +172,11 @@ const AddressModule = {
                 }
 
                 // 테이블 데이터 렌더링
-                const rows = data.memberList.map((item, index) => `
+                const rows = data.memberList.map((item, index) => {
+                    // userType에 따른 상세보기 URL 생성
+                    const detailUrl = `/masterpage_sys/member/${item.userType.toLowerCase()}/${item.memberIdx}`;
+                    
+                    return `
                     <tr>
                         <td>
                             <label class="c-input ci-check single">
@@ -148,7 +186,7 @@ const AddressModule = {
                         </td>
                         <td>${(AddressModule.state.currentPage * AddressModule.state.pageSize) + index + 1}</td>
                         <td>
-                            <a href="/masterpage_sys/member/student/${item.memberIdx}" class="jv-btn underline01">
+                            <a href="${detailUrl}" class="jv-btn underline01">
                                 ${item.name || ''}
                             </a>
                         </td>
@@ -157,7 +195,7 @@ const AddressModule = {
                         <td>${item.zipcode || ''}</td>
                         <td>${(item.addr1 || '') + ' ' + (item.addr2 || '')}</td>
                     </tr>
-                `).join('');
+                `}).join('');
 
                 tbody.innerHTML = rows || '<tr><td colspan="7">검색 결과가 없습니다.</td></tr>';
 
