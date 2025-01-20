@@ -97,7 +97,7 @@ public class MemberRestController {
     public ResponseEntity<?> idCheck(@RequestParam String userId) {
         // 서비스 호출
         boolean isDuplicate = memberService.checkDuplicateId(userId);
-        
+
         // true일 때가 중복이므로, 응답을 반대로 해야 합니다
         return ResponseEntity.ok(APIUtils.success(!isDuplicate));
     }

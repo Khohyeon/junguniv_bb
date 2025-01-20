@@ -361,16 +361,17 @@ const AddressModule = {
     // 이벤트 바인딩
     bindEvents: function() {
         // 검색 버튼 이벤트 리스너
-        const searchBtn = document.getElementById('searchBtn');
+        const searchBtn = document.querySelector('.search-btn');
         if (searchBtn) {
-            searchBtn.addEventListener('click', () => {
+            searchBtn.addEventListener('click', (e) => {
+                e.preventDefault();
                 this.state.currentPage = 0;
                 this.handlers.search();
             });
         }
 
         // 검색 입력 필드 엔터키 이벤트
-        const searchInputs = document.querySelectorAll('.column-tc-wrap input[type="text"]');
+        const searchInputs = document.querySelectorAll('.search-input');
         searchInputs.forEach(input => {
             input.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
@@ -382,7 +383,7 @@ const AddressModule = {
         });
 
         // 페이지 크기 변경 이벤트
-        const pageSizeSelect = document.querySelector('.page-view select');
+        const pageSizeSelect = document.querySelector('.page-size-select');
         if (pageSizeSelect) {
             pageSizeSelect.addEventListener('change', (e) => {
                 this.state.pageSize = parseInt(e.target.value) || 10;
@@ -392,27 +393,36 @@ const AddressModule = {
         }
 
         // 전체 선택 체크박스 이벤트
-        const checkAll = document.querySelector('table thead input[type="checkbox"]');
+        const checkAll = document.querySelector('.check-all');
         if (checkAll) {
             checkAll.addEventListener('change', (e) => this.handlers.checkAll(e.target.checked));
         }
 
         // 회사찾기 버튼 이벤트 리스너
-        const companySearchBtn = document.getElementById('companySearchBtn');
+        const companySearchBtn = document.querySelector('.company-search-btn');
         if (companySearchBtn) {
-            companySearchBtn.addEventListener('click', this.handlers.openCompanySearch);
+            companySearchBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.handlers.openCompanySearch();
+            });
         }
 
         // 주소록 일괄 출력 버튼 이벤트 리스너
         const printLabelBtn = document.querySelector('.print-label-btn');
         if (printLabelBtn) {
-            printLabelBtn.addEventListener('click', () => this.printLabel.print());
+            printLabelBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.printLabel.print();
+            });
         }
 
         // 엑셀 다운로드 버튼 이벤트 리스너
-        const excelBtn = document.querySelector('.icon-excel');
+        const excelBtn = document.querySelector('.excel-btn');
         if (excelBtn) {
-            excelBtn.addEventListener('click', this.handlers.saveExcel);
+            excelBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.handlers.saveExcel();
+            });
         }
     },
 
@@ -427,7 +437,7 @@ const AddressModule = {
 };
 
 // 회사 선택 콜백 함수 (팝업에서 호출)
-const handleCompanySelect = (companyData) => {
+window.handleCompanySelect = (companyData) => {
     AddressModule.handlers.selectCompany(companyData);
 };
 
