@@ -704,14 +704,46 @@ const MemberModule = {
                         : null,
 
                     // 이미지 처리
-                    mainImg: document.getElementById('mainImgUserFile')?.value,
-                    mainImgName: document.getElementById('mainImgDisplay')?.value,
-                    subImg: document.getElementById('subImgUserFile')?.value,
-                    subImgName: document.getElementById('subImgDisplay')?.value,
-                    fnameSaup: document.getElementById('fnameSaupUserFile')?.value,
-                    fnameSaupName: document.getElementById('fnameSaupDisplay')?.value,
-                    fnameLogo: document.getElementById('fnameLogoUserFile')?.value,
-                    fnameLogoName: document.getElementById('fnameLogoDisplay')?.value,
+                    mainImg: (() => {
+                        const mainImgRadio = document.querySelector('input[name="mainImg"]:checked');
+                        if (!mainImgRadio) return null;
+                        if (mainImgRadio.value === 'custom') {
+                            const value = document.getElementById('mainImgUserFile')?.value;
+                            return value || null;  // 값이 없으면 명시적으로 null 반환
+                        }
+                        return mainImgRadio.value;
+                    })(),
+                    mainImgName: (() => {
+                        const mainImgRadio = document.querySelector('input[name="mainImg"]:checked');
+                        if (!mainImgRadio) return null;
+                        if (mainImgRadio.value === 'custom') {
+                            const value = document.getElementById('mainImgDisplay')?.value;
+                            return value || null;  // 값이 없으면 명시적으로 null 반환
+                        }
+                        return mainImgRadio.value;
+                    })(),
+                    subImg: (() => {
+                        const subImgRadio = document.querySelector('input[name="subImg"]:checked');
+                        if (!subImgRadio) return null;
+                        if (subImgRadio.value === 'custom') {
+                            const value = document.getElementById('subImgUserFile')?.value;
+                            return value || null;  // 값이 없으면 명시적으로 null 반환
+                        }
+                        return subImgRadio.value;
+                    })(),
+                    subImgName: (() => {
+                        const subImgRadio = document.querySelector('input[name="subImg"]:checked');
+                        if (!subImgRadio) return null;
+                        if (subImgRadio.value === 'custom') {
+                            const value = document.getElementById('subImgDisplay')?.value;
+                            return value || null;  // 값이 없으면 명시적으로 null 반환
+                        }
+                        return subImgRadio.value;
+                    })(),
+                    fnameSaup: document.getElementById('fnameSaupUserFile')?.value || null,  // 명시적으로 null 설정
+                    fnameSaupName: document.getElementById('fnameSaupDisplay')?.value || null,  // 명시적으로 null 설정
+                    fnameLogo: document.getElementById('fnameLogoUserFile')?.value || null,  // 명시적으로 null 설정
+                    fnameLogoName: document.getElementById('fnameLogoDisplay')?.value || null,  // 명시적으로 null 설정
                 };
 
                 // 필수 입력값 검증
@@ -826,9 +858,12 @@ const MemberModule = {
                     }
                 
             
-                // 빈 값이나 null 값을 가진 속성 제거
+                // 빈 값이나 null 값을 가진 속성 제거하는 부분 수정
                 Object.keys(data).forEach(key => {
-                    if (data[key] === null || data[key] === '' || data[key] === undefined) {
+                    // 파일 관련 필드는 명시적으로 null을 유지하고, 나머지는 기존처럼 처리
+                    const isFileField = ['mainImg', 'mainImgName', 'subImg', 'subImgName', 
+                                       'fnameSaup', 'fnameSaupName', 'fnameLogo', 'fnameLogoName'].includes(key);
+                    if (!isFileField && (data[key] === null || data[key] === '' || data[key] === undefined)) {
                         delete data[key];
                     }
                 });
@@ -851,19 +886,21 @@ const MemberModule = {
                 if (result.success) {
                     // 파일 이동 처리
                     const uploadedFiles = [];
-                    const mainImgUserFile = document.getElementById('mainImgUserFile')?.value;
-                    const subImgUserFile = document.getElementById('subImgUserFile')?.value;
-                    const fnameSaupUserFile = document.getElementById('fnameSaupUserFile')?.value;
-                    const fnameLogoUserFile = document.getElementById('fnameLogoUserFile')?.value;
-
-                    if (mainImgUserFile) uploadedFiles.push(mainImgUserFile);
-                    if (subImgUserFile) uploadedFiles.push(subImgUserFile);
-                    if (fnameSaupUserFile) uploadedFiles.push(fnameSaupUserFile);
-                    if (fnameLogoUserFile) uploadedFiles.push(fnameLogoUserFile);
+                    const fileInputs = document.querySelectorAll('.hidden-file-input');
+                    
+                    // 새로 업로드된 파일만 이동 처리
+                    fileInputs.forEach(input => {
+                        // dataset에 uploadedFileName이 있는 경우에만 이동 대상에 추가
+                        if (input.dataset.uploadedFileName) {
+                            uploadedFiles.push(input.dataset.uploadedFileName);
+                            console.log('이동할 파일:', input.dataset.uploadedFileName); // 디버깅용 로그
+                        }
+                    });
 
                     // 업로드된 파일들을 temp에서 member 폴더로 이동
                     for (const fileName of uploadedFiles) {
                         try {
+                            console.log('파일 이동 시도:', fileName); // 디버깅용 로그
                             const moveResponse = await fetch(`/api/v1/files/move/member/${fileName}`, {
                                 method: 'POST'
                             });
@@ -877,6 +914,15 @@ const MemberModule = {
                             if (!moveResult.success) {
                                 throw new Error(moveResult.message || '파일 이동에 실패했습니다.');
                             }
+
+                            console.log('파일 이동 성공:', fileName); // 디버깅용 로그
+
+                            // 이동 성공 후 dataset 초기화
+                            fileInputs.forEach(input => {
+                                if (input.dataset.uploadedFileName === fileName) {
+                                    delete input.dataset.uploadedFileName;
+                                }
+                            });
                         } catch (error) {
                             console.error('파일 이동 중 오류 발생:', error);
                             throw new Error('파일 이동 중 오류가 발생했습니다.');
@@ -1234,14 +1280,46 @@ const MemberModule = {
                         : null,
 
                     // 이미지 정보
-                    mainImg: document.getElementById('mainImgUserFile')?.value,
-                    mainImgName: document.getElementById('mainImgDisplay')?.value,
-                    subImg: document.getElementById('subImgUserFile')?.value,
-                    subImgName: document.getElementById('subImgDisplay')?.value,
-                    fnameSaup: document.getElementById('fnameSaupUserFile')?.value,
-                    fnameSaupName: document.getElementById('fnameSaupDisplay')?.value,
-                    fnameLogo: document.getElementById('fnameLogoUserFile')?.value,
-                    fnameLogoName: document.getElementById('fnameLogoDisplay')?.value,
+                    mainImg: (() => {
+                        const mainImgRadio = document.querySelector('input[name="mainImg"]:checked');
+                        if (!mainImgRadio) return null;
+                        if (mainImgRadio.value === 'custom') {
+                            const value = document.getElementById('mainImgUserFile')?.value;
+                            return value || null;  // 값이 없으면 명시적으로 null 반환
+                        }
+                        return mainImgRadio.value;
+                    })(),
+                    mainImgName: (() => {
+                        const mainImgRadio = document.querySelector('input[name="mainImg"]:checked');
+                        if (!mainImgRadio) return null;
+                        if (mainImgRadio.value === 'custom') {
+                            const value = document.getElementById('mainImgDisplay')?.value;
+                            return value || null;  // 값이 없으면 명시적으로 null 반환
+                        }
+                        return mainImgRadio.value;
+                    })(),
+                    subImg: (() => {
+                        const subImgRadio = document.querySelector('input[name="subImg"]:checked');
+                        if (!subImgRadio) return null;
+                        if (subImgRadio.value === 'custom') {
+                            const value = document.getElementById('subImgUserFile')?.value;
+                            return value || null;  // 값이 없으면 명시적으로 null 반환
+                        }
+                        return subImgRadio.value;
+                    })(),
+                    subImgName: (() => {
+                        const subImgRadio = document.querySelector('input[name="subImg"]:checked');
+                        if (!subImgRadio) return null;
+                        if (subImgRadio.value === 'custom') {
+                            const value = document.getElementById('subImgDisplay')?.value;
+                            return value || null;  // 값이 없으면 명시적으로 null 반환
+                        }
+                        return subImgRadio.value;
+                    })(),
+                    fnameSaup: document.getElementById('fnameSaupUserFile')?.value || null,  // 명시적으로 null 설정
+                    fnameSaupName: document.getElementById('fnameSaupDisplay')?.value || null,  // 명시적으로 null 설정
+                    fnameLogo: document.getElementById('fnameLogoUserFile')?.value || null,  // 명시적으로 null 설정
+                    fnameLogoName: document.getElementById('fnameLogoDisplay')?.value || null,  // 명시적으로 null 설정
 
                     // 교육담당자 연락처 (기업 회원)
                     contractorTel: document.getElementById('telMobile1')?.value && document.getElementById('telMobile2')?.value && document.getElementById('telMobile3')?.value
@@ -1293,9 +1371,12 @@ const MemberModule = {
                     }
                 }
 
-                // 빈 값이나 null 값을 가진 속성 제거
+                // 빈 값이나 null 값을 가진 속성 제거하는 부분 수정
                 Object.keys(data).forEach(key => {
-                    if (data[key] === null || data[key] === '' || data[key] === undefined) {
+                    // 파일 관련 필드는 명시적으로 null을 유지하고, 나머지는 기존처럼 처리
+                    const isFileField = ['mainImg', 'mainImgName', 'subImg', 'subImgName', 
+                                       'fnameSaup', 'fnameSaupName', 'fnameLogo', 'fnameLogoName'].includes(key);
+                    if (!isFileField && (data[key] === null || data[key] === '' || data[key] === undefined)) {
                         delete data[key];
                     }
                 });
@@ -1318,19 +1399,20 @@ const MemberModule = {
                 if (result.success) {
                     // 파일 이동 처리
                     const uploadedFiles = [];
-                    const mainImgUserFile = document.getElementById('mainImgUserFile')?.value;
-                    const subImgUserFile = document.getElementById('subImgUserFile')?.value;
-                    const fnameSaupUserFile = document.getElementById('fnameSaupUserFile')?.value;
-                    const fnameLogoUserFile = document.getElementById('fnameLogoUserFile')?.value;
-
-                    if (mainImgUserFile) uploadedFiles.push(mainImgUserFile);
-                    if (subImgUserFile) uploadedFiles.push(subImgUserFile);
-                    if (fnameSaupUserFile) uploadedFiles.push(fnameSaupUserFile);
-                    if (fnameLogoUserFile) uploadedFiles.push(fnameLogoUserFile);
+                    const fileInputs = document.querySelectorAll('.hidden-file-input');
+                    
+                    // 새로 업로드된 파일만 이동 처리
+                    fileInputs.forEach(input => {
+                        if (input.dataset.uploadedFileName) {
+                            uploadedFiles.push(input.dataset.uploadedFileName);
+                            console.log('이동할 파일:', input.dataset.uploadedFileName); // 디버깅용 로그
+                        }
+                    });
 
                     // 업로드된 파일들을 temp에서 member 폴더로 이동
                     for (const fileName of uploadedFiles) {
                         try {
+                            console.log('파일 이동 시도:', fileName); // 디버깅용 로그
                             const moveResponse = await fetch(`/api/v1/files/move/member/${fileName}`, {
                                 method: 'POST'
                             });
@@ -1344,6 +1426,15 @@ const MemberModule = {
                             if (!moveResult.success) {
                                 throw new Error(moveResult.message || '파일 이동에 실패했습니다.');
                             }
+
+                            console.log('파일 이동 성공:', fileName); // 디버깅용 로그
+
+                            // 이동 성공 후 dataset 초기화
+                            fileInputs.forEach(input => {
+                                if (input.dataset.uploadedFileName === fileName) {
+                                    delete input.dataset.uploadedFileName;
+                                }
+                            });
                         } catch (error) {
                             console.error('파일 이동 중 오류 발생:', error);
                             throw new Error('파일 이동 중 오류가 발생했습니다.');
@@ -1757,6 +1848,38 @@ const MemberModule = {
             document.querySelectorAll('.btn-view').forEach(button => {
                 button.addEventListener('click', this.handlers.onViewFileClick);
             });
+
+            // 파일 이동 처리
+            const moveFile = async (fileName) => {
+                if (!fileName || fileName.startsWith('sample')) {
+                    return; // 기본 이미지인 경우 이동 처리 스킵
+                }
+                try {
+                    const response = await fetch(`/api/v1/files/move/member/${fileName}`, {
+                        method: 'POST'
+                    });
+                    if (!response.ok) {
+                        throw new Error(`파일 이동 실패: ${fileName}`);
+                    }
+                } catch (error) {
+                    console.error(`파일 이동 실패: ${fileName}`);
+                    throw new Error('파일 이동에 실패했습니다.');
+                }
+            };
+
+            // 업로드된 파일들 이동
+            try {
+                const fileInputs = document.querySelectorAll('.hidden-file-input');
+                for (const input of fileInputs) {
+                    const uploadedFileName = input.dataset.uploadedFileName;
+                    if (uploadedFileName) {
+                        await moveFile(uploadedFileName);
+                    }
+                }
+            } catch (error) {
+                console.error('파일 이동 중 오류 발생:', error);
+                throw new Error('파일 이동 중 오류가 발생했습니다.');
+            }
         } catch (error) {
             console.error('초기화 에러:', error);
             alert('데이터를 불러오는데 실패했습니다.');
@@ -1905,6 +2028,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (displayInput) displayInput.value = file.name;
                 if (userFileInput) userFileInput.value = data.fileName;
 
+                // dataset에 업로드된 파일 정보 저장
+                this.dataset.uploadedFileName = data.fileName;
+                this.dataset.originalFileName = file.name;
+
                 // mainImg나 subImg인 경우 라디오 버튼 체크
                 if (target === 'mainImg' || target === 'subImg') {
                     const radio = document.querySelector(`input[name="${target}"][value="custom"]`);
@@ -1944,10 +2071,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            if (confirm('파일을 삭제하시겠습니다?')) {
+            if (confirm('파일을 삭제하시겠습니까?')) {
                 try {
                     // 서버에 삭제 요청
-                    const response = await fetch(`/api/v1/files/delete/member/${userFileInput.value}`, {
+                    const response = await fetch(`/api/v1/files/member/${userFileInput.value}`, {
                         method: 'DELETE'
                     });
 
@@ -1957,6 +2084,23 @@ document.addEventListener('DOMContentLoaded', function() {
                     fileInput.value = '';
                     displayInput.value = '';
                     userFileInput.value = '';
+
+                    // dataset 초기화
+                    fileInput.dataset.uploadedFileName = '';
+                    fileInput.dataset.originalFileName = '';
+
+                    // 파일명 표시 제거
+                    const fileNameDisplay = this.parentElement.querySelector('.selected-file');
+                    if (fileNameDisplay) {
+                        fileNameDisplay.remove();
+                    }
+
+                    // mainImg나 subImg인 경우 라디오 버튼 초기화
+                    if (target === 'mainImg' || target === 'subImg') {
+                        const defaultRadio = document.querySelector(`input[name="${target}"][value="sample01.jpg"]`);
+                        if (defaultRadio) defaultRadio.checked = true;
+                    }
+
                     alert('파일이 삭제되었습니다.');
                 } catch (error) {
                     console.error('파일 삭제 중 오류 발생:', error);

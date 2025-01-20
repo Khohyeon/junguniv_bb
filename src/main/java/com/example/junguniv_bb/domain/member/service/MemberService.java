@@ -361,6 +361,60 @@ public class MemberService {
             encodedPwd = memberPS.getPwd();
         }
 
+        // 메인 이미지 처리
+        if (reqDTO.mainImg() != null && reqDTO.mainImg().equals("custom")) {
+            if (reqDTO.mainImgFile() != null && !reqDTO.mainImgFile().isEmpty()) {
+                String mainImgPath = saveFile(reqDTO.mainImgFile());
+                memberPS.setMainImg(mainImgPath);
+                memberPS.setMainImgName(reqDTO.mainImgFile().getOriginalFilename());
+            }
+        } else if (reqDTO.mainImg() != null) {
+            // 기본 이미지인 경우 파일명만 저장
+            memberPS.setMainImg(reqDTO.mainImg());
+            memberPS.setMainImgName(reqDTO.mainImg());
+        } else {
+            // 이미지를 삭제하는 경우
+            memberPS.setMainImg(null);
+            memberPS.setMainImgName(null);
+        }
+
+        // 서브 이미지 처리
+        if (reqDTO.subImg() != null && reqDTO.subImg().equals("custom")) {
+            if (reqDTO.subImgFile() != null && !reqDTO.subImgFile().isEmpty()) {
+                String subImgPath = saveFile(reqDTO.subImgFile());
+                memberPS.setSubImg(subImgPath);
+                memberPS.setSubImgName(reqDTO.subImgFile().getOriginalFilename());
+            }
+        } else if (reqDTO.subImg() != null) {
+            // 기본 이미지인 경우 파일명만 저장
+            memberPS.setSubImg(reqDTO.subImg());
+            memberPS.setSubImgName(reqDTO.subImg());
+        } else {
+            // 이미지를 삭제하는 경우
+            memberPS.setSubImg(null);
+            memberPS.setSubImgName(null);
+        }
+
+        // 사업자등록증 처리
+        if (reqDTO.fnameSaupFile() != null && !reqDTO.fnameSaupFile().isEmpty()) {
+            String fnameSaupPath = saveFile(reqDTO.fnameSaupFile());
+            memberPS.setFnameSaup(fnameSaupPath);
+            memberPS.setFnameSaupName(reqDTO.fnameSaupFile().getOriginalFilename());
+        } else if (reqDTO.fnameSaup() == null || reqDTO.fnameSaup().isEmpty()) {
+            memberPS.setFnameSaup(null);
+            memberPS.setFnameSaupName(null);
+        }
+
+        // 로고 처리
+        if (reqDTO.fnameLogoFile() != null && !reqDTO.fnameLogoFile().isEmpty()) {
+            String fnameLogoPath = saveFile(reqDTO.fnameLogoFile());
+            memberPS.setFnameLogo(fnameLogoPath);
+            memberPS.setFnameLogoName(reqDTO.fnameLogoFile().getOriginalFilename());
+        } else if (reqDTO.fnameLogo() == null || reqDTO.fnameLogo().isEmpty()) {
+            memberPS.setFnameLogo(null);
+            memberPS.setFnameLogoName(null);
+        }
+
         // 트랜잭션 처리
         reqDTO.updateEntity(memberPS, encodedPwd);
     }
@@ -392,6 +446,8 @@ public class MemberService {
     public void memberSave(MemberSaveReqDTO requestDTO) {
         String mainImgPath = null;
         String subImgPath = null;
+        String fnameSaupPath = null;
+        String fnameLogoPath = null;
 
         try {
             // pwd null 체크
@@ -405,48 +461,68 @@ public class MemberService {
             // 파일 처리
             MultipartFile mainImgFile = requestDTO.mainImgFile();
             MultipartFile subImgFile = requestDTO.subImgFile();
+            MultipartFile fnameSaupFile = requestDTO.fnameSaupFile();
+            MultipartFile fnameLogoFile = requestDTO.fnameLogoFile();
 
-            log.info("파일 업로드 시작 - 메인이미지: {}, 서브이미지: {}",
+            log.info("파일 업로드 시작 - 메인이미지: {}, 서브이미지: {}, 사업자등록증: {}, 로고: {}",
                 mainImgFile != null ? mainImgFile.getOriginalFilename() : "없음",
-                subImgFile != null ? subImgFile.getOriginalFilename() : "없음");
+                subImgFile != null ? subImgFile.getOriginalFilename() : "없음",
+                fnameSaupFile != null ? fnameSaupFile.getOriginalFilename() : "없음",
+                fnameLogoFile != null ? fnameLogoFile.getOriginalFilename() : "없음");
+
+            // 엔티티 생성
+            Member member = requestDTO.toEntity(encodedPwd);
 
             // 메인 이미지 처리
-            if (mainImgFile != null && !mainImgFile.isEmpty()) {
-                mainImgPath = saveFile(mainImgFile);
-                log.info("메인 이미지 저장 완료: {}", mainImgPath);
+            if (requestDTO.mainImg() != null && requestDTO.mainImg().equals("custom")) {
+                if (mainImgFile != null && !mainImgFile.isEmpty()) {
+                    mainImgPath = saveFile(mainImgFile);
+                    member.setMainImg(mainImgPath);
+                    member.setMainImgName(mainImgFile.getOriginalFilename());
+                }
             } else if (requestDTO.mainImg() != null) {
-                // 기본 이미지 선택한 경우
-                mainImgPath = requestDTO.mainImg();
-                log.info("기본 메인 이미지 선택: {}", mainImgPath);
+                // 기본 이미지인 경우 파일명만 저장
+                member.setMainImg(requestDTO.mainImg());
+                member.setMainImgName(requestDTO.mainImg());
             }
 
             // 서브 이미지 처리
-            if (subImgFile != null && !subImgFile.isEmpty()) {
-                subImgPath = saveFile(subImgFile);
-                log.info("서브 이미지 저장 완료: {}", subImgPath);
+            if (requestDTO.subImg() != null && requestDTO.subImg().equals("custom")) {
+                if (subImgFile != null && !subImgFile.isEmpty()) {
+                    subImgPath = saveFile(subImgFile);
+                    member.setSubImg(subImgPath);
+                    member.setSubImgName(subImgFile.getOriginalFilename());
+                }
             } else if (requestDTO.subImg() != null) {
-                // 기본 이미지 선택한 경우
-                subImgPath = requestDTO.subImg();
-                log.info("기본 서브 이미지 선택: {}", subImgPath);
+                // 기본 이미지인 경우 파일명만 저장
+                member.setSubImg(requestDTO.subImg());
+                member.setSubImgName(requestDTO.subImg());
             }
 
-            // 엔티티 생성 및 저장
-            Member member = requestDTO.toEntity(encodedPwd);
-            member.setMainImg(mainImgPath);
-            member.setSubImg(subImgPath);
+            // 사업자등록증 처리
+            if (fnameSaupFile != null && !fnameSaupFile.isEmpty()) {
+                fnameSaupPath = saveFile(fnameSaupFile);
+                member.setFnameSaup(fnameSaupPath);
+                member.setFnameSaupName(fnameSaupFile.getOriginalFilename());
+            }
+
+            // 로고 처리
+            if (fnameLogoFile != null && !fnameLogoFile.isEmpty()) {
+                fnameLogoPath = saveFile(fnameLogoFile);
+                member.setFnameLogo(fnameLogoPath);
+                member.setFnameLogoName(fnameLogoFile.getOriginalFilename());
+            }
 
             memberRepository.save(member);
-            log.info("회원 저장 완료 - ID: {}, 메인이미지: {}, 서브이미지: {}",
-                member.getUserId(), mainImgPath, subImgPath);
+            log.info("회원 저장 완료 - ID: {}, 메인이미지: {}, 서브이미지: {}, 사업자등록증: {}, 로고: {}",
+                member.getUserId(), member.getMainImg(), member.getSubImg(), fnameSaupPath, fnameLogoPath);
 
         } catch (Exception e) {
-            // 업로드된 파일이 있다면 삭제
-            if (mainImgPath != null) {
-                FileUtils.deleteFile(mainImgPath, uploadDirPath);
-            }
-            if (subImgPath != null) {
-                FileUtils.deleteFile(subImgPath, uploadDirPath);
-            }
+            // 업로드된 파일이 있다면 삭제 (기본 이미지는 제외)
+            if (mainImgPath != null) FileUtils.deleteFile(mainImgPath, uploadDirPath);
+            if (subImgPath != null) FileUtils.deleteFile(subImgPath, uploadDirPath);
+            if (fnameSaupPath != null) FileUtils.deleteFile(fnameSaupPath, uploadDirPath);
+            if (fnameLogoPath != null) FileUtils.deleteFile(fnameLogoPath, uploadDirPath);
 
             log.error("회원 저장 중 오류 발생: {}", e.getMessage(), e);
             throw new RuntimeException("회원 저장에 실패했습니다: " + e.getMessage());
