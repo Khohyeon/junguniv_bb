@@ -10,7 +10,8 @@ public enum ValidExceptionMessage {
     INVALID_TELMOBILE(Message.INVALID_TELMOBILE),
     EMPTY_CONTENT(Message.EMPTY_CONTENT),
     EMPTY_POINT(Message.EMPTY_POINT),
-    IS_CORRECT(Message.IS_CORRECT);
+    IS_CORRECT(Message.IS_CORRECT),
+    INVALID_DATE_FORMAT(Message.INVALID_DATE_FORMAT); // 추가된 항목
 
     final private String message;
 
@@ -32,6 +33,7 @@ public enum ValidExceptionMessage {
         public static final String EMPTY_QUESTION = "문제를 입력하세요.";
         public static final String EMPTY_QUESTION_ANSWER = "답안을 입력하세요.";
         public static final String IS_CORRECT = "정답 여부를 입력하세요.";
+        public static final String INVALID_DATE_FORMAT = "날짜 형식이 잘못되었습니다. 올바른 형식: yyyy-MM-dd"; // 추가된 메시지
     }
 }
 

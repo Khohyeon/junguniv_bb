@@ -12,6 +12,8 @@ public record PopupDetailResDTO(
         String heightSize,
         String leftSize,
         String topSize,
-        String contents
+        String contents,
+        String popupUrl,
+        String bgcolor
 ) {
 }

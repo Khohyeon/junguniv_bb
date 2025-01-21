@@ -1,19 +1,25 @@
 package com.example.junguniv_bb.domain.popup.controller;
 
+import com.example.junguniv_bb._core.exception.Exception400;
 import com.example.junguniv_bb._core.util.APIUtils;
 import com.example.junguniv_bb.domain.popup.dto.PopupSaveReqDTO;
 import com.example.junguniv_bb.domain.popup.dto.PopupSearchResDTO;
 import com.example.junguniv_bb.domain.popup.dto.PopupUpdateReqDTO;
 import com.example.junguniv_bb.domain.popup.service.PopupService;
+import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.regex.Pattern;
+
 
 @RestController
 @RequestMapping("masterpage_sys/popup/api")
@@ -37,7 +43,11 @@ public class PopupRestController {
      *  [관리자모드] 홈페이지관리 - 팝업관리 - 메인팝업 - 팝업 등록페이지 - 등록하기
      */
     @PostMapping("/save")
-    public ResponseEntity<APIUtils.APIResult<String>> popupSave(@ModelAttribute PopupSaveReqDTO popupSaveReqDTO) {
+    public ResponseEntity<APIUtils.APIResult<String>> popupSave(@Valid @ModelAttribute PopupSaveReqDTO popupSaveReqDTO, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            throw new Exception400(bindingResult.getAllErrors().get(0).getDefaultMessage());
+        }
         popupService.popupSave(popupSaveReqDTO);
         return ResponseEntity.ok(APIUtils.success("팝업등록이 성공적으로 완료되었습니다."));
     }
@@ -46,7 +56,12 @@ public class PopupRestController {
      *  [관리자모드] 홈페이지관리 - 팝업관리 - 메인팝업 - 팝업 상세페이지 - 수정하기
      */
     @PutMapping("/update")
-    public ResponseEntity<APIUtils.APIResult<String>> popupUpdate(@ModelAttribute PopupUpdateReqDTO popupUpdateReqDTO) {
+    public ResponseEntity<APIUtils.APIResult<String>> popupUpdate(@Valid @ModelAttribute PopupUpdateReqDTO popupUpdateReqDTO, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            throw new Exception400(bindingResult.getAllErrors().get(0).getDefaultMessage());
+        }
+
         popupService.popupUpdate(popupUpdateReqDTO);
         return ResponseEntity.ok(APIUtils.success("팝업수정이 성공적으로 완료되었습니다."));
     }

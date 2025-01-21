@@ -12,12 +12,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.regex.Pattern;
+
 
 @Service
 @RequiredArgsConstructor
 public class PopupService {
 
     private final PopupRepository popupRepository;
+    private static final String URL_PATTERN = "^(https?://)?([\\w\\-]+\\.)+[\\w\\-]+(/[\\w\\-._~:/?#]@!$&'()*+,;=*)?$";
 
     /**
      * 메인팝업 리스트 조회
@@ -78,7 +81,9 @@ public class PopupService {
                 popup.getHeightSize(),
                 popup.getLeftSize(),
                 popup.getTopSize(),
-                popup.getContents()
+                popup.getContents(),
+                popup.getPopupUrl(),
+                popup.getBgcolor()
         );
     }
 
@@ -88,6 +93,21 @@ public class PopupService {
      */
     @Transactional
     public void popupSave(PopupSaveReqDTO popupSaveReqDTO) {
+
+        String popupUrl = popupSaveReqDTO.popupUrl();
+
+        if (popupUrl == null) {
+            // 프로토콜 추가
+            if (popupUrl != null && !popupUrl.startsWith("http://") && !popupUrl.startsWith("https://")) {
+                popupUrl = "https://" + popupUrl;
+            }
+
+            // URL 유효성 검증
+            if (!Pattern.matches(URL_PATTERN, popupUrl)) {
+                throw new Exception400("팝업 URL 형식이 올바르지 않습니다.");
+            }
+        }
+
         popupRepository.save(popupSaveReqDTO.saveEntity());
     }
 
@@ -97,6 +117,21 @@ public class PopupService {
      */
     @Transactional
     public void popupUpdate(PopupUpdateReqDTO popupUpdateReqDTO) {
+
+        String popupUrl = popupUpdateReqDTO.popupUrl();
+
+        if (popupUrl == null) {
+            // 프로토콜 추가
+            if (popupUrl != null && !popupUrl.startsWith("http://") && !popupUrl.startsWith("https://")) {
+                popupUrl = "https://" + popupUrl;
+            }
+
+            // URL 유효성 검증
+            if (!Pattern.matches(URL_PATTERN, popupUrl)) {
+                throw new Exception400("팝업 URL 형식이 올바르지 않습니다.");
+            }
+        }
+
         popupRepository.save(popupUpdateReqDTO.updateEntity());
     }
 
