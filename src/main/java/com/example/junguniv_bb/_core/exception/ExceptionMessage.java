@@ -13,7 +13,10 @@ public enum ExceptionMessage {
     NOT_FOUND_MEMBER("존재하지 않는 멤버입니다."),
     NOT_FOUND_BBS("존재하지 않는 게시글입니다."),
     NOT_FOUND_BBS_FILE("존재하지 않는 게시글 첨부파일입니다."),
-
+    NOT_FOUND_MANAGER_MENU("존재하지 않는 메뉴입니다."),
+    NOT_FOUND_PARENT_MANAGER_MENU("존재하지 않는 부모 메뉴입니다."),
+    NOT_FOUND_AUTH_LEVEL("존재하지 않는 권한 레벨입니다."),
+    NOT_FOUND_MANAGER_AUTH("존재하지 않는 메뉴 권한입니다."),
     EXISTS_AUTH_LEVEL("이미 존재하는 권한 레벨입니다."),
 
 

@@ -52,7 +52,16 @@ const MemberModule = {
         // 회원 목록 조회
         getMembers: async function(page = 0, size = 10) {
             try {
-                const response = await fetch(`/masterpage_sys/member/api/?page=${page}&size=${size}`, {
+                // URL에서 authLevel 파라미터 확인
+                const urlParams = new URLSearchParams(window.location.search);
+                const authLevel = urlParams.get('authLevel');
+
+                // 현재 페이지가 관리자 목록이고 authLevel이 있는 경우
+                if (window.location.pathname.includes('/member/admin') && authLevel) {
+                    return await this.searchAdmins({ authLevel }, page, size);
+                }
+
+                const response = await fetch(`/masterpage_sys/member/api?page=${page}&size=${size}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -67,14 +76,14 @@ const MemberModule = {
                 return await response.json();
             } catch (error) {
                 console.error('회원 목록 조회 에러:', error);
-                return null; // 에러 발생 시 null 반환하도록 수정
+                return null;
             }
         },
 
         // 회원 삭제
         deleteMembers: async function(ids) {
             try {
-                const response = await fetch('/masterpage_sys/member/api/', {
+                const response = await fetch('/masterpage_sys/member/api', {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json'
@@ -96,7 +105,7 @@ const MemberModule = {
         // 회원 등록
         saveMember: async function(memberData) {
             try {
-                const response = await fetch('/masterpage_sys/member/api/', {
+                const response = await fetch('/masterpage_sys/member/api', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -614,6 +623,13 @@ const MemberModule = {
             event.preventDefault();
             
             try {
+                // 아이디 중복 확인 여부 체크
+                if (!MemberModule.state.isIdCheckPassed) {
+                    alert('아이디 중복 확인이 필요합니다.');
+                    document.getElementById('userId')?.focus();
+                    return;
+                }
+
                 const data = {
                     // 공통 필드
                     userType: document.getElementById('userType').value,
@@ -875,7 +891,7 @@ const MemberModule = {
                 });
 
                 // API 호출
-                const response = await fetch('/masterpage_sys/member/api/', {
+                const response = await fetch('/masterpage_sys/member/api', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -1101,11 +1117,23 @@ const MemberModule = {
         search: async function(e) {
             e.preventDefault();
 
+            // URL에서 authLevel 파라미터 확인
+            const urlParams = new URLSearchParams(window.location.search);
+            const authLevel = urlParams.get('authLevel');
+
             // 검색 파라미터 수집
             const searchParams = {};
 
             // 페이지 타입에 따른 검색 파라미터 설정
-            if (MemberModule.state.pageType === 'teacher') {
+            if (MemberModule.state.pageType === 'admin') {
+                // 관리자 검색 파라미터
+                searchParams.name = document.getElementById('name')?.value || null;
+                searchParams.userId = document.getElementById('userId')?.value || null;
+                searchParams.jobCourseDuty = document.getElementById('jobCourseDuty')?.value || null;
+                if (authLevel) {
+                    searchParams.authLevel = authLevel;
+                }
+            } else if (MemberModule.state.pageType === 'teacher') {
                 // 교강사 검색 파라미터
                 searchParams.name = document.getElementById('name')?.value || null;
                 searchParams.userId = document.getElementById('userId')?.value || null;
@@ -1121,11 +1149,6 @@ const MemberModule = {
                 searchParams.contractorTel = document.getElementById('contractorTel')?.value || null;
                 searchParams.contractorEtc = document.getElementById('contractorEtc')?.value || null;
                 searchParams.jobScale = document.querySelector('input[name="company"]:checked')?.value || null;
-            } else if (MemberModule.state.pageType === 'admin') {
-                // 관리자 검색 파라미터
-                searchParams.name = document.getElementById('name')?.value || null;
-                searchParams.userId = document.getElementById('userId')?.value || null;
-                searchParams.jobCourseDuty = document.getElementById('jobCourseDuty')?.value || null;
             } else {
                 // 학생 검색 파라미터
                 searchParams.name = document.getElementById('name')?.value || null;
@@ -1734,7 +1757,8 @@ const MemberModule = {
 
             // 저장 버튼 클릭 이벤트 리스너 (폼 제출 대체)
             const btnSave = document.getElementById('btnSave');
-            if (btnSave) {
+            const btnSave1 = document.getElementById('btnSave1');
+            if (btnSave || btnSave1) {
                 btnSave.addEventListener('click', (e) => {
                     e.preventDefault();
                     const form = document.querySelector('form[id$="SaveForm"]');
@@ -1842,7 +1866,8 @@ const MemberModule = {
 
             // 수정 버튼 클릭 이벤트 리스너 (폼 제출 대체)
             const btnUpdate = document.getElementById('btnUpdate');
-            if (btnUpdate) {
+            const btnUpdate1 = document.getElementById('btnUpdate1');
+            if (btnUpdate || btnUpdate1) {
                 btnUpdate.addEventListener('click', (e) => {
                     e.preventDefault();
                     const form = document.querySelector('form[id$="DetailForm"]');
