@@ -1,13 +1,13 @@
-package com.example.junguniv_bb.domain.auth.service;
+package com.example.junguniv_bb.domain._auth.service;
 
 import com.example.junguniv_bb._core.exception.Exception400;
 import com.example.junguniv_bb._core.exception.ExceptionMessage;
 import com.example.junguniv_bb._core.security.JWTType;
 import com.example.junguniv_bb._core.security.JwtProvider;
-import com.example.junguniv_bb.domain.auth.dto.ReqJoinDTO;
-import com.example.junguniv_bb.domain.auth.dto.ReqLoginDTO;
-import com.example.junguniv_bb.domain.auth.dto.ResJoinDTO;
-import com.example.junguniv_bb.domain.auth.dto.ResLoginDTO;
+import com.example.junguniv_bb.domain._auth.dto.ReqJoinDTO;
+import com.example.junguniv_bb.domain._auth.dto.ReqLoginDTO;
+import com.example.junguniv_bb.domain._auth.dto.ResJoinDTO;
+import com.example.junguniv_bb.domain._auth.dto.ResLoginDTO;
 import com.example.junguniv_bb.domain.member.model.Member;
 import com.example.junguniv_bb.domain.member.model.MemberRepository;
 import jakarta.servlet.http.Cookie;

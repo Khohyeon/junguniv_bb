@@ -614,6 +614,13 @@ const MemberModule = {
             event.preventDefault();
             
             try {
+                // 아이디 중복 확인 여부 체크
+                if (!MemberModule.state.isIdCheckPassed) {
+                    alert('아이디 중복 확인이 필요합니다.');
+                    document.getElementById('userId')?.focus();
+                    return;
+                }
+
                 const data = {
                     // 공통 필드
                     userType: document.getElementById('userType').value,
@@ -1734,7 +1741,8 @@ const MemberModule = {
 
             // 저장 버튼 클릭 이벤트 리스너 (폼 제출 대체)
             const btnSave = document.getElementById('btnSave');
-            if (btnSave) {
+            const btnSave1 = document.getElementById('btnSave1');
+            if (btnSave || btnSave1) {
                 btnSave.addEventListener('click', (e) => {
                     e.preventDefault();
                     const form = document.querySelector('form[id$="SaveForm"]');
@@ -1842,7 +1850,8 @@ const MemberModule = {
 
             // 수정 버튼 클릭 이벤트 리스너 (폼 제출 대체)
             const btnUpdate = document.getElementById('btnUpdate');
-            if (btnUpdate) {
+            const btnUpdate1 = document.getElementById('btnUpdate1');
+            if (btnUpdate || btnUpdate1) {
                 btnUpdate.addEventListener('click', (e) => {
                     e.preventDefault();
                     const form = document.querySelector('form[id$="DetailForm"]');

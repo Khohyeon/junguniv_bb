@@ -1,4 +1,4 @@
-package com.example.junguniv_bb.domain.auth.dto;
+package com.example.junguniv_bb.domain._auth.dto;
 
 import com.example.junguniv_bb._core.exception.Exception400;
 import com.example.junguniv_bb._core.exception.ValidExceptionMessage;

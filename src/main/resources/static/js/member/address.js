@@ -225,7 +225,7 @@ const AddressModule = {
             const left = (window.screen.width - width) / 2;
             const top = (window.screen.height - height) / 2;
             
-            window.open('/masterpage_sys/member/company/searchForm', 'companySearch',
+            window.open('/masterpage_sys/member/company/search', 'companySearch',
                 `width=${width},height=${height},left=${left},top=${top},scrollbars=yes`);
         },
 

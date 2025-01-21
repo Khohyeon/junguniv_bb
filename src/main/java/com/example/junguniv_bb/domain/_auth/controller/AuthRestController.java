@@ -1,23 +1,18 @@
-package com.example.junguniv_bb.domain.auth.controller;
+package com.example.junguniv_bb.domain._auth.controller;
 
 import com.example.junguniv_bb._core.exception.Exception400;
-import com.example.junguniv_bb._core.security.CustomUserDetails;
 import com.example.junguniv_bb._core.util.APIUtils;
-import com.example.junguniv_bb.domain.auth.dto.ReqJoinDTO;
-import com.example.junguniv_bb.domain.auth.dto.ReqLoginDTO;
-import com.example.junguniv_bb.domain.auth.dto.ResJoinDTO;
-import com.example.junguniv_bb.domain.auth.dto.ResLoginDTO;
-import com.example.junguniv_bb.domain.auth.service.AuthService;
-import com.example.junguniv_bb.domain.member._enum.UserType;
-import com.example.junguniv_bb.domain.member.model.Member;
+import com.example.junguniv_bb.domain._auth.dto.ReqJoinDTO;
+import com.example.junguniv_bb.domain._auth.dto.ReqLoginDTO;
+import com.example.junguniv_bb.domain._auth.dto.ResJoinDTO;
+import com.example.junguniv_bb.domain._auth.dto.ResLoginDTO;
+import com.example.junguniv_bb.domain._auth.service.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
