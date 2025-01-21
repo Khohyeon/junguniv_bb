@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
  */
 async function fetchDepth3Menus(menuIdx) {
     try {
-        const response = await fetch(`/masterpage_sys/uznMenu/api/depth3?parentMenuIdx=${menuIdx}`);
+        const response = await fetch(`/masterpage_sys/manager_menu/api/depth3?parentMenuIdx=${menuIdx}`);
         if (!response.ok) {
             throw new Error('Failed to fetch depth3 menus');
         }

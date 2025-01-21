@@ -27,7 +27,7 @@ public record MemberAdminPageResDTO(
             String userId, // 아이디
             String telMobile, // 휴대폰
             String email, // 이메일
-            String jobDuty, // 환급/일반 담당
+            String jobCourseDuty, // 환급/일반 담당
             Long authLevel, // 권한명
             String jobWorkState, // 근무상태
             LocalDateTime createdDate // 회원등록일
@@ -39,7 +39,7 @@ public record MemberAdminPageResDTO(
                     member.getUserId(),
                     member.getTelMobile(),
                     member.getEmail(),
-                    member.getJobDuty(),
+                    member.getJobCourseDuty(),
                     member.getAuthLevel(),
                     member.getJobWorkState(),
                     member.getCreatedDate()

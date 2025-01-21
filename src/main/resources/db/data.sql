@@ -18,7 +18,7 @@ VALUES (1, 'qwer', '$2a$10$5mcrIopDr1/WTCSzbMoGo.5L7SYgLLyxH0OZobyOYkSPeItRqxI6G
 -- 회원 테이블 시퀀스 초기화
 ALTER TABLE MEMBER ALTER COLUMN MEMBER_IDX RESTART WITH 8;
 
-INSERT INTO UZN_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX) VALUES
+INSERT INTO MANAGER_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX) VALUES
 -- 최상위 메뉴
 ('회원관리', 1, 'Y', NULL, NULL),
 ('홈페이지관리', 2, 'Y', NULL, NULL),
@@ -26,11 +26,11 @@ INSERT INTO UZN_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX) VALUES
 ('시스템설정', 4, 'Y', NULL, NULL),
 
 -- 하위 메뉴
-('회원정보관리', 1, 'Y', '/masterpage_sys/member/student/', 1),
-('권한관리', 2, 'Y', '/masterpage_sys/authlevel/', 1),
-('주소록출력', 3, 'Y', '/masterpage_sys/label/student/', 1),
+('회원정보관리', 1, 'Y', '/masterpage_sys/member/student', 1),
+('권한관리', 2, 'Y', '/masterpage_sys/authlevel', 1),
+('주소록출력', 3, 'Y', '/masterpage_sys/label/student', 1),
 ('팝업관리', 1, 'Y', '/masterpage_sys/popup', 2),
-('약관관리', 2, 'Y', '/masterpage_sys/agreement/join', 2),
+('약관관리', 2, 'Y', '/masterpage_sys/agreement', 2),
 ('게시판관리', 3, 'Y', '/masterpage_sys/board/counsel', 2),
 ('문의상담관리', 4, 'Y', '/masterpage_sys/counsel', 2),
 ('일반통계', 1, 'Y', '#', 3),
@@ -40,14 +40,14 @@ INSERT INTO UZN_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX) VALUES
 ('메뉴관리', 4, 'Y', '#', 4),
 
 -- 탭 메뉴
-('수강생', 1, 'Y', '/masterpage_sys/member/student/', 5),
-('교강사(튜터)', 2, 'Y', '/masterpage_sys/member/teacher/', 5),
-('위탁기업', 3, 'Y', '/masterpage_sys/member/company/', 5),
-('LMS관리자', 4, 'Y', '/masterpage_sys/member/admin/', 5),
+('수강생', 1, 'Y', '/masterpage_sys/member/student', 5),
+('교강사(튜터)', 2, 'Y', '/masterpage_sys/member/teacher', 5),
+('위탁기업', 3, 'Y', '/masterpage_sys/member/company', 5),
+('LMS관리자', 4, 'Y', '/masterpage_sys/member/admin', 5),
 ('관리자권한설정', 1, 'Y', '#', 6),
 ('홈페이지게시판', 2, 'Y', '/masterpage_sys/board/managerForm', 6),
-('주소록출력', 1, 'Y', '/masterpage_sys/member/address/', 7),
 ('메인팝업', 1, 'Y', '/masterpage_sys/popup', 8),
+('주소록출력', 1, 'Y', '/masterpage_sys/member/address', 7),
 ('상단팝업', 2, 'N', '/masterpage_sys/board/mainpopup', 8),
 ('회원가입약관', 1, 'Y', '/masterpage_sys/agreement/join', 9),
 ('수강신청약관', 2, 'Y', '/masterpage_sys/agreement/course', 9),

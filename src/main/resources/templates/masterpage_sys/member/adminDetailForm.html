@@ -153,16 +153,16 @@
 								<div class="tit">휴대폰</div>
 								<div class="con flex">
 									<select name="telMobile1" id="telMobile1">
-										<option value="010" th:selected="${member.telMobile != null && #strings.substring(member.telMobile, 0, 3) == '010'}">010</option>
-										<option value="011" th:selected="${member.telMobile != null && #strings.substring(member.telMobile, 0, 3) == '011'}">011</option>
-										<option value="016" th:selected="${member.telMobile != null && #strings.substring(member.telMobile, 0, 3) == '016'}">016</option>
-										<option value="017" th:selected="${member.telMobile != null && #strings.substring(member.telMobile, 0, 3) == '017'}">017</option>
-										<option value="019" th:selected="${member.telMobile != null && #strings.substring(member.telMobile, 0, 3) == '019'}">019</option>
+										<option value="010" th:selected="${member.telMobile != null && member.telMobile.length() >= 3 && #strings.substring(member.telMobile, 0, 3) == '010'}">010</option>
+										<option value="011" th:selected="${member.telMobile != null && member.telMobile.length() >= 3 && #strings.substring(member.telMobile, 0, 3) == '011'}">011</option>
+										<option value="016" th:selected="${member.telMobile != null && member.telMobile.length() >= 3 && #strings.substring(member.telMobile, 0, 3) == '016'}">016</option>
+										<option value="017" th:selected="${member.telMobile != null && member.telMobile.length() >= 3 && #strings.substring(member.telMobile, 0, 3) == '017'}">017</option>
+										<option value="019" th:selected="${member.telMobile != null && member.telMobile.length() >= 3 && #strings.substring(member.telMobile, 0, 3) == '019'}">019</option>
 									</select>
 									<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
-									<input type="text" name="telMobile2" id="telMobile2" maxlength="4" th:value="${member.telMobile != null ? #strings.substring(member.telMobile, 4, 8) : ''}">
+									<input type="text" name="telMobile2" id="telMobile2" maxlength="4" th:value="${member.telMobile != null && member.telMobile.length() >= 8 ? #strings.substring(member.telMobile, 4, 8) : ''}">
 									<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
-									<input type="text" name="telMobile3" id="telMobile3" maxlength="4" th:value="${member.telMobile != null ? #strings.substring(member.telMobile, 9, 13) : ''}">
+									<input type="text" name="telMobile3" id="telMobile3" maxlength="4" th:value="${member.telMobile != null && member.telMobile.length() >= 13 ? #strings.substring(member.telMobile, 9, 13) : ''}">
 								</div>
 							</div>
 						</div>
@@ -186,7 +186,7 @@
 		</form>
 
 		<div class="btn-wrap mt50">
-			<a href="/masterpage_sys/member/admin/" class="jv-btn fill01-lg">목록</a>
+			<a href="/masterpage_sys/member/admin" class="jv-btn fill01-lg">목록</a>
 			<button type="submit" class="jv-btn fill01-lg" id="btnUpdate">수정</button>
 		</div>
 	</div>

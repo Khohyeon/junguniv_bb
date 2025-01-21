@@ -1,8 +1,8 @@
-package com.example.junguniv_bb.dto;
+package com.example.junguniv_bb.domain.managerMenu.dto;
 
 import java.util.List;
 
-public record UznMenuListResDTO(
+public record ManagerMenuListResDTO(
         Long code,
         String name,
         String url,
