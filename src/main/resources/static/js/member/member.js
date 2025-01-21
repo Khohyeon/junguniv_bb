@@ -417,7 +417,13 @@ const MemberModule = {
                                     </label>
                                 ` : ''}
                             </td>
-                            <td>${member.jobDuty || '-'}</td>
+                            <td>${(() => {
+                                switch(member.jobCourseDuty) {
+                                    case 'REFUND': return '환급';
+                                    case 'NORMAL': return '일반';
+                                    default: return '-';
+                                }
+                            })()}</td>
                             <td>${member.authLevel || '-'}</td>
                             <td>${(() => {
                                 switch(member.jobWorkState) {
@@ -937,7 +943,7 @@ const MemberModule = {
                     }[data.userType];
                     
                     alert(`${userTypeText} 등록 완료.`);
-                    window.location.href = `/masterpage_sys/member/${data.userType.toLowerCase()}/`;
+                    window.location.href = `/masterpage_sys/member/${data.userType.toLowerCase()}`;
                 } else {
                     alert(result.message || '회원 등록에 실패했습니다.');
                 }
@@ -977,7 +983,7 @@ const MemberModule = {
             const left = (window.screen.width - popupWidth) / 2;
             const top = (window.screen.height - popupHeight) / 2;
             
-            window.open('/masterpage_sys/member/company/searchForm', 'companySearch',
+            window.open('/masterpage_sys/member/company/search', 'companySearch',
                 `width=${popupWidth},height=${popupHeight},left=${left},top=${top}`);
         },
 
@@ -1449,7 +1455,9 @@ const MemberModule = {
                     }[data.userType];
 
                     alert(`${userTypeText} 수정이 완료되었습니다.`);
-                    window.location.reload();
+                    // window.location.reload();
+                    window.location.href = `/masterpage_sys/member/${data.userType.toLowerCase()}`;
+
                 } else {
                     alert(result.message || '회원 수정에 실패했습니다.');
                 }
@@ -1634,7 +1642,7 @@ const MemberModule = {
             const currentPath = window.location.pathname;
             if (currentPath.includes('/member/teacher')) {
                 this.state.pageType = 'teacher';
-            } else if (currentPath.includes('/member/company/searchForm')) {
+            } else if (currentPath.includes('/member/company/search')) {
                 this.state.pageType = 'companySearch';
             } else if (currentPath.includes('/member/company')) {
                 this.state.pageType = 'company';

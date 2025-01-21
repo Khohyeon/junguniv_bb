@@ -1,8 +1,8 @@
 package com.example.junguniv_bb;
 
-import com.example.junguniv_bb.dto.UznMenuListResDTO;
-import com.example.junguniv_bb.domain.uznMenu.model.UznMenu;
-import com.example.junguniv_bb.domain.uznMenu.model.UznMenuRepository;
+import com.example.junguniv_bb.domain.managerMenu.dto.ManagerMenuListResDTO;
+import com.example.junguniv_bb.domain.managerMenu.model.ManagerMenu;
+import com.example.junguniv_bb.domain.managerMenu.model.ManagerMenuRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +13,7 @@ import java.util.Optional;
 @ControllerAdvice
 @RequiredArgsConstructor
 public class MasterGlobalModelAttribute {
-    private final UznMenuRepository uznMenuRepository;
+    private final ManagerMenuRepository managerMenuRepository;
 
 
     /**
@@ -21,9 +21,9 @@ public class MasterGlobalModelAttribute {
      * 최상위 메뉴와 하위 메뉴를 포함한 메뉴 계층을 반환합니다.
      */
     @ModelAttribute("xbigMenus")
-    public List<UznMenuListResDTO> populateBigMenus() {
+    public List<ManagerMenuListResDTO> populateBigMenus() {
         // 최상위 메뉴 조회
-        List<UznMenu> topMenus = uznMenuRepository.findByParentIsNullAndChkUseOrderBySortno("Y");
+        List<ManagerMenu> topMenus = managerMenuRepository.findByParentIsNullAndChkUseOrderBySortno("Y");
 
         // 메뉴 데이터를 변환하여 반환
         return topMenus.stream()
@@ -32,15 +32,15 @@ public class MasterGlobalModelAttribute {
     }
     
     /**
-     * UznMenu 엔티티를 Menu DTO로 변환합니다.
+     * ManagerMenu 엔티티를 Menu DTO로 변환합니다.
      */
-    private UznMenuListResDTO convertToMenu(UznMenu menu) {
+    private ManagerMenuListResDTO convertToMenu(ManagerMenu menu) {
         // 하위 메뉴를 Menu.SubMenu 객체로 변환
-        List<UznMenuListResDTO.SubMenu> subMenuList = Optional.ofNullable(menu.getChildren())
+        List<ManagerMenuListResDTO.SubMenu> subMenuList = Optional.ofNullable(menu.getChildren())
                 .orElse(Collections.emptyList())
                 .stream()
                 .filter(child -> "Y".equals(child.getChkUse())) // 사용 가능한 하위 메뉴만 필터링
-                .map(sub -> new UznMenuListResDTO.SubMenu(
+                .map(sub -> new ManagerMenuListResDTO.SubMenu(
                         sub.getMenuIdx(),
                         sub.getMenuName(),
                         Optional.ofNullable(sub.getUrl()).orElse("#") // URL이 없으면 기본값 #
@@ -48,7 +48,7 @@ public class MasterGlobalModelAttribute {
                 .toList();
 
         // 최상위 메뉴를 Menu 객체로 변환
-        return new UznMenuListResDTO(
+        return new ManagerMenuListResDTO(
                 menu.getMenuIdx(),
                 menu.getMenuName(),
                 Optional.ofNullable(menu.getUrl()).orElse("#"), // URL이 없으면 기본값 #

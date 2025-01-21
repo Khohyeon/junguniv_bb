@@ -107,18 +107,18 @@ public class MemberService {
 
         if (referer != null) {
             // 주소록 페이지인 경우
-            if (referer.contains("/address/")) {
+            if (referer.contains("/address")) {
                 memberPagePS = memberRepository.findAll(pageable);
                 return ResponseEntity.ok(new MemberAddressPageResDTO(memberPagePS));
             }
 
-            if (referer.contains("/student/")) {
+            if (referer.contains("/student")) {
                 userType = UserType.STUDENT;
-            } else if (referer.contains("/teacher/")) {
+            } else if (referer.contains("/teacher")) {
                 userType = UserType.TEACHER;
-            } else if (referer.contains("/company/")) {
+            } else if (referer.contains("/company")) {
                 userType = UserType.COMPANY;
-            } else if (referer.contains("/admin/")) {
+            } else if (referer.contains("/admin")) {
                 userType = UserType.ADMIN;
             }
         }
