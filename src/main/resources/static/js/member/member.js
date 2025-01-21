@@ -52,6 +52,15 @@ const MemberModule = {
         // 회원 목록 조회
         getMembers: async function(page = 0, size = 10) {
             try {
+                // URL에서 authLevel 파라미터 확인
+                const urlParams = new URLSearchParams(window.location.search);
+                const authLevel = urlParams.get('authLevel');
+
+                // 현재 페이지가 관리자 목록이고 authLevel이 있는 경우
+                if (window.location.pathname.includes('/member/admin') && authLevel) {
+                    return await this.searchAdmins({ authLevel }, page, size);
+                }
+
                 const response = await fetch(`/masterpage_sys/member/api?page=${page}&size=${size}`, {
                     method: 'GET',
                     headers: {
@@ -67,7 +76,7 @@ const MemberModule = {
                 return await response.json();
             } catch (error) {
                 console.error('회원 목록 조회 에러:', error);
-                return null; // 에러 발생 시 null 반환하도록 수정
+                return null;
             }
         },
 
@@ -1108,11 +1117,23 @@ const MemberModule = {
         search: async function(e) {
             e.preventDefault();
 
+            // URL에서 authLevel 파라미터 확인
+            const urlParams = new URLSearchParams(window.location.search);
+            const authLevel = urlParams.get('authLevel');
+
             // 검색 파라미터 수집
             const searchParams = {};
 
             // 페이지 타입에 따른 검색 파라미터 설정
-            if (MemberModule.state.pageType === 'teacher') {
+            if (MemberModule.state.pageType === 'admin') {
+                // 관리자 검색 파라미터
+                searchParams.name = document.getElementById('name')?.value || null;
+                searchParams.userId = document.getElementById('userId')?.value || null;
+                searchParams.jobCourseDuty = document.getElementById('jobCourseDuty')?.value || null;
+                if (authLevel) {
+                    searchParams.authLevel = authLevel;
+                }
+            } else if (MemberModule.state.pageType === 'teacher') {
                 // 교강사 검색 파라미터
                 searchParams.name = document.getElementById('name')?.value || null;
                 searchParams.userId = document.getElementById('userId')?.value || null;
@@ -1128,11 +1149,6 @@ const MemberModule = {
                 searchParams.contractorTel = document.getElementById('contractorTel')?.value || null;
                 searchParams.contractorEtc = document.getElementById('contractorEtc')?.value || null;
                 searchParams.jobScale = document.querySelector('input[name="company"]:checked')?.value || null;
-            } else if (MemberModule.state.pageType === 'admin') {
-                // 관리자 검색 파라미터
-                searchParams.name = document.getElementById('name')?.value || null;
-                searchParams.userId = document.getElementById('userId')?.value || null;
-                searchParams.jobCourseDuty = document.getElementById('jobCourseDuty')?.value || null;
             } else {
                 // 학생 검색 파라미터
                 searchParams.name = document.getElementById('name')?.value || null;

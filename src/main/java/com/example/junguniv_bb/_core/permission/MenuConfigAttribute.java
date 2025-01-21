@@ -1,6 +1,6 @@
 package com.example.junguniv_bb._core.permission;
 
-import com.example.junguniv_bb.domain.managerMenu.model.ManagerMenu;
+import com.example.junguniv_bb.domain.managermenu.model.ManagerMenu;
 import org.springframework.security.access.ConfigAttribute;
 
 public class MenuConfigAttribute implements ConfigAttribute {

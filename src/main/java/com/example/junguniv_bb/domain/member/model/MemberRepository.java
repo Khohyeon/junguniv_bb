@@ -7,11 +7,14 @@ import org.springframework.data.jpa.repository.Meta;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
-import com.example.junguniv_bb.domain.member._enum.UserType;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.junguniv_bb.domain.member._enum.UserType;
+
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
@@ -103,10 +106,12 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
            "WHERE m.userType = 'ADMIN' " +
            "AND (:name IS NULL OR m.name LIKE CONCAT('%', :name, '%')) " +
            "AND (:userId IS NULL OR m.userId LIKE CONCAT('%', :userId, '%')) " +
-           "AND (:jobCourseDuty IS NULL OR m.jobCourseDuty = :jobCourseDuty)")
+           "AND (:jobCourseDuty IS NULL OR m.jobCourseDuty = :jobCourseDuty) " +
+           "AND (:authLevel IS NULL OR m.authLevel = :authLevel)")
     Page<Member> searchAdmins(@Param("name") String name,
                             @Param("userId") String userId,
                             @Param("jobCourseDuty") String jobCourseDuty,
+                            @Param("authLevel") Long authLevel,
                             Pageable pageable);
 
     /* 주소록 검색 */
@@ -125,4 +130,17 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             @Param("email") String email,
             @Param("jobName") String jobName,
             Pageable pageable);
+
+    @Meta(comment = "각 AuthLevel 별 회원 수를 조회합니다.")
+    @Query("SELECT m.authLevel, COUNT(m) FROM Member m WHERE m.authLevel IN :authLevels GROUP BY m.authLevel")
+    List<Object[]> countMembersByAuthLevelRaw(@Param("authLevels") List<Long> authLevels);
+
+    default Map<Long, Long> countMembersByAuthLevel(List<Long> authLevels) {
+        List<Object[]> results = countMembersByAuthLevelRaw(authLevels);
+        return results.stream()
+                .collect(Collectors.toMap(
+                        row -> (Long) row[0],  // authLevel
+                        row -> (Long) row[1]   // count
+                ));
+    }
 }
