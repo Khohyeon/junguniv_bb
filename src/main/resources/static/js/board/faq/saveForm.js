@@ -1,15 +1,11 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const form = document.querySelector('.form-wrap2');
-    const saveButton = document.querySelector('.jv-btn.fill04-lg');
+    const form = document.getElementById('saveForm');
 
-
-    saveButton.addEventListener('click', function (event) {
+    form.addEventListener('submit', function (event) {
         event.preventDefault(); // 기본 제출 방지
 
         const formData = new FormData(form); // 폼 데이터 생성
         const boardType = 'FAQ';
-        const editorContent = document.getElementById('editor').value; // 에디터 내용 추가
-        formData.append('contents', editorContent);
         formData.append('boardType', boardType);
 
         fetch('/masterpage_sys/board/api/save', {

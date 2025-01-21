@@ -1,21 +1,44 @@
-<div th:fragment="board_header" class="inner">
+<div th:fragment="board_header(includeCategory)" class="inner">
     <div class="form-wrap">
         <div class="group01">
             <div class="tit">검색</div>
             <div class="con">
                 <div class="column-tc-wrap part2">
+                    <!-- 제목 검색 -->
                     <div class="column-tc">
                         <div class="tit">제목</div>
-                        <div class="con ml5">
-                            <input type="text" id="searchInput" placeholder="검색어를 입력해주세요">
+                        <div class="con flex">
+                            <!-- 제목 검색 방식 -->
+                            <select id="searchType">
+                                <option value="title">제목</option>
+                                <option value="titleAndContent">제목+내용</option>
+                                <option value="content">내용</option>
+                            </select>
+                            <div class="ml5">
+                                <input type="text" id="searchInput" placeholder="검색어를 입력해주세요">
+                            </div>
                         </div>
                     </div>
+                    <!-- 작성일 -->
                     <div class="column-tc">
                         <div class="tit">작성일</div>
                         <div class="con flex">
-                            <input type="date">
+                            <input type="date" id="startDate">
                             <span>&nbsp;&nbsp;~&nbsp;&nbsp;</span>
-                            <input type="date">
+                            <input type="date" id="endDate">
+                        </div>
+                    </div>
+                    <!-- 카테고리 -->
+                    <div class="column-tc" th:if="${includeCategory}">
+                        <div class="tit">카테고리</div>
+                        <div class="con">
+                            <select name="category" id="category" >
+                                <option value="" th:selected="${selectedCategory == null}">선택</option>
+                                <option th:each="category : ${categories}"
+                                        th:value="${category}"
+                                        th:text="${category}"
+                                        th:selected="${category == selectedCategory}"></option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -30,10 +53,11 @@
             <a href="#none" class="jv-btn fill05 delete-board-btn">삭제</a>
             <div class="page-view flex">
                 <span>페이지수</span>
-                <select>
-                    <option>선택</option>
-                    <option>1</option>
-                    <option>2</option>
+                <select id="pageSelect">
+                    <option value="0">1</option>
+                    <option value="1">2</option>
+                    <option value="2">3</option>
+                    <!-- 필요에 따라 옵션 추가 -->
                 </select>
             </div>
             <div class="count">
@@ -57,6 +81,7 @@
             <th>NO</th>
             <th>제목</th>
             <th>작성일</th>
+            <th>게시글 수정</th>
             <th>조회수</th>
         </tr>
         </thead>

@@ -32,7 +32,7 @@ public record BoardUpdateReqDTO(
                 title,
                 writer,
                 category,
-                topFix,
+                topFix == null ? "N" : topFix,
                 parseDate(fixStartDate),
                 parseDate(fixEndDate),
                 chkMain,

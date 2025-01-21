@@ -28,16 +28,29 @@ public class BoardRestController {
      */
     @GetMapping("/search")
     public ResponseEntity<APIUtils.APIResult<Page<BoardSearchResDTO>>> searchBoards(
-            @RequestParam String title,
-            @RequestParam String boardType,
+            @RequestParam(required = false) String title,        // 제목 또는 내용 검색 키워드
+            @RequestParam String boardType,                     // 게시판 타입
+            @RequestParam(required = false) String searchType,  // 검색 타입 (제목, 제목+내용, 내용)
+            @RequestParam(required = false) String startDate,   // 작성일 시작
+            @RequestParam(required = false) String endDate,     // 작성일 종료
+            @RequestParam(required = false) String category,    // 카테고리
             Pageable pageable) {
 
-        // 팝업의 페이징 형태를 boardIdx 기준으로 DESC 내림차순으로 설정
+        // 페이징 기본 설정: bbsIdx 기준 내림차순
         pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "bbsIdx"));
 
-        Page<BoardSearchResDTO> searchResults = boardService.searchByName(title, boardType, pageable);
-        return ResponseEntity.ok(APIUtils.success(searchResults));
+        // 서비스 호출하여 검색 수행
+        Page<BoardSearchResDTO> searchResults = boardService.searchBoards(
+                title,
+                boardType,
+                searchType,
+                startDate,
+                endDate,
+                category,
+                pageable
+        );
 
+        return ResponseEntity.ok(APIUtils.success(searchResults));
     }
 
     /**

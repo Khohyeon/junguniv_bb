@@ -54,28 +54,32 @@ function deleteSelectedBoards(boardIds) {
         });
 }
 
-
 function deleteSelectedBoard(boardId, redirectUrl) {
-    fetch('/masterpage_sys/board/api/delete', {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(boardId) // 객체 형태로 감싸서 전송
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('삭제 실패');
-            }
-            return response.json();
+    // 사용자 확인
+    if (confirm('정말 삭제하시겠습니까?')) {
+        fetch('/masterpage_sys/board/api/delete', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(boardId) // 객체 형태로 감싸서 전송
         })
-        .then(data => {
-            alert(data.response);
-            window.location.href = redirectUrl; // 성공 후 목록으로 이동
-        })
-        .catch(error => {
-            alert('오류가 발생했습니다: ' + error.message);
-            console.error('Error:', error);
-        });
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('삭제 실패');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.response); // 성공 메시지 표시
+                window.location.href = redirectUrl; // 성공 후 목록으로 이동
+            })
+            .catch(error => {
+                alert('오류가 발생했습니다: ' + error.message);
+                console.error('Error:', error);
+            });
+    } else {
+        alert('삭제가 취소되었습니다.'); // 사용자가 취소한 경우
+    }
 }
 

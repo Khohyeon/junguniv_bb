@@ -14,8 +14,8 @@
                 </ul>
             </div>
             <div class="view-con">
-                <!-- 내용 -->
-                <p th:text="${board.contents()}">내용</p>
+                <!-- HTML 태그를 렌더링 -->
+                <p th:utext="${board.contents()}"></p>
             </div>
         </div>
         <div class="view-bot">

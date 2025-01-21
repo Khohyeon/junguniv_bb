@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
         event.preventDefault(); // 기본 제출 방지
 
         const formData = new FormData(form); // 폼 데이터 생성
-        const boardType = 'QNA'; // 게시판 타입 추가
+        const boardType = 'Q&A'; // 게시판 타입 추가
 
         formData.append('boardType', boardType);
 

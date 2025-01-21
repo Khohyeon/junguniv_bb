@@ -48,7 +48,7 @@
                     <a th:href="@{/masterpage_sys/agreement/join/{agreementIdx}(agreementIdx=${agreement.agreementIdx()})}" class="jv-btn fill04 ml10">텍스트 수정</a>
                 </div>
             </div>
-            <div class="b01" th:text="${agreement.agreementContents()}">
+            <div class="b01" th:utext="${agreement.agreementContents()}">
                 약관 내용
             </div>
         </div>

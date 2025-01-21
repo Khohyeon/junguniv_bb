@@ -1,5 +1,6 @@
 package com.example.junguniv_bb.domain.board.service;
 
+import com.example.junguniv_bb.domain.board.model.BbsSpecifications;
 import com.example.junguniv_bb._core.exception.Exception400;
 import com.example.junguniv_bb._core.exception.ExceptionMessage;
 import com.example.junguniv_bb._core.util.FileUtils;
@@ -12,21 +13,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.FileTime;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Arrays;
-
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -106,23 +100,41 @@ public class BoardService {
         BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(boardType);
 
         Page<Bbs> bbsPage = bbsRepository.findByTitleContainingIgnoreCaseAndBbsGroup(title, bbsGroup,pageable);
-        return bbsPage.map(bbs ->
-                new BoardSearchResDTO(
-                        bbs.getBbsIdx(),
-                        bbs.getBbsGroup(),
-                        bbs.getTitle(),
-                        bbs.getFormattedCreatedDate2(),
-                        bbs.getReadNum()
-                ));
+        return bbsPage.map(bbs -> {
+            // 현재 날짜 확인
+            LocalDate currentDate = LocalDate.now();
+
+            // chkTopFix 값 조정
+            String chkTopFix = "Y".equals(bbs.getChkTopFix()) &&
+                    bbs.getFixStartDate() != null &&
+                    bbs.getFixEndDate() != null &&
+                    !currentDate.isBefore(bbs.getFixStartDate()) &&
+                    !currentDate.isAfter(bbs.getFixEndDate())
+                    ? "Y"
+                    : "N";
+
+            return new BoardSearchResDTO(
+                    bbs.getBbsIdx(),
+                    bbs.getBbsGroup(),
+                    bbs.getTitle(),
+                    bbs.getFormattedCreatedDate2(),
+                    bbs.getReadNum(),
+                    chkTopFix // 조정된 chkTopFix 값을 전달
+            );
+        });
     }
 
     /**
      * 게시판 상세페이지 BoardType 을 통해 모두 하나의 매핑으로 작업
      * 응답 형태 : BoardDetailResDTO
      */
+    @Transactional
     public BoardDetailResDTO getBoardDetail(Long bbsIdx) {
+        bbsRepository.incrementReadNum(bbsIdx);
+
         Bbs bbs = bbsRepository.findById(bbsIdx)
                 .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_BBS.getMessage()));
+
 
         return new BoardDetailResDTO(
                 bbs.getBbsIdx(),
@@ -292,5 +304,71 @@ public class BoardService {
     public String getBoardCategory(String boardType) {
         BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(boardType);
         return bbsGroup.getCategory();
+    }
+
+    public Page<BoardSearchResDTO> searchBoards(String title, String boardType, String searchType, String startDate, String endDate, String category, Pageable pageable) {
+        BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(boardType);
+        if (bbsGroup == null) {
+            throw new Exception400("Invalid boardType: " + boardType);
+        }
+
+        // Specification을 이용한 동적 조건 빌드
+        Specification<Bbs> spec = Specification.where(BbsSpecifications.bbsGroupEquals(bbsGroup));
+
+        // 제목 검색 처리
+        if (title != null && !title.isEmpty()) {
+            switch (searchType) {
+                case "title":
+                    spec = spec.and(BbsSpecifications.titleContains(title));
+                    break;
+                case "titleAndContent":
+                    spec = spec.and(BbsSpecifications.titleOrContentContains(title));
+                    break;
+                case "content":
+                    spec = spec.and(BbsSpecifications.contentContains(title));
+                    break;
+            }
+        }
+
+        // 작성일 필터 추가
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        if (startDate != null && !startDate.isEmpty()) {
+            LocalDate parsedStartDate = LocalDate.parse(startDate, formatter);
+            spec = spec.and(BbsSpecifications.createdDateAfter(parsedStartDate));
+        }
+        if (endDate != null && !endDate.isEmpty()) {
+            LocalDate parsedEndDate = LocalDate.parse(endDate, formatter);
+            spec = spec.and(BbsSpecifications.createdDateBefore(parsedEndDate));
+        }
+
+        if (category != null && !category.isEmpty()) {
+            spec = spec.and(BbsSpecifications.categoryEquals(category));
+        }
+
+        // 검색 실행 및 결과 매핑
+        Page<Bbs> bbsPage = bbsRepository.findAll(spec, pageable);
+
+        return bbsPage.map(bbs -> {
+            // 현재 날짜 확인
+            LocalDate currentDate = LocalDate.now();
+
+            // chkTopFix 값 조정
+            String chkTopFix = "Y".equals(bbs.getChkTopFix()) &&
+                    bbs.getFixStartDate() != null &&
+                    bbs.getFixEndDate() != null &&
+                    !currentDate.isBefore(bbs.getFixStartDate()) &&
+                    !currentDate.isAfter(bbs.getFixEndDate())
+                    ? "Y"
+                    : "N";
+
+            return new BoardSearchResDTO(
+                    bbs.getBbsIdx(),
+                    bbs.getBbsGroup(),
+                    bbs.getTitle(),
+                    bbs.getFormattedCreatedDate2(),
+                    bbs.getReadNum(),
+                    chkTopFix // 조정된 chkTopFix 값을 전달
+            );
+        });
     }
 }
