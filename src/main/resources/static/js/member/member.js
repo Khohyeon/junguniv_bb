@@ -52,7 +52,7 @@ const MemberModule = {
         // 회원 목록 조회
         getMembers: async function(page = 0, size = 10) {
             try {
-                const response = await fetch(`/masterpage_sys/member/api/?page=${page}&size=${size}`, {
+                const response = await fetch(`/masterpage_sys/member/api?page=${page}&size=${size}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ const MemberModule = {
         // 회원 삭제
         deleteMembers: async function(ids) {
             try {
-                const response = await fetch('/masterpage_sys/member/api/', {
+                const response = await fetch('/masterpage_sys/member/api', {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json'
@@ -96,7 +96,7 @@ const MemberModule = {
         // 회원 등록
         saveMember: async function(memberData) {
             try {
-                const response = await fetch('/masterpage_sys/member/api/', {
+                const response = await fetch('/masterpage_sys/member/api', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -882,7 +882,7 @@ const MemberModule = {
                 });
 
                 // API 호출
-                const response = await fetch('/masterpage_sys/member/api/', {
+                const response = await fetch('/masterpage_sys/member/api', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
