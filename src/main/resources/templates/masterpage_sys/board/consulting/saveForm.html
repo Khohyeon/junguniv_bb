@@ -3,6 +3,7 @@
 <head>
     <!-- 헤더에서 CSS 포함 -->
     <th:block th:replace="fragments/header :: head"></th:block>
+    <link rel="stylesheet" th:href="@{/css/board/consulting.css}">
 
     <script th:src="@{/js/board/consulting/saveForm.js}"></script>
 </head>
@@ -10,36 +11,50 @@
 <!-- 헤더에서 상단 메뉴 포함 -->
 <div th:replace="fragments/header :: header"></div>
 <div class="inner">
-    <div class="form-wrap2">
-        <div class="column-tc-wrap column-tc-wrap2 part2">
-            <div class="column-tc">
-                <div class="tit">메시지 제목</div>
-                <div class="con">
-                    <input type="text" placeholder="제목을 입력해주세요">
+    <form id="saveForm" action="/masterpage_sys/board/api/save" method="post" enctype="multipart/form-data">
+        <div class="form-wrap2">
+            <div class="column-tc-wrap column-tc-wrap2 part2">
+                <div class="column-tc">
+                    <div class="tit">메시지 제목</div>
+                    <div class="con">
+                        <input type="text" name="title" placeholder="제목을 입력해주세요" required>
+                    </div>
                 </div>
-            </div>
-            <div class="column-tc">
-                <div class="tit">받는 사람</div>
-                <div class="con flex">
-                    <input type="text" readonly>
-                    <a href="#none" class="jv-btn fill01" style="width:150px;">회원찾기</a>
-                </div>
-            </div>
-        </div>
-        <div class="column-tc-wrap column-tc-wrap2 part1">
-            <div class="column-tc">
-                <div class="tit">메시지 내용</div>
-                <div class="con">
-                    <textarea rows="10" placeholder="내용을 입력해주세요"></textarea>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="btn-wrap mt50">
-        <a th:href="@{/masterpage_sys/board/listForm}" class="jv-btn fill01-lg">목록</a>
-        <a href="#none" class="jv-btn fill04-lg">보내기</a>
-    </div>
-</div>
+                <div class="column-tc">
+                    <div class="tit">받는 사람</div>
+                    <div class="con flex">
+                        <input type="text" id="recipient" name="recipient" readonly required>
+                        <a href="#none" class="jv-btn fill01" id="searchMember">회원찾기</a>
+                    </div>
 
+                    <!-- Modal -->
+                    <div id="memberModal" class="modal">
+                        <div class="modal-content">
+                            <button class="close" id="closeModal">&times;</button>
+                            <h2>회원 찾기</h2>
+                            <div>
+                                <input type="text" id="searchInput" placeholder="회원 이름 검색">
+                                <button id="searchButton" class="jv-btn fill04-lg">검색</button>
+                            </div>
+                            <div id="memberList"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column-tc-wrap column-tc-wrap2 part1">
+                <div class="column-tc">
+                    <div class="tit">메시지 내용</div>
+                    <div class="con">
+                        <textarea name="contents" rows="10" placeholder="내용을 입력해주세요" required></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="btn-wrap mt50">
+            <a th:href="@{/masterpage_sys/board/consulting}" class="jv-btn fill01-lg">목록</a>
+            <button type="submit" class="jv-btn fill04-lg">보내기</button>
+        </div>
+    </form>
+</div>
 </body>
 </html>

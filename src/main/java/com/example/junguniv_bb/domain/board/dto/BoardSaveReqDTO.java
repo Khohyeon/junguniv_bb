@@ -27,6 +27,7 @@ public record BoardSaveReqDTO(
         return new Bbs(
                 null, // ID는 자동 생성
                 bbsGroupIdx,
+                boardType,
                 title,
                 writer,
                 category,

@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // 메시지 작성 버튼에 href 설정
         const saveForm = document.querySelector('.right .jv-btn');
         if (saveForm) {
-            const dynamicUrl = '/masterpage_sys/board/example/save'; // 동적으로 설정할 URL
+            const dynamicUrl = '/masterpage_sys/board/data/save'; // 동적으로 설정할 URL
             saveForm.setAttribute('href', dynamicUrl); // href 속성 설정
         }
 

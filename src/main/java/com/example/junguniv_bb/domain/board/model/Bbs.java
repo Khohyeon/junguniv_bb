@@ -102,10 +102,11 @@ public class Bbs extends BaseTime {
     @Column(name = "FIX_END_DATE")
     private LocalDate fixEndDate;
 
-    public Bbs(Long bbsIdx, BbsGroup bbsGroupIdx, String title, String writer, String category, String chkTopFix, LocalDate fixStartDate, LocalDate fixEndDate,
+    public Bbs(Long bbsIdx, BbsGroup bbsGroupIdx, String bbsId, String title, String writer, String category, String chkTopFix, LocalDate fixStartDate, LocalDate fixEndDate,
                String chkMain, LocalDate startDate, LocalDate endDate, String contents) {
         this.bbsIdx = bbsIdx;
         this.bbsGroup = bbsGroupIdx;
+        this.bbsId = bbsId;
         this.title = title;
         this.writer = writer;
         this.category = category;

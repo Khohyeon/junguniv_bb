@@ -29,6 +29,84 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+
 document.addEventListener('DOMContentLoaded', function () {
-    getCategory('CONSULTING')
+    const searchMemberButton = document.getElementById('searchMember');
+    const modal = document.getElementById('memberModal');
+    const closeModalButton = document.getElementById('closeModal');
+    const searchButton = document.getElementById('searchButton');
+    const memberList = document.getElementById('memberList');
+    const recipientInput = document.getElementById('recipient');
+
+    // 모달 열기
+    searchMemberButton.addEventListener('click', function () {
+        modal.style.display = 'block';
+    });
+
+    // 모달 닫기
+    closeModalButton.addEventListener('click', function () {
+        modal.style.display = 'none';
+    });
+
+    // 회원 검색
+    searchButton.addEventListener('click', function () {
+        const searchInput = document.getElementById('searchInput').value;
+
+        // 서버에서 회원 검색 (예제 API 호출)
+        fetch(`/api/members?name=${encodeURIComponent(searchInput)}`)
+            .then(response => response.json())
+            .then(data => {
+                memberList.innerHTML = '';
+
+                if (data.length === 0) {
+                    memberList.textContent = '검색 결과가 없습니다.';
+                } else {
+                    data.forEach(member => {
+                        const memberItem = document.createElement('div');
+                        memberItem.textContent = `${member.name} (${member.id})`;
+                        memberItem.classList.add('member-item');
+                        memberItem.dataset.name = member.name; // 데이터 저장
+                        memberItem.addEventListener('click', function () {
+                            selectMember(member.name);
+                        });
+                        memberList.appendChild(memberItem);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching members:', error);
+                memberList.textContent = '회원 검색에 실패했습니다.';
+            });
+    });
+
+    // 회원 선택
+    function selectMember(name) {
+        recipientInput.value = name;
+        modal.style.display = 'none';
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.querySelector('.modal');
+    const overlay = document.querySelector('.modal-overlay');
+    const openButton = document.getElementById('searchMember'); // 버튼 ID
+    const closeButton = document.querySelector('.modal .close');
+
+    // 모달 열기
+    openButton.addEventListener('click', function () {
+        overlay.style.display = 'block';
+        modal.style.display = 'block';
+    });
+
+    // 모달 닫기
+    closeButton.addEventListener('click', function () {
+        overlay.style.display = 'none';
+        modal.style.display = 'none';
+    });
+
+    // 모달 외부 클릭 시 닫기
+    overlay.addEventListener('click', function () {
+        overlay.style.display = 'none';
+        modal.style.display = 'none';
+    });
 });

@@ -29,6 +29,7 @@ public record BoardUpdateReqDTO(
         return new Bbs(
                 bbsIdx, // ID는 자동 생성
                 bbsGroupIdx,
+                boardType,
                 title,
                 writer,
                 category,

@@ -118,6 +118,13 @@ document.addEventListener('DOMContentLoaded', function () {
             countDiv.textContent = totalElements;
         }
 
+        // 메시지 작성 버튼에 href 설정
+        const saveForm = document.querySelector('.right .jv-btn');
+        if (saveForm) {
+            const dynamicUrl = '/masterpage_sys/board/faq/save'; // 동적으로 설정할 URL
+            saveForm.setAttribute('href', dynamicUrl); // href 속성 설정
+        }
+
         tableBody.innerHTML = ''; // 기존 데이터 초기화
 
         if (!data || data.length === 0) {
