@@ -23,7 +23,7 @@ public class MemberController {
     /**
      * 회원관리 - 주소록 출력
      */
-    @GetMapping("/address/")
+    @GetMapping("/address")
     public String memberAddressForm(Model model) {
 
         
@@ -90,7 +90,7 @@ public class MemberController {
         return "/masterpage_sys/member/adminDetailForm";
     }
     /* 수강생 등록시 사용되는 기업검색 페이지 */
-    @GetMapping("/company/searchForm")
+    @GetMapping("/company/search")
     public String companySearchForm(Model model) {
 
         
@@ -101,28 +101,28 @@ public class MemberController {
      * 회원관리 - 등록
      */
     /* 회원관리 > 회원정보관리 > 수강생 등록 */
-    @GetMapping("/student/saveForm")
+    @GetMapping("/student/save")
     public String studentSaveForm(Model model) {
 
         return "/masterpage_sys/member/studentSaveForm";
     }
 
     /* 회원관리 > 회원정보관리 > 교강사(튜터) 등록 */
-    @GetMapping("/teacher/saveForm")
+    @GetMapping("/teacher/save")
     public String teacherSaveForm(Model model) {
 
         return "/masterpage_sys/member/teacherSaveForm";
     }
 
     /* 회원관리 > 회원정보관리 > 위탁기업 등록 */
-    @GetMapping("/company/saveForm")
+    @GetMapping("/company/save")
     public String companySaveForm(Model model) {
 
         return "/masterpage_sys/member/companySaveForm";
     }
 
     /* 회원관리 > 회원정보관리 > LMS관리자 등록 */
-    @GetMapping("/admin/saveForm")
+    @GetMapping("/admin/save")
     public String adminSaveForm(Model model) {
 
         return "/masterpage_sys/member/adminSaveForm";
@@ -133,13 +133,13 @@ public class MemberController {
      * 회원관리 - 리스트
      */
     /* 회원관리 > 회원정보관리 > 수강생 리스트 */
-    @GetMapping("/student/")
+    @GetMapping("/student")
     public String studentListForm(Model model) {
         return "/masterpage_sys/member/studentListForm";
     }
 
     /* 회원관리 > 회원정보관리 > 교강사(튜터) 리스트 */
-    @GetMapping("/teacher/")
+    @GetMapping("/teacher")
     public String teacherListForm(Model model) {
 
 
@@ -147,7 +147,7 @@ public class MemberController {
     }
 
     /* 회원관리 > 회원정보관리 > 위탁기업 리스트 */
-    @GetMapping("/company/")
+    @GetMapping("/company")
     public String companyListForm(Model model) {
 
 
@@ -155,7 +155,7 @@ public class MemberController {
     }
 
     /* 회원관리 > 회원정보관리 > LMS관리자 리스트 */
-    @GetMapping("/admin/")
+    @GetMapping("/admin")
     public String adminListForm(Model model) {
 
 
