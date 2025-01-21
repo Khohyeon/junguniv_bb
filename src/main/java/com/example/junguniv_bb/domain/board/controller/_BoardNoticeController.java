@@ -15,23 +15,23 @@ public class _BoardNoticeController {
 
     private final BoardService boardService;
 
-    @GetMapping("/listForm")
+    @GetMapping
     public String noticeListForm() {
         return "masterpage_sys/board/notice/listForm";
     }
 
-    @GetMapping("/saveForm")
+    @GetMapping("/save")
     public String noticeSaveForm() {
         return "masterpage_sys/board/notice/saveForm";
     }
 
-    @GetMapping("/detailForm/{bbsIdx}")
+    @GetMapping("/{bbsIdx}")
     public String noticeDetailForm(@PathVariable Long bbsIdx, Model model) {
         model.addAttribute("board", boardService.getBoardDetail(bbsIdx));
         return "masterpage_sys/board/notice/detailForm";
     }
 
-    @GetMapping("/updateForm/{bbsIdx}")
+    @GetMapping("/update/{bbsIdx}")
     public String noticeUpdateForm(@PathVariable Long bbsIdx, Model model) {
         model.addAttribute("board", boardService.getBoardUpdate(bbsIdx));
         return "masterpage_sys/board/notice/updateForm";

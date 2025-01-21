@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
         detailForm.addEventListener('click', function (event) {
             event.preventDefault(); // 기본 동작(링크 이동) 방지
             // 이동할 URL 설정
-            const targetUrl = '/masterpage_sys/agreement/course/detailForm';
+            const targetUrl = '/masterpage_sys/agreement/course/detail';
             window.location.href = targetUrl; // URL로 이동
         });
     } else {

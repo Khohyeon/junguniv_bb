@@ -15,23 +15,23 @@ public class _BoardFaqController {
 
     private final BoardService boardService;
 
-    @GetMapping("/listForm")
+    @GetMapping
     public String faqListForm() {
         return "masterpage_sys/board/faq/listForm";
     }
 
-    @GetMapping("/saveForm")
+    @GetMapping("/save")
     public String faqSaveForm() {
         return "masterpage_sys/board/faq/saveForm";
     }
 
-    @GetMapping("/detailForm/{bbsIdx}")
+    @GetMapping("/{bbsIdx}")
     public String faqDetailForm(@PathVariable Long bbsIdx, Model model) {
         model.addAttribute("board", boardService.getBoardDetail(bbsIdx));
         return "masterpage_sys/board/faq/detailForm";
     }
 
-    @GetMapping("/updateForm/{bbsIdx}")
+    @GetMapping("/update/{bbsIdx}")
     public String faqUpdateForm(@PathVariable Long bbsIdx, Model model) {
         model.addAttribute("board", boardService.getBoardUpdate(bbsIdx));
         return "masterpage_sys/board/faq/updateForm";

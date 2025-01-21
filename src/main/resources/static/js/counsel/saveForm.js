@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 // 성공 응답 처리
                 alert(data.response);
-                window.location.href = '/masterpage_sys/counsel/listForm'; // 성공 시 리스트 페이지로 이동
+                window.location.href = '/masterpage_sys/counsel'; // 성공 시 리스트 페이지로 이동
             })
 
     });

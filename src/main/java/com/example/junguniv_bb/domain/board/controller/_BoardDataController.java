@@ -15,23 +15,23 @@ public class _BoardDataController {
 
     private final BoardService boardService;
 
-    @GetMapping("/listForm")
+    @GetMapping
     public String dataListForm() {
         return "masterpage_sys/board/data/listForm";
     }
 
-    @GetMapping("/saveForm")
+    @GetMapping("/save")
     public String dataSaveForm() {
         return "masterpage_sys/board/data/saveForm";
     }
 
-    @GetMapping("/detailForm/{bbsIdx}")
+    @GetMapping("/{bbsIdx}")
     public String dataDetailForm(@PathVariable Long bbsIdx, Model model) {
         model.addAttribute("board", boardService.getBoardDetail(bbsIdx));
         return "masterpage_sys/board/data/detailForm";
     }
 
-    @GetMapping("/updateForm/{bbsIdx}")
+    @GetMapping("/update/{bbsIdx}")
     public String dataUpdateForm(@PathVariable Long bbsIdx, Model model) {
         model.addAttribute("board", boardService.getBoardUpdate(bbsIdx));
         return "masterpage_sys/board/data/updateForm";

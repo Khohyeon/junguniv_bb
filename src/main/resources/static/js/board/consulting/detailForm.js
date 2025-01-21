@@ -4,20 +4,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const listButton = document.getElementById('listButton');
     const deleteButton = document.getElementById('deleteButton');
 
-    let url = `/masterpage_sys/board/data`;
-    let redirectUrl = url+`/listForm`;
+    let url = `/masterpage_sys/board/consulting`;
 
     // 수정 버튼 href 설정
     if (updateButton) {
         const boardId = updateButton.getAttribute('data-id'); // ID 추출
-        const updateUrl = url+`/updateForm/${boardId}`; // 동적 URL 생성
+        const updateUrl = url+`/update/${boardId}`; // 동적 URL 생성
         updateButton.setAttribute('href', updateUrl); // href 속성 동적으로 설정
     }
 
     // 목록 버튼 클릭 이벤트
     if (listButton) {
         listButton.addEventListener('click', () => {
-            window.location.href = redirectUrl; // 목록 URL
+            window.location.href = url; // 목록 URL
         });
     }
 
@@ -25,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (deleteButton) {
         const boardId = updateButton.getAttribute('data-id'); // ID 추출
         deleteButton.addEventListener('click', () => {
-            deleteSelectedBoard(boardId, redirectUrl);
+            deleteSelectedBoard(boardId, url);
         });
     }
 });

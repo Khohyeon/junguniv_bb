@@ -15,23 +15,23 @@ public class _BoardConsultingController {
 
     private final BoardService boardService;
 
-    @GetMapping("/listForm")
+    @GetMapping
     public String consultingListForm() {
         return "masterpage_sys/board/consulting/listForm";
     }
 
-    @GetMapping("/saveForm")
+    @GetMapping("/save")
     public String consultingSaveForm() {
         return "masterpage_sys/board/consulting/saveForm";
     }
 
-    @GetMapping("/detailForm/{bbsIdx}")
+    @GetMapping("/{bbsIdx}")
     public String consultingDetailForm(@PathVariable Long bbsIdx, Model model) {
         model.addAttribute("board", boardService.getBoardDetail(bbsIdx));
         return "masterpage_sys/board/consulting/detailForm";
     }
 
-    @GetMapping("/updateForm/{bbsIdx}")
+    @GetMapping("/update/{bbsIdx}")
     public String consultingUpdateForm(@PathVariable Long bbsIdx, Model model) {
         model.addAttribute("board", boardService.getBoardUpdate(bbsIdx));
         return "masterpage_sys/board/consulting/updateForm";

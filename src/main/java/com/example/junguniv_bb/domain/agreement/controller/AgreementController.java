@@ -22,7 +22,7 @@ public class AgreementController {
      *  [관리자모드] 홈페이지관리 - 약관관리 - 회원가입약관 목록페이지
      *  Model 응답 List<AgreementJoinListResDTO>
      */
-    @GetMapping("/join/listForm")
+    @GetMapping("/join")
     public String joinForm(Model model) {
 
         // Service 에서 agreement 을 List 형태로 응답받아서 모델에 담음
@@ -31,7 +31,7 @@ public class AgreementController {
         return "masterpage_sys/agreement/joinForm";
     }
 
-    @GetMapping("/join/detailForm/{agreementIdx}")
+    @GetMapping("/join/{agreementIdx}")
     public String getAgreement(@PathVariable Long agreementIdx, Model model) {
 
         model.addAttribute("agreement", agreementService.getAgreementDetail(agreementIdx));
@@ -39,7 +39,7 @@ public class AgreementController {
         return "masterpage_sys/agreement/detailForm"; // HTML 파일명 (Thymeleaf 템플릿)
     }
 
-    @GetMapping("/course/listForm")
+    @GetMapping("/course")
     public String courseListForm(Model model) {
         List<AgreementListResDTO> agreementList = agreementService.getAgreementCourseList();
         if (!agreementList.isEmpty()) {
@@ -49,7 +49,7 @@ public class AgreementController {
         return "masterpage_sys/agreement/course/listForm";
     }
 
-    @GetMapping("/course/detailForm")
+    @GetMapping("/course/detail")
     public String courseDetailForm(Model model) {
         List<AgreementListResDTO> agreementList = agreementService.getAgreementCourseList();
         // Model에 데이터 추가
@@ -58,7 +58,7 @@ public class AgreementController {
         return "masterpage_sys/agreement/course/detailForm";
     }
 
-    @GetMapping("/refund/listForm")
+    @GetMapping("/refund")
     public String refundListForm(Model model) {
         List<AgreementListResDTO> agreementList = agreementService.getAgreementRefundList();
         if (!agreementList.isEmpty()) {
@@ -69,7 +69,7 @@ public class AgreementController {
         return "masterpage_sys/agreement/refund/listForm";
     }
 
-    @GetMapping("/refund/detailForm")
+    @GetMapping("/refund/detail")
     public String refundDetailForm(Model model) {
         List<AgreementListResDTO> agreementList = agreementService.getAgreementRefundList();
 
