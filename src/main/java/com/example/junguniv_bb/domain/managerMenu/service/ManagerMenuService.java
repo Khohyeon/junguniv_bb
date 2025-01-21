@@ -4,6 +4,7 @@ package com.example.junguniv_bb.domain.managerMenu.service;
 import com.example.junguniv_bb._core.exception.Exception400;
 import com.example.junguniv_bb._core.exception.ExceptionMessage;
 import com.example.junguniv_bb._core.permission.ManagerMenuChangeEvent;
+import com.example.junguniv_bb.domain.managerAuth.model.ManagerAuthRepository;
 import com.example.junguniv_bb.domain.managerMenu.dto.*;
 import com.example.junguniv_bb.domain.managerMenu.model.ManagerMenu;
 import com.example.junguniv_bb.domain.managerMenu.model.ManagerMenuRepository;
@@ -26,7 +27,7 @@ public class ManagerMenuService {
 
     /* DI */
     private final ManagerMenuRepository managerMenuRepository;
-    // private final ManagerAuthRepository managerAuthRepository;
+    private final ManagerAuthRepository managerAuthRepository;
     private final ApplicationEventPublisher eventPublisher; // 이벤트 발행을 위한 DI
 
 
@@ -69,10 +70,10 @@ public class ManagerMenuService {
             }
         }
 
-        // // 관련 ManagerAuth 삭제
-        // for (ManagerMenu menu : menus) {
-        //     managerAuthRepository.deleteAllByMenuIdx(menu.getMenuIdx());
-        // }
+        // 관련 ManagerAuth 삭제
+        for (ManagerMenu menu : menus) {
+            managerAuthRepository.deleteAllByMenuIdx(menu.getMenuIdx());
+        }
 
         // 3. 삭제 처리
         managerMenuRepository.deleteAll(menus);
@@ -104,15 +105,15 @@ public class ManagerMenuService {
         ManagerMenu managerMenuPS = managerMenuRepository.findByIdWithParentAndChildren(id)
                 .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_MANAGER_MENU.getMessage()));
 
-        // Long menuIdx = managerMenuPS.getMenuIdx();
+        Long menuIdx = managerMenuPS.getMenuIdx();
         
         // 2. 자식 메뉴 존재 여부 확인
         if (!managerMenuPS.getChildren().isEmpty()) {
             throw new Exception400("하위 메뉴가 존재하는 메뉴는 삭제할 수 없습니다. 하위 메뉴를 먼저 삭제해주세요.");
         }
 
-        // // 관련 ManagerAuth 삭제
-        // managerAuthRepository.deleteAllByMenuIdx(menuIdx);
+        // 관련 ManagerAuth 삭제
+        managerAuthRepository.deleteAllByMenuIdx(menuIdx);
 
         // 3. 삭제 처리
         managerMenuRepository.delete(managerMenuPS);

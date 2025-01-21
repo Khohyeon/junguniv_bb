@@ -88,7 +88,7 @@ public class AuthLevelRestController {
 
     /* 관리자 권한 조회 */
     @GetMapping("/{id}")
-    public ResponseEntity<?> detail(@PathVariable Long id) {
+    public ResponseEntity<?> authLevelDetail(@PathVariable Long id) {
 
         // 서비스 호출
         AuthLevelDetailResDTO resDTO = authLevelService.authLevelDetail(id);
@@ -98,7 +98,7 @@ public class AuthLevelRestController {
 
     /* 관리자 권한 등록 */
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody @Valid AuthLevelSaveReqDTO reqDTO, Errors errors) {
+    public ResponseEntity<?> authLevelSave(@RequestBody @Valid AuthLevelSaveReqDTO reqDTO, Errors errors) {
 
         if (errors.hasErrors()) {
             log.warn(errors.getAllErrors()
