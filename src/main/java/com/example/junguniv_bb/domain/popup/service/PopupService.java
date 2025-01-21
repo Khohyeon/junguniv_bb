@@ -96,11 +96,9 @@ public class PopupService {
 
         String popupUrl = popupSaveReqDTO.popupUrl();
 
-        if (popupUrl == null) {
-            // 프로토콜 추가
-            if (popupUrl != null && !popupUrl.startsWith("http://") && !popupUrl.startsWith("https://")) {
-                popupUrl = "https://" + popupUrl;
-            }
+        // 프로토콜 추가
+        if (popupUrl != null && !popupUrl.startsWith("http://") && !popupUrl.startsWith("https://")) {
+            popupUrl = "https://" + popupUrl;
 
             // URL 유효성 검증
             if (!Pattern.matches(URL_PATTERN, popupUrl)) {
@@ -120,11 +118,9 @@ public class PopupService {
 
         String popupUrl = popupUpdateReqDTO.popupUrl();
 
-        if (popupUrl == null) {
-            // 프로토콜 추가
-            if (popupUrl != null && !popupUrl.startsWith("http://") && !popupUrl.startsWith("https://")) {
-                popupUrl = "https://" + popupUrl;
-            }
+        // 프로토콜 추가
+        if (popupUrl != null && !popupUrl.startsWith("http://") && !popupUrl.startsWith("https://")) {
+            popupUrl = "https://" + popupUrl;
 
             // URL 유효성 검증
             if (!Pattern.matches(URL_PATTERN, popupUrl)) {
