@@ -56,7 +56,7 @@ public class ManagerMenuService {
         // 1. 메뉴 조회 (자식 메뉴 함께 조회)
         List<ManagerMenu> menus = ids.stream()
             .map(id -> managerMenuRepository.findByIdWithParentAndChildren(id)
-                .orElseThrow(() -> new Exception400("ID: " + id + "인 메뉴를 찾을 수 없습니다.")))
+                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_MANAGER_MENU.getMessage())))
             .toList();
 
         // 2. 자식 메뉴 존재 여부 확인

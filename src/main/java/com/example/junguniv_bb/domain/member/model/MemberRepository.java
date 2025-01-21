@@ -4,14 +4,22 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Meta;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.example.junguniv_bb.domain.member._enum.UserType;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
+
+    @Meta(comment = "특정 authLevel을 사용하는 모든 회원의 authLevel을 null로 설정합니다.")
+    @Modifying
+    @Transactional
+    @Query("UPDATE Member m SET m.authLevel = null WHERE m.authLevel = :authLevel")
+    int setAuthLevelToNullForMembers(@Param("authLevel") Long authLevel);
 
     @Meta(comment = "회원 아이디로 조회")
     Optional<Member> findByUserId(String userId);
