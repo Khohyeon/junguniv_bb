@@ -16,23 +16,23 @@ public class _BoardSuggestionController {
     private final BoardService boardService;
 
 
-    @GetMapping("/listForm")
+    @GetMapping
     public String suggestionListForm() {
         return "masterpage_sys/board/suggestion/listForm";
     }
 
-    @GetMapping("/saveForm")
+    @GetMapping("/save")
     public String suggestionSaveForm() {
         return "masterpage_sys/board/suggestion/saveForm";
     }
 
-    @GetMapping("/detailForm/{bbsIdx}")
+    @GetMapping("/{bbsIdx}")
     public String suggestionDetailForm(@PathVariable Long bbsIdx, Model model) {
         model.addAttribute("board", boardService.getBoardDetail(bbsIdx));
         return "masterpage_sys/board/suggestion/detailForm";
     }
 
-    @GetMapping("/updateForm/{bbsIdx}")
+    @GetMapping("/update/{bbsIdx}")
     public String suggestionUpdateForm(@PathVariable Long bbsIdx, Model model) {
         model.addAttribute("board", boardService.getBoardUpdate(bbsIdx));
         return "masterpage_sys/board/suggestion/updateForm";

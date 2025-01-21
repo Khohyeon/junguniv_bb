@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <td>${popup.popupIdx}</td>
             <!-- 팝업 이름 -->
             <td>
-                <a href="/masterpage_sys/popup/detailForm/${popup.popupIdx}" 
+                <a href="/masterpage_sys/popup/${popup.popupIdx}" 
                    class="jv-btn underline01">${popup.popupName}</a>
             </td>
             <!-- 수정일 -->
@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <!-- 공개 기간 -->
             <td>${popup.startDate} ~ ${popup.endDate}</td>
             <!-- 팝업 종류 -->
-            
+            <td>Layer</td>
             <!-- 공개 여부 -->
             <td>${popup.chkOpen}</td>
         `;

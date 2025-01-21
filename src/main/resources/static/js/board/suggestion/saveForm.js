@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .then(data => {
                 alert(data.response);
-                window.location.href = '/masterpage_sys/board/suggestion/listForm'; // 성공 후 목록으로 이동
+                window.location.href = '/masterpage_sys/board/suggestion'; // 성공 후 목록으로 이동
             })
             .catch(error => {
                 console.error('저장 중 오류 발생:', error);

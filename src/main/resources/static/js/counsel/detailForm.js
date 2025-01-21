@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 // 성공 응답 처리
                 alert('상담예약이 성공적으로 수정되었습니다.');
-                window.location.href = '/masterpage_sys/counsel/listForm'; // 성공 시 리스트 페이지로 이동
+                window.location.href = '/masterpage_sys/counsel'; // 성공 시 리스트 페이지로 이동
             })
             .catch(error => {
                 // 에러 응답 처리

@@ -16,23 +16,23 @@ public class _BoardQnaController {
     private final BoardService boardService;
 
 
-    @GetMapping("/listForm")
+    @GetMapping
     public String qnaListForm() {
         return "masterpage_sys/board/qna/listForm";
     }
 
-    @GetMapping("/saveForm")
+    @GetMapping("/save")
     public String qnaSaveForm() {
         return "masterpage_sys/board/qna/saveForm";
     }
 
-    @GetMapping("/detailForm/{bbsIdx}")
+    @GetMapping("/{bbsIdx}")
     public String qnaDetailForm(@PathVariable Long bbsIdx, Model model) {
         model.addAttribute("board", boardService.getBoardDetail(bbsIdx));
         return "masterpage_sys/board/qna/detailForm";
     }
 
-    @GetMapping("/updateForm/{bbsIdx}")
+    @GetMapping("/update/{bbsIdx}")
     public String qnaUpdateForm(@PathVariable Long bbsIdx, Model model) {
         model.addAttribute("board", boardService.getBoardUpdate(bbsIdx));
         return "masterpage_sys/board/qna/updateForm";

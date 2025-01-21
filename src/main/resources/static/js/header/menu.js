@@ -162,12 +162,21 @@ function restoreTabState() {
         li.appendChild(anchor);
         depth3MenuList.appendChild(li);
 
-        // 현재 URL과 관련된 메뉴 활성화
         const currentPath = window.location.pathname;
         const menuPath = new URL(menu.url, window.location.origin).pathname;
 
-        // 공통 경로 비교 (예: /masterpage_sys/popup/)
-        const isRelated = currentPath.startsWith(menuPath) || currentPath.includes(menuPath.split('/').slice(0, -1).join('/'));
+        // console.log로 디버그
+        console.log('currentPath: ' + currentPath);
+        console.log('menuPath: ' + menuPath);
+
+        // 정확한 경로 비교
+        const isExactMatch = currentPath === menuPath;
+        // 하위 경로 비교
+        const isSubPath = currentPath.startsWith(menuPath + '/');
+
+        // 관련 경로 판단
+        const isRelated = isExactMatch || isSubPath;
+
         if (isRelated) {
             li.classList.add('on'); // 관련된 경로를 활성화
         }

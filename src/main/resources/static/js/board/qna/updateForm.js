@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .then(data => {
                 alert(data.response);
-                window.location.href = '/masterpage_sys/board/qna/listForm'; // 성공 후 목록으로 이동
+                window.location.href = '/masterpage_sys/board/qna'; // 성공 후 목록으로 이동
             })
             .catch(error => {
                 console.error('업데이트 중 오류 발생:', error);

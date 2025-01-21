@@ -176,7 +176,7 @@ function renderSearchResults(data, totalElements) {
 
             <!-- 상담상태 -->
             <td>
-                <a href="/masterpage_sys/counsel/detailForm/${item.counselIdx}" class="jv-btn ${item.counselState === 1 ? 'label01' : 'label07'}">
+                <a href="/masterpage_sys/counsel/${item.counselIdx}" class="jv-btn ${item.counselState === 1 ? 'label01' : 'label07'}">
                     ${item.counselState === 1 ? '상담대기' : '상담완료'}
                 </a>
             </td>

@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .then(data => {
                 alert(data.response);
-                window.location.href = '/masterpage_sys/agreement/refund/listForm';
+                window.location.href = '/masterpage_sys/agreement/refund';
             })
             .catch(error => {
                 console.error('저장 중 오류 발생:', error);

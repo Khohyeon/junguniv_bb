@@ -23,7 +23,7 @@ public class PopupController {
      *  [관리자모드] 홈페이지관리 - 팝업관리 - 메인팝업 목록페이지
      *  Model 응답 Page<PopupPageResDTO>
      */
-    @GetMapping("/listForm")
+    @GetMapping
     public String popupListForm(Pageable pageable, Model model) {
 
         // 팝업의 페이징 형태를 popupIdx 기준으로 DESC 내림차순으로 설정
@@ -38,13 +38,13 @@ public class PopupController {
     /**
      *  [관리자모드] 홈페이지관리 - 팝업관리 - 메인팝업 - 팝업 등록페이지
      */
-    @GetMapping("/saveForm")
+    @GetMapping("/save")
     public String popupSaveForm() {return "masterpage_sys/popup/saveForm";}
 
     /**
      *  [관리자모드] 홈페이지관리 - 팝업관리 - 메인팝업 - 팝업명 클릭 시 상세페이지
      */
-    @GetMapping("/detailForm/{popupIdx}")
+    @GetMapping("/{popupIdx}")
     public String popupDetailForm(@PathVariable Long popupIdx, Model model) {
 
         // 메인팝업 List 에서 popupIdx를 가져와 팝업 데이터 가져와 model에 담아 보내기
