@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDate;
 import java.util.List;
 
-public record BoardUpdateReqDTO(
+public record BoardReplyReqDTO(
         Long bbsIdx,
         String boardType,
         String title,
@@ -28,14 +28,14 @@ public record BoardUpdateReqDTO(
         String pwd
 ) {
 
-    public Bbs updateEntity(BbsGroup bbsGroupIdx) {
+    public Bbs updateReplyEntity(BbsGroup bbsGroupIdx, String name) {
         return new Bbs(
-                bbsIdx, // ID는 자동 생성
+                null, // ID는 자동 생성
                 pwd,
                 bbsGroupIdx,
                 boardType,
                 title,
-                writer,
+                name == null ? "로그인한 유저이름" : name,
                 category,
                 topFix == null ? "N" : topFix,
                 parseDate(fixStartDate),
@@ -46,7 +46,7 @@ public record BoardUpdateReqDTO(
                 contents,
                 recipientName,
                 recipientId,
-                null
+                bbsIdx
         );
     }
 

@@ -13,7 +13,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -329,8 +331,11 @@ public class BoardService {
             spec = spec.and(BbsSpecifications.categoryEquals(category));
         }
 
+        // 기존 Specification에 정렬 추가
+        Specification<Bbs> specWithSort = spec.and(customSort());
+
         // 검색 실행 및 결과 매핑
-        Page<Bbs> bbsPage = bbsRepository.findAll(spec, pageable);
+        Page<Bbs> bbsPage = bbsRepository.findAll(specWithSort, pageable);
 
         return bbsPage.map(bbs -> {
             // 현재 날짜 확인
@@ -363,6 +368,26 @@ public class BoardService {
             );
         });
     }
+    public static Specification<Bbs> customSort() {
+        return (root, query, criteriaBuilder) -> {
+            assert query != null;
+
+            // `CASE` 문으로 정렬 기준 정의
+            query.orderBy(
+                    criteriaBuilder.desc(
+                            criteriaBuilder.selectCase()
+                                    // parentBbsIdx가 null이면 정렬 우선순위 0
+                                    .when(criteriaBuilder.isNull(root.get("parentBbsIdx")), root.get("bbsIdx"))
+                                    // parentBbsIdx가 존재하면 해당 parentBbsIdx 순서로 정렬
+                                    .otherwise(root.get("parentBbsIdx"))
+                    ),
+                    // bbsIdx 내림차순 정렬
+                    criteriaBuilder.desc(root.get("bbsIdx"))
+            );
+            return null;
+        };
+    }
+
 
     public BoardSaveResDTO getBoardSave(String bbsId) {
         BbsGroup byBbsId = bbsGroupRepository.findByBbsId(bbsId);
@@ -370,5 +395,37 @@ public class BoardService {
                 byBbsId.getFileNum(),
                 byBbsId.getOptionSecretAuth().equals("Y")
         );
+    }
+
+    /**
+     * 홈페이지게시판 답변등록 BoardType 을 통해 모두 하나의 매핑으로 작업
+     * 요청 형태 : BoardReplyReqDTO
+     */
+    @Transactional
+    public void replyBoard(BoardReplyReqDTO boardReplyReqDTO, Member member) {
+        try {
+            String boardType = boardReplyReqDTO.boardType();
+            BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(boardType);
+
+            // BBS 엔터티 저장
+            Bbs bbs = bbsRepository.save(boardReplyReqDTO.updateReplyEntity(bbsGroup, member.getName()));
+
+            // BBS File 엔티티 저장
+            saveFiles(bbs, boardReplyReqDTO.attachments());
+
+            // 강제 플러시
+            entityManager.flush();
+        } catch (Exception e) {
+            // 업로드된 파일이 있다면 삭제 시도
+            if (boardReplyReqDTO.attachments() != null) {
+                for (MultipartFile file : boardReplyReqDTO.attachments()) {
+                    if (!file.isEmpty()) {
+                        String fileName = FileUtils.generateUniqueFileName(file.getOriginalFilename());
+                        FileUtils.deleteFile(fileName, uploadDirPath);
+                    }
+                }
+            }
+            throw e;
+        }
     }
 }

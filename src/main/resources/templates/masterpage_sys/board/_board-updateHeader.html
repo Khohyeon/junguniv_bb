@@ -14,7 +14,12 @@
                 <div class="column-tc bbs-secret">
                     <div class="tit">비밀번호</div>
                     <div class="con">
-                        <input class="input_pw" id="pwd" name="pwd" type="password" th:value="${board.pwd() != null ? '*****' : ''}" placeholder="비밀번호를 입력하세요">
+                        <!-- 비밀번호 입력 필드 -->
+                        <input class="input_pw" id="pwd" name="pwd" type="password"
+                               th:value="${board.pwd() != null ? '*'.repeat(board.pwd().length()) : ''}"
+                               placeholder="비밀번호를 입력하세요">
+                        <!-- 실제 비밀번호 값을 저장할 hidden input -->
+                        <input type="hidden" id="actualPwd" name="actualPwd" th:value="${board.pwd()}">
                     </div>
                 </div>
             </div>

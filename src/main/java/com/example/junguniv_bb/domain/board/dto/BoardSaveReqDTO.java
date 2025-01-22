@@ -43,7 +43,8 @@ public record BoardSaveReqDTO(
                 parseDate(endDate),
                 contents,
                 recipientName,
-                recipientId
+                recipientId,
+                null
         );
     }
 
