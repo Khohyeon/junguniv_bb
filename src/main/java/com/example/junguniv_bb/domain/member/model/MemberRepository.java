@@ -106,12 +106,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
            "WHERE m.userType = 'ADMIN' " +
            "AND (:name IS NULL OR m.name LIKE CONCAT('%', :name, '%')) " +
            "AND (:userId IS NULL OR m.userId LIKE CONCAT('%', :userId, '%')) " +
-           "AND (:jobCourseDuty IS NULL OR m.jobCourseDuty = :jobCourseDuty) " +
-           "AND (:authLevel IS NULL OR m.authLevel = :authLevel)")
+           "AND (:jobCourseDuty IS NULL OR m.jobCourseDuty = :jobCourseDuty)")
     Page<Member> searchAdmins(@Param("name") String name,
                             @Param("userId") String userId,
                             @Param("jobCourseDuty") String jobCourseDuty,
-                            @Param("authLevel") Long authLevel,
                             Pageable pageable);
 
     /* 주소록 검색 */
@@ -130,6 +128,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             @Param("email") String email,
             @Param("jobName") String jobName,
             Pageable pageable);
+
+    List<Member> findByNameContainingIgnoreCase(String name);
+
 
     @Meta(comment = "각 AuthLevel 별 회원 수를 조회합니다.")
     @Query("SELECT m.authLevel, COUNT(m) FROM Member m WHERE m.authLevel IN :authLevels GROUP BY m.authLevel")

@@ -32,7 +32,7 @@
                 <div class="column-tc">
                     <div class="tit">상담시간</div>
                     <div class="con">
-                        <input type="text" name="talkTime" placeholder="상담시간을 입력해주세요" th:value="${counsel.talkTime()}">
+                        <input type="date" name="talkTime" placeholder="상담시간을 입력해주세요" th:value="${counsel.talkTime()}">
                     </div>
                 </div>
                 <div class="column-tc">
@@ -85,14 +85,15 @@
                 <div class="tit">상담상태</div>
                 <div class="con">
                     <label class="c-input ci-radio">
-                        <input type="radio" name="counselState" value="1"> 상담대기
+                        <input type="radio" name="counselState" th:value="1" th:checked="${counsel.counselState() == 1}"> 상담대기
                         <div class="ci-show"></div>
                     </label>
                     <label class="c-input ci-radio">
-                        <input type="radio" name="counselState" value="2"> 상담완료
+                        <input type="radio" name="counselState" th:value="2" th:checked="${counsel.counselState() == 2}"> 상담완료
                         <div class="ci-show"></div>
                     </label>
                 </div>
+
             </div>
             <div class="column-tc-wrap column-tc-wrap2 part1">
                 <div class="column-tc">

@@ -2,47 +2,66 @@
  * 검색 기능
  */
 document.addEventListener('DOMContentLoaded', function () {
+    const pageSelect = document.getElementById('pageSelect'); // 페이지 선택 드롭다운
     const prevPageBtn = document.getElementById('prevPageBtn');
     const nextPageBtn = document.getElementById('nextPageBtn');
     const currentPageDisplay = document.getElementById('currentPage');
-    const tableBody = document.getElementById('tableBody');
-    const searchInput = document.getElementById('searchInput');
+    const searchTypeSelect = document.getElementById('searchType'); // 제목 검색 방식
+    const searchInput = document.getElementById('searchInput'); // 검색어
+    const startDateInput = document.getElementById('startDate'); // 작성일 시작
+    const endDateInput = document.getElementById('endDate'); // 작성일 종료
+    const categorySelect = document.getElementById('category'); // 카테고리
     const searchButton = document.getElementById('searchButton');
 
-    let currentPage = 0; // 현재 페이지 번호
-    const pageSize = 20; // 페이지 크기
+    let searchState = {
+        keyword: '',
+        searchType: '',
+        startDate: '',
+        endDate: '',
+        category: '',
+        currentPage: 0, // 현재 페이지 번호
+        pageSize: 20 // 페이지 크기
+    };
 
     // 초기 검색 실행
-    search('', currentPage);
+    performSearch();
 
     // 검색 버튼 클릭
     searchButton.addEventListener('click', function () {
-        const keyword = searchInput.value.trim();
-        currentPage = 0; // 검색 시 항상 첫 페이지로 이동
-        search(keyword, currentPage);
+        searchState.keyword = searchInput.value.trim();
+        searchState.searchType = searchTypeSelect.value;
+        searchState.startDate = startDateInput.value;
+        searchState.endDate = endDateInput.value;
+        searchState.category = categorySelect ? categorySelect.value : '';
+        searchState.currentPage = 0; // 검색 시 첫 페이지로 이동
+        performSearch();
     });
 
     // 이전 페이지 버튼
     prevPageBtn.addEventListener('click', function () {
-        if (currentPage > 0) {
-            currentPage--;
-            search(searchInput.value.trim(), currentPage);
+        if (searchState.currentPage > 0) {
+            searchState.currentPage--;
+            updatePageSelect(); // 드롭다운 상태 업데이트
+            performSearch();
         }
     });
 
     // 다음 페이지 버튼
     nextPageBtn.addEventListener('click', function () {
-        currentPage++;
-        search(searchInput.value.trim(), currentPage);
+        searchState.currentPage++;
+        updatePageSelect(); // 드롭다운 상태 업데이트
+        performSearch();
+    });
+
+    // 페이지 선택 드롭다운 변경
+    pageSelect.addEventListener('change', function () {
+        searchState.currentPage = parseInt(this.value, 10); // 선택된 페이지 번호로 설정
+        performSearch();
     });
 
     // 검색 요청
-    function search(keyword, page) {
-        const url = new URL('/masterpage_sys/board/api/search', window.location.origin);
-        url.searchParams.set('title', keyword);
-        url.searchParams.set('boardType', 'NOTICE');
-        url.searchParams.set('page', page);
-        url.searchParams.set('size', pageSize);
+    function performSearch() {
+        const url = createSearchUrl();
 
         fetch(url.toString())
             .then(response => {
@@ -55,7 +74,33 @@ document.addEventListener('DOMContentLoaded', function () {
                 renderSearchResults(data.response.content, data.response.totalElements);
                 updatePagination(data.response);
             })
+            .catch(error => {
+                console.error('검색 중 오류 발생:', error);
+            });
+    }
 
+    // 검색 URL 생성
+    function createSearchUrl() {
+        const url = new URL('/masterpage_sys/board/api/search', window.location.origin);
+        url.searchParams.set('title', searchState.keyword);
+        url.searchParams.set('boardType', 'NOTICE'); // 고정된 게시판 타입
+        url.searchParams.set('page', searchState.currentPage);
+        url.searchParams.set('size', searchState.pageSize);
+
+        if (searchState.searchType) {
+            url.searchParams.set('searchType', searchState.searchType);
+        }
+        if (searchState.startDate) {
+            url.searchParams.set('startDate', searchState.startDate);
+        }
+        if (searchState.endDate) {
+            url.searchParams.set('endDate', searchState.endDate);
+        }
+        if (searchState.category) {
+            url.searchParams.set('category', searchState.category);
+        }
+
+        return url;
     }
 
     // 검색 결과 렌더링
@@ -84,8 +129,31 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        // 공지 사항을 상단으로 정렬
+        data.sort((a, b) => b.chkTopFix.localeCompare(a.chkTopFix)); // 'Y'를 상단으로 정렬
+
         data.forEach((item, index) => {
             const row = document.createElement('tr');
+
+
+            // 공지인 경우 추가 클래스 적용
+            const rowClass = item.chkTopFix === 'Y' ? 'notice-row' : '';
+
+            // 비밀글 표시
+            const secretLabel = item.pwd ? `<span class="secret jv-btn jv-label03-sm">비밀글</span>` : '';
+
+            // 답글 표시
+            const replyLabel = item.parentBbsIdx ? `<span class="jv-btn label05-sm">Re</span>` : '';
+
+            // NEW 표시
+            const newLabel = item.isNew ? `<span class="jv-btn label04-sm">NEW</span>` : '';
+
+            // 제목과 댓글 수
+            const commentCountLabel = item.commentCount > 0 ? `[${item.commentCount}]` : '';
+            const title = item.title || '제목 없음';
+            const titleWithCount = `${title} ${commentCountLabel}`;
+
+
             row.innerHTML = `
             <!-- 체크박스 -->
             <td>
@@ -94,29 +162,58 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="ci-show"></div>
                 </label>
             </td>
-            <!-- 번호 -->
-            <td>${index + 1}</td>
+            <!-- 번호 또는 공지 -->
+            <td>${item.chkTopFix === 'Y' ? '공지' : index + 1}</td>
             <!-- 제목 -->
             <td>
-                <a href="/masterpage_sys/board/notice/${item.bbsIdx}" class="jv-btn underline01">${item.title || '제목 없음'}</a>
+                ${secretLabel}
+                ${replyLabel}
+                <a href="/masterpage_sys/board/notice/${item.bbsIdx}" class="tit Pretd_SB"> ${titleWithCount} </a>
+                ${newLabel}
             </td>
             <!-- 작성일 -->
             <td>${item.createdDate || '-'}</td>
+            <!-- 게시글 수정 -->
+            <td><a href="/masterpage_sys/board/notice/${item.bbsIdx}" class="jv-btn fill04">수정하기</a></td>
             <!-- 조회수 -->
             <td>${item.readNum || 0}</td>
-        `;
+            `;
+
+            // 공지 행에 클래스 추가
+            if (rowClass) {
+                row.classList.add(rowClass);
+            }
+
             tableBody.appendChild(row);
         });
+
     }
 
 
     // 페이지네이션 업데이트
-    function updatePagination(pageable) {
-        currentPage = pageable.number;
-        currentPageDisplay.textContent = currentPage + 1;
+    function updatePagination(response) {
+        const totalPages = response.totalPages;
 
-        // 버튼 활성화/비활성화 설정
-        prevPageBtn.disabled = pageable.first;
-        nextPageBtn.disabled = pageable.last;
+        // 드롭다운 옵션 업데이트
+        pageSelect.innerHTML = ''; // 기존 옵션 제거
+        for (let i = 0; i < totalPages; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = i + 1;
+            if (i === searchState.currentPage) {
+                option.selected = true;
+            }
+            pageSelect.appendChild(option);
+        }
+
+        // 현재 페이지 상태 업데이트
+        currentPageDisplay.textContent = response.pageable.pageNumber + 1;
+        prevPageBtn.disabled = response.pageable.pageNumber === 0;
+        nextPageBtn.disabled = response.pageable.pageNumber + 1 >= response.totalPages;
+    }
+
+    // 드롭다운 상태 업데이트
+    function updatePageSelect() {
+        pageSelect.value = searchState.currentPage;
     }
 });

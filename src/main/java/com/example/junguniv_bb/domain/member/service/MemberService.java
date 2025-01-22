@@ -236,7 +236,7 @@ public class MemberService {
                 searchDTO.name(),
                 searchDTO.userId(),
                 searchDTO.jobCourseDuty(),
-                searchDTO.authLevel(),
+//                searchDTO.authLevel(),
                 pageable
             );
 
@@ -579,6 +579,13 @@ public class MemberService {
             .collect(Collectors.toList());
 
         return ResponseEntity.ok(APIUtils.success(labels));
+    }
+
+    public List<MemberSearchResDTO> searchMembersByName(String name) {
+        return memberRepository.findByNameContainingIgnoreCase(name)
+                .stream()
+                .map(member -> new MemberSearchResDTO(member.getName(), member.getBirthday(), member.getUserId()))
+                .collect(Collectors.toList());
     }
 }
 

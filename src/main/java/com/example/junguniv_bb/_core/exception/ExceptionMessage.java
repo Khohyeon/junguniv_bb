@@ -17,6 +17,7 @@ public enum ExceptionMessage {
     NOT_FOUND_PARENT_MANAGER_MENU("존재하지 않는 부모 메뉴입니다."),
     NOT_FOUND_AUTH_LEVEL("존재하지 않는 권한 레벨입니다."),
     NOT_FOUND_MANAGER_AUTH("존재하지 않는 메뉴 권한입니다."),
+    NOT_FOUND_BBS_GROUP("존재하지 않는 게시판입니다."),
     EXISTS_AUTH_LEVEL("이미 존재하는 권한 레벨입니다."),
 
 

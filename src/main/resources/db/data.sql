@@ -1,74 +1,74 @@
 -- 회원(Member pwd: 1234)
 INSERT INTO MEMBER (MEMBER_IDX, USER_ID, PWD, BIRTHDAY, SEX, TEL_MOBILE, EMAIL, ZIPCODE, ADDR1, ADDR2, USER_TYPE,
-                    AUTH_LEVEL, MEMBER_STATE, CREATED_DATE, UPDATED_DATE)
+                    AUTH_LEVEL, MEMBER_STATE, CREATED_DATE, UPDATED_DATE, NAME)
 VALUES (1, 'qwer', '$2a$10$5mcrIopDr1/WTCSzbMoGo.5L7SYgLLyxH0OZobyOYkSPeItRqxI6G', '1990-01-01', 'M', '010-1234-5678',
-        'user123@example.com', '12345', '서울시 강남구 테헤란로 123', '101호', 'ADMIN', 150, 'Y', now(), now()),
+        'user123@example.com', '12345', '서울시 강남구 테헤란로 123', '101호', 'ADMIN', 150, 'Y', now(), now(), '홍길동'),
        (2, 'ㅂㅈㄷㄱ', '$2a$10$5mcrIopDr1/WTCSzbMoGo.5L7SYgLLyxH0OZobyOYkSPeItRqxI6G', '1995-05-05', 'F', '010-5678-1234',
-        'user5678@example.com', '54321', '서울시 서초구 서초대로 456', '202호',  'ADMIN', 100, 'Y', now(), now()),
+        'user5678@example.com', '54321', '서울시 서초구 서초대로 456', '202호',  'ADMIN', 100, 'Y', now(), now(), '망나니'),
        (3, 'asdf', '$2a$10$5mcrIopDr1/WTCSzbMoGo.5L7SYgLLyxH0OZobyOYkSPeItRqxI6G', '1985-09-10', 'M', '010-9101-1122',
-        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호', 'ADMIN', 80, 'Y', now(), now()),
+        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호', 'ADMIN', 80, 'Y', now(), now(), '성춘향'),
        (4, 'zxcv', '$2a$10$5mcrIopDr1/WTCSzbMoGo.5L7SYgLLyxH0OZobyOYkSPeItRqxI6G', '1985-09-10', 'M', '010-9101-1122',
-        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호',  'COMPANY', null, 'Y', now(), now()),
+        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호',  'COMPANY', 0, 'Y', now(), now(), '이몽룡'),
        (5, 'qwer1', '$2a$10$5mcrIopDr1/WTCSzbMoGo.5L7SYgLLyxH0OZobyOYkSPeItRqxI6G', '1985-09-10', 'M', '010-9101-1122',
-        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호',  'STUDENT', null, 'Y', now(), now()),
+        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호',  'STUDENT', 0, 'Y', now(), now(), '장금이'),
        (6, 'qwer2', '$2a$10$5mcrIopDr1/WTCSzbMoGo.5L7SYgLLyxH0OZobyOYkSPeItRqxI6G', '1985-09-10', 'M', '010-9101-1122',
-        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호',  'STUDENT', null, 'Y', now(), now()),
+        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호',  'STUDENT', 0, 'Y', now(), now(), '주몽'),
        (7, 'qwer3', '$2a$10$5mcrIopDr1/WTCSzbMoGo.5L7SYgLLyxH0OZobyOYkSPeItRqxI6G', '1985-09-10', 'M', '010-9101-1122',
-        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호',  'TEACHER', null, 'Y', now(), now());
+        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호',  'TEACHER', 0, 'Y', now(), now(), '연개소문');
 -- 회원 테이블 시퀀스 초기화
 ALTER TABLE MEMBER ALTER COLUMN MEMBER_IDX RESTART WITH 8;
 
-INSERT INTO MANAGER_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX) VALUES
+INSERT INTO MANAGER_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX, MENU_GROUP) VALUES
 -- 최상위 메뉴
-('회원관리', 1, 'Y', NULL, NULL),
-('홈페이지관리', 2, 'Y', NULL, NULL),
-('일반통계/기록', 3, 'Y', NULL, NULL),
-('시스템설정', 4, 'Y', NULL, NULL),
+('회원관리', 1, 'Y', NULL, NULL, NULL),
+('홈페이지관리', 2, 'Y', NULL, NULL, NULL),
+('일반통계/기록', 3, 'Y', NULL, NULL, NULL),
+('시스템설정', 4, 'Y', NULL, NULL, NULL),
 
 -- 하위 메뉴
-('회원정보관리', 1, 'Y', '/masterpage_sys/member/student', 1),
-('권한관리', 2, 'Y', '/masterpage_sys/auth_level', 1),
-('주소록출력', 3, 'Y', '/masterpage_sys/label/student', 1),
-('팝업관리', 1, 'Y', '/masterpage_sys/popup', 2),
-('약관관리', 2, 'Y', '/masterpage_sys/agreement', 2),
-('게시판관리', 3, 'Y', '/masterpage_sys/board/counsel', 2),
-('문의상담관리', 4, 'Y', '/masterpage_sys/counsel', 2),
-('일반통계', 1, 'Y', '#', 3),
-('기본설정', 1, 'Y', '#', 4),
-('기본표시정보', 2, 'Y', '#', 4),
-('지원금종류설정', 3, 'Y', '#', 4),
-('메뉴관리', 4, 'Y', '#', 4),
+('회원정보관리', 1, 'Y', '/masterpage_sys/member/student', 1, NULL),
+('권한관리', 2, 'Y', '/masterpage_sys/auth_level', 1, NULL),
+('주소록출력', 3, 'Y', '/masterpage_sys/label/student', 1, NULL),
+('팝업관리', 1, 'Y', '/masterpage_sys/popup', 2, NULL),
+('약관관리', 2, 'Y', '/masterpage_sys/agreement', 2, NULL),
+('게시판관리', 3, 'Y', '/masterpage_sys/board/counsel', 2, NULL),
+('문의상담관리', 4, 'Y', '/masterpage_sys/counsel', 2, NULL),
+('일반통계', 1, 'Y', '#', 3, NULL),
+('기본설정', 1, 'Y', '#', 4, NULL),
+('기본표시정보', 2, 'Y', '#', 4, NULL),
+('지원금종류설정', 3, 'Y', '#', 4, NULL),
+('메뉴관리', 4, 'Y', '#', 4, NULL),
 
 -- 탭 메뉴
-('수강생', 1, 'Y', '/masterpage_sys/member/student', 5),
-('교강사(튜터)', 2, 'Y', '/masterpage_sys/member/teacher', 5),
-('위탁기업', 3, 'Y', '/masterpage_sys/member/company', 5),
-('LMS관리자', 4, 'Y', '/masterpage_sys/member/admin', 5),
-('관리자권한설정', 1, 'Y', '/masterpage_sys/auth_level', 6),
-('홈페이지게시판', 2, 'Y', '/masterpage_sys/board/managerForm', 6),
-('메인팝업', 1, 'Y', '/masterpage_sys/popup', 8),
-('주소록출력', 1, 'Y', '/masterpage_sys/member/address', 7),
-('상단팝업', 2, 'N', '/masterpage_sys/board/mainpopup', 8),
-('회원가입약관', 1, 'Y', '/masterpage_sys/agreement/join', 9),
-('수강신청약관', 2, 'Y', '/masterpage_sys/agreement/course', 9),
-('환불신청약관', 2, 'Y', '/masterpage_sys/agreement/refund', 9),
-('공지사항', 1, 'Y', '/masterpage_sys/board/notice', 10),
-('고충상담게시판', 1, 'Y', '/masterpage_sys/board/suggestion', 10),
-('FAQ', 1, 'Y', '/masterpage_sys/board/faq', 10),
-('Q&A', 1, 'Y', '/masterpage_sys/board/qna', 10),
-('학습자료실', 1, 'Y', '/masterpage_sys/board/data', 10),
-('1:1 상담', 1, 'Y', '/masterpage_sys/board/consulting', 10),
+('수강생', 1, 'Y', '/masterpage_sys/member/student', 5, 'SYSTEM'),
+('교강사(튜터)', 2, 'Y', '/masterpage_sys/member/teacher', 5, 'SYSTEM'),
+('위탁기업', 3, 'Y', '/masterpage_sys/member/company', 5, 'SYSTEM'),
+('LMS관리자', 4, 'Y', '/masterpage_sys/member/admin', 5, 'SYSTEM'),
+('관리자권한설정', 1, 'Y', '/masterpage_sys/auth_level', 6, 'SYSTEM'),
+('홈페이지게시판', 2, 'Y', '/masterpage_sys/board/managerForm', 6, 'SYSTEM'),
+('메인팝업', 1, 'Y', '/masterpage_sys/popup', 8, 'SYSTEM'),
+('주소록출력', 1, 'Y', '/masterpage_sys/member/address', 7, 'SYSTEM'),
+('상단팝업', 2, 'N', '/masterpage_sys/board/mainpopup', 8, 'SYSTEM'),
+('회원가입약관', 1, 'Y', '/masterpage_sys/agreement/join', 9, 'SYSTEM'),
+('수강신청약관', 2, 'Y', '/masterpage_sys/agreement/course', 9, 'SYSTEM'),
+('환불신청약관', 2, 'Y', '/masterpage_sys/agreement/refund', 9, 'SYSTEM'),
+('공지사항', 1, 'Y', '/masterpage_sys/board/notice', 10, 'SYSTEM'),
+('고충상담게시판', 1, 'Y', '/masterpage_sys/board/suggestion', 10, 'SYSTEM'),
+('FAQ', 1, 'Y', '/masterpage_sys/board/faq', 10, 'SYSTEM'),
+('Q&A', 1, 'Y', '/masterpage_sys/board/qna', 10, 'SYSTEM'),
+('학습자료실', 1, 'Y', '/masterpage_sys/board/data', 10, 'SYSTEM'),
+('1:1 상담', 1, 'Y', '/masterpage_sys/board/consulting', 10, 'SYSTEM'),
 -- ('게시판말머리관리', 2, 'Y', '/masterpage_sys/board/head', 10),
-('상담예약', 1, 'Y', '/masterpage_sys/counsel', 11),
-('홈페이지 Q&A', 1, 'Y', '#', 12),
-('회원통계', 2, 'Y', '#', 12),
-('회원접속통계', 3, 'Y', '#', 12),
-('기본설정', 1, 'Y', '#', 13),
-('환급교육', 1, 'Y', '#', 14),
-('일반교육', 2, 'Y', '#', 14),
-('환급교육', 1, 'Y', '#', 15),
-('메뉴분류관리', 1, 'Y', '#', 16),
-('메뉴명관리', 2, 'Y', '#', 16);
+('상담예약', 1, 'Y', '/masterpage_sys/counsel', 11, 'SYSTEM'),
+('홈페이지 Q&A', 1, 'Y', '#', 12, NULL),
+('회원통계', 2, 'Y', '#', 12, NULL),
+('회원접속통계', 3, 'Y', '#', 12, NULL),
+('기본설정', 1, 'Y', '#', 13, NULL),
+('환급교육', 1, 'Y', '#', 14, NULL),
+('일반교육', 2, 'Y', '#', 14, NULL),
+('환급교육', 1, 'Y', '#', 15, NULL),
+('메뉴분류관리', 1, 'Y', '#', 16, NULL),
+('메뉴명관리', 2, 'Y', '#', 16, NULL);
 
 INSERT INTO POPUP (POPUP_NAME, START_DATE, END_DATE, WIDTH_SIZE, HEIGHT_SIZE, TOP_SIZE, LEFT_SIZE, CONTENTS, CHK_TODAY, POPUP_TYPE, CHK_OPEN, CHK_SCROLLBAR) VALUES
 ('이벤트 팝업', '2023-01-01', '2023-01-10', '800', '600', '100', '100', '이벤트 내용입니다.', 'Y', 'popup', 'Y', 'N'),
@@ -122,7 +122,7 @@ INSERT INTO BBS_GROUP (
 INSERT INTO BBS (
     BBS_IDX, BBS_GROUP_IDX, BBSID, CATEGORY, TITLE, CONTENTS, URL, WRITER, PWD, IP,
     READ_NUM, CHK_MAIN, START_DATE, END_DATE, CHK_SECRET, CHK_HIDDEN, CHK_AUTH,
-    REPLY_BBS_IDX, REPLY_SORTNO, WRITE_USERID, MODIFY_USERID, REPLY_DEPTH, C_START_DATE, C_END_DATE) VALUES
+    PARENT_BBS_IDX, REPLY_SORTNO, WRITE_USERID, MODIFY_USERID, REPLY_DEPTH, C_START_DATE, C_END_DATE) VALUES
 -- Group 1
 (1, 1, 'BOARD001', '공지', '공지사항 1-1', '내용 1-1', 'http://example.com/1-1', '작성자1', 'pwd1', '127.0.0.1',
  10, 'N', '2025-01-01', '2025-12-31', 'N', 'N', 'USER',
@@ -157,3 +157,10 @@ INSERT INTO BBS (
  8, 'N', '2025-01-01', '2025-12-31', 'N', 'N', 'USER',
  NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31');
 
+INSERT INTO BBS_COMMENT (COMMENT_IDX, BBS_IDX, WRITER, PWD, CONTENTS, IP, CHK_SECRET, WRITE_USERID, MODIFY_USERID, CREATED_DATE, updated_date)
+VALUES
+    (1, 6, '이러닝관리자', 'password123', '첫 번째 댓글입니다.', '192.168.0.1', 'N', 'admin', 'admin', '2025-01-01 10:00:00', '2025-01-01 10:00:00'),
+    (2, 6, '홍길동', 'password456', '두 번째 댓글입니다.', '192.168.0.2', 'Y', 'hong', 'hong', '2025-01-01 11:00:00', '2025-01-01 11:00:00'),
+    (3, 7, '김철수', 'password789', '세 번째 댓글입니다.', '192.168.0.3', 'N', 'kim', 'kim', '2025-01-01 12:00:00', '2025-01-01 12:00:00'),
+    (4, 7, '이영희', 'password000', '네 번째 댓글입니다.', '192.168.0.4', 'N', 'lee', 'lee', '2025-01-01 13:00:00', '2025-01-01 13:00:00'),
+    (5, 7, '박정우', 'password111', '다섯 번째 댓글입니다.', '192.168.0.5', 'Y', 'park', 'park', '2025-01-01 14:00:00', '2025-01-01 14:00:00');

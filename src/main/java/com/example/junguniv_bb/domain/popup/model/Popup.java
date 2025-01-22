@@ -59,4 +59,19 @@ public class Popup extends BaseTime {
     @Column(name = "CHK_SCROLLBAR", length = 1)
     private String chkScrollbar; // 스크롤바 표시 여부
 
+    @Column(name = "POPUP_URL")
+    private String popupUrl; // 팝업 URL
+
+    @Column(name = "BGCOLOR")
+    private String bgcolor; // 팝업 배경색
+
+    // 첨부파일1
+    @Column(name = "FNAME1", length = 200)
+    private String fname1;
+
+    // 비공개파일명1
+    @Column(name = "FNAME1_NAME", length = 100)
+    private String fname1Name;
+
+
 }

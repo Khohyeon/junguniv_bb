@@ -28,7 +28,7 @@ public class AgreementController {
         // Service 에서 agreement 을 List 형태로 응답받아서 모델에 담음
         model.addAttribute("agreementList", agreementService.getAgreementJoinList());
 
-        return "masterpage_sys/agreement/joinForm";
+        return "masterpage_sys/agreement/join/listForm";
     }
 
     @GetMapping("/join/{agreementIdx}")
@@ -36,7 +36,7 @@ public class AgreementController {
 
         model.addAttribute("agreement", agreementService.getAgreementDetail(agreementIdx));
 
-        return "masterpage_sys/agreement/detailForm"; // HTML 파일명 (Thymeleaf 템플릿)
+        return "masterpage_sys/agreement/join/detailForm"; // HTML 파일명 (Thymeleaf 템플릿)
     }
 
     @GetMapping("/course")

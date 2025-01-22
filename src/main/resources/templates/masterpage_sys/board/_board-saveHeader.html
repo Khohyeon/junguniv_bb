@@ -1,113 +1,123 @@
-<div th:fragment="board_header(includeCategory, includeDate, includeTopFix, includeMainExpose, includeAttachments, fileCount)" class="inner">
-    <form class="form-wrap2" id="saveForm" action="/masterpage_sys/board/api/save" method="post" enctype="multipart/form-data">
-        <div class="column-tc-wrap bbs__write part1">
-            <div class="column-tc">
-                <div class="tit">제목</div>
-                <div class="con">
-                    <input type="text" name="title" id="title" placeholder="제목을 입력해주세요" value="">
-                    <input type="hidden" name="chksecret" id="chksecret" value="N">
-                </div>
-            </div>
-            <input type="hidden" name="writer" value="이러닝관리자" placeholder="작성자를 입력해주세요.">
-        </div>
-
-        <div class="column-tc-wrap part1 bbs__write" th:if="${includeCategory}">
-            <div class="column-tc">
-                <div class="tit">카테고리</div>
-                <div class="con">
-                    <select name="category" id="category">
-                        <option value="" th:selected="${selectedCategory == null}">선택</option>
-                        <option th:each="category : ${categories}"
-                                th:value="${category}"
-                                th:text="${category}"
-                                th:selected="${category == selectedCategory}"></option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="column-tc-wrap part1 bbs__write" th:if="${includeDate}">
-            <div class="column-tc">
-                <div class="tit">작성일</div>
-                <div class="con">
-                    <input name="answer_date" id="createdDate" type="date">
-                </div>
-            </div>
-        </div>
-        <!-- 게시글 상단 고정 -->
-        <div class="column-tc-bg" th:if="${includeTopFix}">
-            <div class="column-tc-wrap bbs__write">
+<div th:fragment="board_header(includeCategory, includeDate, includeTopFix, includeMainExpose, includeAttachments)" class="inner">
+    <div class="form-wrap2">
+        <form class="form-wrap2" id="saveForm" action="/masterpage_sys/board/api/save" method="post" enctype="multipart/form-data">
+            <div class="column-tc-wrap bbs__write part1">
                 <div class="column-tc">
-                    <div class="tit">게시글 상단고정</div>
+                    <div class="tit">제목</div>
                     <div class="con">
-                        <label class="c-input ci-radio">
-                            <input type="radio" name="topFix" id="top_fix_y" value="Y"> 리스트 상단 고정
-                            <div class="ci-show"></div>
-                        </label>
-                        <label class="c-input ci-radio">
-                            <input type="radio" name="topFix" id="top_fix_n" value="N"> 리스트 상단 고정 해제
-                            <div class="ci-show"></div>
-                        </label>
+                        <input type="text" name="title" id="title" placeholder="제목을 입력해주세요" value="">
+                        <input type="hidden" name="chksecret" id="chksecret" value="N">
                     </div>
                 </div>
-                <div class="column-tc">
-                    <div class="tit">고정기간</div>
-                    <div class="con flex">
-                        <input name="fix_start_date" id="fixStartDate" type="date" value="">
-                        <span class="bar">&nbsp;&nbsp;~&nbsp;&nbsp;</span>
-                        <input name="fix_end_date" id="fixEndDate" type="date" value="">
+                <div class="column-tc" th:if="${board.optionSecretAuth()}">
+                    <div class="column-tc bbs-secret">
+                        <div class="tit">비밀번호</div>
+                        <div class="con">
+                            <input class="input_pw" id="pwd" name="pwd" type="text" value="" placeholder="비밀번호를 입력하세요">
+                        </div>
                     </div>
                 </div>
+    <!--            <input type="hidden" name="writer" value="이러닝관리자" placeholder="작성자를 입력해주세요.">-->
             </div>
-        </div>
 
-        <!-- 홈페이지 메인 노출 -->
-        <div class="column-tc-bg" th:if="${includeMainExpose}">
-            <div class="column-tc-wrap bbs__write">
+            <div class="column-tc-wrap part1 bbs__write" th:if="${includeCategory}">
                 <div class="column-tc">
-                    <div class="tit">홈페이지 메인노출</div>
+                    <div class="tit">카테고리</div>
                     <div class="con">
-                        <label class="c-input ci-radio">
-                            <input type="radio" name="chkMain" id="chkMain_y" value="Y"> 메인노출
-                            <div class="ci-show"></div>
-                        </label>
-                        <label class="c-input ci-radio">
-                            <input type="radio" name="chkMain" id="chkMain_n" value="N"> 메인노출 해제
-                            <div class="ci-show"></div>
-                        </label>
+                        <select name="category" id="category">
+                            <option value="" th:selected="${selectedCategory == null}">선택</option>
+                            <option th:each="category : ${categories}"
+                                    th:value="${category}"
+                                    th:text="${category}"
+                                    th:selected="${category == selectedCategory}"></option>
+                        </select>
                     </div>
                 </div>
+            </div>
+
+            <div class="column-tc-wrap part1 bbs__write" th:if="${includeDate}">
                 <div class="column-tc">
-                    <div class="tit">노출기간</div>
-                    <div class="con flex">
-                        <input name="startDate" id="start_date" type="date" value="">
-                        <span class="bar">&nbsp;&nbsp;~&nbsp;&nbsp;</span>
-                        <input name="endDate" id="end_date" type="date" value="">
+                    <div class="tit">작성일</div>
+                    <div class="con">
+                        <input name="answer_date" id="createdDate" type="date">
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- 첨부파일 -->
-        <div class="column-tc-wrap part1 bbs__write" th:if="${includeAttachments}">
-            <div class="column-tc">
-                <div class="tit">첨부파일</div>
-                <div class="con flex2 fx-wrap">
-                    <label class="lab_attach" th:each="i : ${#numbers.sequence(1, fileCount)}">
-                        <input type="file" class="mt5" name="attachments">
-                    </label>
+            <!-- 게시글 상단 고정 -->
+            <div class="column-tc-bg" th:if="${includeTopFix}">
+                <div class="column-tc-wrap bbs__write">
+                    <div class="column-tc">
+                        <div class="tit">게시글 상단고정</div>
+                        <div class="con">
+                            <label class="c-input ci-radio">
+                                <input type="radio" name="topFix" id="top_fix_y" value="Y"> 리스트 상단 고정
+                                <div class="ci-show"></div>
+                            </label>
+                            <label class="c-input ci-radio">
+                                <input type="radio" name="topFix" id="top_fix_n" value="N"> 리스트 상단 고정 해제
+                                <div class="ci-show"></div>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="column-tc">
+                        <div class="tit">고정기간</div>
+                        <div class="con flex">
+                            <input name="fixStartDate" id="fixStartDate" type="date" value="">
+                            <span class="bar">&nbsp;&nbsp;~&nbsp;&nbsp;</span>
+                            <input name="fixEndDate" id="fixEndDate" type="date" value="">
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="mt30 con">
-            <textarea id="editor" name="contents"></textarea>
-        </div>
+            <!-- 홈페이지 메인 노출 -->
+            <div class="column-tc-bg" th:if="${includeMainExpose}">
+                <div class="column-tc-wrap bbs__write">
+                    <div class="column-tc">
+                        <div class="tit">홈페이지 메인노출</div>
+                        <div class="con">
+                            <label class="c-input ci-radio">
+                                <input type="radio" name="chkMain" id="chkMain_y" value="Y"> 메인노출
+                                <div class="ci-show"></div>
+                            </label>
+                            <label class="c-input ci-radio">
+                                <input type="radio" name="chkMain" id="chkMain_n" value="N"> 메인노출 해제
+                                <div class="ci-show"></div>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="column-tc">
+                        <div class="tit">노출기간</div>
+                        <div class="con flex">
+                            <input name="startDate" id="start_date" type="date" value="">
+                            <span class="bar">&nbsp;&nbsp;~&nbsp;&nbsp;</span>
+                            <input name="endDate" id="end_date" type="date" value="">
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <div class="btn-wrap mt50">
-            <a href="#" class="jv-btn fill01-lg">목록</a>
-            <button type="submit" class="jv-btn fill04-lg">저장</button>
-        </div>
-    </form>
+            <!-- 첨부파일 -->
+            <div class="column-tc-wrap part1 bbs__write" th:if="${includeAttachments}">
+                <div class="column-tc">
+                    <div class="tit">첨부파일</div>
+                    <div class="con flex2 fx-wrap">
+                        <div th:if="${board.fileCount() > 0}" th:each="i : ${#numbers.sequence(1, board.fileCount())}">
+                            <input type="file" class="mt5" name="attachments">
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            <div class="mt30 con">
+                <textarea id="editor" name="contents"></textarea>
+            </div>
+
+            <div class="btn-wrap mt50">
+                <a href="#" class="jv-btn fill01-lg">목록</a>
+                <button type="submit" class="jv-btn fill04-lg">저장</button>
+            </div>
+        </form>
+    </div>
 </div>

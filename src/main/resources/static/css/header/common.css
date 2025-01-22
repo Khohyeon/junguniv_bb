@@ -238,3 +238,6 @@ ul.list-num > li:nth-of-type(10):before{content:"10";}
 /* font size */
 .fs14{font-size:14px;}
 .fs20{font-size:20px;}
+
+/* 공지 행 스타일 */
+.notice-row {background-color: #f5f5dc; font-weight: bold;}

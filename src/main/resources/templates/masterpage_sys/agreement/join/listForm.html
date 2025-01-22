@@ -8,25 +8,27 @@
 <!-- 헤더에서 상단 메뉴 포함 -->
 <div th:replace="fragments/header :: header"></div>
 
+<script th:src="@{/js/agreement/join/listForm.js}"></script>
+
 <div class="inner">
     <div class="form-wrap">
         <div class="column-tc-wrap">
             <div class="column-tc">
                 <div class="tit">교육원 이름</div>
                 <div class="con">
-                    <input type="text" th:value="${agreementList.get(0).trainingCenterName()}" readonly>
+                    <input type="text" id="trainingCenterName" th:value="${agreementList.get(0).trainingCenterName()}">
                 </div>
             </div>
             <div class="column-tc">
                 <div class="tit">교육원 URL</div>
                 <div class="con">
-                    <input type="text" th:value="${agreementList.get(0).trainingCenterUrl()}" readonly>
+                    <input type="text" id="trainingCenterUrl" th:value="${agreementList.get(0).trainingCenterUrl()}">
                 </div>
             </div>
         </div>
     </div>
     <div class="btn-wrap">
-        <a href="#none" class="jv-btn fill04">저장하기</a>
+        <a href="#none" id="save" class="jv-btn fill04">저장하기</a>
     </div>
     <label class="c-input ci-check mt30">
         <input type="checkbox"> 전체공개설정
@@ -40,13 +42,13 @@
                 </div>
                 <div class="right">
                     <label class="c-input ci-check">
-                        <input type="checkbox" th:checked="${agreement.openYn() == 'Y'}"> 공개설정
+                        <input type="checkbox" id="openYn" value="Y" th:checked="${agreement.openYn() == 'Y'}"> 공개설정
                         <div class="ci-show"></div>
                     </label>
                     <a th:href="@{/masterpage_sys/agreement/join/{agreementIdx}(agreementIdx=${agreement.agreementIdx()})}" class="jv-btn fill04 ml10">텍스트 수정</a>
                 </div>
             </div>
-            <div class="b01" th:text="${agreement.agreementContents()}">
+            <div class="b01" th:utext="${agreement.agreementContents()}">
                 약관 내용
             </div>
         </div>

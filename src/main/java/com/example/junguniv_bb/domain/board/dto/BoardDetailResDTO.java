@@ -6,6 +6,8 @@ public record BoardDetailResDTO(
         String writer,
         String createdDate,
         Long readNum,
-        String contents
-) {
+        String contents,
+        boolean optionCommentAuth,
+        boolean optionReplyAuth
+){
 }

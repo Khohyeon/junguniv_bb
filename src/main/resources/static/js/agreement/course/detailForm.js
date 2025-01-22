@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
             items.push({
                 agreementIdx: agreementIdx || null, // 새 항목일 경우 null
                 agreementContents: agreementContents,
-                agreementType: 'REFUND' // 예시 타입, 필요에 따라 수정
+                agreementType: 'COURSE' // 예시 타입, 필요에 따라 수정
             });
         });
 
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .then(data => {
                 alert(data.response);
-                window.location.href = '/masterpage_sys/agreement/refund';
+                window.location.href = '/masterpage_sys/agreement/course';
             })
             .catch(error => {
                 console.error('저장 중 오류 발생:', error);

@@ -22,23 +22,31 @@ public record BoardUpdateReqDTO(
         String startDate,
         String endDate,
         List<MultipartFile> attachments, // 첨부파일
-        String contents // 에디터 내용
+        String contents, // 에디터 내용
+        String recipientName,
+        String recipientId,
+        String pwd
 ) {
 
     public Bbs updateEntity(BbsGroup bbsGroupIdx) {
         return new Bbs(
                 bbsIdx, // ID는 자동 생성
+                pwd,
                 bbsGroupIdx,
+                boardType,
                 title,
                 writer,
                 category,
-                topFix,
+                topFix == null ? "N" : topFix,
                 parseDate(fixStartDate),
                 parseDate(fixEndDate),
                 chkMain,
                 parseDate(startDate),
                 parseDate(endDate),
-                contents
+                contents,
+                recipientName,
+                recipientId,
+                null
         );
     }
 

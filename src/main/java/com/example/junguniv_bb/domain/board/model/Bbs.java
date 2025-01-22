@@ -72,8 +72,8 @@ public class Bbs extends BaseTime {
     @Column(name = "CHK_AUTH", length = 255)
     private String chkAuth;
 
-    @Column(name = "REPLY_BBS_IDX")
-    private Long replyBbsIdx;
+    @Column(name = "PARENT_BBS_IDX")
+    private Long parentBbsIdx;
 
     @Column(name = "REPLY_SORTNO")
     private Long replySortNo;
@@ -102,12 +102,21 @@ public class Bbs extends BaseTime {
     @Column(name = "FIX_END_DATE")
     private LocalDate fixEndDate;
 
-    public Bbs(Long bbsIdx, BbsGroup bbsGroupIdx, String title, String writer, String category, String chkTopFix, LocalDate fixStartDate, LocalDate fixEndDate,
-               String chkMain, LocalDate startDate, LocalDate endDate, String contents) {
+    @Column(name = "RECIPIENT_NAME")
+    private String recipientName; // 받는 사람 이름
+
+    @Column(name = "RECIPIENT_ID")
+    private String recipientId; // 받는 사람 ID
+
+    public Bbs(Long bbsIdx, String pwd, BbsGroup bbsGroupIdx, String bbsId, String title, String writer, String category, String chkTopFix, LocalDate fixStartDate, LocalDate fixEndDate,
+               String chkMain, LocalDate startDate, LocalDate endDate, String contents, String recipientName, String recipientId, Long parentBbsIdx) {
         this.bbsIdx = bbsIdx;
+        this.pwd = pwd;
         this.bbsGroup = bbsGroupIdx;
+        this.bbsId = bbsId;
         this.title = title;
         this.writer = writer;
+        this.writeUserId = writer;
         this.category = category;
         this.chkTopFix = chkTopFix;
         this.fixStartDate = fixStartDate;
@@ -116,5 +125,8 @@ public class Bbs extends BaseTime {
         this.startDate = startDate;
         this.endDate = endDate;
         this.contents = contents;
+        this.recipientName = recipientName;
+        this.recipientId = recipientId;
+        this.parentBbsIdx = parentBbsIdx;
     }
 }

@@ -1,33 +1,34 @@
 package com.example.junguniv_bb.domain.board.service;
 
+import com.example.junguniv_bb.domain.board.model.BbsSpecifications;
 import com.example.junguniv_bb._core.exception.Exception400;
 import com.example.junguniv_bb._core.exception.ExceptionMessage;
 import com.example.junguniv_bb._core.util.FileUtils;
 import com.example.junguniv_bb.domain.board.dto.*;
 import com.example.junguniv_bb.domain.board.model.*;
+import com.example.junguniv_bb.domain.member.model.Member;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.FileTime;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Arrays;
-
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +39,7 @@ public class BoardService {
     private final BbsGroupRepository bbsGroupRepository;
     private final BbsFileRepository bbsFileRepository;
     private final EntityManager entityManager;
+    private final BbsCommentRepository bbsCommentRepository;
 
     /* 파일 업로드 디렉토리 경로 설정 */
     @Value("${file.upload.directories.board}")
@@ -99,30 +101,19 @@ public class BoardService {
     }
 
     /**
-     * 게시판 검색 조회 BoardType 을 통해 모두 하나의 매핑으로 작업
-     * 응답 형태 : Page<BoardSearchReqDTO>
-     */
-    public Page<BoardSearchResDTO> searchByName(String title, String boardType, Pageable pageable) {
-        BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(boardType);
-
-        Page<Bbs> bbsPage = bbsRepository.findByTitleContainingIgnoreCaseAndBbsGroup(title, bbsGroup,pageable);
-        return bbsPage.map(bbs ->
-                new BoardSearchResDTO(
-                        bbs.getBbsIdx(),
-                        bbs.getBbsGroup(),
-                        bbs.getTitle(),
-                        bbs.getFormattedCreatedDate2(),
-                        bbs.getReadNum()
-                ));
-    }
-
-    /**
      * 게시판 상세페이지 BoardType 을 통해 모두 하나의 매핑으로 작업
      * 응답 형태 : BoardDetailResDTO
      */
+    @Transactional
     public BoardDetailResDTO getBoardDetail(Long bbsIdx) {
+        bbsRepository.incrementReadNum(bbsIdx);
+
         Bbs bbs = bbsRepository.findById(bbsIdx)
                 .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_BBS.getMessage()));
+
+        BbsGroup bbsGroup = bbsGroupRepository.findById(bbs.getBbsGroup().getBbsGroupIdx())
+                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_BBS_GROUP.getMessage()));
+
 
         return new BoardDetailResDTO(
                 bbs.getBbsIdx(),
@@ -130,7 +121,9 @@ public class BoardService {
                 bbs.getWriter(),
                 bbs.getFormattedCreatedDate2(),
                 bbs.getReadNum(),
-                bbs.getContents()
+                bbs.getContents(),
+                bbsGroup.getOptionCommentAuth().equals("Y"),
+                bbsGroup.getOptionReplyAuth().equals("Y")
         );
     }
 
@@ -166,13 +159,13 @@ public class BoardService {
      * 요청 형태 : BoardSaveReqDTO
      */
     @Transactional
-    public void saveBoard(BoardSaveReqDTO boardSaveReqDTO) {
+    public void saveBoard(BoardSaveReqDTO boardSaveReqDTO, Member member) {
         try {
             String boardType = boardSaveReqDTO.boardType();
             BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(boardType);
 
             // BBS 엔터티 저장
-            Bbs bbs = bbsRepository.save(boardSaveReqDTO.saveEntity(bbsGroup));
+            Bbs bbs = bbsRepository.save(boardSaveReqDTO.saveEntity(bbsGroup, member.getName()));
 
             // BBS File 엔티티 저장
             saveFiles(bbs, boardSaveReqDTO.attachments());
@@ -254,6 +247,11 @@ public class BoardService {
         Bbs boardToDelete = bbsRepository.findById(boardId)
                 .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_BBS.getMessage()));
 
+        List<BbsComment> allByBbsIdx = bbsCommentRepository.findAllByBbsIdx(boardToDelete);
+        if (!allByBbsIdx.isEmpty()) {
+            throw new Exception400("댓글이 있는 게시글은 삭제할 수 없습니다.");
+        }
+
         // 첨부 파일 삭제
         List<BbsFile> files = bbsFileRepository.findAllByBbs(boardToDelete);
         for (BbsFile file : files) {
@@ -267,6 +265,9 @@ public class BoardService {
         Bbs bbs = bbsRepository.findById(bbsIdx)
                 .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_BBS.getMessage()));
 
+        BbsGroup byBbsId = bbsGroupRepository.findById(bbs.getBbsGroup().getBbsGroupIdx())
+                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_BBS.getMessage()));
+
         List<String> attachments = bbsFileRepository.findAllByBbs(bbs)
                 .stream()
                 .map(BbsFile::getFName1)
@@ -274,6 +275,7 @@ public class BoardService {
 
         return new BoardUpdateResDTO(
                 bbsIdx,
+                bbs.getPwd(),
                 bbs.getTitle(),
                 bbs.getWriter(),
                 bbs.getCategory(),
@@ -285,6 +287,10 @@ public class BoardService {
                 bbs.getStartDate(),
                 bbs.getEndDate(),
                 bbs.getContents(),
+                bbs.getRecipientName(),
+                bbs.getRecipientId(),
+                byBbsId.getFileNum(),
+                byBbsId.getOptionSecretAuth().equals("Y"),
                 attachments
         );
     }
@@ -292,5 +298,184 @@ public class BoardService {
     public String getBoardCategory(String boardType) {
         BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(boardType);
         return bbsGroup.getCategory();
+    }
+
+    public Page<BoardSearchResDTO> searchBoards(String title, String boardType, String searchType, String startDate, String endDate, String category, Pageable pageable) {
+        BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(boardType);
+        if (bbsGroup == null) {
+            throw new Exception400("Invalid boardType: " + boardType);
+        }
+
+        // Specification을 이용한 동적 조건 빌드
+        Specification<Bbs> spec = Specification.where(BbsSpecifications.bbsGroupEquals(bbsGroup));
+
+        // 제목 검색 처리
+        if (title != null && !title.isEmpty()) {
+            switch (searchType) {
+                case "title":
+                    spec = spec.and(BbsSpecifications.titleContains(title));
+                    break;
+                case "titleAndContent":
+                    spec = spec.and(BbsSpecifications.titleOrContentContains(title));
+                    break;
+                case "content":
+                    spec = spec.and(BbsSpecifications.contentContains(title));
+                    break;
+            }
+        }
+
+        // 작성일 필터 추가
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        if (startDate != null && !startDate.isEmpty()) {
+            LocalDate parsedStartDate = LocalDate.parse(startDate, formatter);
+            spec = spec.and(BbsSpecifications.createdDateAfter(parsedStartDate));
+        }
+        if (endDate != null && !endDate.isEmpty()) {
+            LocalDate parsedEndDate = LocalDate.parse(endDate, formatter);
+            spec = spec.and(BbsSpecifications.createdDateBefore(parsedEndDate));
+        }
+
+        if (category != null && !category.isEmpty()) {
+            spec = spec.and(BbsSpecifications.categoryEquals(category));
+        }
+
+        // 기존 Specification에 정렬 추가
+        Specification<Bbs> specWithSort = spec.and(customSort());
+
+        // 검색 실행 및 결과 매핑
+        Page<Bbs> bbsPage = bbsRepository.findAll(specWithSort, pageable);
+
+        return bbsPage.map(bbs -> {
+
+            long commentCount = bbsCommentRepository.countAllByBbsIdx(bbs);
+
+            // 현재 날짜 확인
+            LocalDate currentDate = LocalDate.now();
+
+            boolean isNew = false;
+            if (bbs.getCreatedDate() != null) {
+                isNew = ChronoUnit.HOURS.between(bbs.getCreatedDate(), LocalDateTime.now()) < 24;
+            }
+
+            // chkTopFix 값 조정
+            String chkTopFix = "Y".equals(bbs.getChkTopFix()) &&
+                    bbs.getFixStartDate() != null &&
+                    bbs.getFixEndDate() != null &&
+                    !currentDate.isBefore(bbs.getFixStartDate()) &&
+                    !currentDate.isAfter(bbs.getFixEndDate())
+                    ? "Y"
+                    : "N";
+
+            return new BoardSearchResDTO(
+                    bbs.getBbsIdx(),
+                    bbs.getBbsGroup(),
+                    bbs.getTitle(),
+                    bbs.getFormattedCreatedDate2(),
+                    bbs.getReadNum(),
+                    chkTopFix, // 조정된 chkTopFix 값을 전달
+                    bbs.getPwd(),
+                    bbs.getParentBbsIdx(),
+                    isNew,
+                    commentCount
+            );
+        });
+    }
+
+    /**
+     * 커스텀으로 정렬 설정 (답변때문에 목록에 2가지 order BY 사용하기 위해서)
+     */
+    public static Specification<Bbs> customSort() {
+        return (root, query, criteriaBuilder) -> {
+            assert query != null;
+
+            // `CASE` 문으로 정렬 기준 정의
+            query.orderBy(
+                    criteriaBuilder.desc(
+                            criteriaBuilder.selectCase()
+                                    // parentBbsIdx가 null이면 정렬 우선순위 0
+                                    .when(criteriaBuilder.isNull(root.get("parentBbsIdx")), root.get("bbsIdx"))
+                                    // parentBbsIdx가 존재하면 해당 parentBbsIdx 순서로 정렬
+                                    .otherwise(root.get("parentBbsIdx"))
+                    ),
+                    // bbsIdx 내림차순 정렬
+                    criteriaBuilder.desc(root.get("bbsIdx"))
+            );
+            return null;
+        };
+    }
+
+
+    public BoardSaveResDTO getBoardSave(String bbsId) {
+        BbsGroup byBbsId = bbsGroupRepository.findByBbsId(bbsId);
+        return new BoardSaveResDTO(
+                byBbsId.getFileNum(),
+                byBbsId.getOptionSecretAuth().equals("Y")
+        );
+    }
+
+    /**
+     * 홈페이지게시판 답변등록 BoardType 을 통해 모두 하나의 매핑으로 작업
+     * 요청 형태 : BoardReplyReqDTO
+     */
+    @Transactional
+    public void replyBoard(BoardReplyReqDTO boardReplyReqDTO, Member member) {
+        try {
+            String boardType = boardReplyReqDTO.boardType();
+            BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(boardType);
+
+            // BBS 엔터티 저장
+            Bbs bbs = bbsRepository.save(boardReplyReqDTO.updateReplyEntity(bbsGroup, member.getName()));
+
+            // BBS File 엔티티 저장
+            saveFiles(bbs, boardReplyReqDTO.attachments());
+
+            // 강제 플러시
+            entityManager.flush();
+        } catch (Exception e) {
+            // 업로드된 파일이 있다면 삭제 시도
+            if (boardReplyReqDTO.attachments() != null) {
+                for (MultipartFile file : boardReplyReqDTO.attachments()) {
+                    if (!file.isEmpty()) {
+                        String fileName = FileUtils.generateUniqueFileName(file.getOriginalFilename());
+                        FileUtils.deleteFile(fileName, uploadDirPath);
+                    }
+                }
+            }
+            throw e;
+        }
+    }
+
+    @Transactional
+    public void commentSaveBoard(BoardCommentSaveReqDTO boardCommentSaveReqDTO, Member member) {
+//        BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(boardCommentSaveReqDTO.boardType());
+        Bbs bbs = bbsRepository.findById(boardCommentSaveReqDTO.bbsIdx())
+                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_BBS.getMessage()));
+        bbsCommentRepository.save(boardCommentSaveReqDTO.saveEntity(bbs, member));
+    }
+
+
+    public List<BoardCommentDetailResDTO> getCommentDetail(Long bbsIdx) {
+        // 게시글 조회
+        Bbs bbs = bbsRepository.findById(bbsIdx)
+                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_BBS.getMessage()));
+
+        // 댓글 조회
+        List<BbsComment> allByBbsIdx = bbsCommentRepository.findAllByBbsIdx(bbs);
+
+        // 댓글 상세 DTO 생성 및 반환
+        return allByBbsIdx.stream()
+                .map(bbsComment -> new BoardCommentDetailResDTO(
+                        bbsComment.getBbsIdx().getBbsIdx(),
+                        bbsComment.getCommentIdx(),
+                        bbsComment.getWriter(),
+                        bbsComment.getContents(),
+                        bbsComment.getFormattedCreatedDate2()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void deleteComment(Long commentIdx) {
+        bbsCommentRepository.deleteById(commentIdx);
     }
 }

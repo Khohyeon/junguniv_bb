@@ -13,7 +13,7 @@
 
 <!-- editor.js 파일 불러오기 -->
 <script th:src="@{/js/common/editor.js}"></script>
-<script th:src="@{/js/agreement/detailForm.js}"></script>
+<script th:src="@{/js/agreement/join/detailForm.js}"></script>
 
 <div class="inner">
     <div class="form-wrap2 agree-join-edit">
@@ -32,6 +32,10 @@
                     <div class="table-util">
                         <div class="left"></div>
                         <div class="right">
+                            <label class="c-input ci-check">
+                                <input type="checkbox" name="openYn" value="Y" th:checked="${agreement.openYn() == 'Y'}"> 공개설정
+                                <div class="ci-show"></div>
+                            </label>
                             <a href="#none" class="jv-btn fill04">교육원 이름 삽입</a>
                             <a href="#none" class="jv-btn fill04">교육원 URL 삽입</a>
                         </div>
@@ -61,7 +65,7 @@
             <!-- 저장 및 목록 버튼 -->
             <div class="btn-wrap mt50">
                 <button type="submit" class="jv-btn fill04-lg">저장</button>
-                <a href="#none" class="jv-btn fill01-lg" th:href="@{/masterpage_sys/agreement/join}">목록</a>
+                <a href="#none" class="jv-btn fill01-lg" th:href="@{/templates/masterpage_sys/agreement/join}">목록</a>
             </div>
             <!-- form 태그 끝 -->
             <input type="hidden" name="agreementIdx" th:value="${agreement.agreementIdx()}">

@@ -5,6 +5,7 @@ import java.util.List;
 
 public record BoardUpdateResDTO(
         Long bbsIdx,
+        String pwd,
         String title,
         String writer,
         String category,
@@ -16,6 +17,10 @@ public record BoardUpdateResDTO(
         LocalDate startDate,
         LocalDate endDate,
         String contents,
+        String recipientName,
+        String recipientId,
+        Integer fileCount,
+        boolean optionSecretAuth,
         List<String> attachments // 첨부파일 이름 리스트
 ) {
 }

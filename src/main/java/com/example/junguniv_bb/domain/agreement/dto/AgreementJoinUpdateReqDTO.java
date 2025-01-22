@@ -4,14 +4,13 @@ import com.example.junguniv_bb.domain.agreement.model.Agreement;
 
 public record AgreementJoinUpdateReqDTO(
         Long agreementIdx,
-        String trainingCenterName,
-        String trainingCenterUrl,
         String agreementTitle,
-        String agreementContents
+        String agreementContents,
+        String openYn
 ) {
-    public Agreement updateJoinEntity() {
+    public Agreement updateJoinEntity(String trainingCenterName, String trainingCenterUrl) {
         return new Agreement(
-                agreementIdx, trainingCenterName, trainingCenterUrl, agreementTitle, agreementContents, "Y", "JOIN"
+                agreementIdx, agreementTitle, trainingCenterName, trainingCenterUrl, agreementContents, openYn, "JOIN"
         );
     }
 }

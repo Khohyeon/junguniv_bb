@@ -7,6 +7,11 @@ public record BoardSearchResDTO(
         BbsGroup bbsGroup,
         String title,
         String createdDate,
-        Long readNum
+        Long readNum,
+        String chkTopFix,
+        String pwd,
+        Long parentBbsIdx,
+        boolean isNew,
+        long commentCount
 ) {
 }

@@ -21,22 +21,30 @@ public record BoardSaveReqDTO(
         String startDate,
         String endDate,
         List<MultipartFile> attachments, // 첨부파일
-        String contents // 에디터 내용
+        String contents, // 에디터 내용
+        String recipientName,
+        String recipientId,
+        String pwd
 ) {
-    public Bbs saveEntity(BbsGroup bbsGroupIdx) {
+    public Bbs saveEntity(BbsGroup bbsGroupIdx, String name) {
         return new Bbs(
                 null, // ID는 자동 생성
+                pwd,
                 bbsGroupIdx,
+                boardType,
                 title,
-                writer,
+                name == null ? "로그인한 유저이름" : name,
                 category,
-                topFix,
+                topFix == null ? "N" : topFix,
                 parseDate(fixStartDate),
                 parseDate(fixEndDate),
                 chkMain,
                 parseDate(startDate),
                 parseDate(endDate),
-                contents
+                contents,
+                recipientName,
+                recipientId,
+                null
         );
     }
 

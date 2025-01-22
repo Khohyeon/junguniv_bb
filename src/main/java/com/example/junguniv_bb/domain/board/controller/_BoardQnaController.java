@@ -22,7 +22,9 @@ public class _BoardQnaController {
     }
 
     @GetMapping("/save")
-    public String qnaSaveForm() {
+    public String qnaSaveForm(Model model) {
+        String bbsId = "Q&A";
+        model.addAttribute("board", boardService.getBoardSave(bbsId));
         return "masterpage_sys/board/qna/saveForm";
     }
 
@@ -34,7 +36,14 @@ public class _BoardQnaController {
 
     @GetMapping("/update/{bbsIdx}")
     public String qnaUpdateForm(@PathVariable Long bbsIdx, Model model) {
+        model.addAttribute("comments", boardService.getCommentDetail(bbsIdx));
         model.addAttribute("board", boardService.getBoardUpdate(bbsIdx));
         return "masterpage_sys/board/qna/updateForm";
+    }
+
+    @GetMapping("/reply/{bbsIdx}")
+    public String qnaReplyForm(@PathVariable Long bbsIdx, Model model) {
+        model.addAttribute("board", boardService.getBoardUpdate(bbsIdx));
+        return "masterpage_sys/board/qna/replyForm";
     }
 }

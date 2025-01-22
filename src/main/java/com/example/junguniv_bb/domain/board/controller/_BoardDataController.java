@@ -21,13 +21,16 @@ public class _BoardDataController {
     }
 
     @GetMapping("/save")
-    public String dataSaveForm() {
+    public String dataSaveForm(Model model) {
+        String bbsId = "MATERIAL";
+        model.addAttribute("board", boardService.getBoardSave(bbsId));
         return "masterpage_sys/board/data/saveForm";
     }
 
     @GetMapping("/{bbsIdx}")
     public String dataDetailForm(@PathVariable Long bbsIdx, Model model) {
         model.addAttribute("board", boardService.getBoardDetail(bbsIdx));
+        model.addAttribute("comments", boardService.getCommentDetail(bbsIdx));
         return "masterpage_sys/board/data/detailForm";
     }
 
@@ -35,5 +38,11 @@ public class _BoardDataController {
     public String dataUpdateForm(@PathVariable Long bbsIdx, Model model) {
         model.addAttribute("board", boardService.getBoardUpdate(bbsIdx));
         return "masterpage_sys/board/data/updateForm";
+    }
+
+    @GetMapping("/reply/{bbsIdx}")
+    public String dataReplyForm(@PathVariable Long bbsIdx, Model model) {
+        model.addAttribute("board", boardService.getBoardUpdate(bbsIdx));
+        return "masterpage_sys/board/data/replyForm";
     }
 }

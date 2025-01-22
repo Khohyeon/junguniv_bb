@@ -1,4 +1,4 @@
-<div th:fragment="board_header(includeCategory, includeDate, includeTopFix, includeMainExpose, includeAttachments, fileCount)" class="inner">
+<div th:fragment="board_header(includeCategory, includeDate, includeTopFix, includeMainExpose, includeAttachments)" class="inner">
     <form class="form-wrap2" id="updateForm" action="/masterpage_sys/board/api/update" method="post" enctype="multipart/form-data">
         <input type="hidden" name="bbsIdx" th:value="${board.bbsIdx()}" />
 
@@ -8,6 +8,19 @@
                 <div class="tit">제목</div>
                 <div class="con">
                     <input type="text" name="title" id="title" placeholder="제목을 입력해주세요" th:value="${board.title() ?: ''}" />
+                </div>
+            </div>
+            <div class="column-tc" th:if="${board.optionSecretAuth()}">
+                <div class="column-tc bbs-secret">
+                    <div class="tit">비밀번호</div>
+                    <div class="con">
+                        <!-- 비밀번호 입력 필드 -->
+                        <input class="input_pw" id="pwd" name="pwd" type="password"
+                               th:value="${board.pwd() != null ? '*'.repeat(board.pwd().length()) : ''}"
+                               placeholder="비밀번호를 입력하세요">
+                        <!-- 실제 비밀번호 값을 저장할 hidden input -->
+                        <input type="hidden" id="actualPwd" name="actualPwd" th:value="${board.pwd()}">
+                    </div>
                 </div>
             </div>
         </div>
@@ -100,14 +113,14 @@
                 <div class="tit">첨부파일</div>
                 <div class="con flex2 fx-wrap">
                     <!-- 업로드 가능한 파일 입력 필드 -->
-                    <div th:each="i : ${#numbers.sequence(1, fileCount)}">
+                    <div th:if="${board.fileCount() > 0}" th:each="i : ${#numbers.sequence(1, board.fileCount())}">
                         <label class="lab_attach">
                             <input type="file" class="mt5" name="attachments" />
                         </label>
                     </div>
 
                     <!-- 이미 업로드된 첨부 파일 출력 -->
-                    <div class="attachment-list" th:if="${board.attachments() != null}">
+                    <div class="attachment-list" th:if="${board.attachments() != null and !#lists.isEmpty(board.attachments())}">
                         <div th:each="attachment, iStat : ${board.attachments()}">
                             <!-- 파일 이름 표시 -->
                             <span th:text="${attachment}"></span>
