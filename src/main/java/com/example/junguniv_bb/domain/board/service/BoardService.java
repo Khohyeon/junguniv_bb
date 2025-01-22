@@ -26,7 +26,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +39,7 @@ public class BoardService {
     private final BbsGroupRepository bbsGroupRepository;
     private final BbsFileRepository bbsFileRepository;
     private final EntityManager entityManager;
+    private final BbsCommentRepository bbsCommentRepository;
 
     /* 파일 업로드 디렉토리 경로 설정 */
     @Value("${file.upload.directories.board}")
@@ -244,6 +247,11 @@ public class BoardService {
         Bbs boardToDelete = bbsRepository.findById(boardId)
                 .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_BBS.getMessage()));
 
+        List<BbsComment> allByBbsIdx = bbsCommentRepository.findAllByBbsIdx(boardToDelete);
+        if (!allByBbsIdx.isEmpty()) {
+            throw new Exception400("댓글이 있는 게시글은 삭제할 수 없습니다.");
+        }
+
         // 첨부 파일 삭제
         List<BbsFile> files = bbsFileRepository.findAllByBbs(boardToDelete);
         for (BbsFile file : files) {
@@ -368,6 +376,10 @@ public class BoardService {
             );
         });
     }
+
+    /**
+     * 커스텀으로 정렬 설정 (답변때문에 목록에 2가지 order BY 사용하기 위해서)
+     */
     public static Specification<Bbs> customSort() {
         return (root, query, criteriaBuilder) -> {
             assert query != null;
@@ -427,5 +439,39 @@ public class BoardService {
             }
             throw e;
         }
+    }
+
+    @Transactional
+    public void commentSaveBoard(BoardCommentSaveReqDTO boardCommentSaveReqDTO, Member member) {
+//        BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(boardCommentSaveReqDTO.boardType());
+        Bbs bbs = bbsRepository.findById(boardCommentSaveReqDTO.bbsIdx())
+                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_BBS.getMessage()));
+        bbsCommentRepository.save(boardCommentSaveReqDTO.saveEntity(bbs, member));
+    }
+
+
+    public List<BoardCommentDetailResDTO> getCommentDetail(Long bbsIdx) {
+        // 게시글 조회
+        Bbs bbs = bbsRepository.findById(bbsIdx)
+                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_BBS.getMessage()));
+
+        // 댓글 조회
+        List<BbsComment> allByBbsIdx = bbsCommentRepository.findAllByBbsIdx(bbs);
+
+        // 댓글 상세 DTO 생성 및 반환
+        return allByBbsIdx.stream()
+                .map(bbsComment -> new BoardCommentDetailResDTO(
+                        bbsComment.getBbsIdx().getBbsIdx(),
+                        bbsComment.getCommentIdx(),
+                        bbsComment.getWriter(),
+                        bbsComment.getContents(),
+                        bbsComment.getFormattedCreatedDate2()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void deleteComment(Long commentIdx) {
+        bbsCommentRepository.deleteById(commentIdx);
     }
 }

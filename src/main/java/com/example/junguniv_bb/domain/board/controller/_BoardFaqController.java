@@ -30,6 +30,7 @@ public class _BoardFaqController {
     @GetMapping("/{bbsIdx}")
     public String faqDetailForm(@PathVariable Long bbsIdx, Model model) {
         model.addAttribute("board", boardService.getBoardDetail(bbsIdx));
+        model.addAttribute("comments", boardService.getCommentDetail(bbsIdx));
         return "masterpage_sys/board/faq/detailForm";
     }
 
@@ -37,5 +38,11 @@ public class _BoardFaqController {
     public String faqUpdateForm(@PathVariable Long bbsIdx, Model model) {
         model.addAttribute("board", boardService.getBoardUpdate(bbsIdx));
         return "masterpage_sys/board/faq/updateForm";
+    }
+
+    @GetMapping("/reply/{bbsIdx}")
+    public String faqReplyForm(@PathVariable Long bbsIdx, Model model) {
+        model.addAttribute("board", boardService.getBoardUpdate(bbsIdx));
+        return "masterpage_sys/board/faq/replyForm";
     }
 }

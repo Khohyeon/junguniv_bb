@@ -31,6 +31,8 @@ public class _BoardSuggestionController {
     @GetMapping("/{bbsIdx}")
     public String suggestionDetailForm(@PathVariable Long bbsIdx, Model model) {
         model.addAttribute("board", boardService.getBoardDetail(bbsIdx));
+        model.addAttribute("comments", boardService.getCommentDetail(bbsIdx));
+
         return "masterpage_sys/board/suggestion/detailForm";
     }
 

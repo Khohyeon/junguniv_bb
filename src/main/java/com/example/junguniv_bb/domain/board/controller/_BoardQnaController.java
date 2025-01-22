@@ -36,8 +36,14 @@ public class _BoardQnaController {
 
     @GetMapping("/update/{bbsIdx}")
     public String qnaUpdateForm(@PathVariable Long bbsIdx, Model model) {
-        System.out.println("fileCount : " + boardService.getBoardUpdate(bbsIdx).fileCount());
+        model.addAttribute("comments", boardService.getCommentDetail(bbsIdx));
         model.addAttribute("board", boardService.getBoardUpdate(bbsIdx));
         return "masterpage_sys/board/qna/updateForm";
+    }
+
+    @GetMapping("/reply/{bbsIdx}")
+    public String qnaReplyForm(@PathVariable Long bbsIdx, Model model) {
+        model.addAttribute("board", boardService.getBoardUpdate(bbsIdx));
+        return "masterpage_sys/board/qna/replyForm";
     }
 }

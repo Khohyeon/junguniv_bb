@@ -5,7 +5,6 @@
     <th:block th:replace="fragments/header :: head"></th:block>
 
     <script th:src="@{/js/board/data/detailForm.js}"></script>
-    <script th:src="@{/js/common/checkbox.js}"></script>
     <script th:src="@{/js/board/header.js}"></script>
 </head>
 <body>
@@ -13,7 +12,6 @@
 <div th:replace="fragments/header :: header"></div>
 
 <!-- 공통 헤더 포함 -->
-<!--  board_header (답변권한)-->
-<div th:replace="/masterpage_sys/board/_board-detailHeader :: board-header(ture)"></div>
+<div th:replace="/masterpage_sys/board/_board-detailHeader :: board-header"></div>
 </body>
 </html>

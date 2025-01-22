@@ -30,6 +30,7 @@ public class _BoardNoticeController {
     @GetMapping("/{bbsIdx}")
     public String noticeDetailForm(@PathVariable Long bbsIdx, Model model) {
         model.addAttribute("board", boardService.getBoardDetail(bbsIdx));
+        model.addAttribute("comments", boardService.getCommentDetail(bbsIdx));
         return "masterpage_sys/board/notice/detailForm";
     }
 
@@ -37,5 +38,11 @@ public class _BoardNoticeController {
     public String noticeUpdateForm(@PathVariable Long bbsIdx, Model model) {
         model.addAttribute("board", boardService.getBoardUpdate(bbsIdx));
         return "masterpage_sys/board/notice/updateForm";
+    }
+
+    @GetMapping("/reply/{bbsIdx}")
+    public String noticeReplyForm(@PathVariable Long bbsIdx, Model model) {
+        model.addAttribute("board", boardService.getBoardUpdate(bbsIdx));
+        return "masterpage_sys/board/notice/replyForm";
     }
 }

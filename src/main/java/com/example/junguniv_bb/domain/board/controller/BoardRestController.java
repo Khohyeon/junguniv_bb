@@ -2,10 +2,7 @@ package com.example.junguniv_bb.domain.board.controller;
 
 import com.example.junguniv_bb._core.security.CustomUserDetails;
 import com.example.junguniv_bb._core.util.APIUtils;
-import com.example.junguniv_bb.domain.board.dto.BoardReplyReqDTO;
-import com.example.junguniv_bb.domain.board.dto.BoardSaveReqDTO;
-import com.example.junguniv_bb.domain.board.dto.BoardSearchResDTO;
-import com.example.junguniv_bb.domain.board.dto.BoardUpdateReqDTO;
+import com.example.junguniv_bb.domain.board.dto.*;
 import com.example.junguniv_bb.domain.board.model.Bbs;
 import com.example.junguniv_bb.domain.board.service.BoardService;
 import com.example.junguniv_bb.domain.member.model.Member;
@@ -40,12 +37,6 @@ public class BoardRestController {
             @RequestParam(required = false) String endDate,     // 작성일 종료
             @RequestParam(required = false) String category,    // 카테고리
             Pageable pageable) {
-
-//        // 페이징 기본 설정: bbsIdx 기준 내림차순
-//        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(
-//                Sort.Order.asc("parentBbsIdx").nullsFirst(), // parentBbsIdx가 NULL인 경우 우선
-//                Sort.Order.desc("bbsIdx")                    // bbsIdx 기준 내림차순
-//        ));
 
         // 서비스 호출하여 검색 수행
         Page<BoardSearchResDTO> searchResults = boardService.searchBoards(
@@ -118,8 +109,8 @@ public class BoardRestController {
     }
 
     /**
-     *  [관리자모드] 홈페이지관리 - 게시판관리 - 게시판목록 - 상세보기 - 수정하기
-     *  각각 게시판 수정을 하나의 매핑으로 처리 (BoardUpdateReqDTO.boardType 으로 구분)
+     *  [관리자모드] 홈페이지관리 - 게시판관리 - 게시판목록 - 상세보기 - 답변
+     *  각각 게시판 답변을 하나의 매핑으로 처리 (BoardReplyReqDTO.boardType 으로 구분)
      */
     @PutMapping("/reply")
     public ResponseEntity<?> replyBoard(@ModelAttribute BoardReplyReqDTO boardReplyReqDTO,
@@ -147,4 +138,41 @@ public class BoardRestController {
         String boardCategory = boardService.getBoardCategory(boardType);
         return ResponseEntity.ok(APIUtils.success(boardCategory));
     }
+
+    /**
+     *  [관리자모드] 홈페이지관리 - 게시판관리 - 게시글 상세 - 댓글작성
+     *  각각 게시판 등록을 하나의 매핑으로 처리 (BoardCommentSaveReqDTO.boardType 으로 구분)
+     */
+    @PostMapping("/comment")
+    public ResponseEntity<?> commentSaveBoard(@ModelAttribute BoardCommentSaveReqDTO boardCommentSaveReqDTO
+            , @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        // CustomUserDetails가 null인지 확인
+        Member member;
+        if (customUserDetails == null) {
+            // 테스트 환경일 경우 기본 Member 객체를 생성
+            member = new Member();
+            member.setMemberIdx(100L); // 기본 ID 설정
+            member.setName("테스트 사용자"); // 테스트 사용자 이름
+            member.setUserId("adminMaster"); // 테스트 사용자 이름
+            member.setBirthday("1992-01-02"); // 테스트 이메일
+        } else {
+            // 실제 사용자 정보 사용
+            member = customUserDetails.getMember();
+        }
+        // 서비스 호출
+        boardService.commentSaveBoard(boardCommentSaveReqDTO, member);
+
+        return ResponseEntity.ok(APIUtils.success("댓글 등록이 성공적으로 완료되었습니다."));
+    }
+
+
+    @DeleteMapping("/comment/delete/{commentIdx}")
+    public ResponseEntity<?> deleteComment(@PathVariable Long commentIdx) {
+        // 댓글 삭제 서비스 호출
+        boardService.deleteComment(commentIdx);
+        return ResponseEntity.ok(APIUtils.success("댓글 삭제가 성공적으로 완료되었습니다."));
+
+    }
+
+
 }

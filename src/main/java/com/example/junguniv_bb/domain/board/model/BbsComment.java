@@ -2,12 +2,7 @@ package com.example.junguniv_bb.domain.board.model;
 
 import com.example.junguniv_bb._core.common.BaseTime;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-import java.time.LocalDateTime;
+import lombok.*;
 
 @Getter
 @Setter
@@ -15,15 +10,19 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "BBS_COMMENT")
+@AllArgsConstructor
 public class BbsComment extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "COMMENT_IDX", nullable = false)
-    private Integer commentIdx; // 댓글 IDX
+    private Long commentIdx; // 댓글 IDX
 
-    @Column(name = "BBS_IDX", nullable = false)
-    private Integer bbsIdx; // 게시글 IDX (FK)
+    @JoinColumn(name = "BBS_IDX", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Bbs bbsIdx; // 게시글 IDX (FK)
+
+
 
     @Column(name = "WRITER", length = 255)
     private String writer; // 작성자 이름
