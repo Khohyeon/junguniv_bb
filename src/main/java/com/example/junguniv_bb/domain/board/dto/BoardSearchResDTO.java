@@ -11,6 +11,7 @@ public record BoardSearchResDTO(
         String chkTopFix,
         String pwd,
         Long parentBbsIdx,
-        boolean isNew
+        boolean isNew,
+        long commentCount
 ) {
 }

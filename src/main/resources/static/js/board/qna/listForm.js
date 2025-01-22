@@ -146,8 +146,10 @@ document.addEventListener('DOMContentLoaded', function () {
             // NEW 표시
             const newLabel = item.isNew ? `<span class="jv-btn label04-sm">NEW</span>` : '';
 
-            // 제목
+            // 제목과 댓글 수
+            const commentCountLabel = item.commentCount > 0 ? `[${item.commentCount}]` : '';
             const title = item.title || '제목 없음';
+            const titleWithCount = `${title} ${commentCountLabel}`;
 
 
             row.innerHTML = `
@@ -164,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <td>
                 ${secretLabel}
                 ${replyLabel}
-                <a href="/masterpage_sys/board/qna/${item.bbsIdx}" class="jv-btn underline01">${title}</a>
+                <a href="/masterpage_sys/board/qna/${item.bbsIdx}" class="tit Pretd_SB"> ${titleWithCount} </a>
                 ${newLabel}
             </td>
             <!-- 작성일 -->

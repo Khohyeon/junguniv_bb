@@ -346,6 +346,9 @@ public class BoardService {
         Page<Bbs> bbsPage = bbsRepository.findAll(specWithSort, pageable);
 
         return bbsPage.map(bbs -> {
+
+            long commentCount = bbsCommentRepository.countAllByBbsIdx(bbs);
+
             // 현재 날짜 확인
             LocalDate currentDate = LocalDate.now();
 
@@ -372,7 +375,8 @@ public class BoardService {
                     chkTopFix, // 조정된 chkTopFix 값을 전달
                     bbs.getPwd(),
                     bbs.getParentBbsIdx(),
-                    isNew
+                    isNew,
+                    commentCount
             );
         });
     }
