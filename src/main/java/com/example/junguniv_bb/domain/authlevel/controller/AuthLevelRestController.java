@@ -12,6 +12,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -32,7 +34,7 @@ public class AuthLevelRestController {
     @GetMapping
     public ResponseEntity<?> authLevelPage(
             // Member member,
-            Pageable pageable, String authLevelName) {
+            @PageableDefault(size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable, String authLevelName) {
 
         // TODO 권한 체크
 

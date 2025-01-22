@@ -9,6 +9,8 @@ import com.example.junguniv_bb.domain.authlevel.dto.AuthLevelSaveReqDTO;
 import com.example.junguniv_bb.domain.authlevel.dto.AuthLevelUpdateReqDTO;
 import com.example.junguniv_bb.domain.authlevel.model.AuthLevel;
 import com.example.junguniv_bb.domain.authlevel.model.AuthLevelRepository;
+import com.example.junguniv_bb.domain.managerauth.model.ManagerAuth;
+import com.example.junguniv_bb.domain.managerauth.model.ManagerAuthRepository;
 import com.example.junguniv_bb.domain.managermenu.model.ManagerMenu;
 import com.example.junguniv_bb.domain.managermenu.model.ManagerMenuRepository;
 import com.example.junguniv_bb.domain.member.model.Member;
@@ -34,7 +36,7 @@ public class AuthLevelService {
 
     /* DI */
     private final AuthLevelRepository authLevelRepository;
-    // private final ManagerAuthRepository managerAuthRepository;
+    private final ManagerAuthRepository managerAuthRepository;
     private final ManagerMenuRepository managerMenuRepository;
     private final MemberRepository memberRepository;
     private final PrivacyMaskingUtil privacyMaskingUtil;
@@ -52,19 +54,19 @@ public class AuthLevelService {
 
 
 
-    // /* 관리자 권한에 따른 접근 제어 */
-    // public boolean hasPermission(Long menuIdx, Long authLevelIdx, String action) {
-    //     ManagerAuth managerAuth = managerAuthRepository.findByMenuIdxAndAuthLevel(menuIdx, authLevelIdx);
-    //     if (managerAuth == null) return false;
-    //
-    //     return switch (action) {
-    //         case "READ" -> managerAuth.getMenuReadAuth() != null && managerAuth.getMenuReadAuth() == 1;
-    //         case "WRITE" -> managerAuth.getMenuWriteAuth() != null && managerAuth.getMenuWriteAuth() == 1;
-    //         case "MODIFY" -> managerAuth.getMenuModifyAuth() != null && managerAuth.getMenuModifyAuth() == 1;
-    //         case "DELETE" -> managerAuth.getMenuDeleteAuth() != null && managerAuth.getMenuDeleteAuth() == 1;
-    //         default -> false;
-    //     };
-    // }
+    /* 관리자 권한에 따른 접근 제어 */
+    public boolean hasPermission(Long menuIdx, Long authLevelIdx, String action) {
+        ManagerAuth managerAuth = managerAuthRepository.findByMenuIdxAndAuthLevel(menuIdx, authLevelIdx);
+        if (managerAuth == null) return false;
+
+        return switch (action) {
+            case "READ" -> managerAuth.getMenuReadAuth() != null && managerAuth.getMenuReadAuth() == 1;
+            case "WRITE" -> managerAuth.getMenuWriteAuth() != null && managerAuth.getMenuWriteAuth() == 1;
+            case "MODIFY" -> managerAuth.getMenuModifyAuth() != null && managerAuth.getMenuModifyAuth() == 1;
+            case "DELETE" -> managerAuth.getMenuDeleteAuth() != null && managerAuth.getMenuDeleteAuth() == 1;
+            default -> false;
+        };
+    }
 
     /* 기본적인 개인정보 접근 권한 확인 (관리자권한 및 메뉴) */
     public boolean hasPrivacyAccessPermission(Long menuIdx, Long authLevelIdx) {
@@ -159,11 +161,11 @@ public class AuthLevelService {
 
         Long authLevelValue = authLevelPS.getAuthLevel();
 
-        // // 관련 ManagerAuth 삭제
-        // managerAuthRepository.deleteAllByAuthLevel(authLevelValue);
+        // 관련 ManagerAuth 삭제
+        managerAuthRepository.deleteAllByAuthLevel(authLevelValue);
 
         // Member의 authLevel을 null로 설정
-        int updatedMembers = memberRepository.setAuthLevelToNullForMembers(authLevelValue);
+        memberRepository.setAuthLevelToNullForMembers(authLevelValue);
 
         // AuthLevel 삭제
         authLevelRepository.delete(authLevelPS);
@@ -190,14 +192,14 @@ public class AuthLevelService {
         // 트랜잭션 처리
         reqDTO.updateEntity(authLevelPS);
 
-        // // authLevel 값이 변경되었는지 확인
-        // if (!oldAuthLevel.equals(newAuthLevel)) {
-        //     // ManagerAuth의 authLevel 값 업데이트
-        //     managerAuthRepository.updateAuthLevelForAuthLevel(oldAuthLevel, newAuthLevel);
-        //
-        //     // Member의 authLevel 값 업데이트
-        //     int updatedMembers = memberRepository.updateAuthLevelForMembers(oldAuthLevel, newAuthLevel);
-        // }
+        // authLevel 값이 변경되었는지 확인
+        if (!oldAuthLevel.equals(newAuthLevel)) {
+            // ManagerAuth의 authLevel 값 업데이트
+            managerAuthRepository.updateAuthLevelForAuthLevel(oldAuthLevel, newAuthLevel);
+
+            // Member의 authLevel 값 업데이트
+            memberRepository.updateAuthLevelForMembers(oldAuthLevel, newAuthLevel);
+        }
     }
 
 

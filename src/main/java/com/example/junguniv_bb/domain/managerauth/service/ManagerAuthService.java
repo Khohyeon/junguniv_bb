@@ -62,15 +62,15 @@ public class ManagerAuthService {
     public ManagerAuthPageResDTO managerAuthPage(Member member, Pageable pageable, String menuName) {
         // TODO 권한 체크
 
-        // DB 조회
+        // DB 조회 (수정된 부분)
         Page<ManagerAuth> managerAuthPagePS;
 
         if (menuName != null) {
-            // 검색 키워드 OOO, 검색된 키워드 조회
-            managerAuthPagePS = managerAuthRepository.findAllByMenuName(menuName, pageable);
+            // 검색 키워드가 있는 경우, 검색된 키워드로 조회 (countQuery 분리)
+            managerAuthPagePS = managerAuthRepository.findAllByMenuNameWithoutParent(menuName, pageable);
         } else {
-            // 검색 키워드 XXX, 모든 내용 조회
-            managerAuthPagePS = managerAuthRepository.findAll(pageable);
+            // 검색 키워드가 없는 경우, 모든 내용 조회 (countQuery 분리)
+            managerAuthPagePS = managerAuthRepository.findAllWithoutParent(pageable);
         }
 
         return new ManagerAuthPageResDTO(managerAuthPagePS);

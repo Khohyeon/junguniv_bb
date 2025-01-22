@@ -1,10 +1,15 @@
 package com.example.junguniv_bb.domain.member.controller;
 
 import com.example.junguniv_bb._core.security.CustomUserDetails;
+import com.example.junguniv_bb.domain.authlevel.model.AuthLevel;
+import com.example.junguniv_bb.domain.authlevel.service.AuthLevelService;
 import com.example.junguniv_bb.domain.member.dto.MemberDetailResDTO;
 import com.example.junguniv_bb.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +24,7 @@ public class MemberController {
 
     /* DI */
     private final MemberService memberService;
+    private final AuthLevelService authLevelService;
 
     /**
      * 회원관리 - 주소록 출력
@@ -80,13 +86,16 @@ public class MemberController {
     /* 회원관리 > 회원정보관리 > 관리자 상세보기 */
     @GetMapping("/admin/{id}")
     public String adminDetailForm(@PathVariable Long id, Model model, CustomUserDetails customUserDetails) {
-
         // DB 조회
         MemberDetailResDTO memberDetailResDTO = memberService.memberDetail(id);
 
+        // 권한 레벨 조회
+        List<AuthLevel> authLevelList = authLevelService.getAllAuthLevel();
+        
         // 모델 추가
         model.addAttribute("member", memberDetailResDTO);
-
+        model.addAttribute("authLevelList", authLevelList);
+        
         return "/masterpage_sys/member/adminDetailForm";
     }
     /* 수강생 등록시 사용되는 기업검색 페이지 */
@@ -125,6 +134,12 @@ public class MemberController {
     @GetMapping("/admin/save")
     public String adminSaveForm(Model model) {
 
+        // 권한 레벨 조회
+        List<AuthLevel> authLevelList = authLevelService.getAllAuthLevel();
+
+        // 모델 추가
+        model.addAttribute("authLevelList", authLevelList);
+
         return "/masterpage_sys/member/adminSaveForm";
     }
 
@@ -158,6 +173,11 @@ public class MemberController {
     @GetMapping("/admin")
     public String adminListForm(Model model) {
 
+        // 권한 레벨 조회
+        List<AuthLevel> authLevelList = authLevelService.getAllAuthLevel();
+
+        // 모델 추가
+        model.addAttribute("authLevelList", authLevelList);
 
         return "/masterpage_sys/member/adminListForm";
     }

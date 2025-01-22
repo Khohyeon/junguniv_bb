@@ -114,49 +114,48 @@ INSERT INTO BBS_GROUP (
 ('NOTICE', '공지사항', 'board', '공지', 3, 'member@company@teacher@tutor@manager', 'manager', 'none', 'none', 'Y', 'N', 'N', 'member@company'),
 ('SUGGESTION', '고충상담게시판', 'consult', '상담', 5, 'member@company@teacher@manager', 'member@manager', 'manager', 'teacher@manager', 'N', 'Y', 'Y', 'manager'),
 ('FAQ', 'FAQ', 'faq', '질문, 답변, 수강신청', 2, 'member@company@teacher@manager', 'manager', 'none', 'member@teacher', 'N', 'N', 'Y', 'member@teacher'),
-('Q&A', 'Q&A', 'qna', '질문답변', 2, 'member@company@teacher@manager', 'member@teacher', 'member@teacher', 'member@teacher', 'N', 'Y', 'Y', 'member@teacher'),
+('QNA', 'Q&A', 'qna', '질문답변', 2, 'member@company@teacher@manager', 'member@teacher', 'member@teacher', 'member@teacher', 'N', 'Y', 'Y', 'member@teacher'),
 ('MATERIAL', '학습자료실', 'material', '자료', 4, 'member@company@teacher@manager', 'manager', 'manager', 'none', 'N', 'N', 'N', 'member@company@teacher'),
 ('CONSULTING', '1:1상담', 'private', '상담', 1, 'member@teacher', 'member@teacher', 'manager', 'none', 'Y', 'Y', 'N', 'manager');
 
--- Dummy Data for BBS table
+-- Dummy data for BBS table
 INSERT INTO BBS (
     BBS_IDX, BBS_GROUP_IDX, BBSID, CATEGORY, TITLE, CONTENTS, URL, WRITER, PWD, IP,
     READ_NUM, CHK_MAIN, START_DATE, END_DATE, CHK_SECRET, CHK_HIDDEN, CHK_AUTH,
-    PARENT_BBS_IDX, REPLY_SORTNO, WRITE_USERID, MODIFY_USERID, REPLY_DEPTH, C_START_DATE, C_END_DATE, CHK_TOP_FIX, FIX_START_DATE, FIX_END_DATE
-) VALUES
+    REPLY_BBS_IDX, REPLY_SORTNO, WRITE_USERID, MODIFY_USERID, REPLY_DEPTH, C_START_DATE, C_END_DATE) VALUES
 -- Group 1
 (1, 1, 'BOARD001', '공지', '공지사항 1-1', '내용 1-1', 'http://example.com/1-1', '작성자1', 'pwd1', '127.0.0.1',
  10, 'N', '2025-01-01', '2025-12-31', 'N', 'N', 'USER',
- NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31', 'Y', '2025-01-01', '2025-03-31'),
+ NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31'),
 (2, 1, 'BOARD001', '공지', '공지사항 1-2', '내용 1-2', 'http://example.com/1-2', '작성자2', 'pwd2', '127.0.0.2',
  15, 'Y', '2025-01-01', '2025-12-31', 'N', 'N', 'USER',
- NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31', 'N', '2025-04-01', '2025-06-30'),
+ NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31'),
 (3, 1, 'BOARD001', '공지', '공지사항 1-3', '내용 1-3', 'http://example.com/1-3', '작성자3', 'pwd3', '127.0.0.3',
  20, 'N', '2025-01-01', '2025-12-31', 'N', 'N', 'USER',
- NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31', 'N', NULL, NULL),
+ NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31'),
 (4, 1, 'BOARD001', '공지', '공지사항 1-4', '내용 1-4', 'http://example.com/1-4', '작성자4', 'pwd4', '127.0.0.4',
  5, 'Y', '2025-01-01', '2025-12-31', 'Y', 'N', 'USER',
- NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31', 'Y', '2025-07-01', '2025-09-30'),
+ NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31'),
 (5, 6, 'BOARD001', '상담', '1:1 상담 진행중입니다. 1-5', '내용 1-5', 'http://example.com/1-5', '작성자5', 'pwd5', '127.0.0.5',
  8, 'N', '2025-01-01', '2025-12-31', 'N', 'N', 'USER',
- NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31', 'Y', NULL, NULL),
+ NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31'),
 
 -- Group 2
 (6, 2, 'BOARD002', '공지', '고충상담게시판 2-1', '내용 2-1', 'http://example.com/2-1', '작성자1', 'pwd1', '127.0.0.6',
  10, 'N', '2025-01-01', '2025-12-31', 'N', 'N', 'USER',
- NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31', 'N', '2025-05-01', '2025-08-31'),
+ NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31'),
 (7, 2, 'BOARD002', '공지', '고충상담게시판 2-2', '내용 2-2', 'http://example.com/2-2', '작성자2', 'pwd2', '127.0.0.7',
  15, 'Y', '2025-01-01', '2025-12-31', 'N', 'N', 'USER',
- NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31', 'N', NULL, NULL),
+ NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31'),
 (8, 3, 'BOARD002', '공지', 'FAQ 게시판입니다.', '내용 2-3', 'http://example.com/2-3', '작성자3', 'pwd3', '127.0.0.8',
  20, 'N', '2025-01-01', '2025-12-31', 'N', 'N', 'USER',
- NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31', 'N', '2025-09-01', '2025-11-30'),
+ NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31'),
 (9, 3, 'BOARD002', '공지', '자주하는 질문입니다.', '내용 2-4', 'http://example.com/2-4', '작성자4', 'pwd4', '127.0.0.9',
  5, 'Y', '2025-01-01', '2025-12-31', 'Y', 'N', 'USER',
- NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31', 'Y', '2025-03-01', '2025-06-30'),
+ NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31'),
 (10, 4, 'BOARD002', '공지', 'Q&A 게시판입니다.', '내용 2-5', 'http://example.com/2-5', '작성자5', 'pwd5', '127.0.0.10',
  8, 'N', '2025-01-01', '2025-12-31', 'N', 'N', 'USER',
- NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31', 'Y', '2025-07-01', '2025-12-31');
+ NULL, NULL, 'admin', 'admin', NULL, '2025-01-01', '2025-12-31');
 
 INSERT INTO BBS_COMMENT (COMMENT_IDX, BBS_IDX, WRITER, PWD, CONTENTS, IP, CHK_SECRET, WRITE_USERID, MODIFY_USERID, CREATED_DATE, updated_date)
 VALUES
