@@ -26,15 +26,38 @@
                     <div class="column-tc">
                         <div class="tit">제목</div>
                         <div class="con ml5">
-                            <input type="text" id="searchInput" placeholder="검색어를 입력해주세요">
+                            <input type="text" name="search_title" id="search_title" value="" placeholder="상담 제목을 입력해주세요">
                         </div>
                     </div>
                     <div class="column-tc">
-                        <div class="tit">작성일</div>
+                        <div class="tit">수신일</div>
                         <div class="con flex">
-                            <input type="date">
+                            <input type="date" name="start_send_date" id="start_send_date" value="">
                             <span>&nbsp;&nbsp;~&nbsp;&nbsp;</span>
-                            <input type="date">
+                            <input type="date" name="end_send_date" id="end_send_date" value="">
+                        </div>
+                    </div>
+                    <div class="column-tc">
+                        <div class="tit">구분</div>
+                        <div class="con">
+                            <label class="c-input ci-radio">
+                                <input type="radio" name="msgType" value="all"> 전체
+                                <div class="ci-show"></div>
+                            </label>
+                            <label class="c-input ci-radio">
+                                <input type="radio" name="msgType" value="send"> 보낸메시지
+                                <div class="ci-show"></div>
+                            </label>
+                            <label class="c-input ci-radio">
+                                <input type="radio" name="msgType" value="receive"> 받은메시지
+                                <div class="ci-show"></div>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="column-tc">
+                        <div class="tit">발송자</div>
+                        <div class="con">
+                            <input type="text" name="search_send_id" id="search_send_id" value="" placeholder="이름을 입력해주세요">
                         </div>
                     </div>
                 </div>

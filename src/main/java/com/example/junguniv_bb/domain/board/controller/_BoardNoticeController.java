@@ -21,7 +21,9 @@ public class _BoardNoticeController {
     }
 
     @GetMapping("/save")
-    public String noticeSaveForm() {
+    public String noticeSaveForm(Model model) {
+        String bbsId = "NOTICE";
+        model.addAttribute("fileCount", boardService.getFileCount(bbsId));
         return "masterpage_sys/board/notice/saveForm";
     }
 

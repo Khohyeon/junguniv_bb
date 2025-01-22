@@ -176,4 +176,10 @@ public class MemberRestController {
     public ResponseEntity<?> printAddressLabels(@RequestBody List<Long> memberIds) {
         return memberService.getAddressLabels(memberIds);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<MemberSearchResDTO>> searchMembers(@RequestParam String name) {
+        List<MemberSearchResDTO> members = memberService.searchMembersByName(name);
+        return ResponseEntity.ok(members);
+    }
 }

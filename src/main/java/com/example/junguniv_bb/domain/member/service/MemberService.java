@@ -554,5 +554,12 @@ public class MemberService {
 
         return ResponseEntity.ok(APIUtils.success(labels));
     }
+
+    public List<MemberSearchResDTO> searchMembersByName(String name) {
+        return memberRepository.findByNameContainingIgnoreCase(name)
+                .stream()
+                .map(member -> new MemberSearchResDTO(member.getName(), member.getBirthday(), member.getUserId()))
+                .collect(Collectors.toList());
+    }
 }
 

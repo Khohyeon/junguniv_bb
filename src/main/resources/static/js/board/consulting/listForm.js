@@ -97,7 +97,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (searchState.category) {
             url.searchParams.set('category', searchState.category);
         }
-
         return url;
     }
 
@@ -117,7 +116,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         tableBody.innerHTML = ''; // 기존 데이터 초기화
-
         if (!data || data.length === 0) {
             tableBody.innerHTML = `
             <tr>
@@ -142,11 +140,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 </label>
             </td>
             <td>${item.chkTopFix === 'Y' ? '공지' : index + 1}</td>
+            <td>${item.category}</td>
+            <td>${item.writer}</td>
             <td>
                 <a href="/masterpage_sys/board/${searchState.boardType.toLowerCase()}/${item.bbsIdx}" class="jv-btn underline01">${item.title || '제목 없음'}</a>
             </td>
             <td>${item.createdDate || '-'}</td>
-            <td>${item.readNum || 0}</td>
+            <td>수신확인</td>
         `;
             if (rowClass) {
                 row.classList.add(rowClass);

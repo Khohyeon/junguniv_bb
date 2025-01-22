@@ -19,7 +19,7 @@
 <div class="inner">
     <div class="form-wrap2">
         <div class="column-tc-wrap column-tc-wrap2 part2">
-            <input type="hidden" id="id" th:value="${board.id}">
+<!--            <input type="hidden" id="id" th:value="${board.id}">-->
             <div class="column-tc">
                 <div class="tit">메시지 제목</div>
                 <div class="con">
@@ -29,7 +29,7 @@
             <div class="column-tc">
                 <div class="tit">받을 사람</div>
                 <div class="con">
-                    <input type="text" value="홍길동 / honggillD9" readonly>
+                    <input type="text" th:value="${board.recipientName()} + ' / ' + ${board.recipientId()}" readonly>
                 </div>
             </div>
         </div>

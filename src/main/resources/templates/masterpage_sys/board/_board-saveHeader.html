@@ -1,4 +1,4 @@
-<div th:fragment="board_header(includeCategory, includeDate, includeTopFix, includeMainExpose, includeAttachments, fileCount)" class="inner">
+<div th:fragment="board_header(includeCategory, includeDate, includeTopFix, includeMainExpose, includeAttachments)" class="inner">
     <form class="form-wrap2" id="saveForm" action="/masterpage_sys/board/api/save" method="post" enctype="multipart/form-data">
         <div class="column-tc-wrap bbs__write part1">
             <div class="column-tc">
@@ -8,7 +8,7 @@
                     <input type="hidden" name="chksecret" id="chksecret" value="N">
                 </div>
             </div>
-            <input type="hidden" name="writer" value="이러닝관리자" placeholder="작성자를 입력해주세요.">
+<!--            <input type="hidden" name="writer" value="이러닝관리자" placeholder="작성자를 입력해주세요.">-->
         </div>
 
         <div class="column-tc-wrap part1 bbs__write" th:if="${includeCategory}">

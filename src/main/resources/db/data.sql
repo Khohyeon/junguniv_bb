@@ -1,20 +1,20 @@
 -- 회원(Member pwd: 1234)
 INSERT INTO MEMBER (MEMBER_IDX, USER_ID, PWD, BIRTHDAY, SEX, TEL_MOBILE, EMAIL, ZIPCODE, ADDR1, ADDR2, USER_TYPE,
-                    AUTH_LEVEL, MEMBER_STATE, CREATED_DATE, UPDATED_DATE)
+                    AUTH_LEVEL, MEMBER_STATE, CREATED_DATE, UPDATED_DATE, NAME)
 VALUES (1, 'qwer', '$2a$10$5mcrIopDr1/WTCSzbMoGo.5L7SYgLLyxH0OZobyOYkSPeItRqxI6G', '1990-01-01', 'M', '010-1234-5678',
-        'user123@example.com', '12345', '서울시 강남구 테헤란로 123', '101호', 'ADMIN', 150, 'Y', now(), now()),
+        'user123@example.com', '12345', '서울시 강남구 테헤란로 123', '101호', 'ADMIN', 150, 'Y', now(), now(), '홍길동'),
        (2, 'ㅂㅈㄷㄱ', '$2a$10$5mcrIopDr1/WTCSzbMoGo.5L7SYgLLyxH0OZobyOYkSPeItRqxI6G', '1995-05-05', 'F', '010-5678-1234',
-        'user5678@example.com', '54321', '서울시 서초구 서초대로 456', '202호',  'ADMIN', 100, 'Y', now(), now()),
+        'user5678@example.com', '54321', '서울시 서초구 서초대로 456', '202호',  'ADMIN', 100, 'Y', now(), now(), '망나니'),
        (3, 'asdf', '$2a$10$5mcrIopDr1/WTCSzbMoGo.5L7SYgLLyxH0OZobyOYkSPeItRqxI6G', '1985-09-10', 'M', '010-9101-1122',
-        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호', 'ADMIN', 80, 'Y', now(), now()),
+        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호', 'ADMIN', 80, 'Y', now(), now(), '성춘향'),
        (4, 'zxcv', '$2a$10$5mcrIopDr1/WTCSzbMoGo.5L7SYgLLyxH0OZobyOYkSPeItRqxI6G', '1985-09-10', 'M', '010-9101-1122',
-        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호',  'COMPANY', 0, 'Y', now(), now()),
+        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호',  'COMPANY', 0, 'Y', now(), now(), '이몽룡'),
        (5, 'qwer1', '$2a$10$5mcrIopDr1/WTCSzbMoGo.5L7SYgLLyxH0OZobyOYkSPeItRqxI6G', '1985-09-10', 'M', '010-9101-1122',
-        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호',  'STUDENT', 0, 'Y', now(), now()),
+        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호',  'STUDENT', 0, 'Y', now(), now(), '장금이'),
        (6, 'qwer2', '$2a$10$5mcrIopDr1/WTCSzbMoGo.5L7SYgLLyxH0OZobyOYkSPeItRqxI6G', '1985-09-10', 'M', '010-9101-1122',
-        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호',  'STUDENT', 0, 'Y', now(), now()),
+        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호',  'STUDENT', 0, 'Y', now(), now(), '주몽'),
        (7, 'qwer3', '$2a$10$5mcrIopDr1/WTCSzbMoGo.5L7SYgLLyxH0OZobyOYkSPeItRqxI6G', '1985-09-10', 'M', '010-9101-1122',
-        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호',  'TEACHER', 0, 'Y', now(), now());
+        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호',  'TEACHER', 0, 'Y', now(), now(), '연개소문');
 -- 회원 테이블 시퀀스 초기화
 ALTER TABLE MEMBER ALTER COLUMN MEMBER_IDX RESTART WITH 8;
 

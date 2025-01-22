@@ -6,6 +6,7 @@ import com.example.junguniv_bb._core.exception.ExceptionMessage;
 import com.example.junguniv_bb._core.util.FileUtils;
 import com.example.junguniv_bb.domain.board.dto.*;
 import com.example.junguniv_bb.domain.board.model.*;
+import com.example.junguniv_bb.domain.member.model.Member;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -178,13 +179,13 @@ public class BoardService {
      * 요청 형태 : BoardSaveReqDTO
      */
     @Transactional
-    public void saveBoard(BoardSaveReqDTO boardSaveReqDTO) {
+    public void saveBoard(BoardSaveReqDTO boardSaveReqDTO, Member member) {
         try {
             String boardType = boardSaveReqDTO.boardType();
             BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(boardType);
 
             // BBS 엔터티 저장
-            Bbs bbs = bbsRepository.save(boardSaveReqDTO.saveEntity(bbsGroup));
+            Bbs bbs = bbsRepository.save(boardSaveReqDTO.saveEntity(bbsGroup, member.getName()));
 
             // BBS File 엔티티 저장
             saveFiles(bbs, boardSaveReqDTO.attachments());
@@ -297,6 +298,8 @@ public class BoardService {
                 bbs.getStartDate(),
                 bbs.getEndDate(),
                 bbs.getContents(),
+                bbs.getRecipientName(),
+                bbs.getRecipientId(),
                 attachments
         );
     }
@@ -370,5 +373,10 @@ public class BoardService {
                     chkTopFix // 조정된 chkTopFix 값을 전달
             );
         });
+    }
+
+    public Integer getFileCount(String bbsId) {
+        BbsGroup byBbsId = bbsGroupRepository.findByBbsId(bbsId);
+        return byBbsId.getFileNum();
     }
 }

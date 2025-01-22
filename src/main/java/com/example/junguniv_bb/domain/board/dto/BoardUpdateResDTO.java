@@ -16,6 +16,8 @@ public record BoardUpdateResDTO(
         LocalDate startDate,
         LocalDate endDate,
         String contents,
+        String recipientName,
+        String recipientId,
         List<String> attachments // 첨부파일 이름 리스트
 ) {
 }

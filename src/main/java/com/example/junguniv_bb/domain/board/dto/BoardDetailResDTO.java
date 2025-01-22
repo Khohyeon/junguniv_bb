@@ -7,5 +7,5 @@ public record BoardDetailResDTO(
         String createdDate,
         Long readNum,
         String contents
-) {
+){
 }

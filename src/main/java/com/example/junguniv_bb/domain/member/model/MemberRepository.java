@@ -9,6 +9,8 @@ import org.springframework.data.repository.query.Param;
 
 import com.example.junguniv_bb.domain.member._enum.UserType;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
@@ -117,4 +119,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             @Param("email") String email,
             @Param("jobName") String jobName,
             Pageable pageable);
+
+    List<Member> findByNameContainingIgnoreCase(String name);
+
 }

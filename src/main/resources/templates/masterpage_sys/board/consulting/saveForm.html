@@ -23,8 +23,11 @@
                 <div class="column-tc">
                     <div class="tit">받는 사람</div>
                     <div class="con flex">
-                        <input type="text" id="recipient" name="recipient" readonly required>
+                        <input type="text" id="selectedMemberInput" name="recipient" readonly required>
                         <a href="#none" class="jv-btn fill01" id="searchMember">회원찾기</a>
+                        <!-- 숨겨진 필드 -->
+                        <input type="hidden" id="recipientName" name="recipientName">
+                        <input type="hidden" id="recipientId" name="recipientId">
                     </div>
 
                     <!-- Modal -->
@@ -37,6 +40,7 @@
                                 <button id="searchButton" class="jv-btn fill04-lg">검색</button>
                             </div>
                             <div id="memberList"></div>
+                            <button id="confirmSelection" class="jv-btn fill02-lg">확인</button>
                         </div>
                     </div>
                 </div>

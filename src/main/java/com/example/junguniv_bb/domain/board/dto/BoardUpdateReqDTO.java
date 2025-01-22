@@ -22,7 +22,9 @@ public record BoardUpdateReqDTO(
         String startDate,
         String endDate,
         List<MultipartFile> attachments, // 첨부파일
-        String contents // 에디터 내용
+        String contents, // 에디터 내용
+        String recipientName,
+        String recipientId
 ) {
 
     public Bbs updateEntity(BbsGroup bbsGroupIdx) {
@@ -39,7 +41,9 @@ public record BoardUpdateReqDTO(
                 chkMain,
                 parseDate(startDate),
                 parseDate(endDate),
-                contents
+                contents,
+                recipientName,
+                recipientId
         );
     }
 

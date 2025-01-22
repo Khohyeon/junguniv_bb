@@ -49,3 +49,8 @@
     flex-direction: column;
     gap: 15px;
 }
+
+.selected {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}

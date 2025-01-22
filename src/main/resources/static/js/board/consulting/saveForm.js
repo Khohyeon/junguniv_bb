@@ -29,84 +29,112 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-
 document.addEventListener('DOMContentLoaded', function () {
-    const searchMemberButton = document.getElementById('searchMember');
     const modal = document.getElementById('memberModal');
+    const overlay = document.querySelector('.modal-overlay'); // If overlay is used
     const closeModalButton = document.getElementById('closeModal');
+    const searchMemberButton = document.getElementById('searchMember');
     const searchButton = document.getElementById('searchButton');
+    const searchInput = document.getElementById('searchInput');
     const memberList = document.getElementById('memberList');
-    const recipientInput = document.getElementById('recipient');
+    const confirmButton = document.getElementById('confirmSelection');
+    const parentInput = document.getElementById('selectedMemberInput');
+    const hiddenNameInput = document.getElementById('recipientName');
+    const hiddenIdInput = document.getElementById('recipientId');
 
-    // 모달 열기
-    searchMemberButton.addEventListener('click', function () {
+    let selectedMember = null;
+
+    function openModal() {
+        if (overlay) overlay.style.display = 'block';
         modal.style.display = 'block';
-    });
+    }
 
-    // 모달 닫기
-    closeModalButton.addEventListener('click', function () {
+    function closeModal() {
+        if (overlay) overlay.style.display = 'none';
         modal.style.display = 'none';
-    });
+    }
 
-    // 회원 검색
+    searchMemberButton.addEventListener('click', openModal);
+    closeModalButton.addEventListener('click', closeModal);
+
+    if (overlay) {
+        overlay.addEventListener('click', closeModal);
+    }
+
     searchButton.addEventListener('click', function () {
-        const searchInput = document.getElementById('searchInput').value;
+        const query = searchInput.value.trim();
 
-        // 서버에서 회원 검색 (예제 API 호출)
-        fetch(`/api/members?name=${encodeURIComponent(searchInput)}`)
-            .then(response => response.json())
-            .then(data => {
-                memberList.innerHTML = '';
+        if (!query) {
+            alert('검색어를 입력해주세요.');
+            return;
+        }
 
-                if (data.length === 0) {
-                    memberList.textContent = '검색 결과가 없습니다.';
-                } else {
-                    data.forEach(member => {
-                        const memberItem = document.createElement('div');
-                        memberItem.textContent = `${member.name} (${member.id})`;
-                        memberItem.classList.add('member-item');
-                        memberItem.dataset.name = member.name; // 데이터 저장
-                        memberItem.addEventListener('click', function () {
-                            selectMember(member.name);
-                        });
-                        memberList.appendChild(memberItem);
-                    });
+        fetch(`/masterpage_sys/member/api/search?name=${encodeURIComponent(query)}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('멤버 조회 중 오류가 발생했습니다.');
                 }
+                return response.json();
+            })
+            .then(data => {
+                displayMembers(data);
             })
             .catch(error => {
-                console.error('Error fetching members:', error);
-                memberList.textContent = '회원 검색에 실패했습니다.';
+                console.error(error);
+                alert('멤버 조회 중 오류가 발생했습니다.');
             });
     });
 
-    // 회원 선택
-    function selectMember(name) {
-        recipientInput.value = name;
-        modal.style.display = 'none';
+    function displayMembers(members) {
+        memberList.innerHTML = '';
+
+        if (members.length === 0) {
+            memberList.innerHTML = '<p>검색 결과가 없습니다.</p>';
+            return;
+        }
+
+        const ul = document.createElement('ul');
+        members.forEach(member => {
+            const li = document.createElement('li');
+            li.textContent = `${member.name} (${member.userId}) [${member.birthday}]`;
+            li.dataset.name = member.name;
+            li.dataset.userId = member.userId;
+            li.dataset.birthday = member.birthday;
+            li.style.cursor = 'pointer';
+
+            li.addEventListener('click', function () {
+                const previouslySelected = memberList.querySelector('li.selected');
+                if (previouslySelected) {
+                    previouslySelected.classList.remove('selected');
+                }
+                li.classList.add('selected');
+                selectedMember = {
+                    name: li.dataset.name,
+                    userId: li.dataset.userId,
+                    birthday: li.dataset.birthday
+                };
+            });
+
+            ul.appendChild(li);
+        });
+
+        memberList.appendChild(ul);
     }
-});
 
-document.addEventListener('DOMContentLoaded', function () {
-    const modal = document.querySelector('.modal');
-    const overlay = document.querySelector('.modal-overlay');
-    const openButton = document.getElementById('searchMember'); // 버튼 ID
-    const closeButton = document.querySelector('.modal .close');
+    confirmButton.addEventListener('click', function () {
+        if (!selectedMember) {
+            alert('멤버를 선택해주세요.');
+            return;
+        }
 
-    // 모달 열기
-    openButton.addEventListener('click', function () {
-        overlay.style.display = 'block';
-        modal.style.display = 'block';
-    });
+        // 부모 페이지의 input 요소에 값 삽입
+        parentInput.value = `${selectedMember.name} (${selectedMember.userId}) [${selectedMember.birthday}]`;
 
-    // 모달 닫기
-    closeButton.addEventListener('click', function () {
-        overlay.style.display = 'none';
-        modal.style.display = 'none';
-    });
+        // 숨겨진 필드에 개별 데이터 저장
+        hiddenNameInput.value = selectedMember.name;
+        hiddenIdInput.value = selectedMember.userId;
 
-    // 모달 외부 클릭 시 닫기
-    overlay.addEventListener('click', function () {
-        overlay.style.display = 'none';
-        modal.style.display = 'none';
+        // 모달 닫기
+        closeModal();
     });
 });
