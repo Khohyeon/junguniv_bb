@@ -361,16 +361,30 @@ const AuthLevelSaveForm = {
                     return;
                 }
 
-                // 전체 메뉴 목록을 가져옴 (페이지네이션 없이)
-                const allMenuResponse = await fetch('/masterpage_sys/manager_menu/api/all');
-                const allMenuData = await allMenuResponse.json();
+                // 현재 활성화된 탭의 메뉴 타입 가져오기
+                const activeTab = document.querySelector('.jv-tab li.active a');
+                const menuType = activeTab?.dataset.menuType;
                 
-                if (!allMenuData.success) {
+                if (!menuType) {
+                    alert('선택된 메뉴 탭이 없습니다.');
+                    return;
+                }
+
+                // 현재 선택된 메뉴 타입의 메뉴 목록을 가져옴
+                const menuResponse = await fetch(`/masterpage_sys/manager_menu/api/all?menuType=${menuType}`);
+                const menuData = await menuResponse.json();
+                
+                if (!menuData.success) {
                     throw new Error('메뉴 목록을 가져오는데 실패했습니다.');
                 }
 
-                // 전체 메뉴에 대한 권한 데이터 수집
-                const menuAuths = allMenuData.response.map(menu => ({
+                if (!menuData.response || menuData.response.length === 0) {
+                    alert('현재 선택된 메뉴 타입에 대한 메뉴가 없습니다.');
+                    return;
+                }
+
+                // 현재 메뉴 타입의 메뉴들에 대한 권한 데이터 수집
+                const menuAuths = menuData.response.map(menu => ({
                     menuIdx: menu.menuIdx,
                     authLevel: authLevel,
                     menuReadAuth: this.state.allMenuAuths.get(menu.menuIdx)?.menuReadAuth ?? 1,
@@ -378,11 +392,6 @@ const AuthLevelSaveForm = {
                     menuModifyAuth: this.state.allMenuAuths.get(menu.menuIdx)?.menuModifyAuth ?? 1,
                     menuDeleteAuth: this.state.allMenuAuths.get(menu.menuIdx)?.menuDeleteAuth ?? 1
                 }));
-
-                if (menuAuths.length === 0) {
-                    alert('최소한 하나의 메뉴에 대한 권한을 설정해주세요.');
-                    return;
-                }
 
                 // 권한 레벨 저장
                 const authLevelResult = await this.api.saveAuthLevel({
@@ -396,11 +405,15 @@ const AuthLevelSaveForm = {
                     if (managerAuthResult.success) {
                         alert('권한이 성공적으로 저장되었습니다.');
                         window.location.href = '/masterpage_sys/auth_level';
+                    } else {
+                        throw new Error(managerAuthResult.error?.message || '메뉴 권한 저장에 실패했습니다.');
                     }
+                } else {
+                    throw new Error(authLevelResult.error?.message || '권한 레벨 저장에 실패했습니다.');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('권한 저장 중 오류가 발생했습니다.');
+                alert(error.message || '권한 저장 중 오류가 발생했습니다.');
             }
         }
     },
@@ -594,11 +607,29 @@ const AuthLevelSaveForm = {
 
     // 이벤트 리스너 설정을 별도 메서드로 분리
     setupEventListeners() {
-        // 탭 메뉴 이벤트 리스너
-        document.querySelectorAll('.jv-tab a').forEach(link => {
-            link.addEventListener('click', (e) => {
+        // 탭 메뉴 클릭 이벤트
+        document.querySelectorAll('.jv-tab li a').forEach(tab => {
+            tab.addEventListener('click', async (e) => {
                 e.preventDefault();
-                this.handlers.handleTabClick.call(this, e);
+                
+                // 이전 활성 탭에서 active 클래스 제거
+                document.querySelector('.jv-tab li.active')?.classList.remove('active');
+                
+                // 클릭된 탭의 부모 li에 active 클래스 추가
+                e.target.closest('li').classList.add('active');
+                
+                // 선택된 메뉴 타입 가져오기
+                const menuType = e.target.dataset.menuType;
+                // 현재 선택된 메뉴 타입 업데이트
+                this.state.currentMenuType = menuType;
+                
+                try {
+                    // 선택된 메뉴 타입에 해당하는 메뉴 목록 로드
+                    await this.loadMenuList(menuType);
+                } catch (error) {
+                    console.error('메뉴 목록 로드 중 오류:', error);
+                    alert('메뉴 목록을 불러오는데 실패했습니다.');
+                }
             });
         });
 
@@ -649,24 +680,16 @@ const AuthLevelSaveForm = {
             this.view.init(this);
             this.utils.init(this);
             
-            // 전체 메뉴 목록을 먼저 가져와서 권한 정보 초기화
-            const response = await this.api.fetchAllMenuList();
-            if (response?.success && response?.response) {
-                response.response.forEach(menu => {
-                    if (!this.state.allMenuAuths.has(menu.menuIdx)) {
-                        this.state.allMenuAuths.set(menu.menuIdx, {
-                            menuReadAuth: 1,
-                            menuWriteAuth: 1,
-                            menuModifyAuth: 1,
-                            menuDeleteAuth: 1
-                        });
-                    }
-                });
-            }
-
-            // 페이징된 메뉴 목록 로드
-            await this.loadMenuList();
-
+            // 기본 메뉴 타입 설정 (첫 번째 탭의 메뉴 타입)
+            const firstTab = document.querySelector('.jv-tab li a');
+            const defaultMenuType = firstTab ? firstTab.dataset.menuType : 'ADMIN_REFUND';
+            
+            // 첫 번째 탭 활성화
+            firstTab?.closest('li')?.classList.add('active');
+            
+            // 선택된 메뉴 타입으로 메뉴 목록 로드
+            await this.loadMenuList(defaultMenuType);
+            
             // 이벤트 리스너 설정
             this.setupEventListeners();
             
@@ -677,43 +700,45 @@ const AuthLevelSaveForm = {
         }
     },
 
-    // 메뉴 목록 로드 (수정)
-    async loadMenuList(page = 0) {
+    async loadMenuList(menuType) {
         try {
-            const data = await this.api.fetchMenuList(page);
-            if (data.menuList) {
-                this.state.menuList = data.menuList;
-                
-                // UI 업데이트
-                this.view.renderMenuAuthTable(data.menuList);
-                this.view.renderPagination(data.pageable);
-                this.view.filterMenuTable(this.state.currentMenuType);
-                this.updateAllCheckboxStates();
-            }
+            // menuType이 undefined인 경우 기본값 사용
+            const type = menuType || 'ADMIN_REFUND';
+            
+            // 메뉴 목록 가져오기
+            const menuList = await this.fetchMenuList(type);
+            
+            // 기존 renderMenuAuthTable 메서드를 사용하여 테이블 갱신
+            this.view.renderMenuAuthTable(menuList);
+            
+            // 체크박스 상태 초기화
+            this.initializeCheckboxes();
         } catch (error) {
             console.error('메뉴 목록 로드 중 오류:', error);
-            alert('메뉴 목록을 불러오는데 실패했습니다.');
+            throw error;
         }
     },
 
-    // 전체 선택 체크박스 상태 업데이트 메서드 추가
-    updateAllCheckboxStates() {
-        const authTypes = ['read', 'write', 'modify', 'delete'];
-        const visibleRows = Array.from(document.querySelectorAll('#managerAuthTable tr'))
-            .filter(row => row.style.display !== 'none');
+    async fetchMenuList(menuType) {
+        try {
+            const response = await fetch(`/masterpage_sys/manager_menu/api/all?menuType=${menuType}`);
+            const data = await response.json();
+            
+            if (!data.success) {
+                throw new Error(data.error?.message || '메뉴 목록을 불러오는데 실패했습니다.');
+            }
+            
+            return data.response;
+        } catch (error) {
+            console.error('메뉴 목록 조회 중 오류:', error);
+            throw error;
+        }
+    },
 
-        authTypes.forEach(type => {
-            const allCheckbox = document.getElementById(`checkAll${type.charAt(0).toUpperCase() + type.slice(1)}`);
-            if (!allCheckbox) return;
-
-            // 현재 보이는 행들의 체크박스 상태 확인
-            const visibleCheckboxes = visibleRows.map(row => 
-                row.querySelector(`input[name="${type}Auth_${row.querySelector('input[type="checkbox"]')?.dataset.menuidx}"]`)
-            ).filter(Boolean);
-
-            // 모든 체크박스가 체크되어 있는지 확인
-            const allChecked = visibleCheckboxes.every(checkbox => checkbox.checked);
-            allCheckbox.checked = allChecked;
+    initializeCheckboxes() {
+        // 전체 선택 체크박스 상태 초기화
+        document.querySelectorAll('input[name="checkAll"]').forEach(checkbox => {
+            checkbox.checked = false;
         });
     },
 };

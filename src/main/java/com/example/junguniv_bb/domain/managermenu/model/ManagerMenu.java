@@ -35,6 +35,7 @@ public class ManagerMenu extends BaseTime {
     @Column(name = "URL")
     private String url; // URL
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "MENU_GROUP", length = 200)
     private MenuType menuGroup; // 메뉴그룹
 
