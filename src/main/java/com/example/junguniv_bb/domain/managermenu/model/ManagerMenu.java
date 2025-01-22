@@ -1,6 +1,7 @@
 package com.example.junguniv_bb.domain.managermenu.model;
 
 import com.example.junguniv_bb._core.common.BaseTime;
+import com.example.junguniv_bb.domain.managermenu._enum.MenuType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,7 +36,7 @@ public class ManagerMenu extends BaseTime {
     private String url; // URL
 
     @Column(name = "MENU_GROUP", length = 200)
-    private String menuGroup; // 메뉴그룹
+    private MenuType menuGroup; // 메뉴그룹
 
     @Column(name = "MENU_HELP", length = 255)
     private String menuHelp; // 명칭

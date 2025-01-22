@@ -437,7 +437,7 @@ const MemberModule = {
                                     default: return '-';
                                 }
                             })()}</td>
-                            <td>${member.authLevel || '-'}</td>
+                            <td>${member.authLevelName || '-'}</td>
                             <td>${(() => {
                                 switch(member.jobWorkState) {
                                     case '001': return '근무';

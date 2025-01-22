@@ -9,6 +9,7 @@ import com.example.junguniv_bb.domain.managermenu.dto.ManagerMenuPageResDTO;
 import com.example.junguniv_bb.domain.managermenu.service.ManagerMenuService;
 import com.example.junguniv_bb.domain.managermenu.dto.ManagerMenuDepth3ListResDTO;
 import com.example.junguniv_bb.domain.member.model.Member;
+import com.example.junguniv_bb.domain.managermenu.model.ManagerMenu;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import com.example.junguniv_bb.domain.managermenu.dto.ManagerMenuAllResDTO;
+import java.util.stream.Collectors;
 
 import java.util.List;
 
@@ -103,5 +106,15 @@ public class ManagerMenuRestController {
         managerMenuService.managerMenuSave(reqDTO);
 
         return ResponseEntity.ok(APIUtils.success("메뉴 등록 완료."));
+    }
+
+    /* 전체 메뉴 목록 조회 */
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllMenus() {
+        List<ManagerMenu> menuList = managerMenuService.findAll();
+        List<ManagerMenuAllResDTO> dtoList = menuList.stream()
+            .map(ManagerMenuAllResDTO::from)
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(APIUtils.success(dtoList));
     }
 }

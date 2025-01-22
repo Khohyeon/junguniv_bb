@@ -45,16 +45,7 @@ public class AuthLevelController {
     public String listForm(Model model, @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @PageableDefault(size = 10) Pageable pageable, @RequestParam(required = false) String authLevelName) {
 
-        // 서비스 호출
-        AuthLevelPageResDTO resDTO = authLevelService.authLevelPage(
-                // customUserDetails.getMember(),
-                pageable, authLevelName);
-
-        // 모델에 추가
-        model.addAttribute("authLevelPage", resDTO);
-
-        // TODO 페이지 제작
-        return "masterpage_sys/auth_level/adminRefundListForm";
+        return "masterpage_sys/auth_level/listForm";
     }
 
     /* 관리자권한 상세보기 페이지 */
@@ -89,14 +80,6 @@ public class AuthLevelController {
     @GetMapping("/save")
     public String saveForm(Model model, @AuthenticationPrincipal CustomUserDetails customUserDetails) throws JsonProcessingException {
 
-        List<ManagerMenu> menuList = managerMenuService.findAll();
-
-        // 모델에 추가
-        // 모든 메뉴를 조회해서 각 메뉴에 대한 Manager_Auth를 생성
-        model.addAttribute("menuList", menuList);
-        model.addAttribute("menuListAsJson", objectMapper.writeValueAsString(menuList)); // JSON 형식으로 변환하여 모델에 추가
-
-        // TODO 페이지 제작
         return "/masterpage_sys/auth_level/saveForm";
     }
 

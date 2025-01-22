@@ -113,8 +113,10 @@
 									<div>
 										<select name="authLevel" id="authLevel">
 											<option value="">선택</option>
-											<option value="1" th:selected="${member.authLevel == 1}">1</option>
-											<option value="2" th:selected="${member.authLevel == 2}">2</option>
+											<option th:each="auth : ${authLevelList}"
+													th:value="${auth.authLevel}"
+													th:text="${auth.authLevelName}"
+													th:selected="${member.authLevel == auth.authLevel}">권한명</option>
 										</select>
 										<div class="color05 fs14 mt5">* 권한명을 택1 해주세요.</div>
 									</div>

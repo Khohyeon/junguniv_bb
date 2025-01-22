@@ -44,4 +44,16 @@ public interface ManagerAuthRepository extends JpaRepository<ManagerAuth, Long> 
     @Meta(comment = "메뉴명으로 ManagerAuth 검색 (JPQL)")
     @Query("SELECT ma FROM ManagerAuth ma, ManagerMenu mm WHERE ma.menuIdx = mm.menuIdx AND mm.menuName = :menuName")
     Page<ManagerAuth> findAllByMenuName(@Param("menuName") String menuName, Pageable pageable);
+
+    @Meta(comment = "메뉴명으로 ManagerAuth 검색 (JPQL)")
+    @Query(value = "SELECT ma FROM ManagerAuth ma " +
+           "WHERE ma.menuIdx IN (SELECT mm.menuIdx FROM ManagerMenu mm WHERE mm.menuName LIKE CONCAT('%', :menuName, '%'))",
+           countQuery = "SELECT COUNT(ma) FROM ManagerAuth ma " +
+           "WHERE ma.menuIdx IN (SELECT mm.menuIdx FROM ManagerMenu mm WHERE mm.menuName LIKE CONCAT('%', :menuName, '%'))")
+    Page<ManagerAuth> findAllByMenuNameWithoutParent(@Param("menuName") String menuName, Pageable pageable);
+
+    @Meta(comment = "모든 ManagerAuth 검색 (JPQL)")
+    @Query(value = "SELECT ma FROM ManagerAuth ma",
+           countQuery = "SELECT COUNT(ma) FROM ManagerAuth ma")
+    Page<ManagerAuth> findAllWithoutParent(Pageable pageable);
 }
