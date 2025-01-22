@@ -23,13 +23,16 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ManagerMenuRestController {
 
+    /* DI */
     private final ManagerMenuService managerMenuService;
 
+    /**
+     * 2차 메뉴를 선택 했을 때 Rest API 요청
+     */
     @GetMapping("/depth3")
-    public ResponseEntity<?> getDepth3Menus(
-            @RequestParam Long parentMenuIdx) {
-        List<ManagerMenuDepth3ListResDTO> result = managerMenuService.getDepth3Menus(parentMenuIdx);
-        return ResponseEntity.ok(APIUtils.success(result));
+    public List<ManagerMenuDepth3ListResDTO> getDepth3Menus(@RequestParam Long parentMenuIdx) {
+
+        return managerMenuService.getDepth3Menus(parentMenuIdx);
     }
 
     @DeleteMapping

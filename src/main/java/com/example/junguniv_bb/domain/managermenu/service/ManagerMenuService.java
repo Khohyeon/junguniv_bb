@@ -47,7 +47,6 @@ public class ManagerMenuService {
                 .toList();
     }
 
-
     /* ManagerMenu 전체 조회 */
     public List<ManagerMenu> findAll() {
         return managerMenuRepository.findAll();
