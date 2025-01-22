@@ -220,7 +220,7 @@ public class MemberService {
                 searchDTO.name(),
                 searchDTO.userId(),
                 searchDTO.jobCourseDuty(),
-                searchDTO.authLevel(),
+//                searchDTO.authLevel(),
                 pageable
             );
             return ResponseEntity.ok(new MemberAdminPageResDTO(memberPagePS));

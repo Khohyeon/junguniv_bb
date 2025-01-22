@@ -221,8 +221,10 @@ document.addEventListener('DOMContentLoaded', function () {
         pageSelect.value = searchState.currentPage;
     }
 
-    // 초기 카테고리 설정
-    document.addEventListener('DOMContentLoaded', function () {
-        getCategory('FAQ');
-    });
+
+});
+
+// 초기 카테고리 설정
+document.addEventListener('DOMContentLoaded', function () {
+    getCategory('FAQ');
 });

@@ -196,3 +196,8 @@ document.addEventListener('DOMContentLoaded', function () {
         nextPageBtn.disabled = pageable.last;
     }
 });
+
+// 초기 카테고리 설정
+document.addEventListener('DOMContentLoaded', function () {
+    getCategory('Q&A');
+});

@@ -4,7 +4,7 @@
 function getCategory(boardType) {
     const categorySelect = document.getElementById('category');
     // 카테고리 데이터를 서버에서 가져오기
-    fetch(`/masterpage_sys/board/api/categories?boardType=${boardType}`)
+    fetch(`/masterpage_sys/board/api/categories?boardType=${encodeURIComponent(boardType)}`)
         .then(response => response.json())
         .then(data => {
             const categories = data.response.split(','); // ,로 구분하여 배열로 변환
