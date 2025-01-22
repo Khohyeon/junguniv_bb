@@ -23,7 +23,7 @@ public class _BoardDataController {
     @GetMapping("/save")
     public String dataSaveForm(Model model) {
         String bbsId = "MATERIAL";
-        model.addAttribute("fileCount", boardService.getFileCount(bbsId));
+        model.addAttribute("board", boardService.getBoardSave(bbsId));
         return "masterpage_sys/board/data/saveForm";
     }
 

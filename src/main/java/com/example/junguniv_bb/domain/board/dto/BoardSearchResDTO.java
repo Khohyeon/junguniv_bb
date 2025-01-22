@@ -8,6 +8,9 @@ public record BoardSearchResDTO(
         String title,
         String createdDate,
         Long readNum,
-        String chkTopFix
+        String chkTopFix,
+        String pwd,
+        Long parentBbsIdx,
+        boolean isNew
 ) {
 }

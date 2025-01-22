@@ -23,7 +23,7 @@ public class _BoardFaqController {
     @GetMapping("/save")
     public String faqSaveForm(Model model) {
         String bbsId = "FAQ";
-        model.addAttribute("fileCount", boardService.getFileCount(bbsId));
+        model.addAttribute("board", boardService.getBoardSave(bbsId));
         return "masterpage_sys/board/faq/saveForm";
     }
 

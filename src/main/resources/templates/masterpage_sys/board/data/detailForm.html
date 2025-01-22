@@ -13,6 +13,7 @@
 <div th:replace="fragments/header :: header"></div>
 
 <!-- 공통 헤더 포함 -->
-<div th:replace="/masterpage_sys/board/_board-detailHeader :: board-header"></div>
+<!--  board_header (답변권한)-->
+<div th:replace="/masterpage_sys/board/_board-detailHeader :: board-header(ture)"></div>
 </body>
 </html>

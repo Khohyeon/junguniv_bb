@@ -72,8 +72,8 @@ public class Bbs extends BaseTime {
     @Column(name = "CHK_AUTH", length = 255)
     private String chkAuth;
 
-    @Column(name = "REPLY_BBS_IDX")
-    private Long replyBbsIdx;
+    @Column(name = "PARENT_BBS_IDX")
+    private Long parentBbsIdx;
 
     @Column(name = "REPLY_SORTNO")
     private Long replySortNo;
@@ -108,9 +108,10 @@ public class Bbs extends BaseTime {
     @Column(name = "RECIPIENT_ID")
     private String recipientId; // 받는 사람 ID
 
-    public Bbs(Long bbsIdx, BbsGroup bbsGroupIdx, String bbsId, String title, String writer, String category, String chkTopFix, LocalDate fixStartDate, LocalDate fixEndDate,
+    public Bbs(Long bbsIdx, String pwd, BbsGroup bbsGroupIdx, String bbsId, String title, String writer, String category, String chkTopFix, LocalDate fixStartDate, LocalDate fixEndDate,
                String chkMain, LocalDate startDate, LocalDate endDate, String contents, String recipientName, String recipientId) {
         this.bbsIdx = bbsIdx;
+        this.pwd = pwd;
         this.bbsGroup = bbsGroupIdx;
         this.bbsId = bbsId;
         this.title = title;

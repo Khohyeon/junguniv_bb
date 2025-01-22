@@ -24,7 +24,7 @@ public class _BoardQnaController {
     @GetMapping("/save")
     public String qnaSaveForm(Model model) {
         String bbsId = "Q&A";
-        model.addAttribute("fileCount", boardService.getFileCount(bbsId));
+        model.addAttribute("board", boardService.getBoardSave(bbsId));
         return "masterpage_sys/board/qna/saveForm";
     }
 

@@ -24,7 +24,7 @@ public class _BoardSuggestionController {
     @GetMapping("/save")
     public String suggestionSaveForm(Model model) {
         String bbsId = "SUGGESTION";
-        model.addAttribute("fileCount", boardService.getFileCount(bbsId));
+        model.addAttribute("board", boardService.getBoardSave(bbsId));
         return "masterpage_sys/board/suggestion/saveForm";
     }
 
@@ -38,5 +38,11 @@ public class _BoardSuggestionController {
     public String suggestionUpdateForm(@PathVariable Long bbsIdx, Model model) {
         model.addAttribute("board", boardService.getBoardUpdate(bbsIdx));
         return "masterpage_sys/board/suggestion/updateForm";
+    }
+
+    @GetMapping("/reply/{bbsIdx}")
+    public String suggestionReplyForm(@PathVariable Long bbsIdx, Model model) {
+        model.addAttribute("board", boardService.getBoardUpdate(bbsIdx));
+        return "masterpage_sys/board/suggestion/replyForm";
     }
 }

@@ -135,8 +135,22 @@ document.addEventListener('DOMContentLoaded', function () {
         data.forEach((item, index) => {
             const row = document.createElement('tr');
 
+
             // 공지인 경우 추가 클래스 적용
             const rowClass = item.chkTopFix === 'Y' ? 'notice-row' : '';
+
+            // 비밀글 표시
+            const secretLabel = item.pwd ? `<span class="secret jv-btn jv-label03-sm">비밀글</span>` : '';
+
+            // 답글 표시
+            const replyLabel = item.parentBbsIdx ? `<span class="jv-btn label05-sm">Re</span>` : '';
+
+            // NEW 표시
+            const newLabel = item.isNew ? `<span class="jv-btn label04-sm">NEW</span>` : '';
+
+            // 제목
+            const title = item.title || '제목 없음';
+
 
             row.innerHTML = `
             <!-- 체크박스 -->
@@ -150,7 +164,10 @@ document.addEventListener('DOMContentLoaded', function () {
             <td>${item.chkTopFix === 'Y' ? '공지' : index + 1}</td>
             <!-- 제목 -->
             <td>
-                <a href="/masterpage_sys/board/notice/${item.bbsIdx}" class="jv-btn underline01">${item.title || '제목 없음'}</a>
+                ${secretLabel}
+                ${replyLabel}
+                <a href="/masterpage_sys/board/notice/${item.bbsIdx}" class="jv-btn underline01">${title}</a>
+                ${newLabel}
             </td>
             <!-- 작성일 -->
             <td>${item.createdDate || '-'}</td>

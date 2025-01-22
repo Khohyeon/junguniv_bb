@@ -18,11 +18,23 @@
                 <p th:utext="${board.contents()}"></p>
             </div>
         </div>
+        <div class="view-com" th:if="${board.optionCommentAuth}">
+            <div class="com-list">
+            </div>
+            <div class="com-write group01">
+                <div class="tit">댓글작성</div>
+                <div class="con">
+                    <textarea class="com-area" name="comments" id="comments" placeholder="댓글을 작성해주세요"></textarea>
+                    <a class="jv-btn jv-fill03-lg" href="javascript:" onclick="doCommentSubmit(document.commentForm);"><span>등록</span></a>
+                </div>
+            </div>
+        </div>
         <div class="view-bot">
 
             <div class="btn-wrap">
                 <a href="#" id="listButton" class="jv-btn fill01-lg">목록</a>
                 <a class="jv-btn fill06-lg" href="#" id="updateButton" th:data-id="${board.bbsIdx()}">수정</a>
+                <a class="jv-btn fill06-lg" href="#" id="replyButton" th:data-id="${board.bbsIdx()}" th:if="${board.optionReplyAuth}">답변</a>
                 <a class="jv-btn fill05-lg" href="#" id="deleteButton" th:data-id="${board.bbsIdx()}">삭제</a>
             </div>
 

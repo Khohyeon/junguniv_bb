@@ -23,11 +23,13 @@ public record BoardSaveReqDTO(
         List<MultipartFile> attachments, // 첨부파일
         String contents, // 에디터 내용
         String recipientName,
-        String recipientId
+        String recipientId,
+        String pwd
 ) {
     public Bbs saveEntity(BbsGroup bbsGroupIdx, String name) {
         return new Bbs(
                 null, // ID는 자동 생성
+                pwd,
                 bbsGroupIdx,
                 boardType,
                 title,

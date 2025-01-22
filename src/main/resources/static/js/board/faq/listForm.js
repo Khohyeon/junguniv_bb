@@ -141,24 +141,50 @@ document.addEventListener('DOMContentLoaded', function () {
 
         data.forEach((item, index) => {
             const row = document.createElement('tr');
+
+
+            // 공지인 경우 추가 클래스 적용
             const rowClass = item.chkTopFix === 'Y' ? 'notice-row' : '';
 
+            // 비밀글 표시
+            const secretLabel = item.pwd ? `<span class="secret jv-btn jv-label03-sm">비밀글</span>` : '';
+
+            // 답글 표시
+            const replyLabel = item.parentBbsIdx ? `<span class="jv-btn label05-sm">Re</span>` : '';
+
+            // NEW 표시
+            const newLabel = item.isNew ? `<span class="jv-btn label04-sm">NEW</span>` : '';
+
+            // 제목
+            const title = item.title || '제목 없음';
+
+
             row.innerHTML = `
+            <!-- 체크박스 -->
             <td>
                 <label class="c-input ci-check single">
                     <input type="checkbox" class="select-item-checkbox" value="${item.bbsIdx}">
                     <div class="ci-show"></div>
                 </label>
             </td>
+            <!-- 번호 또는 공지 -->
             <td>${item.chkTopFix === 'Y' ? '공지' : index + 1}</td>
+            <!-- 제목 -->
             <td>
-                <a href="/masterpage_sys/board/faq/${item.bbsIdx}" class="jv-btn underline01">${item.title || '제목 없음'}</a>
+                ${secretLabel}
+                ${replyLabel}
+                <a href="/masterpage_sys/board/faq/${item.bbsIdx}" class="jv-btn underline01">${title}</a>
+                ${newLabel}
             </td>
+            <!-- 작성일 -->
             <td>${item.createdDate || '-'}</td>
+            <!-- 게시글 수정 -->
             <td><a href="/masterpage_sys/board/faq/${item.bbsIdx}" class="jv-btn fill04">수정하기</a></td>
+            <!-- 조회수 -->
             <td>${item.readNum || 0}</td>
             `;
 
+            // 공지 행에 클래스 추가
             if (rowClass) {
                 row.classList.add(rowClass);
             }

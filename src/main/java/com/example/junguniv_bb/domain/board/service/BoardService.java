@@ -21,7 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -94,38 +96,6 @@ public class BoardService {
     }
 
     /**
-     * 게시판 검색 조회 BoardType 을 통해 모두 하나의 매핑으로 작업
-     * 응답 형태 : Page<BoardSearchReqDTO>
-     */
-    public Page<BoardSearchResDTO> searchByName(String title, String boardType, Pageable pageable) {
-        BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(boardType);
-
-        Page<Bbs> bbsPage = bbsRepository.findByTitleContainingIgnoreCaseAndBbsGroup(title, bbsGroup,pageable);
-        return bbsPage.map(bbs -> {
-            // 현재 날짜 확인
-            LocalDate currentDate = LocalDate.now();
-
-            // chkTopFix 값 조정
-            String chkTopFix = "Y".equals(bbs.getChkTopFix()) &&
-                    bbs.getFixStartDate() != null &&
-                    bbs.getFixEndDate() != null &&
-                    !currentDate.isBefore(bbs.getFixStartDate()) &&
-                    !currentDate.isAfter(bbs.getFixEndDate())
-                    ? "Y"
-                    : "N";
-
-            return new BoardSearchResDTO(
-                    bbs.getBbsIdx(),
-                    bbs.getBbsGroup(),
-                    bbs.getTitle(),
-                    bbs.getFormattedCreatedDate2(),
-                    bbs.getReadNum(),
-                    chkTopFix // 조정된 chkTopFix 값을 전달
-            );
-        });
-    }
-
-    /**
      * 게시판 상세페이지 BoardType 을 통해 모두 하나의 매핑으로 작업
      * 응답 형태 : BoardDetailResDTO
      */
@@ -136,6 +106,9 @@ public class BoardService {
         Bbs bbs = bbsRepository.findById(bbsIdx)
                 .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_BBS.getMessage()));
 
+        BbsGroup bbsGroup = bbsGroupRepository.findById(bbs.getBbsGroup().getBbsGroupIdx())
+                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_BBS_GROUP.getMessage()));
+
 
         return new BoardDetailResDTO(
                 bbs.getBbsIdx(),
@@ -143,7 +116,9 @@ public class BoardService {
                 bbs.getWriter(),
                 bbs.getFormattedCreatedDate2(),
                 bbs.getReadNum(),
-                bbs.getContents()
+                bbs.getContents(),
+                bbsGroup.getOptionCommentAuth().equals("Y"),
+                bbsGroup.getOptionReplyAuth().equals("Y")
         );
     }
 
@@ -290,6 +265,7 @@ public class BoardService {
 
         return new BoardUpdateResDTO(
                 bbsIdx,
+                bbs.getPwd(),
                 bbs.getTitle(),
                 bbs.getWriter(),
                 bbs.getCategory(),
@@ -304,6 +280,7 @@ public class BoardService {
                 bbs.getRecipientName(),
                 bbs.getRecipientId(),
                 byBbsId.getFileNum(),
+                byBbsId.getOptionSecretAuth().equals("Y"),
                 attachments
         );
     }
@@ -359,6 +336,11 @@ public class BoardService {
             // 현재 날짜 확인
             LocalDate currentDate = LocalDate.now();
 
+            boolean isNew = false;
+            if (bbs.getCreatedDate() != null) {
+                isNew = ChronoUnit.HOURS.between(bbs.getCreatedDate(), LocalDateTime.now()) < 24;
+            }
+
             // chkTopFix 값 조정
             String chkTopFix = "Y".equals(bbs.getChkTopFix()) &&
                     bbs.getFixStartDate() != null &&
@@ -374,13 +356,19 @@ public class BoardService {
                     bbs.getTitle(),
                     bbs.getFormattedCreatedDate2(),
                     bbs.getReadNum(),
-                    chkTopFix // 조정된 chkTopFix 값을 전달
+                    chkTopFix, // 조정된 chkTopFix 값을 전달
+                    bbs.getPwd(),
+                    bbs.getParentBbsIdx(),
+                    isNew
             );
         });
     }
 
-    public Integer getFileCount(String bbsId) {
+    public BoardSaveResDTO getBoardSave(String bbsId) {
         BbsGroup byBbsId = bbsGroupRepository.findByBbsId(bbsId);
-        return byBbsId.getFileNum();
+        return new BoardSaveResDTO(
+                byBbsId.getFileNum(),
+                byBbsId.getOptionSecretAuth().equals("Y")
+        );
     }
 }
