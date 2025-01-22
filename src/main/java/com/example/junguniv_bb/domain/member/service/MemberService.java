@@ -10,6 +10,8 @@ import com.example.junguniv_bb.domain.member._enum.UserType;
 import com.example.junguniv_bb.domain.member.dto.*;
 import com.example.junguniv_bb.domain.member.model.Member;
 import com.example.junguniv_bb.domain.member.model.MemberRepository;
+import com.example.junguniv_bb.domain.authlevel.model.AuthLevel;
+import com.example.junguniv_bb.domain.authlevel.service.AuthLevelService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +32,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.HashMap;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +45,7 @@ public class MemberService {
     /* DI */
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthLevelService authLevelService;
 
     /* 파일 업로드 디렉토리 경로 설정 */
     @Value("${file.upload.directories.member}")
@@ -128,6 +133,17 @@ public class MemberService {
             memberRepository.findByUserType(userType, pageable) :
             memberRepository.findAll(pageable);
 
+        // 권한 레벨 목록 조회 (관리자인 경우에만)
+        Map<Long, String> authLevelNames = new HashMap<>();
+        if (userType == UserType.ADMIN) {
+            List<AuthLevel> authLevels = authLevelService.getAllAuthLevel();
+            authLevelNames = authLevels.stream()
+                .collect(Collectors.toMap(
+                    AuthLevel::getAuthLevel,
+                    AuthLevel::getAuthLevelName
+                ));
+        }
+
         // UserType에 따른 DTO 변환 및 반환
         if (userType != null) {
             if (userType == UserType.STUDENT) {
@@ -137,7 +153,7 @@ public class MemberService {
             } else if (userType == UserType.COMPANY) {
                 return ResponseEntity.ok(new MemberCompanyPageResDTO(memberPagePS));
             } else if (userType == UserType.ADMIN) {
-                return ResponseEntity.ok(new MemberAdminPageResDTO(memberPagePS));
+                return ResponseEntity.ok(new MemberAdminPageResDTO(memberPagePS, authLevelNames));
             }
         }
 
@@ -223,7 +239,16 @@ public class MemberService {
                 searchDTO.authLevel(),
                 pageable
             );
-            return ResponseEntity.ok(new MemberAdminPageResDTO(memberPagePS));
+
+            // 권한 레벨 목록 조회
+            List<AuthLevel> authLevels = authLevelService.getAllAuthLevel();
+            Map<Long, String> authLevelNames = authLevels.stream()
+                .collect(Collectors.toMap(
+                    AuthLevel::getAuthLevel,
+                    AuthLevel::getAuthLevelName
+                ));
+
+            return ResponseEntity.ok(new MemberAdminPageResDTO(memberPagePS, authLevelNames));
         } catch (Exception e) {
             log.error("관리자 검색 중 오류 발생: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("관리자 검색 중 오류가 발생했습니다.");

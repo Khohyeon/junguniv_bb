@@ -1,5 +1,6 @@
 package com.example.junguniv_bb.domain.managermenu.dto;
 
+import com.example.junguniv_bb.domain.managermenu._enum.MenuType;
 import com.example.junguniv_bb.domain.managermenu.model.ManagerMenu;
 
 import java.util.List;
@@ -19,9 +20,8 @@ public record ManagerMenuDetailResDTO(
         Integer sortno,
         String chkUse,
         String url,
-        String menuGroup,
+        MenuType menuGroup,
         String menuHelp,
-        String managerGroup,
         String chkPerson,
         String personInfor
     ) {
@@ -34,7 +34,6 @@ public record ManagerMenuDetailResDTO(
                 menu.getUrl(),
                 menu.getMenuGroup(),
                 menu.getMenuHelp(),
-                menu.getManagerGroup(),
                 menu.getChkPerson(),
                 menu.getPersonInfor()
             );

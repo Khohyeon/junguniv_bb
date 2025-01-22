@@ -5,6 +5,7 @@ import com.example.junguniv_bb._core.exception.Exception400;
 import com.example.junguniv_bb._core.exception.ExceptionMessage;
 import com.example.junguniv_bb._core.permission.ManagerMenuChangeEvent;
 import com.example.junguniv_bb.domain.managerauth.model.ManagerAuthRepository;
+import com.example.junguniv_bb.domain.managermenu._enum.MenuType;
 import com.example.junguniv_bb.domain.managermenu.dto.*;
 import com.example.junguniv_bb.domain.managermenu.model.ManagerMenu;
 import com.example.junguniv_bb.domain.managermenu.model.ManagerMenuRepository;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -85,18 +87,103 @@ public class ManagerMenuService {
 
 
     /* ManagerMenu 페이지 */
-    public ManagerMenuPageResDTO managerMenuPage(Member member, Pageable pageable, String menuName) {
-        // TODO 권한 체크
+    public ManagerMenuPageResDTO managerMenuPage(Member member, Pageable pageable, String menuName, String menuType) {
+        // 1. 기본 메뉴 조회 (fetch join으로 N+1 문제 방지)
+        Page<ManagerMenu> managerMenuPage;
+        
+        if (menuName != null) {
+            managerMenuPage = managerMenuRepository.findByMenuNameContainingIgnoreCaseWithParentAndChildren(menuName, pageable);
+        } else {
+            managerMenuPage = managerMenuRepository.findAllWithParentAndChildren(pageable);
+        }
 
-        // 1. DB 조회 (fetch join으로 N+1 문제 방지)
-        Page<ManagerMenu> managerMenuPagePS = (menuName != null)
-            ? managerMenuRepository.findByMenuNameContainingIgnoreCaseWithParentAndChildren(menuName, pageable)
-            : managerMenuRepository.findAllWithParentAndChildren(pageable);
+        // menuType이 null이면 모든 메뉴 반환
+        if (menuType == null) {
+            return ManagerMenuPageResDTO.from(managerMenuPage);
+        }
 
-        // 2. DTO 변환 및 반환
-        return ManagerMenuPageResDTO.from(managerMenuPagePS);
+        // 2. MenuType에 따른 필터링
+        List<ManagerMenu> filteredMenus = managerMenuPage.getContent().stream()
+            .filter(menu -> {
+                // URL이 null이거나 비어있는 메뉴 제외
+                if (menu.getUrl() == null || menu.getUrl().trim().isEmpty()) {
+                    return false;
+                }
+
+                // MenuType에 따른 필터링
+                try {
+                    MenuType selectedType = MenuType.valueOf(menuType);
+                    MenuType menuGroup = menu.getMenuGroup();
+
+                    if (menuGroup == null) {
+                        return false;
+                    }
+
+                    return switch (selectedType) {
+                        case ADMIN_REFUND -> menuGroup == MenuType.SYSTEM || menuGroup == MenuType.ADMIN_REFUND;
+                        case ADMIN_NORMAL -> menuGroup == MenuType.SYSTEM || menuGroup == MenuType.ADMIN_NORMAL;
+                        case TEACHER -> menuGroup == MenuType.TEACHER;
+                        case COMPANY -> menuGroup == MenuType.COMPANY;
+                        case SYSTEM -> menuGroup == MenuType.SYSTEM;
+                    };
+                } catch (IllegalArgumentException e) {
+                    log.warn("Invalid menuType: {}", menuType);
+                    return false;
+                }
+            })
+            .toList();
+
+        // 3. 필터링된 결과로 새로운 Page 객체 생성
+        Page<ManagerMenu> filteredPage = new PageImpl<>(
+            filteredMenus,
+            pageable,
+            filteredMenus.size()  // 필터링된 결과의 총 개수로 수정
+        );
+
+        // 4. DTO 변환 및 반환
+        return ManagerMenuPageResDTO.from(filteredPage);
     }
 
+
+    /* ManagerMenu 전체 조회 (메뉴 타입별) */
+    public List<ManagerMenu> findAllByMenuType(String menuType) {
+        List<ManagerMenu> allMenus = managerMenuRepository.findAll();
+        
+        // menuType이 null이거나 'undefined'인 경우 전체 메뉴 반환
+        if (menuType == null || menuType.equals("undefined")) {
+            return allMenus;
+        }
+
+        return allMenus.stream()
+            .filter(menu -> {
+                // URL이 null이거나 비어있는 메뉴 제외
+                if (menu.getUrl() == null || menu.getUrl().trim().isEmpty()) {
+                    return false;
+                }
+
+                try {
+                    // MenuType에 따른 필터링
+                    MenuType selectedType = MenuType.valueOf(menuType);
+                    MenuType menuGroup = menu.getMenuGroup();
+
+                    if (menuGroup == null) {
+                        return false;
+                    }
+
+                    return switch (selectedType) {
+                        case ADMIN_REFUND -> menuGroup == MenuType.SYSTEM || menuGroup == MenuType.ADMIN_REFUND;
+                        case ADMIN_NORMAL -> menuGroup == MenuType.SYSTEM || menuGroup == MenuType.ADMIN_NORMAL;
+                        case TEACHER -> menuGroup == MenuType.TEACHER;
+                        case COMPANY -> menuGroup == MenuType.COMPANY;
+                        case SYSTEM -> menuGroup == MenuType.SYSTEM;
+                    };
+                } catch (IllegalArgumentException e) {
+                    log.warn("Invalid menuType: {}", menuType);
+                    return false;
+                }
+            })
+            .toList();
+    }
 
     /* ManagerMenu 삭제 */
     @Transactional

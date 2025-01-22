@@ -164,7 +164,8 @@ const MemberModule = {
                     throw new Error('관리자 검색에 실패했습니다.');
                 }
 
-                return await response.json();
+                const data = await response.json();
+                return data;
             } catch (error) {
                 console.error('관리자 검색 에러:', error);
                 throw error;
@@ -192,7 +193,8 @@ const MemberModule = {
                     throw new Error('교강사 검색에 실패했습니다.');
                 }
 
-                return await response.json();
+                const data = await response.json();
+                return data;
             } catch (error) {
                 console.error('교강사 검색 에러:', error);
                 throw error;
@@ -220,7 +222,8 @@ const MemberModule = {
                     throw new Error('학생 검색에 실패했습니다.');
                 }
 
-                return await response.json();
+                const data = await response.json();
+                return data;
             } catch (error) {
                 console.error('학생 검색 에러:', error);
                 throw error;
@@ -248,7 +251,8 @@ const MemberModule = {
                     throw new Error('기업 검색에 실패했습니다.');
                 }
 
-                return await response.json();
+                const data = await response.json();
+                return data;
             } catch (error) {
                 console.error('기업 검색 에러:', error);
                 throw error;
@@ -433,7 +437,7 @@ const MemberModule = {
                                     default: return '-';
                                 }
                             })()}</td>
-                            <td>${member.authLevel || '-'}</td>
+                            <td>${member.authLevelName || '-'}</td>
                             <td>${(() => {
                                 switch(member.jobWorkState) {
                                     case '001': return '근무';
@@ -497,48 +501,36 @@ const MemberModule = {
             const pagination = document.getElementById('paginationMember');
             if (!pagination) return;
 
-            let html = '';
+            let paginationHtml = '';
             
             // 이전 페이지 버튼
-            html += `
-                <button class="prev ${MemberModule.state.currentPage === 0 ? 'disabled' : ''}" 
-                        ${MemberModule.state.currentPage === 0 ? 'disabled' : ''}>
-                    이전
-                </button>
-            `;
-
+            if (MemberModule.state.currentPage > 0) {
+                paginationHtml += `<a href="#" class="prev" data-page="${MemberModule.state.currentPage - 1}"></a>`;
+            }
+            
             // 페이지 번호
             for (let i = 0; i < totalPages; i++) {
-                html += `
-                    <button class="page-number ${MemberModule.state.currentPage === i ? 'active' : ''}"
-                            data-page="${i}">
-                        ${i + 1}
-                    </button>
-                `;
+                if (i === MemberModule.state.currentPage) {
+                    paginationHtml += `<a href="#" class="active" data-page="${i}">${i + 1}</a>`;
+                } else {
+                    paginationHtml += `<a href="#" data-page="${i}">${i + 1}</a>`;
+                }
             }
-
+            
             // 다음 페이지 버튼
-            html += `
-                <button class="next ${MemberModule.state.currentPage === totalPages - 1 ? 'disabled' : ''}"
-                        ${MemberModule.state.currentPage === totalPages - 1 ? 'disabled' : ''}>
-                    다음
-                </button>
-            `;
+            if (MemberModule.state.currentPage < totalPages - 1) {
+                paginationHtml += `<a href="#" class="next" data-page="${MemberModule.state.currentPage + 1}"></a>`;
+            }
+            
+            pagination.innerHTML = paginationHtml;
 
-            pagination.innerHTML = html;
-
-            // 페이지네이션 이벤트 리스너 추가
-            pagination.querySelectorAll('button').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    if (button.classList.contains('disabled')) return;
-                    
-                    if (button.classList.contains('prev')) {
-                        MemberModule.handlers.changePage(MemberModule.state.currentPage - 1);
-                    } else if (button.classList.contains('next')) {
-                        MemberModule.handlers.changePage(MemberModule.state.currentPage + 1);
-                    } else {
-                        const page = parseInt(button.dataset.page);
-                        MemberModule.handlers.changePage(page);
+            // 이벤트 리스너 추가
+            pagination.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const page = parseInt(link.dataset.page);
+                    if (!isNaN(page)) {
+                        await MemberModule.handlers.changePage(page);
                     }
                 });
             });
@@ -552,15 +544,50 @@ const MemberModule = {
             if (page < 0 || page >= MemberModule.state.totalPages) return;
             
             try {
-                const response = MemberModule.api.getMembers(page, MemberModule.state.size);
-                MemberModule.state.members = response.memberList;
-                MemberModule.state.currentPage = response.pageable.pageNumber;
-                MemberModule.state.totalPages = response.pageable.totalPages;
-                MemberModule.state.totalElements = response.pageable.totalElements;
+                let response;
+                const urlParams = new URLSearchParams(window.location.search);
+                const authLevel = urlParams.get('authLevel');
                 
-                MemberModule.render.memberTable(MemberModule.state.members);
-                MemberModule.render.pagination(MemberModule.state.totalPages);
+                // 현재 검색 조건 수집
+                const searchParams = {};
+                const searchForm = document.querySelector('form.search-form');
+                if (searchForm) {
+                    const formData = new FormData(searchForm);
+                    for (let [key, value] of formData.entries()) {
+                        if (value) {
+                            searchParams[key] = value;
+                        }
+                    }
+                }
+                
+                // 현재 페이지 타입에 따라 적절한 API 호출
+                if (window.location.pathname.includes('/member/admin')) {
+                    if (authLevel) {
+                        searchParams.authLevel = authLevel;
+                    }
+                    response = await MemberModule.api.searchAdmins(searchParams, page, MemberModule.state.size);
+                } else if (window.location.pathname.includes('/member/teacher')) {
+                    response = await MemberModule.api.searchTeachers(searchParams, page, MemberModule.state.size);
+                } else if (window.location.pathname.includes('/member/company')) {
+                    response = await MemberModule.api.searchCompanies(searchParams, page, MemberModule.state.size);
+                } else {
+                    response = await MemberModule.api.searchStudents(searchParams, page, MemberModule.state.size);
+                }
+
+                if (response) {
+                    MemberModule.state.members = response.memberList || [];
+                    MemberModule.state.currentPage = response.pageable?.pageNumber || 0;
+                    MemberModule.state.totalPages = response.pageable?.totalPages || 0;
+                    MemberModule.state.totalElements = response.pageable?.totalElements || 0;
+                    
+                    MemberModule.render.memberTable(MemberModule.state.members);
+                    MemberModule.render.pagination(MemberModule.state.totalPages);
+                } else {
+                    console.error('응답이 없거나 잘못된 형식입니다:', response);
+                    throw new Error('Invalid response format');
+                }
             } catch (error) {
+                console.error('페이지 로딩 에러:', error);
                 alert('페이지 로딩에 실패했습니다.');
             }
         },

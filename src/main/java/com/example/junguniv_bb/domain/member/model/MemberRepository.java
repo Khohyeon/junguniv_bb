@@ -143,4 +143,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
                         row -> (Long) row[1]   // count
                 ));
     }
+
+    @Meta(comment = "기존 authLevel 값을 새로운 authLevel 값으로 업데이트합니다.")
+    @Modifying
+    @Transactional
+    @Query("UPDATE Member m SET m.authLevel = :newAuthLevel WHERE m.authLevel = :oldAuthLevel")
+    int updateAuthLevelForMembers(@Param("oldAuthLevel") Long oldAuthLevel, @Param("newAuthLevel") Long newAuthLevel);
 }

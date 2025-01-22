@@ -5,16 +5,20 @@ import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 public record MemberAdminPageResDTO(
         List<MemberDTO> memberList,
         PageableDTO pageable
 ) {
-    public MemberAdminPageResDTO(Page<Member> memberPage) {
+    public MemberAdminPageResDTO(Page<Member> memberPage, Map<Long, String> authLevelNames) {
         this(
                 memberPage.getContent()
                         .stream()
-                        .map(MemberDTO::new)
+                        .map(member -> new MemberDTO(
+                                member,
+                                authLevelNames.getOrDefault(member.getAuthLevel(), "-")
+                        ))
                         .toList(),
                 new PageableDTO(memberPage)
         );
@@ -29,10 +33,11 @@ public record MemberAdminPageResDTO(
             String email, // 이메일
             String jobCourseDuty, // 환급/일반 담당
             Long authLevel, // 권한명
+            String authLevelName, // 권한명 추가
             String jobWorkState, // 근무상태
             LocalDateTime createdDate // 회원등록일
     ) {
-        public  MemberDTO (Member member) {
+        public MemberDTO(Member member, String authLevelName) {
             this(
                     member.getMemberIdx(),
                     member.getName(),
@@ -41,6 +46,7 @@ public record MemberAdminPageResDTO(
                     member.getEmail(),
                     member.getJobCourseDuty(),
                     member.getAuthLevel(),
+                    authLevelName, // 권한명 전달
                     member.getJobWorkState(),
                     member.getCreatedDate()
             );

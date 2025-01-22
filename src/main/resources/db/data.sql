@@ -8,13 +8,13 @@ VALUES (1, 'qwer', '$2a$10$5mcrIopDr1/WTCSzbMoGo.5L7SYgLLyxH0OZobyOYkSPeItRqxI6G
        (3, 'asdf', '$2a$10$5mcrIopDr1/WTCSzbMoGo.5L7SYgLLyxH0OZobyOYkSPeItRqxI6G', '1985-09-10', 'M', '010-9101-1122',
         'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호', 'ADMIN', 80, 'Y', now(), now()),
        (4, 'zxcv', '$2a$10$5mcrIopDr1/WTCSzbMoGo.5L7SYgLLyxH0OZobyOYkSPeItRqxI6G', '1985-09-10', 'M', '010-9101-1122',
-        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호',  'COMPANY', 0, 'Y', now(), now()),
+        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호',  'COMPANY', null, 'Y', now(), now()),
        (5, 'qwer1', '$2a$10$5mcrIopDr1/WTCSzbMoGo.5L7SYgLLyxH0OZobyOYkSPeItRqxI6G', '1985-09-10', 'M', '010-9101-1122',
-        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호',  'STUDENT', 0, 'Y', now(), now()),
+        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호',  'STUDENT', null, 'Y', now(), now()),
        (6, 'qwer2', '$2a$10$5mcrIopDr1/WTCSzbMoGo.5L7SYgLLyxH0OZobyOYkSPeItRqxI6G', '1985-09-10', 'M', '010-9101-1122',
-        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호',  'STUDENT', 0, 'Y', now(), now()),
+        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호',  'STUDENT', null, 'Y', now(), now()),
        (7, 'qwer3', '$2a$10$5mcrIopDr1/WTCSzbMoGo.5L7SYgLLyxH0OZobyOYkSPeItRqxI6G', '1985-09-10', 'M', '010-9101-1122',
-        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호',  'TEACHER', 0, 'Y', now(), now());
+        'user91011@example.com', '67890', '서울시 종로구 종로 789', '303호',  'TEACHER', null, 'Y', now(), now());
 -- 회원 테이블 시퀀스 초기화
 ALTER TABLE MEMBER ALTER COLUMN MEMBER_IDX RESTART WITH 8;
 

@@ -113,8 +113,7 @@
 									<div>
 										<select name="authLevel" id="authLevel">
 											<option value="">선택</option>
-											<option value="1">1</option>
-											<option value="2">2</option>
+											<option th:each="authLevel : ${authLevelList}" th:value="${authLevel.authLevel}" th:text="${authLevel.authLevelName}"></option>
 										</select>
 										<div class="color05 fs14 mt5">* 권한명을 택1 해주세요.</div>
 									</div>
