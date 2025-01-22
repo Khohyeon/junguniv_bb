@@ -54,7 +54,7 @@ public class AuthLevelController {
         model.addAttribute("authLevelPage", resDTO);
 
         // TODO 페이지 제작
-        return "masterpage_sys/auth_level/listForm";
+        return "masterpage_sys/auth_level/adminRefundListForm";
     }
 
     /* 관리자권한 상세보기 페이지 */

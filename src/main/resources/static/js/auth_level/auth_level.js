@@ -146,7 +146,7 @@ async function handleDelete() {
         return;
     }
     
-    if (!confirm('선택한 권한레벨을 삭제하시겠습니까?')) {
+    if (!confirm('선택한 권한을 삭제하시겠습니까?')) {
         return;
     }
     

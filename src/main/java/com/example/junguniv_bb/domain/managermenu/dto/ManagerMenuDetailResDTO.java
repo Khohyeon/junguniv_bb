@@ -21,7 +21,6 @@ public record ManagerMenuDetailResDTO(
         String url,
         String menuGroup,
         String menuHelp,
-        String managerGroup,
         String chkPerson,
         String personInfor
     ) {
@@ -34,7 +33,6 @@ public record ManagerMenuDetailResDTO(
                 menu.getUrl(),
                 menu.getMenuGroup(),
                 menu.getMenuHelp(),
-                menu.getManagerGroup(),
                 menu.getChkPerson(),
                 menu.getPersonInfor()
             );

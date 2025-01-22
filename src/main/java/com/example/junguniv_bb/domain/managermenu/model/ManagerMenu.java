@@ -40,9 +40,6 @@ public class ManagerMenu extends BaseTime {
     @Column(name = "MENU_HELP", length = 255)
     private String menuHelp; // 명칭
 
-    @Column(name = "MANAGER_GROUP", length = 255)
-    private String managerGroup; // 관리자구분
-
     @Column(name = "CHK_PERSON", length = 1)
     private String chkPerson; // 개인정보유무
 

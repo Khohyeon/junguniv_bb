@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<!-- 헤더에서 CSS 포함 -->
+	<th:block th:replace="fragments/header :: head"></th:block>
+	<title>권한관리 - 교강사</title>
+</head>
+<body>
+	<!-- 헤더에서 상단 메뉴 포함 -->
+	<th:block th:replace="fragments/header :: header"></th:block>
+
+
+	<div class="inner">
+		<ul class="jv-tab tab2">
+			<li class="active"><a href="#none">관리자(환급)</a></li>
+			<li><a href="#none">관리자(일반)</a></li>
+			<li><a href="#none">강사</a></li>
+			<li><a href="#none">위탁기업</a></li>
+		</ul>
+		<div class="table-util">
+			<div class="left">
+				<a href="#none" class="jv-btn fill05">삭제</a>
+				<div class="page-view flex">
+					<span>페이지수</span>
+					<select>
+						<option>선택</option>
+						<option>10</option>
+						<option>20</option>
+						<option>30</option>
+						<option>40</option>
+						<option>50</option>
+					</select>
+				</div>
+				<div class="count">
+					<span class="Pretd_B">123</span>건 검색되었습니다.
+				</div>
+			</div>
+			<div class="right">
+				<a href="design.authlevel.php" class="jv-btn fill04">권한생성</a>
+			</div>
+		</div>
+
+		<table class="table01 T_center">
+			<colgroup>
+				<col width="10%">
+				<col width="10%">
+				<col width="50%">
+				<col width="15%">
+				<col width="15%">
+			</colgroup>
+			<thead>
+				<tr>
+					<th>
+						<label class="c-input ci-check single">
+							<input type="checkbox">
+							<div class="ci-show"></div>
+						</label>
+					</th>
+					<th>NO</th>
+					<th>권한명</th>
+					<th>연결 관리자 수</th>
+					<th>등록일</th>
+				</tr>
+			</thead>
+			<tbody>
+
+			</tbody>
+		</table>
+
+		<div class="pagination" id="pagination">
+			<!-- 페이지네이션 버튼은 JavaScript로 렌더링됩니다 -->
+		</div>
+	</div>
+
+	<script th:src="@{/js/auth_level/auth_level.js}"></script>
+</body>
+</html>
