@@ -27,7 +27,7 @@ INSERT INTO MANAGER_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX) VALUES
 
 -- 하위 메뉴
 ('회원정보관리', 1, 'Y', '/masterpage_sys/member/student', 1),
-('권한관리', 2, 'Y', '/masterpage_sys/authlevel', 1),
+('권한관리', 2, 'Y', '/masterpage_sys/auth_level', 1),
 ('주소록출력', 3, 'Y', '/masterpage_sys/label/student', 1),
 ('팝업관리', 1, 'Y', '/masterpage_sys/popup', 2),
 ('약관관리', 2, 'Y', '/masterpage_sys/agreement', 2),
@@ -44,7 +44,7 @@ INSERT INTO MANAGER_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX) VALUES
 ('교강사(튜터)', 2, 'Y', '/masterpage_sys/member/teacher', 5),
 ('위탁기업', 3, 'Y', '/masterpage_sys/member/company', 5),
 ('LMS관리자', 4, 'Y', '/masterpage_sys/member/admin', 5),
-('관리자권한설정', 1, 'Y', '#', 6),
+('관리자권한설정', 1, 'Y', '/masterpage_sys/auth_level', 6),
 ('홈페이지게시판', 2, 'Y', '/masterpage_sys/board/managerForm', 6),
 ('메인팝업', 1, 'Y', '/masterpage_sys/popup', 8),
 ('주소록출력', 1, 'Y', '/masterpage_sys/member/address', 7),

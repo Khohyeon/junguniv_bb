@@ -5,6 +5,9 @@
 	<!-- 헤더에서 CSS 포함 -->
 	<th:block th:replace="fragments/header :: head"></th:block>
 
+	<!-- CSS -->
+	<link rel="stylesheet" th:href="@{/css/member/member.css}">
+
 	<!-- 카카오 주소 API 스크립트 추가 -->
 	<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
@@ -20,7 +23,11 @@
 			<input type="hidden" name="userType" id="userType" value="STUDENT">
 
 			<div class="form-wrap2">
-				<h2 class="form-tit">기본정보 <span class="required-txt">표시가 된 항목은 필수 입력 사항이며, <span class="required"></span><span class="required"></span>표시가 있는 주민등록번호는 환급교육 과정을 1과정 이상 수강하는 회원만 필수 입니다.</span></h2>
+				<div class="form-header">
+					<h2 class="form-tit">기본정보 <span class="required-txt">표시가 된 항목은 필수 입력 사항이며, <span class="required"></span><span class="required"></span>표시가 있는 주민등록번호는 환급교육 과정을 1과정 이상 수강하는 회원만 필수 입니다.</span></h2>
+					<a href="/masterpage_sys/member/student" class="jv-btn fill01-lg">목록</a>
+					<button type="submit" class="jv-btn fill01-lg right" id="btnSave1">저장</button>
+				</div>
 				<div class="column-tc-wrap column-tc-wrap2 part2">
 					<div class="column-tc">
 						<div class="tit">

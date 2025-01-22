@@ -4,16 +4,25 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Meta;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.junguniv_bb.domain.member._enum.UserType;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
+
+    @Meta(comment = "특정 authLevel을 사용하는 모든 회원의 authLevel을 null로 설정합니다.")
+    @Modifying
+    @Transactional
+    @Query("UPDATE Member m SET m.authLevel = null WHERE m.authLevel = :authLevel")
+    int setAuthLevelToNullForMembers(@Param("authLevel") Long authLevel);
 
     @Meta(comment = "회원 아이디로 조회")
     Optional<Member> findByUserId(String userId);
@@ -122,4 +131,17 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     List<Member> findByNameContainingIgnoreCase(String name);
 
+
+    @Meta(comment = "각 AuthLevel 별 회원 수를 조회합니다.")
+    @Query("SELECT m.authLevel, COUNT(m) FROM Member m WHERE m.authLevel IN :authLevels GROUP BY m.authLevel")
+    List<Object[]> countMembersByAuthLevelRaw(@Param("authLevels") List<Long> authLevels);
+
+    default Map<Long, Long> countMembersByAuthLevel(List<Long> authLevels) {
+        List<Object[]> results = countMembersByAuthLevelRaw(authLevels);
+        return results.stream()
+                .collect(Collectors.toMap(
+                        row -> (Long) row[0],  // authLevel
+                        row -> (Long) row[1]   // count
+                ));
+    }
 }

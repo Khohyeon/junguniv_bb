@@ -35,7 +35,7 @@ import org.springframework.data.domain.PageRequest;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/masterpage_sys/member/api/")
+@RequestMapping("/masterpage_sys/member/api")
 @Slf4j
 public class MemberRestController {
 
@@ -103,7 +103,7 @@ public class MemberRestController {
     }
 
     /* 페이지 조회 */
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<?> memberPage(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @PageableDefault(size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable,

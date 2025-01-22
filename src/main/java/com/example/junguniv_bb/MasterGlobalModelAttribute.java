@@ -1,8 +1,8 @@
 package com.example.junguniv_bb;
 
-import com.example.junguniv_bb.domain.managerMenu.dto.ManagerMenuListResDTO;
-import com.example.junguniv_bb.domain.managerMenu.model.ManagerMenu;
-import com.example.junguniv_bb.domain.managerMenu.model.ManagerMenuRepository;
+import com.example.junguniv_bb.domain.managermenu.dto.ManagerMenuListResDTO;
+import com.example.junguniv_bb.domain.managermenu.model.ManagerMenu;
+import com.example.junguniv_bb.domain.managermenu.model.ManagerMenuRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

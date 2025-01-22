@@ -60,7 +60,7 @@ public class PrivacyMaskingUtil {
     }
     
     // 우편번호 마스킹
-    public String maskZipCode(String zipCode) {
+    public String maskZipcode(String zipCode) {
         if (zipCode == null || zipCode.trim().isEmpty()) return zipCode;
         if (zipCode.length() < 5) return zipCode;
         return "*****";
@@ -94,7 +94,7 @@ public class PrivacyMaskingUtil {
     }
     
     // 계좌번호 마스킹 (뒷 4자리 제외)
-    public String maskBankNum(String account) {
+    public String maskBankNumBer(String account) {
         if (account == null || account.trim().isEmpty()) return account;
         if (account.length() < 4) return account;
         return "*".repeat(account.length() - 4) + account.substring(account.length() - 4);
