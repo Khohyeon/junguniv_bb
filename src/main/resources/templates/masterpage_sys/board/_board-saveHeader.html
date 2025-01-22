@@ -93,9 +93,9 @@
             <div class="column-tc">
                 <div class="tit">첨부파일</div>
                 <div class="con flex2 fx-wrap">
-                    <label class="lab_attach" th:each="i : ${#numbers.sequence(1, fileCount)}">
+                    <div th:if="${fileCount > 0}" th:each="i : ${#numbers.sequence(1, fileCount)}">
                         <input type="file" class="mt5" name="attachments">
-                    </label>
+                    </div>
                 </div>
             </div>
         </div>

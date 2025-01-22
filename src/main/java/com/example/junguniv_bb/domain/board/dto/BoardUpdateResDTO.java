@@ -18,6 +18,7 @@ public record BoardUpdateResDTO(
         String contents,
         String recipientName,
         String recipientId,
+        Integer fileCount,
         List<String> attachments // 첨부파일 이름 리스트
 ) {
 }

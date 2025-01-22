@@ -280,6 +280,9 @@ public class BoardService {
         Bbs bbs = bbsRepository.findById(bbsIdx)
                 .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_BBS.getMessage()));
 
+        BbsGroup byBbsId = bbsGroupRepository.findById(bbs.getBbsGroup().getBbsGroupIdx())
+                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_BBS.getMessage()));
+
         List<String> attachments = bbsFileRepository.findAllByBbs(bbs)
                 .stream()
                 .map(BbsFile::getFName1)
@@ -300,6 +303,7 @@ public class BoardService {
                 bbs.getContents(),
                 bbs.getRecipientName(),
                 bbs.getRecipientId(),
+                byBbsId.getFileNum(),
                 attachments
         );
     }

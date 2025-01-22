@@ -22,7 +22,9 @@ public class _BoardQnaController {
     }
 
     @GetMapping("/save")
-    public String qnaSaveForm() {
+    public String qnaSaveForm(Model model) {
+        String bbsId = "Q&A";
+        model.addAttribute("fileCount", boardService.getFileCount(bbsId));
         return "masterpage_sys/board/qna/saveForm";
     }
 
@@ -34,6 +36,7 @@ public class _BoardQnaController {
 
     @GetMapping("/update/{bbsIdx}")
     public String qnaUpdateForm(@PathVariable Long bbsIdx, Model model) {
+        System.out.println("fileCount : " + boardService.getBoardUpdate(bbsIdx).fileCount());
         model.addAttribute("board", boardService.getBoardUpdate(bbsIdx));
         return "masterpage_sys/board/qna/updateForm";
     }

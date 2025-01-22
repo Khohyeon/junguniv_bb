@@ -20,7 +20,7 @@ public record BbsGroupUpdateReqDTO(
 
     public BbsGroup updateEntity() {
         return new BbsGroup(
-                bbsGroupIdx, bbsGroupName, bbsId, skin, category, fileNum, readAuth, writeAuth, replyAuth, commentAuth, optionSecretAuth, optionReplyAuth, optionCommentAuth, null
+                bbsGroupIdx, bbsId, bbsGroupName, skin, category, fileNum, readAuth, writeAuth, replyAuth, commentAuth, optionSecretAuth, optionReplyAuth, optionCommentAuth, null
         );
     }
 }

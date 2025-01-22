@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
         category: '',
         currentPage: 0, // 현재 페이지 번호
         pageSize: 20, // 페이지 크기
-        boardType: 'CONSULTING' // 고정된 게시판 타입
+        boardType: 'Q&A' // 고정된 게시판 타입
     };
 
     // 초기 검색 실행

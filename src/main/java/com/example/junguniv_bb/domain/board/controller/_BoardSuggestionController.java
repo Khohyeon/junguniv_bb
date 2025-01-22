@@ -22,7 +22,9 @@ public class _BoardSuggestionController {
     }
 
     @GetMapping("/save")
-    public String suggestionSaveForm() {
+    public String suggestionSaveForm(Model model) {
+        String bbsId = "SUGGESTION";
+        model.addAttribute("fileCount", boardService.getFileCount(bbsId));
         return "masterpage_sys/board/suggestion/saveForm";
     }
 
