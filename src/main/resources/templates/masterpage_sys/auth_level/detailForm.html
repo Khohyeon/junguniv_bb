@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
 	<meta charset="UTF-8">
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-random123'; style-src 'self' 'unsafe-inline';">
 	<!-- 헤더에서 CSS 포함 -->
 	<th:block th:replace="fragments/header :: head"></th:block>
 	<title>권한관리 - 관리자권한 상세보기</title>
@@ -12,6 +13,7 @@
 
 	<div class="inner">
 		<form id="mainform" method="post">
+			<input type="hidden" id="authLevelIdx" th:value="${authLevelDetail.authLevelIdx}">
 			<ul class="jv-tab tab2">
 				<li class="active"><a href="#" data-menu-type="ADMIN_REFUND">관리자(환급)</a></li>
 				<li><a href="#" data-menu-type="ADMIN_NORMAL">관리자(일반)</a></li>
@@ -23,8 +25,10 @@
 					<div class="column-tc">
 						<div class="tit">권한명 / 권한레벨</div>
 						<div class="con flex">
-							<input type="text" name="authLevelName" id="authLevelName" class="validate[required,length[0,200]] text-input" placeholder="권한명을 입력해주세요">&nbsp;
-							<input type="text" name="authLevel" id="authLevel" class="validate[required,length[0,200]] text-input" placeholder="권한레벨을 입력해주세요">&nbsp;
+							<input type="text" name="authLevelName" id="authLevelName" class="validate[required,length[0,200]] text-input" 
+								   th:value="${authLevelDetail.authLevelName}" placeholder="권한명을 입력해주세요">&nbsp;
+							<input type="number" name="authLevel" id="authLevel" class="validate[required,length[0,200]] text-input" 
+								   th:value="${authLevelDetail.authLevel}" placeholder="권한레벨을 입력해주세요">&nbsp;
 							<button type="button" id="listBtn" class="jv-btn fill01">목록</button>&nbsp;
 							<button type="button" id="saveBtn" class="jv-btn fill04">저장</button>
 						</div>
@@ -42,28 +46,28 @@
 						<th>사용여부</th>
 						<th>
 							<label class="c-input ci-check single">
-								<input type="checkbox" id="checkAllRead">
+								<input type="checkbox" id="checkAllRead" data-auth-type="read">
 								<div class="ci-show"></div>
 							</label>
 							조회
 						</th>
 						<th>
 							<label class="c-input ci-check single">
-								<input type="checkbox" id="checkAllWrite">
+								<input type="checkbox" id="checkAllWrite" data-auth-type="write">
 								<div class="ci-show"></div>
 							</label>
 							등록
 						</th>
 						<th>
 							<label class="c-input ci-check single">
-								<input type="checkbox" id="checkAllModify">
+								<input type="checkbox" id="checkAllModify" data-auth-type="modify">
 								<div class="ci-show"></div>
 							</label>
 							수정
 						</th>
 						<th>
 							<label class="c-input ci-check single">
-								<input type="checkbox" id="checkAllDelete">
+								<input type="checkbox" id="checkAllDelete" data-auth-type="delete">
 								<div class="ci-show"></div>
 							</label>
 							삭제
@@ -78,14 +82,15 @@
 			<div class="pagination" id="pagination">
 				<!-- 페이지네이션은 JavaScript에서 처리됩니다 -->
 			</div>
-
-			<div class="auth-button-group">
-				<button type="button" class="btn-type-01">저장</button>
-				<button type="button" class="btn-type-02">취소</button>
-			</div>
 		</form>
 	</div>
 
-	<script th:src="@{/js/auth_level/auth_level.js}"></script>
+	<!-- 메뉴 데이터를 JavaScript 변수로 전달 -->
+	<script th:inline="javascript" nonce="random123">
+		window.menuList = /*[[${menuList}]]*/ [];
+		window.managerAuthMap = /*[[${managerAuthMap}]]*/ {};
+		window.authLevelDetail = /*[[${authLevelDetail}]]*/ {};
+	</script>
+	<script th:src="@{/js/auth_level/auth_level.js}" nonce="random123"></script>
 </body>
 </html>
