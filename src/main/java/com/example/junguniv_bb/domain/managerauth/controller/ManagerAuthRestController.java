@@ -31,7 +31,7 @@ ManagerAuthRestController {
 
     /* ManagerAuth 업서트 (업데이트 + 삽입) */
     @PutMapping("/upsert")
-    public ResponseEntity<?> upsert(@RequestBody @Valid ManagerAuthUpdateReqDTO reqDTO, Errors errors) {
+    public ResponseEntity<?> managerAuthUpsert(@RequestBody @Valid ManagerAuthUpdateReqDTO reqDTO, Errors errors) {
 
         if (errors.hasErrors()) {
             log.warn(errors.getAllErrors().get(0).getDefaultMessage());
@@ -47,7 +47,7 @@ ManagerAuthRestController {
 
     /* ManagerAuth 페이징 및 검색 */
     @GetMapping
-    public ResponseEntity<?> page(Member member, Pageable pageable, String menuName) {
+    public ResponseEntity<?> managerAuthPage(Member member, Pageable pageable, String menuName) {
 
         // TODO 권한 체크
 
@@ -60,7 +60,7 @@ ManagerAuthRestController {
 
     /* ManagerAuth 삭제 */
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public ResponseEntity<?> managerAuthDelete(@PathVariable Long id) {
 
         // 서비스 호출
         managerAuthService.managerAuthDelete(id);
@@ -71,7 +71,7 @@ ManagerAuthRestController {
 
     /* ManagerAuth 수정 */
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody @Valid ManagerAuthUpdateReqDTO reqDTO, Errors errors) {
+    public ResponseEntity<?> managerAuthUpdate(@PathVariable Long id, @RequestBody @Valid ManagerAuthUpdateReqDTO reqDTO, Errors errors) {
 
         if (errors.hasErrors()) {
             log.warn(errors.getAllErrors()
@@ -92,7 +92,7 @@ ManagerAuthRestController {
 
     /* ManagerAuth 조회 */
     @GetMapping("/{id}")
-    public ResponseEntity<?> detail(@PathVariable Long id) {
+    public ResponseEntity<?> managerAuthDetail(@PathVariable Long id) {
         // 서비스 호출
         ManagerAuthDetailResDTO resDTO = managerAuthService.managerAuthDetail(id);
 
@@ -102,7 +102,7 @@ ManagerAuthRestController {
 
     /* ManagerAuth 등록 */
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody @Valid List<ManagerAuthSaveReqDTO> reqDTOList, Errors errors) {
+    public ResponseEntity<?> managerAuthSave(@RequestBody @Valid List<ManagerAuthSaveReqDTO> reqDTOList, Errors errors) {
 
         if (errors.hasErrors()) {
             log.warn(errors.getAllErrors()

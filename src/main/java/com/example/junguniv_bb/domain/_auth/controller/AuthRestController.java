@@ -2,10 +2,9 @@ package com.example.junguniv_bb.domain._auth.controller;
 
 import com.example.junguniv_bb._core.exception.Exception400;
 import com.example.junguniv_bb._core.util.APIUtils;
-import com.example.junguniv_bb.domain._auth.dto.ReqJoinDTO;
-import com.example.junguniv_bb.domain._auth.dto.ReqLoginDTO;
-import com.example.junguniv_bb.domain._auth.dto.ResJoinDTO;
-import com.example.junguniv_bb.domain._auth.dto.ResLoginDTO;
+import com.example.junguniv_bb.domain._auth.dto.AuthJoinReqDTO;
+import com.example.junguniv_bb.domain._auth.dto.AuthLoginReqDTO;
+import com.example.junguniv_bb.domain._auth.dto.AuthLoginResDTO;
 import com.example.junguniv_bb.domain._auth.service.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.validation.Valid;
@@ -86,7 +85,7 @@ public class AuthRestController {
 
     /* 로그인 */
     @PostMapping("/login")
-    public ResponseEntity<?> login(HttpServletRequest request, @RequestBody @Valid ReqLoginDTO reqDTO,
+    public ResponseEntity<?> login(HttpServletRequest request, @RequestBody @Valid AuthLoginReqDTO reqDTO,
             Errors errors) {
         try {
             if (errors.hasErrors()) {
@@ -101,7 +100,7 @@ public class AuthRestController {
                 );
 
                 // 인증 성공 시 JWT 토큰 생성 및 응답
-                ResLoginDTO resDTO = authService.login(reqDTO);
+                AuthLoginResDTO resDTO = authService.login(reqDTO);
 
                 // JWT를 세션에 설정
                 setJwtSession(resDTO.token().accessToken(), resDTO.token().refreshToken(), request);
@@ -140,20 +139,20 @@ public class AuthRestController {
                             .body(APIUtils.error("계정이 정지되었습니다. 관리자에게 문의하세요.", HttpStatus.UNAUTHORIZED));
                 }
                 // 그 외의 인증 실패
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body(APIUtils.error("아이디 또는 비밀번호가 일치하지 않습니다.", HttpStatus.UNAUTHORIZED));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(APIUtils.error("아이디 또는 비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST));
             }
 
         } catch (Exception e) {
             log.error("로그인 처리 중 오류 발생", e);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(APIUtils.error("로그인 처리 중 오류가 발생했습니다.", HttpStatus.UNAUTHORIZED));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(APIUtils.error("로그인 처리 중 오류가 발생했습니다.", HttpStatus.BAD_REQUEST));
         }
     }
 
     // 회원가입 - 김대홍
     @PostMapping("/join")
-    public ResponseEntity<?> join(@ModelAttribute @Valid ReqJoinDTO reqDTO, Errors errors) {
+    public ResponseEntity<?> join(@ModelAttribute @Valid AuthJoinReqDTO reqDTO, Errors errors) {
 
         // 에러 로그 확인
         if (errors.hasErrors()) {
@@ -165,9 +164,9 @@ public class AuthRestController {
                     .getDefaultMessage());
         }
 
-        ResJoinDTO resDTO = authService.join(reqDTO);
+        authService.join(reqDTO);
 
-        return ResponseEntity.ok(APIUtils.success(resDTO));
+        return ResponseEntity.ok(APIUtils.success("회원가입 완료"));
     }
 
     // 세션에 JWT 저장

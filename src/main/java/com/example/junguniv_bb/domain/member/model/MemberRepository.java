@@ -106,10 +106,12 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
            "WHERE m.userType = 'ADMIN' " +
            "AND (:name IS NULL OR m.name LIKE CONCAT('%', :name, '%')) " +
            "AND (:userId IS NULL OR m.userId LIKE CONCAT('%', :userId, '%')) " +
-           "AND (:jobCourseDuty IS NULL OR m.jobCourseDuty = :jobCourseDuty)")
+           "AND (:jobCourseDuty IS NULL OR m.jobCourseDuty = :jobCourseDuty) " +
+           "AND (:authLevel IS NULL OR m.authLevel = :authLevel)")
     Page<Member> searchAdmins(@Param("name") String name,
                             @Param("userId") String userId,
                             @Param("jobCourseDuty") String jobCourseDuty,
+                            @Param("authLevel") Long authLevel,
                             Pageable pageable);
 
     /* 주소록 검색 */

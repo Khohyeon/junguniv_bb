@@ -101,15 +101,15 @@ public class ManagerMenuService {
             return ManagerMenuPageResDTO.from(managerMenuPage);
         }
 
-        // 2. MenuType에 따른 필터링
+        // MenuType과 MenuLevel에 따른 필터링
         List<ManagerMenu> filteredMenus = managerMenuPage.getContent().stream()
             .filter(menu -> {
-                // URL이 null이거나 비어있는 메뉴 제외
-                if (menu.getUrl() == null || menu.getUrl().trim().isEmpty()) {
+                // 1차, 2차 메뉴는 항상 제외
+                if (menu.getMenuLevel() < 3) {
                     return false;
                 }
 
-                // MenuType에 따른 필터링
+                // 3차 메뉴는 MenuType에 따라 필터링
                 try {
                     MenuType selectedType = MenuType.valueOf(menuType);
                     MenuType menuGroup = menu.getMenuGroup();
@@ -132,15 +132,11 @@ public class ManagerMenuService {
             })
             .toList();
 
-        // 3. 필터링된 결과로 새로운 Page 객체 생성
-        Page<ManagerMenu> filteredPage = new PageImpl<>(
+        return ManagerMenuPageResDTO.from(new PageImpl<>(
             filteredMenus,
             pageable,
-            filteredMenus.size()  // 필터링된 결과의 총 개수로 수정
-        );
-
-        // 4. DTO 변환 및 반환
-        return ManagerMenuPageResDTO.from(filteredPage);
+            filteredMenus.size()
+        ));
     }
 
 
@@ -148,15 +144,17 @@ public class ManagerMenuService {
     public List<ManagerMenu> findAllByMenuType(String menuType) {
         List<ManagerMenu> allMenus = managerMenuRepository.findAll();
         
-        // menuType이 null이거나 'undefined'인 경우 전체 메뉴 반환
+        // menuType이 null이거나 'undefined'인 경우 3차 메뉴만 반환
         if (menuType == null || menuType.equals("undefined")) {
-            return allMenus;
+            return allMenus.stream()
+                .filter(menu -> menu.getMenuLevel() == 3)
+                .toList();
         }
 
         return allMenus.stream()
             .filter(menu -> {
-                // URL이 null이거나 비어있는 메뉴 제외
-                if (menu.getUrl() == null || menu.getUrl().trim().isEmpty()) {
+                // 3차 메뉴가 아닌 경우 제외
+                if (menu.getMenuLevel() != 3) {
                     return false;
                 }
 

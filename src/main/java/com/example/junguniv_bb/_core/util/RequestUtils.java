@@ -17,10 +17,8 @@ public class RequestUtils {
             return false;
         }
 
-        // TODO BB 시스템에 맞게 엔드포인트 수정 필요
-        return antPathMatcher.match("/nGmaster/**/api/**", uri) ||
-                antPathMatcher.match("/nGsmart/**/api/**", uri) ||
-               antPathMatcher.match("/api/**", uri) ||
+        // TODO BB 시스템에 맞게 엔드포인트 수정
+        return antPathMatcher.match("/api**", uri) ||
                (request.getHeader("Accept") != null && 
                 request.getHeader("Accept").contains("application/json")) ||
                (request.getHeader("Content-Type") != null && 
