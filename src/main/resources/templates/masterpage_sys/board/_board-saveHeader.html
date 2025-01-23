@@ -1,4 +1,4 @@
-<div th:fragment="board_header(includeCategory, includeDate, includeTopFix, includeMainExpose, includeAttachments)" class="inner">
+<div th:fragment="board_header(includeCategory, includeTopFix, includeMainExpose, includeAttachments)" class="inner">
     <div class="form-wrap2">
         <form class="form-wrap2" id="saveForm" action="/masterpage_sys/board/api/save" method="post" enctype="multipart/form-data">
             <div class="column-tc-wrap bbs__write part1">
@@ -31,15 +31,6 @@
                                     th:text="${category}"
                                     th:selected="${category == selectedCategory}"></option>
                         </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="column-tc-wrap part1 bbs__write" th:if="${includeDate}">
-                <div class="column-tc">
-                    <div class="tit">작성일</div>
-                    <div class="con">
-                        <input name="answer_date" id="createdDate" type="date">
                     </div>
                 </div>
             </div>

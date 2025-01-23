@@ -1,4 +1,4 @@
-<div th:fragment="board_header(includeCategory, includeDate, includeTopFix, includeMainExpose, includeAttachments)" class="inner">
+<div th:fragment="board_header(includeCategory, includeTopFix, includeMainExpose, includeAttachments)" class="inner">
     <form class="form-wrap2" id="updateForm" action="/masterpage_sys/board/api/update" method="post" enctype="multipart/form-data">
         <input type="hidden" name="bbsIdx" th:value="${board.bbsIdx()}" />
 
@@ -31,25 +31,21 @@
                 <div class="tit">카테고리</div>
                 <div class="con">
                     <select name="category" id="category">
-                        <option value="" th:selected="${selectedCategory == null}">선택</option>
+                        <!-- 기본 선택 옵션 -->
+                        <option th:value="${board.category()}" th:text = "${board.category()}"></option>
+
+                        <!-- 동적 옵션 -->
                         <option th:each="category : ${categories}"
                                 th:value="${category}"
-                                th:text="${category}"
-                                th:selected="${category == selectedCategory}"></option>
+                                th:text="${category}">
+                        </option>
                     </select>
+
+
                 </div>
             </div>
         </div>
 
-        <!-- 작성일 -->
-        <div class="column-tc-wrap part1 bbs__write" th:if="${includeDate}">
-            <div class="column-tc">
-                <div class="tit">작성일</div>
-                <div class="con">
-<!--                    <input name="answer_date" id="createdDate" type="date" th:value="${#dates.format(board.createdDate(), 'yyyy-MM-dd')}" />-->
-                </div>
-            </div>
-        </div>
 
         <!-- 게시글 상단 고정 -->
         <div class="column-tc-bg" th:if="${includeTopFix}">

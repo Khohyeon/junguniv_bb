@@ -396,21 +396,21 @@ public class BoardService {
         return (root, query, criteriaBuilder) -> {
             assert query != null;
 
-            // `CASE` 문으로 정렬 기준 정의
+            // 부모 게시물이 먼저 오고, 자식 게시물은 부모 바로 아래로 오도록 정렬 기준 설정
             query.orderBy(
-                    criteriaBuilder.desc(
+                    criteriaBuilder.asc(
                             criteriaBuilder.selectCase()
-                                    // parentBbsIdx가 null이면 정렬 우선순위 0
-                                    .when(criteriaBuilder.isNull(root.get("parentBbsIdx")), root.get("bbsIdx"))
-                                    // parentBbsIdx가 존재하면 해당 parentBbsIdx 순서로 정렬
-                                    .otherwise(root.get("parentBbsIdx"))
+                                    .when(criteriaBuilder.isNull(root.get("parentBbsIdx")), root.get("bbsIdx")) // 부모 게시물은 자신의 ID
+                                    .otherwise(root.get("parentBbsIdx")) // 답변 게시물은 부모 ID 기준으로 정렬
                     ),
-                    // bbsIdx 내림차순 정렬
-                    criteriaBuilder.desc(root.get("bbsIdx"))
+                    criteriaBuilder.asc(root.get("parentBbsIdx")), // 부모 ID 순으로 정렬
+                    criteriaBuilder.desc(root.get("bbsIdx")) // 동일 부모 내에서는 자신의 ID 순으로 정렬
             );
             return null;
         };
     }
+
+
 
 
     public BoardSaveResDTO getBoardSave(String bbsId) {
