@@ -116,14 +116,19 @@
                     </div>
 
                     <!-- 이미 업로드된 첨부 파일 출력 -->
-                    <div class="attachment-list" th:if="${board.attachments() != null and !#lists.isEmpty(board.attachments())}">
-                        <div th:each="attachment, iStat : ${board.attachments()}">
-                            <!-- 파일 이름 표시 -->
-                            <span th:text="${attachment}"></span>
-                            <!-- 파일 삭제 버튼 -->
-                            <a href="#none" class="remove-file" th:onclick="'removeFile(' + iStat.index + ');'">삭제</a>
-                        </div>
-                    </div>
+                    <!-- 불필요한 div 제거, 바로 th:each 실행 -->
+                    <a th:if="${board.attachments() != null and !#lists.isEmpty(board.attachments())}"
+                       th:each="attachment, iStat : ${board.attachments()}"
+                       th:href="@{'/api/v1/files/download/' + 'board' + '/' + ${attachment}}"
+                       th:text="${attachment}"
+                       class="file Nt_L"></a>
+                    <label th:if="${board.attachments() != null and !#lists.isEmpty(board.attachments())}"
+                           th:each="attachment, iStat : ${board.attachments()}"
+                           class="c-input ci-check file_delete">
+                        <input type="checkbox" class="disabled" name="chkdelfname1" value="Y"> 삭제
+                        <div class="ci-show"></div>
+                    </label>
+
                 </div>
             </div>
         </div>

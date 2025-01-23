@@ -1,8 +1,16 @@
 document.addEventListener('DOMContentLoaded', function () {
+    const listButton = document.getElementById('listButton');
     const boardType = document.body.getAttribute('data-board-type') || 'NOTICE'; // 기본값은 'NOTICE'
     const urlType = document.body.getAttribute('data-url-type') || 'notice'; // body에 저장된 data-url-type 값
     const actionType = document.body.getAttribute('data-action-type') || 'update'; // actionType 기본값 'update'
+    let url = `/masterpage_sys/board/${urlType}`;
 
+    // 목록 버튼 클릭 이벤트
+    if (listButton) {
+        listButton.addEventListener('click', () => {
+            window.location.href = url;
+        });
+    }
     const form = document.getElementById(actionType+'Form');
 
     form.addEventListener('submit', function (event) {

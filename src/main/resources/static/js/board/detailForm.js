@@ -17,12 +17,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // 서버에서 전달된 권한 정보 가져오기
     const hasReplyPermission = document.getElementById('permissionReply').getAttribute('data-reply');
 
-    // Reply 권한이 있는 경우
-    if (hasReplyPermission === 'true') {
-        const replyUrl = `${url}/reply/${boardId}`;
-        replyButton.setAttribute('href', replyUrl);
-    } else {
-        replyButton.style.display = 'none';
+    if (replyButton != null) {
+        // Reply 권한이 있는 경우
+        if (hasReplyPermission === 'true') {
+            const replyUrl = `${url}/reply/${boardId}`;
+            replyButton.setAttribute('href', replyUrl);
+        } else {
+            replyButton.style.display = 'none';
+        }
     }
 
     // 댓글 리스트 이벤트

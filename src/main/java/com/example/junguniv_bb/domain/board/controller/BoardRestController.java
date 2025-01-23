@@ -72,13 +72,13 @@ public class BoardRestController {
             member = customUserDetails.getMember();
         }
 
-        // 서비스 호출
-        boardService.saveBoard(boardSaveReqDTO, member);
-
         BbsAuthResDTO permissions = boardService.getPermission(boardSaveReqDTO.boardType(), UserType.GUEST);
         if (!permissions.write()) {
             throw new Exception400("쓰기 권한이 없습니다.");
         }
+
+        // 서비스 호출
+        boardService.saveBoard(boardSaveReqDTO, member);
 
         return ResponseEntity.ok(APIUtils.success("게시글 등록이 성공적으로 완료되었습니다."));
     }
@@ -147,12 +147,13 @@ public class BoardRestController {
                 // 실제 사용자 정보 사용
                 member = customUserDetails.getMember();
             }
-        boardService.replyBoard(boardReplyReqDTO ,member); // 서비스 호출
-
         BbsAuthResDTO permissions = boardService.getPermission(boardReplyReqDTO.boardType(), UserType.GUEST);
         if (!permissions.reply()) {
             throw new Exception400("답변 권한이 없습니다.");
         }
+
+        boardService.replyBoard(boardReplyReqDTO ,member); // 서비스 호출
+
         return ResponseEntity.ok(APIUtils.success("게시글 답변 등록이 성공적으로 완료되었습니다."));
     }
 
@@ -183,13 +184,15 @@ public class BoardRestController {
             // 실제 사용자 정보 사용
             member = customUserDetails.getMember();
         }
-        // 서비스 호출
-        boardService.commentSaveBoard(boardCommentSaveReqDTO, member);
 
         BbsAuthResDTO permissions = boardService.getPermission(boardCommentSaveReqDTO.boardType(), UserType.GUEST);
         if (!permissions.comment()) {
             throw new Exception400("댓글 권한이 없습니다.");
         }
+
+        // 서비스 호출
+        boardService.commentSaveBoard(boardCommentSaveReqDTO, member);
+
 
         return ResponseEntity.ok(APIUtils.success("댓글 등록이 성공적으로 완료되었습니다."));
     }
