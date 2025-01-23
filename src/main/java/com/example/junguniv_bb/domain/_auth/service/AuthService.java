@@ -4,10 +4,9 @@ import com.example.junguniv_bb._core.exception.Exception400;
 import com.example.junguniv_bb._core.exception.ExceptionMessage;
 import com.example.junguniv_bb._core.security.JWTType;
 import com.example.junguniv_bb._core.security.JwtProvider;
-import com.example.junguniv_bb.domain._auth.dto.ReqJoinDTO;
-import com.example.junguniv_bb.domain._auth.dto.ReqLoginDTO;
-import com.example.junguniv_bb.domain._auth.dto.ResJoinDTO;
-import com.example.junguniv_bb.domain._auth.dto.ResLoginDTO;
+import com.example.junguniv_bb.domain._auth.dto.AuthJoinReqDTO;
+import com.example.junguniv_bb.domain._auth.dto.AuthLoginReqDTO;
+import com.example.junguniv_bb.domain._auth.dto.AuthLoginResDTO;
 import com.example.junguniv_bb.domain.member.model.Member;
 import com.example.junguniv_bb.domain.member.model.MemberRepository;
 import jakarta.servlet.http.Cookie;
@@ -68,7 +67,7 @@ public class AuthService {
 
 
     // 로그인
-    public ResLoginDTO login(ReqLoginDTO reqDTO) {
+    public AuthLoginResDTO login(AuthLoginReqDTO reqDTO) {
 
         // userId로 Member 엔티티 불러오기
         // 만약 존재하지 않는다면 로그인 실패(코드 400)
@@ -85,22 +84,19 @@ public class AuthService {
         String refreshToken = jwtProvider.createToken(memberPS, JWTType.REFRESH_TOKEN);
 
         // 두 토큰을 모두 포함하여 응답
-        return new ResLoginDTO(memberPS, accessToken, refreshToken);
+        return new AuthLoginResDTO(memberPS, accessToken, refreshToken);
 
     }
 
     // 회원가입
     @Transactional
-    public ResJoinDTO join(ReqJoinDTO reqDTO) {
+    public void join(AuthJoinReqDTO reqDTO) {
 
         // 패스워드 암호화
         String encodedPwd = passwordEncoder.encode(reqDTO.pwd());
 
         // 멤버 저장
-        Member member = memberRepository.save(reqDTO.toEntity(encodedPwd));
-
-        // 응답 DTO 리턴
-        return new ResJoinDTO(member);
+        memberRepository.save(reqDTO.toEntity(encodedPwd));
     }
 
 }

@@ -4,6 +4,8 @@ import com.example.junguniv_bb._core.common.BaseTime;
 import com.example.junguniv_bb.domain.managermenu._enum.MenuType;
 import jakarta.persistence.*;
 import lombok.*;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,11 +50,16 @@ public class ManagerMenu extends BaseTime {
     @Column(name = "PERSON_INFOR", length = 255)
     private String personInfor; // 개인정보항목
 
-    @ManyToOne
+    @JsonBackReference // 250123 순환참조 방지
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PARENT_IDX") // 부모 메뉴
     private ManagerMenu parent;
 
+    @JsonManagedReference // 250123 순환참조 방지
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @OrderBy("sortno ASC") // 정렬 기준
     private List<ManagerMenu> children = new ArrayList<>();
+
+    @Column(name = "MENU_LEVEL")
+    private Long menuLevel; // 1: 1차메뉴, 2: 2차메뉴, 3: 3차메뉴
 }

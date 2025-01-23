@@ -4,7 +4,7 @@ import com.example.junguniv_bb._core.exception.ValidExceptionMessage;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
-public record ReqLoginDTO(
+public record AuthLoginReqDTO(
         @NotEmpty(message = ValidExceptionMessage.Message.INVALID_USERID)
         @Size(min = 4, max = 15, message = ValidExceptionMessage.Message.INVALID_USERID)
         String userId,

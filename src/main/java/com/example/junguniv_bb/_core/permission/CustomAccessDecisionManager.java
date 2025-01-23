@@ -66,11 +66,11 @@ public class CustomAccessDecisionManager implements AccessDecisionManager {
         // 기본 READ 권한 체크
         String action = mapHttpMethodToAction(httpMethod);
         validatePermission(menuIdx, authLevel, action, "접근이 거부되었습니다.");
-
+        
         // 개인정보가 포함된 메뉴인 경우 추가 검증 (단, 접근 차단하지 않음)
         if ("Y".equals(menu.getChkPerson())) {
             boolean hasPrivacyAccess = managerAuthService.hasPrivacyPermission(menuIdx, authLevel);
-            // log.info("개인정보 접근 권한 체크 - menuIdx: {}, authLevel: {}, hasPrivacyAccess: {}", menuIdx, authLevel, hasPrivacyAccess);
+            log.info("개인정보 접근 권한 체크 - menuIdx: {}, authLevel: {}, hasPrivacyAccess: {}", menuIdx, authLevel, hasPrivacyAccess);
 
             // 개인정보 접근 권한 여부를 CustomUserDetails에 저장
             userDetails.setHasPrivacyAccess(hasPrivacyAccess);
@@ -83,7 +83,7 @@ public class CustomAccessDecisionManager implements AccessDecisionManager {
     }
 
     private void validatePermission(Long menuIdx, Long authLevel, String action, String errorMessage) {
-        // log.info("권한 체크 - menuIdx: {}, authLevel: {}, action: {}", menuIdx, authLevel, action);
+        log.info("권한 체크 - menuIdx: {}, authLevel: {}, action: {}", menuIdx, authLevel, action);
         if (!managerAuthService.hasPermission(menuIdx, authLevel, action)) {
             throw new AccessDeniedException(errorMessage);
         }

@@ -31,7 +31,7 @@ public class ManagerAuthService {
 
     /* ManagerAuth 업서트 (업데이트 또는 삽입) */
     @Transactional
-    public ManagerAuthDetailResDTO managerAuthUpsert(ManagerAuthUpdateReqDTO reqDTO) {
+    public void managerAuthUpsert(ManagerAuthUpdateReqDTO reqDTO) {
         Long menuIdx = reqDTO.menuIdx();
         Long authLevel = reqDTO.authLevel();
 
@@ -47,8 +47,6 @@ public class ManagerAuthService {
             managerAuthRepository.save(newManagerAuthForSave);
             managerAuthPS = newManagerAuthForSave;
         }
-
-        return ManagerAuthDetailResDTO.from(managerAuthPS);
     }
 
 

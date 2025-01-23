@@ -26,8 +26,13 @@ public class DynamicSecurityMetadataSource implements FilterInvocationSecurityMe
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
     private volatile Map<String, ManagerMenu> urlToMenuMap = new ConcurrentHashMap<>();
 
-    private static final String API_PATTERN = "/nGmaster/**/api/**";
+    // API 엔드포인트 패턴 (예: /api/users, /api/posts, /api?version=1 등 /api를 포함한 모든 요청)
+    private static final String API_PATTERN = "**/api**";
+    // 웹 페이지 엔드포인트 패턴 (모든 웹 요청에 대한 패턴)
     private static final String WEB_PATTERN = "/**";
+
+    // 개발 모드 플래그 추가
+    private static final boolean IS_DEV_MODE = false; // TODO 개발 완료 후 false로 변경
 
     public DynamicSecurityMetadataSource(ManagerMenuRepository managerMenuRepository) {
         this.managerMenuRepository = managerMenuRepository;
@@ -38,15 +43,36 @@ public class DynamicSecurityMetadataSource implements FilterInvocationSecurityMe
     private synchronized void loadResourceDefine() {
         List<ManagerMenu> menus = managerMenuRepository.findAll();
         Map<String, ManagerMenu> newMap = new HashMap<>();
+
         for (ManagerMenu menu : menus) {
-            newMap.put(menu.getUrl(), menu);
+            String url = menu.getUrl();
+
+            // 3차 메뉴만 실제 권한 체크 대상
+            if (menu.getMenuLevel() == 3 && url != null && !url.isEmpty() && !url.equals("#")) {
+                String urlPattern = url;
+                if (url.startsWith("/masterpage_sys/")) {
+                    String[] segments = url.split("/", 4);
+                    if (segments.length >= 3) {
+                        urlPattern = String.format("/%s/%s/**", segments[1], segments[2]);
+                    }
+                }
+                newMap.put(urlPattern, menu);
+                log.debug("URL 매핑 추가: {} -> {}", urlPattern, menu.getMenuName());
+            }
         }
+
         urlToMenuMap = newMap;
-        // log.info("DynamicSecurityMetadataSource 메뉴 URL 맵 갱신 완료: {}", urlToMenuMap.keySet());
+        log.info("DynamicSecurityMetadataSource 메뉴 URL 맵 갱신 완료: {}", urlToMenuMap.keySet());
     }
 
     @Override
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
+        // 개발 모드일 때는 모든 요청 허용
+        if (IS_DEV_MODE) {
+            return SecurityConfig.createList("PERMIT_ALL");
+        }
+
+        // 기존 권한 체크 로직
         FilterInvocation fi = (FilterInvocation) object;
         String uri = fi.getRequest().getRequestURI();
         String contextPath = fi.getRequest().getContextPath();

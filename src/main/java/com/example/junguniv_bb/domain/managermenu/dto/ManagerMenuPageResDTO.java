@@ -19,6 +19,7 @@ public record ManagerMenuPageResDTO(
         String url,
         // 계층 구조 파악을 위한 최소 정보
         ParentInfo parent,
+        Long menuLevel,
         int childCount  // 자식 메뉴 개수
     ) {
         public record ParentInfo(
@@ -42,6 +43,7 @@ public record ManagerMenuPageResDTO(
                 menu.getChkUse(),
                 menu.getUrl(),
                 ParentInfo.from(menu.getParent()),
+                menu.getMenuLevel(),
                 menu.getChildren().size()  // 자식 메뉴 개수만 표시
             );
         }
