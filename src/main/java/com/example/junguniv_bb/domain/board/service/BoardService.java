@@ -114,6 +114,10 @@ public class BoardService {
         BbsGroup bbsGroup = bbsGroupRepository.findById(bbs.getBbsGroup().getBbsGroupIdx())
                 .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_BBS_GROUP.getMessage()));
 
+        List<String> attachments = bbsFileRepository.findAllByBbs(bbs)
+                .stream()
+                .map(BbsFile::getFName1)
+                .toList();
 
         return new BoardDetailResDTO(
                 bbs.getBbsIdx(),
@@ -123,7 +127,8 @@ public class BoardService {
                 bbs.getReadNum(),
                 bbs.getContents(),
                 bbsGroup.getOptionCommentAuth().equals("Y"),
-                bbsGroup.getOptionReplyAuth().equals("Y")
+                bbsGroup.getOptionReplyAuth().equals("Y"),
+                attachments
         );
     }
 
@@ -191,13 +196,16 @@ public class BoardService {
      * 요청 형태 : BoardUpdateReqDTO
      */
     @Transactional
-    public void updateBoard(BoardUpdateReqDTO boardUpdateReqDTO) {
+    public void updateBoard(BoardUpdateReqDTO boardUpdateReqDTO, Member member) {
         try {
             String boardType = boardUpdateReqDTO.boardType();
             BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(boardType);
 
+            Bbs bbs = bbsRepository.findById(boardUpdateReqDTO.bbsIdx())
+                    .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_BBS.getMessage()));
+
             // BBS 엔터티 저장
-            Bbs bbs = bbsRepository.save(boardUpdateReqDTO.updateEntity(bbsGroup));
+            bbsRepository.save(boardUpdateReqDTO.updateEntity(bbsGroup, bbs, member));
 
             // BBS File 엔티티 저장
             saveFiles(bbs, boardUpdateReqDTO.attachments());

@@ -46,7 +46,8 @@ public record BoardReplyReqDTO(
                 contents,
                 recipientName,
                 recipientId,
-                bbsIdx
+                bbsIdx,
+                0L
         );
     }
 

@@ -109,7 +109,7 @@ public class Bbs extends BaseTime {
     private String recipientId; // 받는 사람 ID
 
     public Bbs(Long bbsIdx, String pwd, BbsGroup bbsGroupIdx, String bbsId, String title, String writer, String category, String chkTopFix, LocalDate fixStartDate, LocalDate fixEndDate,
-               String chkMain, LocalDate startDate, LocalDate endDate, String contents, String recipientName, String recipientId, Long parentBbsIdx) {
+               String chkMain, LocalDate startDate, LocalDate endDate, String contents, String recipientName, String recipientId, Long parentBbsIdx, Long readNum) {
         this.bbsIdx = bbsIdx;
         this.pwd = pwd;
         this.bbsGroup = bbsGroupIdx;
@@ -128,5 +128,6 @@ public class Bbs extends BaseTime {
         this.recipientName = recipientName;
         this.recipientId = recipientId;
         this.parentBbsIdx = parentBbsIdx;
+        this.readNum = readNum;
     }
 }

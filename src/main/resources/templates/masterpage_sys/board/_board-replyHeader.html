@@ -1,5 +1,5 @@
 <div th:fragment="board_header(includeCategory, includeDate, includeTopFix, includeMainExpose, includeAttachments)" class="inner">
-    <form class="form-wrap2" id="updateForm" action="/masterpage_sys/board/api/reply" method="post" enctype="multipart/form-data">
+    <form class="form-wrap2" id="replyForm" action="/masterpage_sys/board/api/reply" method="post" enctype="multipart/form-data">
         <input type="hidden" name="bbsIdx" th:value="${board.bbsIdx()}" />
 
         <!-- 제목 -->

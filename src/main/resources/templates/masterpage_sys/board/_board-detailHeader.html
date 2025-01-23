@@ -12,6 +12,13 @@
                     <!-- 조회수 -->
                     <li>View.<span th:text="${board.readNum()}">0</span></li>
                 </ul>
+                <div class="attach">
+                    <a th:each="attachment : ${board.attachments()}"
+                       th:href="@{'/api/v1/files/download/' + 'board' + '/' + ${attachment}}"
+                       th:text="${attachment}">
+                    </a>
+                </div>
+
             </div>
             <div class="view-con">
                 <!-- HTML 태그를 렌더링 -->
