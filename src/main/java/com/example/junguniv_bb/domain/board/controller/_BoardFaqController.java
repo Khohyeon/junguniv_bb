@@ -1,7 +1,5 @@
 package com.example.junguniv_bb.domain.board.controller;
 
-import com.example.junguniv_bb._core.aop.CheckAuth;
-import com.example.junguniv_bb.domain.board.dto.BbsAuthResDTO;
 import com.example.junguniv_bb.domain.board.service.BoardService;
 import com.example.junguniv_bb.domain.member._enum.UserType;
 import lombok.RequiredArgsConstructor;

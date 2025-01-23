@@ -1,8 +1,6 @@
 package com.example.junguniv_bb.domain.board.controller;
 
-import com.example.junguniv_bb._core.aop.CheckAuth;
 import com.example.junguniv_bb.domain.board.dto.BbsAuthResDTO;
-import com.example.junguniv_bb.domain.board.service.BbsAuthService;
 import com.example.junguniv_bb.domain.board.service.BoardService;
 import com.example.junguniv_bb.domain.member._enum.UserType;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -31,7 +28,6 @@ public class _BoardNoticeController {
     }
 
     @GetMapping("/save")
-    @CheckAuth("WRITE")
     public String noticeSaveForm(Model model) {
         model.addAttribute("board", boardService.getBoardSave(bbsId));
         return "masterpage_sys/board/notice/saveForm";

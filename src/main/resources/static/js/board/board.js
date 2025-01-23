@@ -22,7 +22,19 @@ document.addEventListener('DOMContentLoaded', function () {
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error(`${actionType.toUpperCase()} 실패`);
+                    // 응답 헤더의 Content-Type이 JSON인지 확인
+                    const contentType = response.headers.get('content-type');
+                    if (contentType && contentType.includes('application/json')) {
+                        // JSON 응답을 파싱하여 에러 메시지를 추출
+                        return response.json().then(errorData => {
+                            console.log("errorData : "+ errorData);
+                            alert(errorData.error.message);
+                            throw new Error('서버에 오류가 발생했습니다.');
+                        });
+                    } else {
+                        // JSON이 아닌 경우 일반 에러 메시지 표시
+                        throw new Error('서버에 오류가 발생했습니다.');
+                    }
                 }
                 return response.json();
             })
@@ -30,10 +42,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert(data.response);
                 window.location.href = '/masterpage_sys/board/' + urlType; // 성공 후 목록으로 이동
             })
-            .catch(error => {
-                console.error(`${actionType.toUpperCase()} 중 오류 발생:`, error);
-                alert(`${actionType.toUpperCase()} 중 문제가 발생했습니다.`);
-            });
     });
 });
 

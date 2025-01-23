@@ -1,21 +1,15 @@
 package com.example.junguniv_bb.domain.board.controller;
 
-import com.example.junguniv_bb._core.aop.CheckAuth;
-import com.example.junguniv_bb._core.security.CustomUserDetails;
-import com.example.junguniv_bb._core.util.AuthUtil;
+import com.example.junguniv_bb._core.exception.Exception400;
 import com.example.junguniv_bb.domain.board.dto.BbsAuthResDTO;
 import com.example.junguniv_bb.domain.board.service.BoardService;
 import com.example.junguniv_bb.domain.member._enum.UserType;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @Controller
@@ -38,6 +32,7 @@ public class _BoardSuggestionController {
     @GetMapping("/save")
     public String suggestionSaveForm(Model model) {
         model.addAttribute("board", boardService.getBoardSave(bbsId));
+
         return "masterpage_sys/board/suggestion/saveForm";
     }
 

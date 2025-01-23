@@ -168,7 +168,10 @@ public class BoardService {
      * 요청 형태 : BoardSaveReqDTO
      */
     @Transactional
-    public void saveBoard(BoardSaveReqDTO boardSaveReqDTO, Member member) {
+    public void
+
+
+    saveBoard(BoardSaveReqDTO boardSaveReqDTO, Member member) {
         try {
             String boardType = boardSaveReqDTO.boardType();
             BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(boardType);

@@ -1,9 +1,11 @@
 package com.example.junguniv_bb.domain.board.controller;
 
+import com.example.junguniv_bb._core.exception.Exception400;
 import com.example.junguniv_bb._core.security.CustomUserDetails;
 import com.example.junguniv_bb._core.util.APIUtils;
 import com.example.junguniv_bb.domain.board.dto.*;
 import com.example.junguniv_bb.domain.board.service.BoardService;
+import com.example.junguniv_bb.domain.member._enum.UserType;
 import com.example.junguniv_bb.domain.member.model.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -73,6 +75,11 @@ public class BoardRestController {
         // 서비스 호출
         boardService.saveBoard(boardSaveReqDTO, member);
 
+        BbsAuthResDTO permissions = boardService.getPermission(boardSaveReqDTO.boardType(), UserType.GUEST);
+        if (!permissions.write()) {
+            throw new Exception400("쓰기 권한이 없습니다.");
+        }
+
         return ResponseEntity.ok(APIUtils.success("게시글 등록이 성공적으로 완료되었습니다."));
     }
     /**
@@ -141,6 +148,11 @@ public class BoardRestController {
                 member = customUserDetails.getMember();
             }
         boardService.replyBoard(boardReplyReqDTO ,member); // 서비스 호출
+
+        BbsAuthResDTO permissions = boardService.getPermission(boardReplyReqDTO.boardType(), UserType.GUEST);
+        if (!permissions.reply()) {
+            throw new Exception400("답변 권한이 없습니다.");
+        }
         return ResponseEntity.ok(APIUtils.success("게시글 답변 등록이 성공적으로 완료되었습니다."));
     }
 
@@ -173,6 +185,11 @@ public class BoardRestController {
         }
         // 서비스 호출
         boardService.commentSaveBoard(boardCommentSaveReqDTO, member);
+
+        BbsAuthResDTO permissions = boardService.getPermission(boardCommentSaveReqDTO.boardType(), UserType.GUEST);
+        if (!permissions.comment()) {
+            throw new Exception400("댓글 권한이 없습니다.");
+        }
 
         return ResponseEntity.ok(APIUtils.success("댓글 등록이 성공적으로 완료되었습니다."));
     }
