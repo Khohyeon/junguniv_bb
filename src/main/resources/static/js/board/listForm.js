@@ -1,3 +1,4 @@
+
 /**
  * 검색 및 페이지네이션 기능 (공통화)
  */
@@ -120,10 +121,19 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // 메시지 작성 버튼에 href 설정
+
         const saveForm = document.querySelector('.right .jv-btn');
         if (saveForm) {
-            const dynamicUrl = '/masterpage_sys/board/'+urlType+'/save'; // 동적으로 설정할 URL
-            saveForm.setAttribute('href', dynamicUrl); // href 속성 설정
+            // 서버에서 전달된 WRITE 권한 정보 가져오기
+            const hasWritePermission = document.getElementById('permissions').getAttribute('data-write');
+
+            // WRITE 권한이 있는 경우
+            if (hasWritePermission === 'true') {
+                const dynamicUrl = '/masterpage_sys/board/' + urlType + '/save';
+                saveForm.setAttribute('href', dynamicUrl);
+            } else {
+                saveForm.style.display = 'none';
+            }
         }
 
         tableBody.innerHTML = '';
@@ -168,11 +178,11 @@ document.addEventListener('DOMContentLoaded', function () {
             <td>
                 ${secretLabel}
                 ${replyLabel}
-                <a href="/masterpage_sys/board/${urlType}/${item.bbsIdx}" class="tit Pretd_SB"> ${titleWithCount} </a>
+               <a href="/masterpage_sys/board/${urlType}/${item.bbsIdx}" class="tit Pretd_SB readLink"> ${titleWithCount} </a>
                 ${newLabel}
             </td>
             <td>${item.createdDate || '-'}</td>
-            <td><a href="/masterpage_sys/board/${urlType}/${item.bbsIdx}" class="jv-btn fill04">수정하기</a></td>
+            <td><a href="/masterpage_sys/board/${urlType}/${item.bbsIdx}" class="jv-btn fill04 readLink">수정하기</a></td>
             <td>${item.readNum || 0}</td>
             `;
 
@@ -181,6 +191,21 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             tableBody.appendChild(row);
+
+        });
+
+        const readLinks = document.querySelectorAll('.readLink');
+        const hasReadPermission = document.getElementById('permissions2').getAttribute('data-read') === 'true';
+
+        console.log("hasReadPermission (raw):", hasReadPermission);
+
+        readLinks.forEach(link => {
+            link.addEventListener('click', function (event) {
+                if (!hasReadPermission) {
+                    event.preventDefault(); // 기본 클릭 동작 방지
+                    alert('조회 권한이 없습니다.');
+                }
+            });
         });
     }
 
@@ -208,7 +233,6 @@ document.addEventListener('DOMContentLoaded', function () {
         pageSelect.value = searchState.currentPage;
     }
 });
-
 
 // 초기 카테고리 설정
 document.addEventListener('DOMContentLoaded', function () {

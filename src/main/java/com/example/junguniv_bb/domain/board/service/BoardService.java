@@ -1,11 +1,13 @@
 package com.example.junguniv_bb.domain.board.service;
 
+import com.example.junguniv_bb._core.util.AuthUtil;
 import com.example.junguniv_bb.domain.board.model.BbsSpecifications;
 import com.example.junguniv_bb._core.exception.Exception400;
 import com.example.junguniv_bb._core.exception.ExceptionMessage;
 import com.example.junguniv_bb._core.util.FileUtils;
 import com.example.junguniv_bb.domain.board.dto.*;
 import com.example.junguniv_bb.domain.board.model.*;
+import com.example.junguniv_bb.domain.member._enum.UserType;
 import com.example.junguniv_bb.domain.member.model.Member;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
@@ -27,7 +29,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -485,5 +489,15 @@ public class BoardService {
     @Transactional
     public void deleteComment(Long commentIdx) {
         bbsCommentRepository.deleteById(commentIdx);
+    }
+
+    public BbsAuthResDTO getPermission(String bbsId, UserType currentUserType) {
+        BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(bbsId);
+        return new BbsAuthResDTO(
+                AuthUtil.hasAccess(bbsGroup.getReadAuth(), currentUserType),
+                AuthUtil.hasAccess(bbsGroup.getWriteAuth(), currentUserType),
+                AuthUtil.hasAccess(bbsGroup.getReplyAuth(), currentUserType),
+                AuthUtil.hasAccess(bbsGroup.getCommentAuth(), currentUserType)
+        );
     }
 }

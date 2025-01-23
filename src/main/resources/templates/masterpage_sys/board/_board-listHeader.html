@@ -64,6 +64,9 @@
                 <span class="Pretd_B">0</span>건 검색되었습니다.
             </div>
         </div>
+        <div id="permissions" th:data-write="${permissions?.write()}"></div>
+        <div id="permissions2" th:data-read="${permissions?.read()}"></div>
+
         <div class="right">
             <a href="#" class="jv-btn fill04">글쓰기</a>
         </div>

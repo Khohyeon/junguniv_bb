@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const urlType = document.body.getAttribute('data-url-type') || 'notice'; // body에 저장된 data-url-type 값
     let url = `/masterpage_sys/board/${urlType}`;
 
+
+
     // 공통 버튼
     const updateButton = document.getElementById('updateButton');
     const listButton = document.getElementById('listButton');
@@ -11,6 +13,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const commentButton = document.getElementById('commentButton');
 
     const boardId = updateButton ? updateButton.getAttribute('data-id') : null; // ID 추출
+
+    // 서버에서 전달된 권한 정보 가져오기
+    const hasReplyPermission = document.getElementById('permissionReply').getAttribute('data-reply');
+
+    // Reply 권한이 있는 경우
+    if (hasReplyPermission === 'true') {
+        const replyUrl = `${url}/reply/${boardId}`;
+        replyButton.setAttribute('href', replyUrl);
+    } else {
+        replyButton.style.display = 'none';
+    }
 
     // 댓글 리스트 이벤트
     const commentList = document.querySelector('.com-list');

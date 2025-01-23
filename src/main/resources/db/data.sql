@@ -111,10 +111,10 @@ INSERT INTO AGREEMENT (TRAINING_CENTER_NAME, TRAINING_CENTER_URL, AGREEMENT_TITL
 INSERT INTO BBS_GROUP (
     BBSID, BBS_GROUP_NAME, SKIN, CATEGORY, FILENUM, READAUTH, WRITEAUTH, REPLYAUTH, COMMENTAUTH,
     OPTION_SECRETAUTH, OPTION_REPLYAUTH, OPTION_COMMENTAUTH, FILEAUTH) VALUES
-('NOTICE', '공지사항', 'board', '공지', 3, 'member@company@teacher@tutor@manager', 'manager', 'none', 'none', 'Y', 'N', 'N', 'member@company'),
-('SUGGESTION', '고충상담게시판', 'consult', '상담', 5, 'member@company@teacher@manager', 'member@manager', 'manager', 'teacher@manager', 'N', 'Y', 'Y', 'manager'),
+('NOTICE', '공지사항', 'board', '공지', 3, 'member@company@teacher@tutor@manager@guest', 'manager', 'none', 'none', 'Y', 'N', 'N', 'member@company'),
+('SUGGESTION', '고충상담게시판', 'consult', '상담', 5, 'member@company@teacher@manager@guest', 'member@manager', 'manager', 'teacher@manager', 'N', 'Y', 'Y', 'manager'),
 ('FAQ', 'FAQ', 'faq', '질문, 답변, 수강신청', 2, 'member@company@teacher@manager', 'manager', 'none', 'member@teacher', 'N', 'N', 'Y', 'member@teacher'),
-('Q&A', 'Q&A', 'qna', '질문답변', 2, 'member@company@teacher@manager', 'member@teacher', 'member@teacher', 'member@teacher', 'N', 'Y', 'Y', 'member@teacher'),
+('Q&A', 'Q&A', 'qna', '질문답변', 2, 'member@company@teacher@manager@guest', 'member@teacher', 'member@teacher', 'member@teacher', 'N', 'Y', 'Y', 'member@teacher'),
 ('MATERIAL', '학습자료실', 'material', '자료', 4, 'member@company@teacher@manager', 'manager', 'manager', 'none', 'N', 'N', 'N', 'member@company@teacher'),
 ('CONSULTING', '1:1상담', 'private', '상담', 1, 'member@teacher', 'member@teacher', 'manager', 'none', 'Y', 'Y', 'N', 'manager');
 
