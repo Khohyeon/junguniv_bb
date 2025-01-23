@@ -154,19 +154,19 @@ public class AuthLevelService {
     /* AuthLevel 삭제 */
     @Transactional
     public void authLevelDelete(Long id) {
-
         // DB 조회
         AuthLevel authLevelPS = authLevelRepository.findById(id)
                 .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_AUTH_LEVEL.getMessage()));
 
+        Long authLevelValue = authLevelPS.getAuthLevel();
         
         // 연결된 관리자 수 확인
-        if(authLevelPS.getAuthLevel() > 0) {
+        Map<Long, Long> memberCountMap = memberRepository.countMembersByAuthLevel(List.of(authLevelValue));
+        Long connectedMemberCount = memberCountMap.getOrDefault(authLevelValue, 0L);
+        
+        if(connectedMemberCount > 0) {
             throw new Exception400(ExceptionMessage.EXISTS_LINKED_MEMBER_AUTH_LEVEL.getMessage());
         }
-
-        Long authLevelValue = authLevelPS.getAuthLevel();
-
 
         // 관련 ManagerAuth 삭제
         managerAuthRepository.deleteAllByAuthLevel(authLevelValue);
@@ -176,7 +176,6 @@ public class AuthLevelService {
 
         // AuthLevel 삭제
         authLevelRepository.delete(authLevelPS);
-
     }
 
 

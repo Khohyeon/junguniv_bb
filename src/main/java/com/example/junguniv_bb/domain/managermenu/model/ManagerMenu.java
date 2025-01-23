@@ -59,4 +59,7 @@ public class ManagerMenu extends BaseTime {
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @OrderBy("sortno ASC") // 정렬 기준
     private List<ManagerMenu> children = new ArrayList<>();
+
+    @Column(name = "MENU_LEVEL")
+    private Long menuLevel; // 1: 1차메뉴, 2: 2차메뉴, 3: 3차메뉴
 }

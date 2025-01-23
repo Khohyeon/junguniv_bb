@@ -1,5 +1,9 @@
 package com.example.junguniv_bb._core.security;
 
+import com.example.junguniv_bb._core.permission.CustomAccessDecisionManager;
+import com.example.junguniv_bb._core.permission.DynamicSecurityMetadataSource;
+import com.example.junguniv_bb.domain.managerauth.service.ManagerAuthService;
+import com.example.junguniv_bb.domain.managermenu.model.ManagerMenuRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,6 +17,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.firewall.HttpFirewall;
@@ -32,11 +37,15 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtProvider provider;
+    private final ManagerMenuRepository managerMenuRepository;
+    private final ManagerAuthService managerAuthService;
     private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 
-    public SecurityConfig(JwtProvider provider,
-             CustomAuthenticationFailureHandler customAuthenticationFailureHandler) {
+    public SecurityConfig(JwtProvider provider, ManagerMenuRepository managerMenuRepository,
+            ManagerAuthService managerAuthService, CustomAuthenticationFailureHandler customAuthenticationFailureHandler) {
         this.provider = provider;
+        this.managerMenuRepository = managerMenuRepository;
+        this.managerAuthService = managerAuthService;
         this.customAuthenticationFailureHandler = customAuthenticationFailureHandler;
     }
 
@@ -54,7 +63,7 @@ public class SecurityConfig {
                 // 페이지별 인가 설정
                 .authorizeHttpRequests((auth) -> auth
 
-                        // .requestMatchers("/**").permitAll() // ! (Dev) 개발단계에서 모든 경로에 대한 접근 허용, 배포시에 제거해야함.
+                        .requestMatchers("/**").permitAll() // ! (Dev) 개발단계에서 모든 경로에 대한 접근 허용, 배포시에 제거해야함.
 
                         .requestMatchers(HIDDEN_PATTERNS).denyAll() // 숨겨진 파일 접근 차단
                         .requestMatchers(WHITELIST).permitAll()
@@ -64,7 +73,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .exceptionHandling((exceptions) -> exceptions
                         .defaultAuthenticationEntryPointFor(new JwtAuthenticationEntryPoint(), 
-                            new AntPathRequestMatcher("/api/**"))
+                            new AntPathRequestMatcher("/api**"))
                         .defaultAuthenticationEntryPointFor(new LoginUrlAuthenticationEntryPoint("/login"), 
                             new AntPathRequestMatcher("/**"))
                         .accessDeniedHandler(new JwtAccessDeniedHandler()))
@@ -139,6 +148,26 @@ public class SecurityConfig {
     }
 
     @Bean
+    public FilterSecurityInterceptor filterSecurityInterceptor(
+            AuthenticationManager authenticationManager) throws Exception {
+        FilterSecurityInterceptor interceptor = new FilterSecurityInterceptor();
+        interceptor.setSecurityMetadataSource(dynamicSecurityMetadataSource());
+        interceptor.setAccessDecisionManager(customAccessDecisionManager());
+        interceptor.setAuthenticationManager(authenticationManager); // 수정된 부분
+        return interceptor;
+    }
+
+    @Bean
+    public DynamicSecurityMetadataSource dynamicSecurityMetadataSource() {
+        return new DynamicSecurityMetadataSource(managerMenuRepository);
+    }
+
+    @Bean
+    public CustomAccessDecisionManager customAccessDecisionManager() {
+        return new CustomAccessDecisionManager(managerAuthService);
+    }
+
+    @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
@@ -146,8 +175,8 @@ public class SecurityConfig {
 
 
     /* 스프링 시큐리티 엔드포인트 권한 설정 */
-    // TODO 권한에 따른 엔드포인트 재설정 필요!!!
-    public static final String[] ADMIN = {"/nGmaster/**",}; // LMS 관리자
+    // TODO BB 프로젝트 권한에 따른 엔드포인트 재설정 필요!!!
+    public static final String[] ADMIN = {"/masterpage_sys/**", "masterpage_pro/**"}; // LMS 관리자
     public static final String[] STUDENT = {"/nGsmart/student/**",}; // 학생
     public static final String[] TEACHER = {"/nGsmart/teacher/**",}; // 내용전문가
     public static final String[] COMPANY = {"/nGsmart/student/**",}; // 교강사

@@ -10,6 +10,7 @@ public record ManagerMenuAllResDTO(
     String chkUse,
     String url,
     MenuType menuGroup,
+    Long menuLevel,
     ParentMenuDTO parent
 ) {
     public record ParentMenuDTO(
@@ -25,6 +26,7 @@ public record ManagerMenuAllResDTO(
             menu.getChkUse(),
             menu.getUrl(),
             menu.getMenuGroup(),
+            menu.getMenuLevel(),
             menu.getParent() != null 
                 ? new ParentMenuDTO(menu.getParent().getMenuIdx(), menu.getParent().getMenuName()) 
                 : null
