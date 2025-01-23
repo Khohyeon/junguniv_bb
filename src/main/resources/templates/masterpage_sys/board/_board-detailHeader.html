@@ -12,13 +12,20 @@
                     <!-- 조회수 -->
                     <li>View.<span th:text="${board.readNum()}">0</span></li>
                 </ul>
+                <div class="attach">
+                    <a th:each="attachment : ${board.attachments()}"
+                       th:href="@{'/api/v1/files/download/' + 'board' + '/' + ${attachment}}"
+                       th:text="${attachment}">
+                    </a>
+                </div>
+
             </div>
             <div class="view-con">
                 <!-- HTML 태그를 렌더링 -->
                 <p th:utext="${board.contents()}"></p>
             </div>
         </div>
-        <div class="view-com" th:if="${board.optionCommentAuth}">
+        <div class="view-com" th:if="${board.optionCommentAuth} and (${permissions.comment()} == true)">
             <div class="com-list">
                 <!-- 댓글 반복 출력 -->
                 <div th:each="comment : ${comments}" class="comment group01">
@@ -41,7 +48,9 @@
                 </div>
             </div>
         </div>
+
         <div class="view-bot">
+            <div id="permissionReply" th:data-reply="${permissions.reply()}"></div>
             <div class="btn-wrap">
                 <a href="#" id="listButton" class="jv-btn fill01-lg">목록</a>
                 <a class="jv-btn fill06-lg" href="#" id="updateButton" th:data-id="${board.bbsIdx()}">수정</a>

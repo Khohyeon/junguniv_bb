@@ -1,5 +1,7 @@
 package com.example.junguniv_bb.domain.board.dto;
 
+import java.util.List;
+
 public record BoardDetailResDTO(
         Long bbsIdx,
         String title,
@@ -8,6 +10,7 @@ public record BoardDetailResDTO(
         Long readNum,
         String contents,
         boolean optionCommentAuth,
-        boolean optionReplyAuth
+        boolean optionReplyAuth,
+        List<String> attachments // 첨부파일 이름 리스트
 ){
 }

@@ -1,4 +1,4 @@
-<div th:fragment="board_header(includeCategory, includeDate, includeTopFix, includeMainExpose, includeAttachments)" class="inner">
+<div th:fragment="board_header(includeCategory, includeTopFix, includeMainExpose, includeAttachments)" class="inner">
     <form class="form-wrap2" id="updateForm" action="/masterpage_sys/board/api/update" method="post" enctype="multipart/form-data">
         <input type="hidden" name="bbsIdx" th:value="${board.bbsIdx()}" />
 
@@ -31,25 +31,21 @@
                 <div class="tit">카테고리</div>
                 <div class="con">
                     <select name="category" id="category">
-                        <option value="" th:selected="${selectedCategory == null}">선택</option>
+                        <!-- 기본 선택 옵션 -->
+                        <option th:value="${board.category()}" th:text = "${board.category()}"></option>
+
+                        <!-- 동적 옵션 -->
                         <option th:each="category : ${categories}"
                                 th:value="${category}"
-                                th:text="${category}"
-                                th:selected="${category == selectedCategory}"></option>
+                                th:text="${category}">
+                        </option>
                     </select>
+
+
                 </div>
             </div>
         </div>
 
-        <!-- 작성일 -->
-        <div class="column-tc-wrap part1 bbs__write" th:if="${includeDate}">
-            <div class="column-tc">
-                <div class="tit">작성일</div>
-                <div class="con">
-<!--                    <input name="answer_date" id="createdDate" type="date" th:value="${#dates.format(board.createdDate(), 'yyyy-MM-dd')}" />-->
-                </div>
-            </div>
-        </div>
 
         <!-- 게시글 상단 고정 -->
         <div class="column-tc-bg" th:if="${includeTopFix}">
@@ -120,14 +116,19 @@
                     </div>
 
                     <!-- 이미 업로드된 첨부 파일 출력 -->
-                    <div class="attachment-list" th:if="${board.attachments() != null and !#lists.isEmpty(board.attachments())}">
-                        <div th:each="attachment, iStat : ${board.attachments()}">
-                            <!-- 파일 이름 표시 -->
-                            <span th:text="${attachment}"></span>
-                            <!-- 파일 삭제 버튼 -->
-                            <a href="#none" class="remove-file" th:onclick="'removeFile(' + iStat.index + ');'">삭제</a>
-                        </div>
-                    </div>
+                    <!-- 불필요한 div 제거, 바로 th:each 실행 -->
+                    <a th:if="${board.attachments() != null and !#lists.isEmpty(board.attachments())}"
+                       th:each="attachment, iStat : ${board.attachments()}"
+                       th:href="@{'/api/v1/files/download/' + 'board' + '/' + ${attachment}}"
+                       th:text="${attachment}"
+                       class="file Nt_L"></a>
+                    <label th:if="${board.attachments() != null and !#lists.isEmpty(board.attachments())}"
+                           th:each="attachment, iStat : ${board.attachments()}"
+                           class="c-input ci-check file_delete">
+                        <input type="checkbox" class="disabled" name="chkdelfname1" value="Y"> 삭제
+                        <div class="ci-show"></div>
+                    </label>
+
                 </div>
             </div>
         </div>
@@ -140,7 +141,7 @@
 
         <!-- 버튼 -->
         <div class="btn-wrap mt50">
-            <a href="#" class="jv-btn fill01-lg">목록</a>
+            <a href="#" id="listButton" class="jv-btn fill01-lg">목록</a>
             <button type="submit" class="jv-btn fill04-lg">저장</button>
         </div>
     </form>

@@ -1,11 +1,13 @@
 package com.example.junguniv_bb.domain.board.service;
 
+import com.example.junguniv_bb._core.util.AuthUtil;
 import com.example.junguniv_bb.domain.board.model.BbsSpecifications;
 import com.example.junguniv_bb._core.exception.Exception400;
 import com.example.junguniv_bb._core.exception.ExceptionMessage;
 import com.example.junguniv_bb._core.util.FileUtils;
 import com.example.junguniv_bb.domain.board.dto.*;
 import com.example.junguniv_bb.domain.board.model.*;
+import com.example.junguniv_bb.domain.member._enum.UserType;
 import com.example.junguniv_bb.domain.member.model.Member;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
@@ -27,7 +29,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -114,6 +118,10 @@ public class BoardService {
         BbsGroup bbsGroup = bbsGroupRepository.findById(bbs.getBbsGroup().getBbsGroupIdx())
                 .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_BBS_GROUP.getMessage()));
 
+        List<String> attachments = bbsFileRepository.findAllByBbs(bbs)
+                .stream()
+                .map(BbsFile::getFName1)
+                .toList();
 
         return new BoardDetailResDTO(
                 bbs.getBbsIdx(),
@@ -123,7 +131,8 @@ public class BoardService {
                 bbs.getReadNum(),
                 bbs.getContents(),
                 bbsGroup.getOptionCommentAuth().equals("Y"),
-                bbsGroup.getOptionReplyAuth().equals("Y")
+                bbsGroup.getOptionReplyAuth().equals("Y"),
+                attachments
         );
     }
 
@@ -159,7 +168,10 @@ public class BoardService {
      * 요청 형태 : BoardSaveReqDTO
      */
     @Transactional
-    public void saveBoard(BoardSaveReqDTO boardSaveReqDTO, Member member) {
+    public void
+
+
+    saveBoard(BoardSaveReqDTO boardSaveReqDTO, Member member) {
         try {
             String boardType = boardSaveReqDTO.boardType();
             BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(boardType);
@@ -191,13 +203,16 @@ public class BoardService {
      * 요청 형태 : BoardUpdateReqDTO
      */
     @Transactional
-    public void updateBoard(BoardUpdateReqDTO boardUpdateReqDTO) {
+    public void updateBoard(BoardUpdateReqDTO boardUpdateReqDTO, Member member) {
         try {
             String boardType = boardUpdateReqDTO.boardType();
             BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(boardType);
 
+            Bbs bbs = bbsRepository.findById(boardUpdateReqDTO.bbsIdx())
+                    .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_BBS.getMessage()));
+
             // BBS 엔터티 저장
-            Bbs bbs = bbsRepository.save(boardUpdateReqDTO.updateEntity(bbsGroup));
+            bbsRepository.save(boardUpdateReqDTO.updateEntity(bbsGroup, bbs, member));
 
             // BBS File 엔티티 저장
             saveFiles(bbs, boardUpdateReqDTO.attachments());
@@ -388,21 +403,21 @@ public class BoardService {
         return (root, query, criteriaBuilder) -> {
             assert query != null;
 
-            // `CASE` 문으로 정렬 기준 정의
+            // 부모 게시물이 먼저 오고, 자식 게시물은 부모 바로 아래로 오도록 정렬 기준 설정
             query.orderBy(
-                    criteriaBuilder.desc(
+                    criteriaBuilder.asc(
                             criteriaBuilder.selectCase()
-                                    // parentBbsIdx가 null이면 정렬 우선순위 0
-                                    .when(criteriaBuilder.isNull(root.get("parentBbsIdx")), root.get("bbsIdx"))
-                                    // parentBbsIdx가 존재하면 해당 parentBbsIdx 순서로 정렬
-                                    .otherwise(root.get("parentBbsIdx"))
+                                    .when(criteriaBuilder.isNull(root.get("parentBbsIdx")), root.get("bbsIdx")) // 부모 게시물은 자신의 ID
+                                    .otherwise(root.get("parentBbsIdx")) // 답변 게시물은 부모 ID 기준으로 정렬
                     ),
-                    // bbsIdx 내림차순 정렬
-                    criteriaBuilder.desc(root.get("bbsIdx"))
+                    criteriaBuilder.asc(root.get("parentBbsIdx")), // 부모 ID 순으로 정렬
+                    criteriaBuilder.desc(root.get("bbsIdx")) // 동일 부모 내에서는 자신의 ID 순으로 정렬
             );
             return null;
         };
     }
+
+
 
 
     public BoardSaveResDTO getBoardSave(String bbsId) {
@@ -477,5 +492,15 @@ public class BoardService {
     @Transactional
     public void deleteComment(Long commentIdx) {
         bbsCommentRepository.deleteById(commentIdx);
+    }
+
+    public BbsAuthResDTO getPermission(String bbsId, UserType currentUserType) {
+        BbsGroup bbsGroup = bbsGroupRepository.findByBbsId(bbsId);
+        return new BbsAuthResDTO(
+                AuthUtil.hasAccess(bbsGroup.getReadAuth(), currentUserType),
+                AuthUtil.hasAccess(bbsGroup.getWriteAuth(), currentUserType),
+                AuthUtil.hasAccess(bbsGroup.getReplyAuth(), currentUserType),
+                AuthUtil.hasAccess(bbsGroup.getCommentAuth(), currentUserType)
+        );
     }
 }

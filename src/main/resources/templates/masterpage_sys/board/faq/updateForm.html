@@ -10,16 +10,16 @@
     <!-- editor.js 파일 불러오기 -->
     <script th:src="@{/js/common/editor.js}"></script>
 
-    <script th:src="@{/js/board/faq/updateForm.js}"></script>
+    <script th:src="@{/js/board/board.js}"></script>
     <script th:src="@{/js/board/_common.js}"></script>
 
 </head>
-<body>
+<body data-board-type="FAQ" data-url-type="faq" data-action-type="update">
 <!-- 헤더에서 상단 메뉴 포함 -->
 <div th:replace="fragments/header :: header"></div>
 
-<!--  board_header (카테고리, 작성일, 상단고정, 메인노출, 첨부파일, 파일개수)-->
-<div th:replace="/masterpage_sys/board/_board-updateHeader :: board_header(true, true, false, false, false)"></div>
+<!--  board_header (카테고리, 상단고정, 메인노출, 첨부파일, 파일개수)-->
+<div th:replace="/masterpage_sys/board/_board-updateHeader :: board_header(true, false, false, false)"></div>
 
 
 </body>

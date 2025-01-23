@@ -1,6 +1,7 @@
 package com.example.junguniv_bb.domain.board.controller;
 
 import com.example.junguniv_bb.domain.board.service.BoardService;
+import com.example.junguniv_bb.domain.member._enum.UserType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,16 +15,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class _BoardQnaController {
 
     private final BoardService boardService;
+    private String bbsId = "Q&A";
 
 
     @GetMapping
-    public String qnaListForm() {
+    public String qnaListForm(
+            Model model) {
+        model.addAttribute("permissions", boardService.getPermission(bbsId, UserType.GUEST));
         return "masterpage_sys/board/qna/listForm";
     }
 
     @GetMapping("/save")
     public String qnaSaveForm(Model model) {
-        String bbsId = "Q&A";
         model.addAttribute("board", boardService.getBoardSave(bbsId));
         return "masterpage_sys/board/qna/saveForm";
     }
@@ -31,6 +34,9 @@ public class _BoardQnaController {
     @GetMapping("/{bbsIdx}")
     public String qnaDetailForm(@PathVariable Long bbsIdx, Model model) {
         model.addAttribute("board", boardService.getBoardDetail(bbsIdx));
+        model.addAttribute("comments", boardService.getCommentDetail(bbsIdx));
+        model.addAttribute("permissions", boardService.getPermission(bbsId, UserType.GUEST));
+        System.out.println("permissions : " + boardService.getPermission(bbsId, UserType.GUEST));
         return "masterpage_sys/board/qna/detailForm";
     }
 

@@ -1,26 +1,35 @@
+
 /**
- * 검색 기능
+ * 검색 및 페이지네이션 기능 (공통화)
  */
 document.addEventListener('DOMContentLoaded', function () {
-    const pageSelect = document.getElementById('pageSelect'); // 페이지 선택 드롭다운
+    // 동적 boardType 설정 (예: 'notice', 'faq', 'qna')
+    const boardType = document.body.getAttribute('data-board-type') || 'NOTICE'; // 기본값은 'notice'
+    const urlType = document.body.getAttribute('data-url-type') || 'notice'; // body에 저장된 data-url-type 값
+
+    // DOM 요소
+    const pageSelect = document.getElementById('pageSelect');
     const prevPageBtn = document.getElementById('prevPageBtn');
     const nextPageBtn = document.getElementById('nextPageBtn');
     const currentPageDisplay = document.getElementById('currentPage');
-    const searchTypeSelect = document.getElementById('searchType'); // 제목 검색 방식
-    const searchInput = document.getElementById('searchInput'); // 검색어
-    const startDateInput = document.getElementById('startDate'); // 작성일 시작
-    const endDateInput = document.getElementById('endDate'); // 작성일 종료
-    const categorySelect = document.getElementById('category'); // 카테고리
+    const searchTypeSelect = document.getElementById('searchType');
+    const searchInput = document.getElementById('searchInput');
+    const startDateInput = document.getElementById('startDate');
+    const endDateInput = document.getElementById('endDate');
+    const categorySelect = document.getElementById('category');
     const searchButton = document.getElementById('searchButton');
+    const tableBody = document.getElementById('tableBody');
 
+
+    // 검색 상태 관리
     let searchState = {
         keyword: '',
         searchType: '',
         startDate: '',
         endDate: '',
         category: '',
-        currentPage: 0, // 현재 페이지 번호
-        pageSize: 20 // 페이지 크기
+        currentPage: 0,
+        pageSize: 20
     };
 
     // 초기 검색 실행
@@ -41,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
     prevPageBtn.addEventListener('click', function () {
         if (searchState.currentPage > 0) {
             searchState.currentPage--;
-            updatePageSelect(); // 드롭다운 상태 업데이트
+            updatePageSelect();
             performSearch();
         }
     });
@@ -49,13 +58,13 @@ document.addEventListener('DOMContentLoaded', function () {
     // 다음 페이지 버튼
     nextPageBtn.addEventListener('click', function () {
         searchState.currentPage++;
-        updatePageSelect(); // 드롭다운 상태 업데이트
+        updatePageSelect();
         performSearch();
     });
 
-    // 페이지 선택 드롭다운 변경
+    // 페이지 선택 드롭다운
     pageSelect.addEventListener('change', function () {
-        searchState.currentPage = parseInt(this.value, 10); // 선택된 페이지 번호로 설정
+        searchState.currentPage = parseInt(this.value, 10);
         performSearch();
     });
 
@@ -81,9 +90,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 검색 URL 생성
     function createSearchUrl() {
-        const url = new URL('/masterpage_sys/board/api/search', window.location.origin);
+        const url = new URL(`/masterpage_sys/board/api/search`, window.location.origin);
         url.searchParams.set('title', searchState.keyword);
-        url.searchParams.set('boardType', 'NOTICE'); // 고정된 게시판 타입
+        url.searchParams.set('boardType', boardType); // 동적 boardType
         url.searchParams.set('page', searchState.currentPage);
         url.searchParams.set('size', searchState.pageSize);
 
@@ -112,25 +121,30 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // 메시지 작성 버튼에 href 설정
+
         const saveForm = document.querySelector('.right .jv-btn');
         if (saveForm) {
-            const dynamicUrl = '/masterpage_sys/board/notice/save'; // 동적으로 설정할 URL
-            saveForm.setAttribute('href', dynamicUrl); // href 속성 설정
+            // 서버에서 전달된 WRITE 권한 정보 가져오기
+            const hasWritePermission = document.getElementById('permissions').getAttribute('data-write');
+
+            // WRITE 권한이 있는 경우
+            if (hasWritePermission === 'true') {
+                const dynamicUrl = '/masterpage_sys/board/' + urlType + '/save';
+                saveForm.setAttribute('href', dynamicUrl);
+            } else {
+                saveForm.style.display = 'none';
+            }
         }
 
-        tableBody.innerHTML = ''; // 기존 데이터 초기화
+        tableBody.innerHTML = '';
 
         if (!data || data.length === 0) {
             tableBody.innerHTML = `
             <tr>
                 <td colspan="5" class="no-results">조회된 결과가 없습니다.</td>
-            </tr>
-        `;
+            </tr>`;
             return;
         }
-
-        // 공지 사항을 상단으로 정렬
-        data.sort((a, b) => b.chkTopFix.localeCompare(a.chkTopFix)); // 'Y'를 상단으로 정렬
 
         data.forEach((item, index) => {
             const row = document.createElement('tr');
@@ -153,49 +167,53 @@ document.addEventListener('DOMContentLoaded', function () {
             const title = item.title || '제목 없음';
             const titleWithCount = `${title} ${commentCountLabel}`;
 
-
             row.innerHTML = `
-            <!-- 체크박스 -->
             <td>
                 <label class="c-input ci-check single">
                     <input type="checkbox" class="select-item-checkbox" value="${item.bbsIdx}">
                     <div class="ci-show"></div>
                 </label>
             </td>
-            <!-- 번호 또는 공지 -->
             <td>${item.chkTopFix === 'Y' ? '공지' : index + 1}</td>
-            <!-- 제목 -->
             <td>
                 ${secretLabel}
                 ${replyLabel}
-                <a href="/masterpage_sys/board/notice/${item.bbsIdx}" class="tit Pretd_SB"> ${titleWithCount} </a>
+               <a href="/masterpage_sys/board/${urlType}/${item.bbsIdx}" class="tit Pretd_SB readLink"> ${titleWithCount} </a>
                 ${newLabel}
             </td>
-            <!-- 작성일 -->
             <td>${item.createdDate || '-'}</td>
-            <!-- 게시글 수정 -->
-            <td><a href="/masterpage_sys/board/notice/${item.bbsIdx}" class="jv-btn fill04">수정하기</a></td>
-            <!-- 조회수 -->
+            <td><a href="/masterpage_sys/board/${urlType}/${item.bbsIdx}" class="jv-btn fill04 readLink">수정하기</a></td>
             <td>${item.readNum || 0}</td>
             `;
 
-            // 공지 행에 클래스 추가
             if (rowClass) {
                 row.classList.add(rowClass);
             }
 
             tableBody.appendChild(row);
+
         });
 
-    }
+        const readLinks = document.querySelectorAll('.readLink');
+        const hasReadPermission = document.getElementById('permissions2').getAttribute('data-read') === 'true';
 
+        console.log("hasReadPermission (raw):", hasReadPermission);
+
+        readLinks.forEach(link => {
+            link.addEventListener('click', function (event) {
+                if (!hasReadPermission) {
+                    event.preventDefault(); // 기본 클릭 동작 방지
+                    alert('조회 권한이 없습니다.');
+                }
+            });
+        });
+    }
 
     // 페이지네이션 업데이트
     function updatePagination(response) {
         const totalPages = response.totalPages;
 
-        // 드롭다운 옵션 업데이트
-        pageSelect.innerHTML = ''; // 기존 옵션 제거
+        pageSelect.innerHTML = '';
         for (let i = 0; i < totalPages; i++) {
             const option = document.createElement('option');
             option.value = i;
@@ -206,14 +224,24 @@ document.addEventListener('DOMContentLoaded', function () {
             pageSelect.appendChild(option);
         }
 
-        // 현재 페이지 상태 업데이트
         currentPageDisplay.textContent = response.pageable.pageNumber + 1;
         prevPageBtn.disabled = response.pageable.pageNumber === 0;
         nextPageBtn.disabled = response.pageable.pageNumber + 1 >= response.totalPages;
     }
 
-    // 드롭다운 상태 업데이트
     function updatePageSelect() {
         pageSelect.value = searchState.currentPage;
     }
+});
+
+// 초기 카테고리 설정
+document.addEventListener('DOMContentLoaded', function () {
+    const boardType = document.body.getAttribute('data-board-type') || 'NOTICE'; // 기본값은 'NOTICE'
+    const categoryElement = document.getElementById('category'); // 카테고리 select 요소
+
+    if (!categoryElement) {
+        // category ID가 없으면 아무 작업도 하지 않음
+        return;
+    }
+    getCategory(boardType);
 });

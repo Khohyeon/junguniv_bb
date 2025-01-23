@@ -44,7 +44,8 @@ public record BoardSaveReqDTO(
                 contents,
                 recipientName,
                 recipientId,
-                null
+                null,
+                0L
         );
     }
 

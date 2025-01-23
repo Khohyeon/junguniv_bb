@@ -2,6 +2,7 @@ package com.example.junguniv_bb.domain.board.dto;
 
 import com.example.junguniv_bb.domain.board.model.Bbs;
 import com.example.junguniv_bb.domain.board.model.BbsGroup;
+import com.example.junguniv_bb.domain.member.model.Member;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -11,10 +12,8 @@ public record BoardUpdateReqDTO(
         Long bbsIdx,
         String boardType,
         String title,
-//        String chksecret,
         String writer,
         String category,
-//        String answerDate,
         String topFix,
         String fixStartDate,
         String fixEndDate,
@@ -28,14 +27,14 @@ public record BoardUpdateReqDTO(
         String pwd
 ) {
 
-    public Bbs updateEntity(BbsGroup bbsGroupIdx) {
+    public Bbs updateEntity(BbsGroup bbsGroupIdx, Bbs bbs, Member member) {
         return new Bbs(
                 bbsIdx, // ID는 자동 생성
                 pwd,
                 bbsGroupIdx,
                 boardType,
                 title,
-                writer,
+                member.getName(),
                 category,
                 topFix == null ? "N" : topFix,
                 parseDate(fixStartDate),
@@ -46,7 +45,8 @@ public record BoardUpdateReqDTO(
                 contents,
                 recipientName,
                 recipientId,
-                null
+                null,
+                bbs.getReadNum()
         );
     }
 
