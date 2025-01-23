@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 
-public record ReqJoinDTO(
+public record AuthJoinReqDTO(
 
         @NotEmpty(message = ValidExceptionMessage.Message.INVALID_USERID)
         @Size(min = 4, max = 20, message = "아이디는 4자 이상 20자 이하로 입력하세요.")
@@ -78,7 +78,7 @@ public record ReqJoinDTO(
     }
 
     // 생성자에서 나이 검증 로직 추가
-    public ReqJoinDTO {
+    public AuthJoinReqDTO {
         // 생년월일을 LocalDate로 파싱
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate birthDateParsed = LocalDate.parse(birthDate, formatter);

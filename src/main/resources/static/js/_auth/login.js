@@ -86,8 +86,20 @@
                 // 사용자 정보 저장
                 sessionStorage.setItem('userInfo', JSON.stringify(member));
 
-                // 메인 페이지로 이동
-                window.location.href = '/';
+                // userType에 따른 페이지 이동 분기 처리
+                const userType = member.userType;
+
+                if (userType === 'ADMIN' || userType === '관리자') {
+                    window.location.href = '/masterpage_sys/member/student';
+                } else if (userType === 'STUDENT' || userType === '학생') {
+                    window.location.href = '/student/main';
+                } else if (userType === 'TEACHER' || userType === '교강사') {
+                    window.location.href = '/teacher/main';
+                } else if (userType === 'COMPANY' || userType === '기업') {
+                    window.location.href = '/company/main';
+                } else {
+                    window.location.href = '/';
+                }
             } else {
                 // 로그인 실패
                 alert(data.error.message || '로그인에 실패했습니다.');
