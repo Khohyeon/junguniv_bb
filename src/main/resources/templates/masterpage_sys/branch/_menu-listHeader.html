@@ -20,15 +20,18 @@
                 <a href="#none" class="jv-btn outline07-sm tit-del">삭제</a>
             </div>
             <div class="menu-depth2">
+                <form id="menuForm2" method="POST" action="/masterpage_sys/branch/api/save/depth2" enctype="multipart/form-data">
                 <div class="column-tc-wrap column-tc-wrap2 part1 depth2-add">
                     <div class="column-tc">
                         <div class="tit">2차 메뉴 추가</div>
                         <div class="con flex">
-                            <input type="text" placeholder="메뉴명을 입력해주세요">
-                            <a href="#none" class="jv-btn fill01">추가</a>
+                            <input type="text" id="menuName2" placeholder="메뉴명을 입력해주세요">
+                            <input type="hidden" name="parentIdx" id="parentIdx" th:value="${menu1.menuIdx}"> <!-- 1차 메뉴 ID -->
+                            <button type="submit" class="jv-btn fill01" style="width:100px;">추가</button>
                         </div>
                     </div>
                 </div>
+                </form>
                 <div class="depth2-wrap">
                     <ul>
                         <li th:each="menu2 : ${branchMenuList.depth2Menus}"
@@ -40,7 +43,7 @@
                             <div class="depth3-count">
                                 <span>하위 메뉴 수 : </span>
                                 <span class="num">
-                                    <a href="#none" th:text="${branchMenuList.depth3Counts[menu2.getMenuIdx()] + '개'}"></a>
+                                    <a href="#none" th:text="${branchMenuList.depth3Counts[menu2.getMenuIdx()] ?: 0 + '개'}"></a>
                                 </span>
                             </div>
                         </li>

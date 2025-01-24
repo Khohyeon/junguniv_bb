@@ -6,6 +6,7 @@ import com.example.junguniv_bb._core.exception.ExceptionMessage;
 import com.example.junguniv_bb._core.permission.ManagerMenuChangeEvent;
 import com.example.junguniv_bb.domain.managerauth.model.ManagerAuthRepository;
 import com.example.junguniv_bb.domain.managermenu._branch.dto.Depth1MenuSaveReqDTO;
+import com.example.junguniv_bb.domain.managermenu._branch.dto.Depth2MenuSaveReqDTO;
 import com.example.junguniv_bb.domain.managermenu._enum.MenuType;
 import com.example.junguniv_bb.domain.managermenu.dto.*;
 import com.example.junguniv_bb.domain.managermenu.model.ManagerMenu;
@@ -316,9 +317,23 @@ public class ManagerMenuService {
     }
 
 
+    /**
+     * 1차메뉴 추가
+     */
     @Transactional
     public void saveDepth1Menu(Depth1MenuSaveReqDTO depth1MenuSaveReqDTO) {
         Long maxSortNoByMenuLevel = managerMenuRepository.findMaxSortNoByMenuLevel(1L);
         managerMenuRepository.save(depth1MenuSaveReqDTO.saveEntity(maxSortNoByMenuLevel));
+    }
+
+    /**
+     * 2차메뉴 추가
+     */
+    @Transactional
+    public void saveDepth2Menu(Depth2MenuSaveReqDTO depth2MenuSaveReqDTO) {
+        ManagerMenu managerMenu = managerMenuRepository.findById(depth2MenuSaveReqDTO.parentIdx())
+                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_MANAGER_MENU.getMessage()));
+        Long maxSortNoByMenuLevel = managerMenuRepository.findMaxSortNoByMenuLevel(2L);
+        managerMenuRepository.save(depth2MenuSaveReqDTO.saveEntity(maxSortNoByMenuLevel, managerMenu));
     }
 }

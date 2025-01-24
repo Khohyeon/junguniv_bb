@@ -2,6 +2,7 @@ package com.example.junguniv_bb.domain.managermenu._branch.controller;
 
 import com.example.junguniv_bb._core.util.APIUtils;
 import com.example.junguniv_bb.domain.managermenu._branch.dto.Depth1MenuSaveReqDTO;
+import com.example.junguniv_bb.domain.managermenu._branch.dto.Depth2MenuSaveReqDTO;
 import com.example.junguniv_bb.domain.managermenu.service.ManagerMenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,5 +28,17 @@ public class ManagerMenu_BranchRestController {
     ) {
         managerMenuService.saveDepth1Menu(depth1MenuSaveReqDTO);
         return ResponseEntity.ok(APIUtils.success("1차메뉴 등록이 성공적으로 완료되었습니다."));
+    }
+
+    /**
+     *  [시스템 설정] - [메뉴분류관리] - [2차메뉴추가]
+     *  2차 메뉴 저장하는 매핑
+     */
+    @PostMapping("/save/depth2")
+    public ResponseEntity<APIUtils.APIResult<String>> saveDepth2Menus(
+            @RequestBody Depth2MenuSaveReqDTO depth2MenuSaveReqDTO
+    ) {
+        managerMenuService.saveDepth2Menu(depth2MenuSaveReqDTO);
+        return ResponseEntity.ok(APIUtils.success("2차메뉴 등록이 성공적으로 완료되었습니다."));
     }
 }

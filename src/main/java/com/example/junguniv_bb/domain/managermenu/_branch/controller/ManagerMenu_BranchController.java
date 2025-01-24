@@ -30,6 +30,7 @@ public class ManagerMenu_BranchController {
         // 2차 메뉴
         List<ManagerMenu> depth2Menus = managerMenuService.findMenusByLevel(2L);
 
+        // 3차 메뉴 개수 매핑
         List<ManagerMenu> depth3Menus = managerMenuService.findMenusByLevel(3L);
 
         Map<ManagerMenu, Long> depth3Counts = depth3Menus.stream()
@@ -37,8 +38,6 @@ public class ManagerMenu_BranchController {
                         ManagerMenu::getParent, // PARENT_IDX 기준으로 그룹화
                         Collectors.counting()     // 각 그룹의 개수 계산
                 ));
-        // 3차 메뉴 개수 매핑
-//        Map<Long, Long> depth3Counts =  // PARENT_IDX -> COUNT 매핑
 
         // BranchMenuListResDTO 생성
         BranchMenuListResDTO branchMenuListResDTO = new BranchMenuListResDTO(depth1Menus, depth2Menus, depth3Counts);
