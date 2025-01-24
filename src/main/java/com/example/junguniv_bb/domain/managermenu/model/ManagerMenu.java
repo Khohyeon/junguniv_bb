@@ -29,7 +29,7 @@ public class ManagerMenu extends BaseTime {
     private String menuName; // 메뉴명
 
     @Column(name = "SORTNO")
-    private Integer sortno; // 정렬값
+    private Long sortno; // 정렬값
 
     @Column(name = "CHK_USE", length = 1)
     private String chkUse; // 사용여부
@@ -56,7 +56,7 @@ public class ManagerMenu extends BaseTime {
     private ManagerMenu parent;
 
     @JsonManagedReference // 250123 순환참조 방지
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)   // CascadeType.REMOVE 변경 후 자식 삭제가능
     @OrderBy("sortno ASC") // 정렬 기준
     private List<ManagerMenu> children = new ArrayList<>();
 

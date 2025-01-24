@@ -14,7 +14,7 @@ public record ManagerMenuPageResDTO(
     public record ManagerMenuDTO(
         Long menuIdx,
         String menuName,
-        Integer sortno,
+        Long sortno,
         String chkUse,
         String url,
         // 계층 구조 파악을 위한 최소 정보

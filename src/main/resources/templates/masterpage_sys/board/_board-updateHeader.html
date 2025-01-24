@@ -120,6 +120,7 @@
                     <a th:if="${board.attachments() != null and !#lists.isEmpty(board.attachments())}"
                        th:each="attachment, iStat : ${board.attachments()}"
                        th:href="@{'/api/v1/files/download/' + 'board' + '/' + ${attachment}}"
+                       th:download="${board.attachment()}"
                        th:text="${attachment}"
                        class="file Nt_L"></a>
                     <label th:if="${board.attachments() != null and !#lists.isEmpty(board.attachments())}"

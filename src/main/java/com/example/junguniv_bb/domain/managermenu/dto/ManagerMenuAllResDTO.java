@@ -6,7 +6,7 @@ import com.example.junguniv_bb.domain.managermenu.model.ManagerMenu;
 public record ManagerMenuAllResDTO(
     Long menuIdx,
     String menuName,
-    Integer sortno,
+    Long sortno,
     String chkUse,
     String url,
     MenuType menuGroup,

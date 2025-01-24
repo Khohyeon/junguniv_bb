@@ -5,6 +5,10 @@ spring:
     username: sa
     password:
   jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
     hibernate:
       ddl-auto: create
     defer-datasource-initialization: true
@@ -32,7 +36,12 @@ spring:
     multipart:
       max-file-size: 10MB   # 단일 파일의 최대 크기
       max-request-size: 50MB # 요청 전체의 최대 크기
-
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type.descriptor.sql.BasicBinder: TRACE
 file:
   upload:
     base-dir: upload

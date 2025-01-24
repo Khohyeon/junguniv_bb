@@ -20,24 +20,25 @@ ALTER TABLE MEMBER ALTER COLUMN MEMBER_IDX RESTART WITH 8;
 
 INSERT INTO MANAGER_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX, MENU_GROUP, MENU_LEVEL) VALUES
 -- 최상위 메뉴
-('회원관리', 1, 'Y', NULL, NULL, NULL, 1),
-('홈페이지관리', 2, 'Y', NULL, NULL, NULL, 1),
-('일반통계/기록', 3, 'Y', NULL, NULL, NULL, 1),
-('시스템설정', 4, 'Y', NULL, NULL, NULL, 1),
+('회원관리', 1, 'Y', NULL, NULL, 'SYSTEM', 1),
+('홈페이지관리', 2, 'Y', NULL, NULL, 'SYSTEM', 1),
+('일반통계/기록', 3, 'Y', NULL, NULL, 'SYSTEM', 1),
+('시스템설정', 4, 'Y', NULL, NULL, 'SYSTEM', 1),
 
 -- 하위 메뉴
-('회원정보관리', 1, 'Y', '/masterpage_sys/member/student', 1, NULL, 2),
-('권한관리', 2, 'Y', '/masterpage_sys/auth_level', 1, NULL, 2),
-('주소록출력', 3, 'Y', '/masterpage_sys/label/student', 1, NULL, 2),
-('팝업관리', 1, 'Y', '/masterpage_sys/popup', 2, NULL, 2),
-('약관관리', 2, 'Y', '/masterpage_sys/agreement', 2, NULL, 2),
-('게시판관리', 3, 'Y', '/masterpage_sys/board/counsel', 2, NULL, 2),
-('문의상담관리', 4, 'Y', '/masterpage_sys/counsel', 2, NULL, 2),
-('일반통계', 1, 'Y', '#', 3, NULL, 2),
-('기본설정', 1, 'Y', '#', 4, NULL, 2),
-('기본표시정보', 2, 'Y', '#', 4, NULL, 2),
-('지원금종류설정', 3, 'Y', '#', 4, NULL, 2),
-('메뉴관리', 4, 'Y', '#', 4, NULL, 2),
+('회원정보관리', 1, 'Y', '/masterpage_sys/member/student', 1, 'SYSTEM', 2),
+('권한관리', 2, 'Y', '/masterpage_sys/auth_level', 1, 'SYSTEM', 2),
+('주소록출력', 3, 'Y', '/masterpage_sys/label/student', 1, 'SYSTEM', 2),
+('팝업관리', 1, 'Y', '/masterpage_sys/popup', 2, 'SYSTEM', 2),
+('약관관리', 2, 'Y', '/masterpage_sys/agreement', 2, 'SYSTEM', 2),
+('게시판관리', 3, 'Y', '/masterpage_sys/board/counsel', 2, 'SYSTEM', 2),
+('문의상담관리', 4, 'Y', '/masterpage_sys/counsel', 2, 'SYSTEM', 2),
+('일반통계', 1, 'Y', '#', 3, 'SYSTEM', 2),
+('기본설정', 1, 'Y', '#', 4, 'SYSTEM', 2),
+('기본표시정보', 2, 'Y', '#', 4, 'SYSTEM', 2),
+('지원금종류설정', 3, 'Y', '#', 4, 'SYSTEM', 2),
+('메뉴분류관리', 4, 'Y', '#', 4, 'SYSTEM', 2),
+('메뉴명관리', 4, 'Y', '#', 4, 'SYSTEM', 2),
 
 -- 탭 메뉴
 ('수강생', 1, 'Y', '/masterpage_sys/member/student', 5, 'SYSTEM', 3),
@@ -60,15 +61,19 @@ INSERT INTO MANAGER_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX, MENU_GROU
 ('1:1 상담', 1, 'Y', '/masterpage_sys/board/consulting', 10, 'SYSTEM', 3),
 -- ('게시판말머리관리', 2, 'Y', '/masterpage_sys/board/head', 10, 3),
 ('상담예약', 1, 'Y', '/masterpage_sys/counsel', 11, 'SYSTEM', 3),
-('홈페이지 Q&A', 1, 'Y', '#', 12, NULL, 3),
-('회원통계', 2, 'Y', '#', 12, NULL, 3),
-('회원접속통계', 3, 'Y', '#', 12, NULL, 3),
-('기본설정', 1, 'Y', '#', 13, NULL, 3),
-('환급교육', 1, 'Y', '#', 14, NULL, 3),
-('일반교육', 2, 'Y', '#', 14, NULL, 3),
-('환급교육', 1, 'Y', '#', 15, NULL, 3),
-('메뉴분류관리', 1, 'Y', '#', 16, NULL, 3),
-('메뉴명관리', 2, 'Y', '#', 16, NULL, 3);
+('홈페이지 Q&A', 1, 'Y', '#', 12, 'SYSTEM', 3),
+('회원통계', 2, 'Y', '#', 12, 'SYSTEM', 3),
+('회원접속통계', 3, 'Y', '#', 12, 'SYSTEM', 3),
+('기본설정', 1, 'Y', '#', 13, 'SYSTEM', 3),
+('환급교육', 1, 'Y', '#', 14, 'SYSTEM', 3),
+('일반교육', 2, 'Y', '#', 14, 'SYSTEM', 3),
+('지원금종류설정', 1, 'Y', '/masterpage_sys/refund_price/refund', 15, 'SYSTEM', 3),
+('관리자모드 메뉴분류관리', 1, 'Y', '/masterpage_sys/branch/admin', 16, 'SYSTEM', 3),
+('강사모드 메뉴분류관리', 1, 'Y', '/masterpage_sys/branch/teacher', 16, 'SYSTEM', 3),
+('위탁기업모드 메뉴분류관리', 1, 'Y', '/masterpage_sys/branch/company', 16, 'SYSTEM', 3),
+('관리자모드 메뉴명관리', 2, 'Y', '/masterpage_sys/manager_menu', 17, 'SYSTEM', 3),
+('강사모드 메뉴명관리', 2, 'Y', '#', 17, 'SYSTEM', 3),
+('위탁기업모드 메뉴명관리', 2, 'Y', '#', 17, 'SYSTEM', 3);
 
 INSERT INTO POPUP (POPUP_NAME, START_DATE, END_DATE, WIDTH_SIZE, HEIGHT_SIZE, TOP_SIZE, LEFT_SIZE, CONTENTS, CHK_TODAY, POPUP_TYPE, CHK_OPEN, CHK_SCROLLBAR) VALUES
 ('이벤트 팝업', '2023-01-01', '2023-01-10', '800', '600', '100', '100', '이벤트 내용입니다.', 'Y', 'popup', 'Y', 'N'),
@@ -164,3 +169,11 @@ VALUES
     (3, 7, '김철수', 'password789', '세 번째 댓글입니다.', '192.168.0.3', 'N', 'kim', 'kim', '2025-01-01 12:00:00', '2025-01-01 12:00:00'),
     (4, 7, '이영희', 'password000', '네 번째 댓글입니다.', '192.168.0.4', 'N', 'lee', 'lee', '2025-01-01 13:00:00', '2025-01-01 13:00:00'),
     (5, 7, '박정우', 'password111', '다섯 번째 댓글입니다.', '192.168.0.5', 'Y', 'park', 'park', '2025-01-01 14:00:00', '2025-01-01 14:00:00');
+
+INSERT INTO refund_price (refund_price_idx, refund_price_type, refund_price_name, refund_rate, discount_amount, chk_use)
+VALUES
+    (1, 'GOVERNMENT', '정부지원', 80, 50000, 'Y'),
+    (2, 'COMPANY', '기업지원', 70, 40000, 'Y'),
+    (3, 'SELF', '개인부담', 0, 0, 'Y'),
+    (4, 'SPECIAL', '특별할인', 50, 30000, 'N'),
+    (5, 'EVENT', '이벤트할인', 30, 20000, 'Y');

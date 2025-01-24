@@ -1,8 +1,10 @@
 package com.example.junguniv_bb;
 
+import com.example.junguniv_bb.domain.managermenu._enum.MenuType;
 import com.example.junguniv_bb.domain.managermenu.dto.ManagerMenuListResDTO;
 import com.example.junguniv_bb.domain.managermenu.model.ManagerMenu;
 import com.example.junguniv_bb.domain.managermenu.model.ManagerMenuRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,16 +21,39 @@ public class MasterGlobalModelAttribute {
     /**
      * 시스템 설정 탭의 Header에 고정으로 넣는 데이터 값
      * 최상위 메뉴와 하위 메뉴를 포함한 메뉴 계층을 반환합니다.
+     * @param request HTTP 요청 객체
+     * @return 필터링된 메뉴 리스트
      */
     @ModelAttribute("xbigMenus")
-    public List<ManagerMenuListResDTO> populateBigMenus() {
-        // 최상위 메뉴 조회
-        List<ManagerMenu> topMenus = managerMenuRepository.findByParentIsNullAndChkUseOrderBySortno("Y");
+    public List<ManagerMenuListResDTO> populateBigMenus(HttpServletRequest request) {
+        // URL에서 MenuType 추출
+        MenuType menuType = extractMenuTypeFromRequest(request);
+
+        // 최상위 메뉴 조회 (MenuType에 따라 필터링)
+        List<ManagerMenu> topMenus = managerMenuRepository.findByParentIsNullAndChkUseAndMenuGroupOrderBySortno("Y", menuType);
 
         // 메뉴 데이터를 변환하여 반환
         return topMenus.stream()
                 .map(this::convertToMenu)
                 .toList();
+    }
+
+    /**
+     * 요청 URL에서 MenuType을 추출합니다.
+     * @param request HTTP 요청 객체
+     * @return MenuType (없으면 기본값 SYSTEM)
+     */
+    private MenuType extractMenuTypeFromRequest(HttpServletRequest request) {
+        String uri = request.getRequestURI();
+
+        if (uri.contains("masterpage_sys")) {
+            return MenuType.SYSTEM;
+        } else if (uri.contains("masterpage_pro")) {
+            return MenuType.ADMIN_REFUND;
+        }
+
+        // 기본값 설정
+        return MenuType.SYSTEM;
     }
     
     /**
