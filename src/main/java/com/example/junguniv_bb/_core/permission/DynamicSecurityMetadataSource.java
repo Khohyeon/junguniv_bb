@@ -54,7 +54,9 @@ public class DynamicSecurityMetadataSource implements FilterInvocationSecurityMe
                 if (menu.getMenuLevel() == 2) {
                     newMap.put(url + "/**", menu); // 2차 메뉴는 하위 경로 모두 포함
                 } else {
-                    newMap.put(url, menu); // 3차 메뉴는 정확한 URL 매칭
+                    // 3차 메뉴의 경우 자신의 URL과 그 하위 경로에 대한 권한 설정
+                    newMap.put(url, menu); // 정확한 URL 매칭
+                    newMap.put(url + "/**", menu); // 하위 경로 포함
                 }
             }
         }
@@ -83,12 +85,23 @@ public class DynamicSecurityMetadataSource implements FilterInvocationSecurityMe
             return SecurityConfig.createList("PERMIT_ALL");
         }
 
+        // URL 매칭 시 가장 구체적인 패턴을 우선 적용
+        ManagerMenu matchedMenu = null;
+        String matchedPattern = null;
         for (Map.Entry<String, ManagerMenu> entry : urlToMenuMap.entrySet()) {
-            String menuUrl = entry.getKey();
-            if (antPathMatcher.match(menuUrl, uri)) {
-                ManagerMenu menu = entry.getValue();
-                return List.of(new MenuConfigAttribute(menu));
+            String pattern = entry.getKey();
+            if (antPathMatcher.match(pattern, uri)) {
+                // 이미 매칭된 패턴이 있고, 현재 패턴이 더 구체적이지 않다면 스킵
+                if (matchedPattern != null && pattern.contains("**") && !matchedPattern.contains("**")) {
+                    continue;
+                }
+                matchedMenu = entry.getValue();
+                matchedPattern = pattern;
             }
+        }
+
+        if (matchedMenu != null) {
+            return List.of(new MenuConfigAttribute(matchedMenu));
         }
 
         // 매칭되는 메뉴가 없을 경우 접근 허용
