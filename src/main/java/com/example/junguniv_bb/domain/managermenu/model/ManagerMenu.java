@@ -29,7 +29,7 @@ public class ManagerMenu extends BaseTime {
     private String menuName; // 메뉴명
 
     @Column(name = "SORTNO")
-    private Integer sortno; // 정렬값
+    private Long sortno; // 정렬값
 
     @Column(name = "CHK_USE", length = 1)
     private String chkUse; // 사용여부

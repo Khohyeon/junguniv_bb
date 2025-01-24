@@ -59,5 +59,12 @@ public interface ManagerMenuRepository extends JpaRepository<ManagerMenu, Long> 
     // URL로 메뉴 조회
     ManagerMenu findByUrl(String url);
 
-    List<ManagerMenu> findByMenuLevel(Long menuLevel);
+    List<ManagerMenu> findByMenuLevelOrderBySortno(Long menuLevel);
+
+
+    /**
+     * menuLevel 에 따른 sortNo의 최대값 불러오는 쿼리
+     */
+    @Query("SELECT MAX(m.sortno) FROM ManagerMenu m WHERE m.menuLevel = :menuLevel")
+    Long findMaxSortNoByMenuLevel(@Param("menuLevel") long menuLevel);
 }

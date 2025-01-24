@@ -5,6 +5,7 @@ import com.example.junguniv_bb._core.exception.Exception400;
 import com.example.junguniv_bb._core.exception.ExceptionMessage;
 import com.example.junguniv_bb._core.permission.ManagerMenuChangeEvent;
 import com.example.junguniv_bb.domain.managerauth.model.ManagerAuthRepository;
+import com.example.junguniv_bb.domain.managermenu._branch.dto.Depth1MenuSaveReqDTO;
 import com.example.junguniv_bb.domain.managermenu._enum.MenuType;
 import com.example.junguniv_bb.domain.managermenu.dto.*;
 import com.example.junguniv_bb.domain.managermenu.model.ManagerMenu;
@@ -311,8 +312,13 @@ public class ManagerMenuService {
     }
 
     public List<ManagerMenu> findMenusByLevel(Long menuLevel) {
-        return managerMenuRepository.findByMenuLevel(menuLevel);
+        return managerMenuRepository.findByMenuLevelOrderBySortno(menuLevel);
     }
 
 
+    @Transactional
+    public void saveDepth1Menu(Depth1MenuSaveReqDTO depth1MenuSaveReqDTO) {
+        Long maxSortNoByMenuLevel = managerMenuRepository.findMaxSortNoByMenuLevel(1L);
+        managerMenuRepository.save(depth1MenuSaveReqDTO.saveEntity(maxSortNoByMenuLevel));
+    }
 }

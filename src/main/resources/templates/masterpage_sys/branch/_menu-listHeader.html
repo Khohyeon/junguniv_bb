@@ -1,14 +1,16 @@
 <div th:fragment="menu-header" >
     <div class="form-wrap2">
-        <div class="column-tc-wrap column-tc-wrap2 part1">
-            <div class="column-tc">
-                <div class="tit">1차 메뉴 추가</div>
-                <div class="con flex">
-                    <input type="text" placeholder="메뉴명을 입력해주세요">&nbsp;
-                    <a href="#none" class="jv-btn fill01" style="width:100px;">추가</a>
+        <form id="menuForm" method="POST" action="/masterpage_sys/branch/api/save/depth1" enctype="multipart/form-data">
+            <div class="column-tc-wrap column-tc-wrap2 part1">
+                <div class="column-tc">
+                    <div class="tit">1차 메뉴 추가</div>
+                    <div class="con flex">
+                        <input type="text" name="menuName" id="menuName" placeholder="메뉴명을 입력해주세요" required>&nbsp;
+                        <button type="submit" class="jv-btn fill01" style="width:100px;">추가</button>
+                    </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 
     <div class="form-wrap2 menu-sort">
