@@ -385,9 +385,9 @@ public class ManagerMenuService {
 
         if (Objects.equals(chkUse, "ALL")) {
             // 전체 조회
-            menuPage = managerMenuRepository.findByMenuNameContainingIgnoreCase(menuName, pageable);
+            menuPage = managerMenuRepository.findByMenuNameContainingIgnoreCaseAndMenuLevel(menuName, 3L, pageable);
         } else {
-            menuPage = managerMenuRepository.findByMenuNameContainingIgnoreCaseAndChkUse(menuName, chkUse, pageable);
+            menuPage = managerMenuRepository.findByMenuNameContainingIgnoreCaseAndChkUseAndMenuLevel(menuName, chkUse, 3L, pageable);
         }
 
 

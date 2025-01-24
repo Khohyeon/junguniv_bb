@@ -67,11 +67,11 @@ INSERT INTO MANAGER_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX, MENU_GROU
 ('기본설정', 1, 'Y', '#', 13, 'SYSTEM', 3),
 ('환급교육', 1, 'Y', '#', 14, 'SYSTEM', 3),
 ('일반교육', 2, 'Y', '#', 14, 'SYSTEM', 3),
-('환급교육', 1, 'Y', '#', 15, 'SYSTEM', 3),
+('지원금종류설정', 1, 'Y', '/masterpage_sys/refund_price/refund', 15, 'SYSTEM', 3),
 ('관리자모드 메뉴분류관리', 1, 'Y', '/masterpage_sys/branch/admin', 16, 'SYSTEM', 3),
 ('강사모드 메뉴분류관리', 1, 'Y', '/masterpage_sys/branch/teacher', 16, 'SYSTEM', 3),
 ('위탁기업모드 메뉴분류관리', 1, 'Y', '/masterpage_sys/branch/company', 16, 'SYSTEM', 3),
-('관리자모드 메뉴명관리', 2, 'Y', '/masterpage_sys/managerMenu', 17, 'SYSTEM', 3),
+('관리자모드 메뉴명관리', 2, 'Y', '/masterpage_sys/manager_menu', 17, 'SYSTEM', 3),
 ('강사모드 메뉴명관리', 2, 'Y', '#', 17, 'SYSTEM', 3),
 ('위탁기업모드 메뉴명관리', 2, 'Y', '#', 17, 'SYSTEM', 3);
 
@@ -169,3 +169,11 @@ VALUES
     (3, 7, '김철수', 'password789', '세 번째 댓글입니다.', '192.168.0.3', 'N', 'kim', 'kim', '2025-01-01 12:00:00', '2025-01-01 12:00:00'),
     (4, 7, '이영희', 'password000', '네 번째 댓글입니다.', '192.168.0.4', 'N', 'lee', 'lee', '2025-01-01 13:00:00', '2025-01-01 13:00:00'),
     (5, 7, '박정우', 'password111', '다섯 번째 댓글입니다.', '192.168.0.5', 'Y', 'park', 'park', '2025-01-01 14:00:00', '2025-01-01 14:00:00');
+
+INSERT INTO refund_price (refund_price_idx, refund_price_type, refund_price_name, refund_rate, discount_amount, chk_use)
+VALUES
+    (1, 'GOVERNMENT', '정부지원', 80, 50000, 'Y'),
+    (2, 'COMPANY', '기업지원', 70, 40000, 'Y'),
+    (3, 'SELF', '개인부담', 0, 0, 'Y'),
+    (4, 'SPECIAL', '특별할인', 50, 30000, 'N'),
+    (5, 'EVENT', '이벤트할인', 30, 20000, 'Y');
