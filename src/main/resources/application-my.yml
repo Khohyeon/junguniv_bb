@@ -63,3 +63,6 @@ file:
       # 아래 처럼 사용하면됨.
       # board: ${file.upload.base-dir}/board
       # profile: ${file.upload.base-dir}/profile
+logging:
+  level:
+    com.example.junguniv_bb._core: DEBUG

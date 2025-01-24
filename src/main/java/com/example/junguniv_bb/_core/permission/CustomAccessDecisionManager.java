@@ -1,6 +1,7 @@
 package com.example.junguniv_bb._core.permission;
 
 import com.example.junguniv_bb._core.security.CustomUserDetails;
+import com.example.junguniv_bb._core.util.RequestUtils;
 import com.example.junguniv_bb.domain.managerauth.service.ManagerAuthService;
 import com.example.junguniv_bb.domain.managermenu.model.ManagerMenu;
 import lombok.extern.slf4j.Slf4j;
@@ -60,12 +61,26 @@ public class CustomAccessDecisionManager implements AccessDecisionManager {
         ManagerMenu menu = menuConfigAttribute.getManagerMenu();
         Long menuIdx = menu.getMenuIdx();
 
+        log.debug("권한 체크 시작 - URI: {}, Method: {}", uri, httpMethod);
+
         // CustomUserDetails에 현재 메뉴 정보 설정
         userDetails.setCurrentMenuIdx(menuIdx);
 
-        // 기본 READ 권한 체크
-        String action = mapHttpMethodToAction(httpMethod);
-        validatePermission(menuIdx, authLevel, action, "접근이 거부되었습니다.");
+        // API 요청인 경우 CRUD 권한 체크
+        boolean isApi = RequestUtils.isApiRequest(fi.getRequest());
+        log.debug("API 요청 여부: {}", isApi);
+
+        if (isApi) {
+            String action = RequestUtils.getCrudOperation(fi.getRequest());
+            log.info("API 요청 권한 체크 - URI: {}, Method: {}, Action: {}, AuthLevel: {}, MenuIdx: {}", 
+                uri, httpMethod, action, authLevel, menuIdx);
+            validatePermission(menuIdx, authLevel, action, action + " 권한이 없습니다.");
+            return;
+        }
+
+        // 웹 페이지 요청인 경우 기본 READ 권한 체크
+        log.debug("웹 페이지 요청 권한 체크 시작");
+        validatePermission(menuIdx, authLevel, "READ", "접근이 거부되었습니다.");
         
         // 개인정보가 포함된 메뉴인 경우 추가 검증 (단, 접근 차단하지 않음)
         if ("Y".equals(menu.getChkPerson())) {
@@ -78,7 +93,11 @@ public class CustomAccessDecisionManager implements AccessDecisionManager {
 
         // Form 페이지 접근 권한 체크
         if (uri.contains("/save")) {
+            log.debug("등록 페이지 접근 권한 체크");
             validatePermission(menuIdx, authLevel, "WRITE", "등록 페이지 접근이 거부되었습니다.");
+        } else if (uri.matches(".*/\\d+$")) { // 상세 페이지 접근 권한 체크 (URL이 숫자로 끝나는 경우)
+            log.debug("상세 페이지 접근 권한 체크");
+            validatePermission(menuIdx, authLevel, "READ", "상세 페이지 접근이 거부되었습니다.");
         }
     }
 
@@ -97,15 +116,5 @@ public class CustomAccessDecisionManager implements AccessDecisionManager {
     @Override
     public boolean supports(Class<?> clazz) {
         return FilterInvocation.class.isAssignableFrom(clazz);
-    }
-
-    private String mapHttpMethodToAction(String httpMethod) {
-        return switch (httpMethod) {
-            case "GET" -> "READ";
-            case "POST" -> "WRITE";
-            case "PUT", "PATCH" -> "MODIFY";
-            case "DELETE" -> "DELETE";
-            default -> "UNKNOWN";
-        };
     }
 }
