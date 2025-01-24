@@ -76,4 +76,6 @@ public interface ManagerMenuRepository extends JpaRepository<ManagerMenu, Long> 
     List<ManagerMenu> findByMenuLevelAndMenuGroup(long level, MenuType menuGroup);
 
     Page<ManagerMenu> findByMenuNameContainingIgnoreCaseAndChkUse(String menuName, String chkUse, Pageable pageable);
+
+    List<ManagerMenu> findByParentIsNullAndChkUseAndMenuGroupOrderBySortno(String y, MenuType menuType);
 }

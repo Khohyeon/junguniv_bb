@@ -11,7 +11,7 @@ public record Depth3MenuSaveReqDTO(
 
     public ManagerMenu saveEntity(Long maxSort, ManagerMenu managerMenu) {
         return new ManagerMenu(
-                null, menuName, maxSort, "N", null, MenuType.valueOf(menuGroup), null,
+                null, menuName, maxSort, "N", "개발 필요", MenuType.valueOf(menuGroup), null,
                 null, null, managerMenu, null, 3L
         );
     }
