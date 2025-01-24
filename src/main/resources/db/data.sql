@@ -37,7 +37,8 @@ INSERT INTO MANAGER_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX, MENU_GROU
 ('기본설정', 1, 'Y', '#', 4, NULL, 2),
 ('기본표시정보', 2, 'Y', '#', 4, NULL, 2),
 ('지원금종류설정', 3, 'Y', '#', 4, NULL, 2),
-('메뉴관리', 4, 'Y', '#', 4, NULL, 2),
+('메뉴분류관리', 4, 'Y', '#', 4, NULL, 2),
+('메뉴명관리', 4, 'Y', '#', 4, NULL, 2),
 
 -- 탭 메뉴
 ('수강생', 1, 'Y', '/masterpage_sys/member/student', 5, 'SYSTEM', 3),
@@ -67,8 +68,12 @@ INSERT INTO MANAGER_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX, MENU_GROU
 ('환급교육', 1, 'Y', '#', 14, NULL, 3),
 ('일반교육', 2, 'Y', '#', 14, NULL, 3),
 ('환급교육', 1, 'Y', '#', 15, NULL, 3),
-('메뉴분류관리', 1, 'Y', '#', 16, NULL, 3),
-('메뉴명관리', 2, 'Y', '#', 16, NULL, 3);
+('관리자모드 메뉴분류관리', 1, 'Y', '/masterpage_sys/branch/admin', 16, 'SYSTEM', 3),
+('강사모드 메뉴분류관리', 1, 'Y', '/masterpage_sys/branch/teacher', 16, 'SYSTEM', 3),
+('위탁기업모드 메뉴분류관리', 1, 'Y', '/masterpage_sys/branch/company', 16, 'SYSTEM', 3),
+('관리자모드 메뉴명관리', 2, 'Y', '#', 17, 'SYSTEM', 3),
+('강사모드 메뉴명관리', 2, 'Y', '#', 17, 'SYSTEM', 3),
+('위탁기업모드 메뉴명관리', 2, 'Y', '#', 17, 'SYSTEM', 3);
 
 INSERT INTO POPUP (POPUP_NAME, START_DATE, END_DATE, WIDTH_SIZE, HEIGHT_SIZE, TOP_SIZE, LEFT_SIZE, CONTENTS, CHK_TODAY, POPUP_TYPE, CHK_OPEN, CHK_SCROLLBAR) VALUES
 ('이벤트 팝업', '2023-01-01', '2023-01-10', '800', '600', '100', '100', '이벤트 내용입니다.', 'Y', 'popup', 'Y', 'N'),

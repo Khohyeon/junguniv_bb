@@ -58,4 +58,6 @@ public interface ManagerMenuRepository extends JpaRepository<ManagerMenu, Long> 
 
     // URL로 메뉴 조회
     ManagerMenu findByUrl(String url);
+
+    List<ManagerMenu> findByMenuLevel(Long menuLevel);
 }

@@ -1,0 +1,51 @@
+<div th:fragment="menu-header" >
+    <div class="form-wrap2">
+        <div class="column-tc-wrap column-tc-wrap2 part1">
+            <div class="column-tc">
+                <div class="tit">1차 메뉴 추가</div>
+                <div class="con flex">
+                    <input type="text" placeholder="메뉴명을 입력해주세요">&nbsp;
+                    <a href="#none" class="jv-btn fill01" style="width:100px;">추가</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-wrap2 menu-sort">
+        <div class="menu-list" th:each="menu1 : ${branchMenuList.depth1Menus()}">
+            <div class="menu-depth1">
+                <div class="depth1-tit" th:text="${menu1.menuName}"></div>
+                <a href="#none" class="jv-btn outline07-sm tit-del">삭제</a>
+            </div>
+            <div class="menu-depth2">
+                <div class="column-tc-wrap column-tc-wrap2 part1 depth2-add">
+                    <div class="column-tc">
+                        <div class="tit">2차 메뉴 추가</div>
+                        <div class="con flex">
+                            <input type="text" placeholder="메뉴명을 입력해주세요">
+                            <a href="#none" class="jv-btn fill01">추가</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="depth2-wrap">
+                    <ul>
+                        <li th:each="menu2 : ${branchMenuList.depth2Menus}"
+                            th:if="${menu2.parent.getMenuIdx() == menu1.getMenuIdx()}">
+                            <div class="depth2-tit-wrap">
+                                <div class="depth2-tit" th:text="${menu2.menuName}"></div>
+                                <a href="#none" class="jv-btn outline07-sm tit-del">삭제</a>
+                            </div>
+                            <div class="depth3-count">
+                                <span>하위 메뉴 수 : </span>
+                                <span class="num">
+                                    <a href="#none" th:text="${branchMenuList.depth3Counts[menu2.getMenuIdx()] + '개'}"></a>
+                                </span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
