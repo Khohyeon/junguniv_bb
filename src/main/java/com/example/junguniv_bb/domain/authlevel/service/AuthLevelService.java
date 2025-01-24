@@ -55,8 +55,8 @@ public class AuthLevelService {
 
 
     /* 관리자 권한에 따른 접근 제어 */
-    public boolean hasPermission(Long menuIdx, Long authLevelIdx, String action) {
-        ManagerAuth managerAuth = managerAuthRepository.findByMenuIdxAndAuthLevel(menuIdx, authLevelIdx);
+    public boolean hasPermission(Long menuIdx, Long authLevel, String action) {
+        ManagerAuth managerAuth = managerAuthRepository.findByMenuIdxAndAuthLevel(menuIdx, authLevel);
         if (managerAuth == null) return false;
 
         return switch (action) {

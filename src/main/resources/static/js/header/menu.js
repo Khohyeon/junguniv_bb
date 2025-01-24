@@ -27,6 +27,7 @@ async function fetchDepth3Menus(menuIdx) {
         if (!response.ok) {
             throw new Error('Failed to fetch depth3 menus');
         }
+        // 서버에서 이미 권한이 있는 메뉴만 반환하므로 추가 필터링 불필요
         return await response.json();
     } catch (error) {
         console.error('Error:', error);

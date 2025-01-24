@@ -38,6 +38,9 @@ public interface ManagerAuthRepository extends JpaRepository<ManagerAuth, Long> 
     @Query("SELECT m FROM ManagerAuth m WHERE m.menuIdx = :menuIdx AND m.authLevel = :authLevel")
     ManagerAuth findByMenuIdxAndAuthLevel(@Param("menuIdx") Long menuIdx, @Param("authLevel") Long authLevel);
 
+    @Meta(comment = "메뉴 인덱스와 권한 레벨로 존재 여부 확인")
+    boolean existsByMenuIdxAndAuthLevel(Long menuIdx, Long authLevel);
+
     @Meta(comment = "권한 레벨로 검색")
     Page<ManagerAuth> findByAuthLevel(Long authLevel, Pageable pageable);
 

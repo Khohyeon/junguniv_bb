@@ -4,12 +4,19 @@ package com.example.junguniv_bb.domain.managermenu.service;
 import com.example.junguniv_bb._core.exception.Exception400;
 import com.example.junguniv_bb._core.exception.ExceptionMessage;
 import com.example.junguniv_bb._core.permission.ManagerMenuChangeEvent;
+
+import com.example.junguniv_bb._core.security.CustomUserDetails;
+import com.example.junguniv_bb.domain.managerauth.model.ManagerAuthRepository;
+import com.example.junguniv_bb.domain.managerauth.service.ManagerAuthService;
+
 import com.example.junguniv_bb.domain.counsel.dto.CounselSearchResDTO;
 import com.example.junguniv_bb.domain.counsel.model.Counsel;
 import com.example.junguniv_bb.domain.managerauth.model.ManagerAuthRepository;
 import com.example.junguniv_bb.domain.managermenu._branch.dto.Depth1MenuSaveReqDTO;
 import com.example.junguniv_bb.domain.managermenu._branch.dto.Depth2MenuSaveReqDTO;
+
 import com.example.junguniv_bb.domain.managermenu._enum.MenuType;
+import com.example.junguniv_bb.domain.member._enum.UserType;
 import com.example.junguniv_bb.domain.managermenu.dto.*;
 import com.example.junguniv_bb.domain.managermenu.model.ManagerMenu;
 import com.example.junguniv_bb.domain.managermenu.model.ManagerMenuRepository;
@@ -20,6 +27,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +48,7 @@ public class ManagerMenuService {
     private final ManagerMenuRepository managerMenuRepository;
     private final ManagerAuthRepository managerAuthRepository;
     private final ApplicationEventPublisher eventPublisher; // 이벤트 발행을 위한 DI
+    private final ManagerAuthService managerAuthService;
 
 
     /* ManagerMenu 하위 메뉴 조회 */
@@ -50,6 +61,63 @@ public class ManagerMenuService {
                         menu.getUrl() != null ? menu.getUrl() : "#",
                         "_self",
                         true // 기본적으로 비활성화
+                ))
+                .toList();
+    }
+
+    /* ManagerMenu 하위 메뉴 조회 (권한 체크 포함) */
+    public List<ManagerMenuDepth3ListResDTO> getDepth3MenusWithPermission(Long parentMenuIdx, CustomUserDetails userDetails) {
+        List<ManagerMenu> childMenus = managerMenuRepository.findByParent_MenuIdxAndChkUseOrderBySortno(parentMenuIdx, "Y");
+
+        return childMenus.stream()
+                .filter(menu -> {
+                    try {
+                        // 현재 인증된 사용자의 권한 정보 가져오기
+                        if (userDetails == null) {
+                            return false;
+                        }
+
+                        // URL이 없는 메뉴는 제외
+                        if (menu.getUrl() == null || menu.getUrl().isEmpty() || menu.getUrl().equals("#")) {
+                            return false;
+                        }
+
+                        // 사용자 유형과 권한 레벨 확인
+                        Member member = userDetails.getMember();
+                        Long authLevel = userDetails.getAuthLevel();
+
+                        // 관리자의 경우 authLevel로 권한 체크
+                        if (member.getUserType() == UserType.ADMIN) {
+                            if (authLevel == null) {
+                                return false;
+                            }
+                            // 메뉴에 대한 읽기 권한이 있는지 확인
+                            return managerAuthRepository.existsByMenuIdxAndAuthLevel(menu.getMenuIdx(), authLevel) &&
+                                   managerAuthService.hasPermission(menu.getMenuIdx(), authLevel, "READ");
+                        }
+                        
+                        // 학생, 강사, 기업 회원의 경우 메뉴의 MenuGroup과 UserType 매칭
+                        MenuType menuGroup = menu.getMenuGroup();
+                        if (menuGroup == null) {
+                            return false;
+                        }
+
+                        return switch (member.getUserType()) {
+                            case STUDENT -> menuGroup == MenuType.STUDENT;
+                            case TEACHER -> menuGroup == MenuType.TEACHER;
+                            case COMPANY -> menuGroup == MenuType.COMPANY;
+                            default -> false;
+                        };
+                    } catch (Exception e) {
+                        log.error("권한 체크 중 오류 발생: {}", e.getMessage());
+                        return false;
+                    }
+                })
+                .map(menu -> new ManagerMenuDepth3ListResDTO(
+                        menu.getMenuName(),
+                        menu.getUrl(),
+                        "_self",
+                        true
                 ))
                 .toList();
     }
@@ -131,6 +199,7 @@ public class ManagerMenuService {
                         case TEACHER -> menuGroup == MenuType.TEACHER;
                         case COMPANY -> menuGroup == MenuType.COMPANY;
                         case SYSTEM -> menuGroup == MenuType.SYSTEM;
+                        case STUDENT -> menuGroup == MenuType.STUDENT;
                     };
                 } catch (IllegalArgumentException e) {
                     log.warn("Invalid menuType: {}", menuType);
@@ -180,6 +249,7 @@ public class ManagerMenuService {
                         case TEACHER -> menuGroup == MenuType.TEACHER;
                         case COMPANY -> menuGroup == MenuType.COMPANY;
                         case SYSTEM -> menuGroup == MenuType.SYSTEM;
+                        case STUDENT -> menuGroup == MenuType.STUDENT;
                     };
                 } catch (IllegalArgumentException e) {
                     log.warn("Invalid menuType: {}", menuType);
