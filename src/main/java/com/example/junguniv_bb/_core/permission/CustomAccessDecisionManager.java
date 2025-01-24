@@ -77,7 +77,7 @@ public class CustomAccessDecisionManager implements AccessDecisionManager {
         }
 
         // Form 페이지 접근 권한 체크
-        if (uri.contains("/saveForm")) {
+        if (uri.contains("/save")) {
             validatePermission(menuIdx, authLevel, "WRITE", "등록 페이지 접근이 거부되었습니다.");
         }
     }

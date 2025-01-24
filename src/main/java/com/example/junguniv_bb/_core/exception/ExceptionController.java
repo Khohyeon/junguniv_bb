@@ -18,12 +18,12 @@ public class ExceptionController {
         } else {
             model.addAttribute("errorMessage", "로그인이 필요합니다.");
         }
-        return "_error/error403";
+        return "common/_error/error403";
     }
 
     @GetMapping("/id-stop")
     public String idStop(Model model) {
         model.addAttribute("errorMessage", "계정이 정지되었습니다.\n관리자에게 문의하세요.");
-        return "_error/error401";
+        return "common/_error/error401";
     }
 }

@@ -47,17 +47,15 @@ public class DynamicSecurityMetadataSource implements FilterInvocationSecurityMe
         for (ManagerMenu menu : menus) {
             String url = menu.getUrl();
 
-            // 3차 메뉴만 실제 권한 체크 대상
-            if (menu.getMenuLevel() == 3 && url != null && !url.isEmpty() && !url.equals("#")) {
-                String urlPattern = url;
-                if (url.startsWith("/masterpage_sys/")) {
-                    String[] segments = url.split("/", 4);
-                    if (segments.length >= 3) {
-                        urlPattern = String.format("/%s/%s/**", segments[1], segments[2]);
-                    }
+            // 2차와 3차 메뉴 모두 독립적으로 권한 체크
+            if ((menu.getMenuLevel() == 2 || menu.getMenuLevel() == 3) 
+                && url != null && !url.isEmpty() && !url.equals("#")) {
+                // 2차 메뉴의 경우 독립적인 URL 패턴 사용
+                if (menu.getMenuLevel() == 2) {
+                    newMap.put(url + "/**", menu); // 2차 메뉴는 하위 경로 모두 포함
+                } else {
+                    newMap.put(url, menu); // 3차 메뉴는 정확한 URL 매칭
                 }
-                newMap.put(urlPattern, menu);
-                log.debug("URL 매핑 추가: {} -> {}", urlPattern, menu.getMenuName());
             }
         }
 

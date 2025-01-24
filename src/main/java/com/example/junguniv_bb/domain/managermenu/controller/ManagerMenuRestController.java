@@ -1,6 +1,7 @@
 package com.example.junguniv_bb.domain.managermenu.controller;
 
 import com.example.junguniv_bb._core.exception.Exception400;
+import com.example.junguniv_bb._core.security.CustomUserDetails;
 import com.example.junguniv_bb._core.util.APIUtils;
 import com.example.junguniv_bb.domain.managermenu.dto.*;
 import com.example.junguniv_bb.domain.managermenu.model.ManagerMenu;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,11 +30,13 @@ public class ManagerMenuRestController {
 
     /**
      * 2차 메뉴를 선택 했을 때 Rest API 요청
+     * 권한이 있는 3차 메뉴만 반환
      */
     @GetMapping("/depth3")
-    public List<ManagerMenuDepth3ListResDTO> getDepth3Menus(@RequestParam Long parentMenuIdx) {
+    public List<ManagerMenuDepth3ListResDTO> getDepth3Menus(@RequestParam Long parentMenuIdx, @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        return managerMenuService.getDepth3Menus(parentMenuIdx);
+        // 권한이 있는 3차 메뉴만 필터링하여 반환
+        return managerMenuService.getDepth3MenusWithPermission(parentMenuIdx, userDetails);
     }
 
     @DeleteMapping

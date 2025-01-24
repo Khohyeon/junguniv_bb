@@ -63,7 +63,7 @@ public class SecurityConfig {
                 // 페이지별 인가 설정
                 .authorizeHttpRequests((auth) -> auth
 
-                        .requestMatchers("/**").permitAll() // ! (Dev) 개발단계에서 모든 경로에 대한 접근 허용, 배포시에 제거해야함.
+                        // .requestMatchers("/**").permitAll() // ! (Dev) 개발단계에서 모든 경로에 대한 접근 허용, 배포시에 제거해야함.
 
                         .requestMatchers(HIDDEN_PATTERNS).denyAll() // 숨겨진 파일 접근 차단
                         .requestMatchers(WHITELIST).permitAll()

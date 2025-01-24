@@ -61,5 +61,5 @@ public class ManagerMenu extends BaseTime {
     private List<ManagerMenu> children = new ArrayList<>();
 
     @Column(name = "MENU_LEVEL")
-    private Long menuLevel; // 1: 1차메뉴, 2: 2차메뉴, 3: 3차메뉴
+    private Long menuLevel; // 메뉴레벨(1,2,3차)
 }
