@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/masterpage_sys/manager_menu")
+@RequestMapping("/masterpage_sys/managerMenu")
 @RequiredArgsConstructor
 public class ManagerMenuController {
 

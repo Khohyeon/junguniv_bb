@@ -4,6 +4,8 @@ package com.example.junguniv_bb.domain.managermenu.service;
 import com.example.junguniv_bb._core.exception.Exception400;
 import com.example.junguniv_bb._core.exception.ExceptionMessage;
 import com.example.junguniv_bb._core.permission.ManagerMenuChangeEvent;
+import com.example.junguniv_bb.domain.counsel.dto.CounselSearchResDTO;
+import com.example.junguniv_bb.domain.counsel.model.Counsel;
 import com.example.junguniv_bb.domain.managerauth.model.ManagerAuthRepository;
 import com.example.junguniv_bb.domain.managermenu._branch.dto.Depth1MenuSaveReqDTO;
 import com.example.junguniv_bb.domain.managermenu._branch.dto.Depth2MenuSaveReqDTO;
@@ -23,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -313,9 +316,7 @@ public class ManagerMenuService {
         return false;
     }
 
-    public List<ManagerMenu> findMenusByLevel(Long menuLevel) {
-        return managerMenuRepository.findByMenuLevelOrderBySortno(menuLevel);
-    }
+
 
 
     /**
@@ -374,4 +375,29 @@ public class ManagerMenuService {
     }
 
 
+    public List<ManagerMenu> findMenusByLevelAndType(long level, String menuGroup) {
+        return managerMenuRepository.findByMenuLevelAndMenuGroup(level, MenuType.valueOf(menuGroup));
+    }
+
+    public Page<ManagerMenuSearchResDTO> getManagerMenuPage(String menuName, String chkUse, Pageable pageable) {
+
+        Page<ManagerMenu> menuPage = null;
+
+        if (Objects.equals(chkUse, "ALL")) {
+            // 전체 조회
+            menuPage = managerMenuRepository.findByMenuNameContainingIgnoreCase(menuName, pageable);
+        } else {
+            menuPage = managerMenuRepository.findByMenuNameContainingIgnoreCaseAndChkUse(menuName, chkUse, pageable);
+        }
+
+
+        return menuPage.map(menu ->
+                new ManagerMenuSearchResDTO(
+                        menu.getMenuIdx(),
+                        menu.getMenuGroup().getText(),
+                        menu.getMenuName(),
+                        menu.getUrl(),
+                        menu.getChkUse()
+                ));
+    }
 }

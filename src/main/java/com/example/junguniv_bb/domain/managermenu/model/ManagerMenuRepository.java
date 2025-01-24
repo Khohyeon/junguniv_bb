@@ -1,5 +1,6 @@
 package com.example.junguniv_bb.domain.managermenu.model;
 
+import com.example.junguniv_bb.domain.managermenu._enum.MenuType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -71,4 +72,8 @@ public interface ManagerMenuRepository extends JpaRepository<ManagerMenu, Long> 
     List<ManagerMenu> findByParent(ManagerMenu managerMenu);
 
     List<ManagerMenu> findByParentAndMenuLevel(ManagerMenu parent, Long menuLevel);
+
+    List<ManagerMenu> findByMenuLevelAndMenuGroup(long level, MenuType menuGroup);
+
+    Page<ManagerMenu> findByMenuNameContainingIgnoreCaseAndChkUse(String menuName, String chkUse, Pageable pageable);
 }
