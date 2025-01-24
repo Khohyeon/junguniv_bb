@@ -67,4 +67,8 @@ public interface ManagerMenuRepository extends JpaRepository<ManagerMenu, Long> 
      */
     @Query("SELECT MAX(m.sortno) FROM ManagerMenu m WHERE m.menuLevel = :menuLevel")
     Long findMaxSortNoByMenuLevel(@Param("menuLevel") long menuLevel);
+
+    List<ManagerMenu> findByParent(ManagerMenu managerMenu);
+
+    List<ManagerMenu> findByParentAndMenuLevel(ManagerMenu parent, Long menuLevel);
 }

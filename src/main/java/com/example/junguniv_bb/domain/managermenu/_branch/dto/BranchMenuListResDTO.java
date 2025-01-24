@@ -8,6 +8,7 @@ import java.util.Map;
 public record BranchMenuListResDTO(
         List<ManagerMenu> depth1Menus,
         List<ManagerMenu> depth2Menus,
+        List<ManagerMenu> depth3Menus,
         Map<ManagerMenu, Long> depth3Counts
 ) {
 }

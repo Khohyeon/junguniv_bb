@@ -40,7 +40,7 @@ public class ManagerMenu_BranchController {
                 ));
 
         // BranchMenuListResDTO 생성
-        BranchMenuListResDTO branchMenuListResDTO = new BranchMenuListResDTO(depth1Menus, depth2Menus, depth3Counts);
+        BranchMenuListResDTO branchMenuListResDTO = new BranchMenuListResDTO(depth1Menus, depth2Menus, depth3Menus, depth3Counts);
 
 
         model.addAttribute("branchMenuList", branchMenuListResDTO);

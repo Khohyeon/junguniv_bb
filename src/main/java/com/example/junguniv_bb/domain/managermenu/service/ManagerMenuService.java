@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -323,7 +324,7 @@ public class ManagerMenuService {
     @Transactional
     public void saveDepth1Menu(Depth1MenuSaveReqDTO depth1MenuSaveReqDTO) {
         Long maxSortNoByMenuLevel = managerMenuRepository.findMaxSortNoByMenuLevel(1L);
-        managerMenuRepository.save(depth1MenuSaveReqDTO.saveEntity(maxSortNoByMenuLevel));
+        managerMenuRepository.save(depth1MenuSaveReqDTO.saveEntity(maxSortNoByMenuLevel + 1L));
     }
 
     /**
@@ -334,6 +335,43 @@ public class ManagerMenuService {
         ManagerMenu managerMenu = managerMenuRepository.findById(depth2MenuSaveReqDTO.parentIdx())
                 .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_MANAGER_MENU.getMessage()));
         Long maxSortNoByMenuLevel = managerMenuRepository.findMaxSortNoByMenuLevel(2L);
-        managerMenuRepository.save(depth2MenuSaveReqDTO.saveEntity(maxSortNoByMenuLevel, managerMenu));
+        managerMenuRepository.save(depth2MenuSaveReqDTO.saveEntity(maxSortNoByMenuLevel + 1L, managerMenu));
     }
+
+    /**
+     * 3차메뉴 추가
+     */
+    @Transactional
+    public void saveDepth3Menu(Depth3MenuSaveReqDTO depth3MenuSaveReqDTO) {
+        ManagerMenu managerMenu = managerMenuRepository.findById(depth3MenuSaveReqDTO.parentIdx())
+                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_MANAGER_MENU.getMessage()));
+        Long maxSortNoByMenuLevel = managerMenuRepository.findMaxSortNoByMenuLevel(3L);
+        managerMenuRepository.save(depth3MenuSaveReqDTO.saveEntity(maxSortNoByMenuLevel + 1L, managerMenu));
+    }
+
+    /**
+     * 메뉴 삭제
+     */
+    @Transactional
+    public void deleteMenuByIdx(Long menuIdx) {
+        ManagerMenu managerMenu = managerMenuRepository.findById(menuIdx)
+                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_MANAGER_MENU.getMessage()));
+
+        List<ManagerMenu> managerMenuList = managerMenuRepository.findByParent(managerMenu);
+        if (!managerMenuList.isEmpty()) {
+            throw new Exception400("하위 메뉴가 존재하여 삭제할 수 없습니다.");
+        }
+
+        // 삭제
+        managerMenuRepository.delete(managerMenu);
+
+    }
+
+    public List<ManagerMenu> getDepth3MenusByParentIdx(Long parentIdx) {
+        ManagerMenu managerMenu = managerMenuRepository.findById(parentIdx)
+                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_MANAGER_MENU.getMessage()));
+        return managerMenuRepository.findByParentAndMenuLevel(managerMenu, 3L);
+    }
+
+
 }
