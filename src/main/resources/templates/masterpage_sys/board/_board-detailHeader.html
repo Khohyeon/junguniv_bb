@@ -15,6 +15,7 @@
                 <div class="attach">
                     <a th:each="attachment : ${board.attachments()}"
                        th:href="@{'/api/v1/files/download/' + 'board' + '/' + ${attachment}}"
+                       th:download="${attachment}"
                        th:text="${attachment}">
                     </a>
                 </div>

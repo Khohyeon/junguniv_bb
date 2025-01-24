@@ -1,5 +1,6 @@
 package com.example.junguniv_bb.domain.managermenu.model;
 
+import com.example.junguniv_bb.domain.managermenu._enum.MenuType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -58,4 +59,25 @@ public interface ManagerMenuRepository extends JpaRepository<ManagerMenu, Long> 
 
     // URL로 메뉴 조회
     ManagerMenu findByUrl(String url);
+
+    List<ManagerMenu> findByMenuLevelOrderBySortno(Long menuLevel);
+
+
+    /**
+     * menuLevel 에 따른 sortNo의 최대값 불러오는 쿼리
+     */
+    @Query("SELECT MAX(m.sortno) FROM ManagerMenu m WHERE m.menuLevel = :menuLevel")
+    Long findMaxSortNoByMenuLevel(@Param("menuLevel") long menuLevel);
+
+    List<ManagerMenu> findByParent(ManagerMenu managerMenu);
+
+    List<ManagerMenu> findByParentAndMenuLevel(ManagerMenu parent, Long menuLevel);
+
+    List<ManagerMenu> findByMenuLevelAndMenuGroup(long level, MenuType menuGroup);
+
+    Page<ManagerMenu> findByMenuNameContainingIgnoreCaseAndChkUseAndMenuLevel(String menuName, String chkUse, Long menuLevel, Pageable pageable);
+
+    List<ManagerMenu> findByParentIsNullAndChkUseAndMenuGroupOrderBySortno(String y, MenuType menuType);
+
+    Page<ManagerMenu> findByMenuNameContainingIgnoreCaseAndMenuLevel(String menuName, Long menuLevel, Pageable pageable);
 }

@@ -10,7 +10,10 @@ import com.example.junguniv_bb.domain.member.model.Member;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
@@ -107,5 +110,17 @@ public class ManagerMenuRestController {
             .map(ManagerMenuAllResDTO::from)
             .collect(Collectors.toList());
         return ResponseEntity.ok(APIUtils.success(dtoList));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<APIUtils.APIResult<Page<ManagerMenuSearchResDTO>>> getManagerMenuSearch(
+            @RequestParam String menuName,
+            @RequestParam String chkUse,
+            Pageable pageable) {
+
+        // 팝업의 페이징 형태를 counselIdx 기준으로 DESC 내림차순으로 설정
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "menuIdx"));
+        Page<ManagerMenuSearchResDTO> managerMenuPage = managerMenuService.getManagerMenuPage(menuName, chkUse, pageable);
+        return ResponseEntity.ok(APIUtils.success(managerMenuPage));
     }
 }

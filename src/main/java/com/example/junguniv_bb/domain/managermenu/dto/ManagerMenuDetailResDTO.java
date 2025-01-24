@@ -17,7 +17,7 @@ public record ManagerMenuDetailResDTO(
     public record ManagerMenuDTO(
         Long menuIdx,
         String menuName,
-        Integer sortno,
+        Long sortno,
         String chkUse,
         String url,
         MenuType menuGroup,
@@ -60,7 +60,7 @@ public record ManagerMenuDetailResDTO(
     public record ChildMenuInfo(
         Long menuIdx,
         String menuName,
-        Integer sortno,
+        Long sortno,
         String url,
         String chkUse
     ) {

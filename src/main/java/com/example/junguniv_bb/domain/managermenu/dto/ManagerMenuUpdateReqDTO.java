@@ -5,7 +5,7 @@ import com.example.junguniv_bb.domain.managermenu.model.ManagerMenu;
 
 public record ManagerMenuUpdateReqDTO(
         String menuName, // 메뉴명
-        Integer sortno, // 정렬값
+        Long sortno, // 정렬값
         String chkUse, // 사용여부
         String url, // URL
         MenuType menuGroup, // 메뉴그룹

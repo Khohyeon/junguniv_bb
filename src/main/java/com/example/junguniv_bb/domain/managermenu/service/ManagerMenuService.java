@@ -4,9 +4,17 @@ package com.example.junguniv_bb.domain.managermenu.service;
 import com.example.junguniv_bb._core.exception.Exception400;
 import com.example.junguniv_bb._core.exception.ExceptionMessage;
 import com.example.junguniv_bb._core.permission.ManagerMenuChangeEvent;
+
 import com.example.junguniv_bb._core.security.CustomUserDetails;
 import com.example.junguniv_bb.domain.managerauth.model.ManagerAuthRepository;
 import com.example.junguniv_bb.domain.managerauth.service.ManagerAuthService;
+
+import com.example.junguniv_bb.domain.counsel.dto.CounselSearchResDTO;
+import com.example.junguniv_bb.domain.counsel.model.Counsel;
+import com.example.junguniv_bb.domain.managerauth.model.ManagerAuthRepository;
+import com.example.junguniv_bb.domain.managermenu._branch.dto.Depth1MenuSaveReqDTO;
+import com.example.junguniv_bb.domain.managermenu._branch.dto.Depth2MenuSaveReqDTO;
+
 import com.example.junguniv_bb.domain.managermenu._enum.MenuType;
 import com.example.junguniv_bb.domain.member._enum.UserType;
 import com.example.junguniv_bb.domain.managermenu.dto.*;
@@ -26,6 +34,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -373,5 +384,90 @@ public class ManagerMenuService {
             }
         }
         return false;
+    }
+
+
+
+
+    /**
+     * 1차메뉴 추가
+     */
+    @Transactional
+    public void saveDepth1Menu(Depth1MenuSaveReqDTO depth1MenuSaveReqDTO) {
+        Long maxSortNoByMenuLevel = managerMenuRepository.findMaxSortNoByMenuLevel(1L);
+        managerMenuRepository.save(depth1MenuSaveReqDTO.saveEntity(maxSortNoByMenuLevel + 1L));
+    }
+
+    /**
+     * 2차메뉴 추가
+     */
+    @Transactional
+    public void saveDepth2Menu(Depth2MenuSaveReqDTO depth2MenuSaveReqDTO) {
+        ManagerMenu managerMenu = managerMenuRepository.findById(depth2MenuSaveReqDTO.parentIdx())
+                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_MANAGER_MENU.getMessage()));
+        Long maxSortNoByMenuLevel = managerMenuRepository.findMaxSortNoByMenuLevel(2L);
+        managerMenuRepository.save(depth2MenuSaveReqDTO.saveEntity(maxSortNoByMenuLevel + 1L, managerMenu));
+    }
+
+    /**
+     * 3차메뉴 추가
+     */
+    @Transactional
+    public void saveDepth3Menu(Depth3MenuSaveReqDTO depth3MenuSaveReqDTO) {
+        ManagerMenu managerMenu = managerMenuRepository.findById(depth3MenuSaveReqDTO.parentIdx())
+                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_MANAGER_MENU.getMessage()));
+        Long maxSortNoByMenuLevel = managerMenuRepository.findMaxSortNoByMenuLevel(3L);
+        managerMenuRepository.save(depth3MenuSaveReqDTO.saveEntity(maxSortNoByMenuLevel + 1L, managerMenu));
+    }
+
+    /**
+     * 메뉴 삭제
+     */
+    @Transactional
+    public void deleteMenuByIdx(Long menuIdx) {
+        ManagerMenu managerMenu = managerMenuRepository.findById(menuIdx)
+                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_MANAGER_MENU.getMessage()));
+
+        List<ManagerMenu> managerMenuList = managerMenuRepository.findByParent(managerMenu);
+        if (!managerMenuList.isEmpty()) {
+            throw new Exception400("하위 메뉴가 존재하여 삭제할 수 없습니다.");
+        }
+
+        // 삭제
+        managerMenuRepository.delete(managerMenu);
+
+    }
+
+    public List<ManagerMenu> getDepth3MenusByParentIdx(Long parentIdx) {
+        ManagerMenu managerMenu = managerMenuRepository.findById(parentIdx)
+                .orElseThrow(() -> new Exception400(ExceptionMessage.NOT_FOUND_MANAGER_MENU.getMessage()));
+        return managerMenuRepository.findByParentAndMenuLevel(managerMenu, 3L);
+    }
+
+
+    public List<ManagerMenu> findMenusByLevelAndType(long level, String menuGroup) {
+        return managerMenuRepository.findByMenuLevelAndMenuGroup(level, MenuType.valueOf(menuGroup));
+    }
+
+    public Page<ManagerMenuSearchResDTO> getManagerMenuPage(String menuName, String chkUse, Pageable pageable) {
+
+        Page<ManagerMenu> menuPage = null;
+
+        if (Objects.equals(chkUse, "ALL")) {
+            // 전체 조회
+            menuPage = managerMenuRepository.findByMenuNameContainingIgnoreCaseAndMenuLevel(menuName, 3L, pageable);
+        } else {
+            menuPage = managerMenuRepository.findByMenuNameContainingIgnoreCaseAndChkUseAndMenuLevel(menuName, chkUse, 3L, pageable);
+        }
+
+
+        return menuPage.map(menu ->
+                new ManagerMenuSearchResDTO(
+                        menu.getMenuIdx(),
+                        menu.getMenuGroup().getText(),
+                        menu.getMenuName(),
+                        menu.getUrl(),
+                        menu.getChkUse()
+                ));
     }
 }
