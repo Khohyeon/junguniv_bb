@@ -8,7 +8,8 @@ public enum MenuType {
     ADMIN_NORMAL("관리자(일반)"),
     TEACHER("교강사"),
     COMPANY("위탁기업"),
-    SYSTEM("시스템");
+    SYSTEM("시스템"),
+    STUDENT("학생");
 
     final private String text;
 
