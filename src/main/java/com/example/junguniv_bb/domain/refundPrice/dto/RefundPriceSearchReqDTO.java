@@ -2,7 +2,7 @@ package com.example.junguniv_bb.domain.refundPrice.dto;
 
 public record RefundPriceSearchReqDTO(
         String refundPriceType,
-        String refundPriceName
-
+        String refundPriceName,
+        String studyType
 ) {
 }

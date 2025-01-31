@@ -9,8 +9,8 @@
 
     <script th:src="@{/js/refund_price/refund_price.js}"></script>
 </head>
-<body data-study-type="refund">
+<body data-study-type="normal">
 <!-- 헤더에서 상단 메뉴 포함 -->
 <div th:replace="fragments/header :: header"></div>
 
-<th:block th:replace="masterpage_sys/refund_price/_refundPrice-saveHeader :: refundPrice_header(true)"></th:block>
+<th:block th:replace="masterpage_sys/refund_price/_refundPrice-saveHeader :: refundPrice_header(false)"></th:block>

@@ -7,6 +7,7 @@ public record RefundPriceSearchResDTO(
         Long refundRate,
         String chkUse,
         String discountType,
-        Long sortno
+        Long sortno,
+        String studyType
 ) {
 }

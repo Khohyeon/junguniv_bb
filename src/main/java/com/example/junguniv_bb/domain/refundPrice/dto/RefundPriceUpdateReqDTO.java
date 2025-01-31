@@ -5,7 +5,7 @@ import jakarta.validation.constraints.*;
 
 public record RefundPriceUpdateReqDTO(
         Long refundPriceIdx,
-        @NotBlank(message = "환불 유형을 입력하세요.") // 빈 값 또는 공백 체크
+//        @NotBlank(message = "환불 유형을 입력하세요.") // 빈 값 또는 공백 체크
         String refundPriceType,
 
         @NotBlank(message = "환불 항목명을 입력하세요.") // 빈 값 또는 공백 체크
@@ -25,12 +25,13 @@ public record RefundPriceUpdateReqDTO(
 
         @NotNull(message = "정렬 번호를 입력하세요.") // null 체크
         @Min(value = 1, message = "정렬 번호는 1 이상이어야 합니다.")
-        Long sortno
+        Long sortno,
+        String studyType
 ) {
 
     public RefundPrice updateEntity() {
         return new RefundPrice(
-                refundPriceIdx, refundPriceType, refundPriceName, discountType, refundRate, chkUse, sortno
+                refundPriceIdx, refundPriceType, refundPriceName, discountType, refundRate, chkUse, sortno, studyType
         );
     }
 

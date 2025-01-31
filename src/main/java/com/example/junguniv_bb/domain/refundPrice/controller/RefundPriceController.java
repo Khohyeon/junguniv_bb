@@ -20,14 +20,30 @@ public class RefundPriceController {
         return "/masterpage_sys/refund_price/refund/listForm";
     }
 
+    @GetMapping("/normal")
+    public String normalPrice() {
+        return "/masterpage_sys/refund_price/normal/listForm";
+    }
+
     @GetMapping("/refund/save")
     public String saveRefundPrice() {
         return "/masterpage_sys/refund_price/refund/saveForm";
+    }
+
+    @GetMapping("/normal/save")
+    public String saveNormalPrice() {
+        return "/masterpage_sys/refund_price/normal/saveForm";
     }
 
     @GetMapping("/refund/{refundPriceIdx}")
     public String saveRefundPrice(@PathVariable Long refundPriceIdx, Model model) {
         model.addAttribute("refundDetail", refundPriceService.refundPriceDetail(refundPriceIdx));
         return "/masterpage_sys/refund_price/refund/detailForm";
+    }
+
+    @GetMapping("/normal/{refundPriceIdx}")
+    public String saveNormalPrice(@PathVariable Long refundPriceIdx, Model model) {
+        model.addAttribute("refundDetail", refundPriceService.refundPriceDetail(refundPriceIdx));
+        return "/masterpage_sys/refund_price/normal/detailForm";
     }
 }

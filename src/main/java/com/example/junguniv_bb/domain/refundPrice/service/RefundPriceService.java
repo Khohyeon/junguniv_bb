@@ -20,17 +20,26 @@ public class RefundPriceService {
     private final RefundPriceRepository refundPriceRepository;
 
     public Page<RefundPriceSearchResDTO> refundPriceSearchPage(RefundPriceSearchReqDTO refundPriceSearchReqDTO, Pageable pageable) {
+        Page<RefundPrice> refundPricePage;
 
-        Page<RefundPrice> refundPricePage = null;
+        // studyType을 기준으로 분기
+        String studyType = refundPriceSearchReqDTO.studyType();
+        String refundPriceName = refundPriceSearchReqDTO.refundPriceName();
+        String refundPriceType = refundPriceSearchReqDTO.refundPriceType();
 
-        if (Objects.equals(refundPriceSearchReqDTO.refundPriceType(), "ALL")) {
-            // 전체 조회
-            refundPricePage = refundPriceRepository.findByRefundPriceNameContainingIgnoreCase(refundPriceSearchReqDTO.refundPriceName(), pageable);
-        } else {
-            refundPricePage = refundPriceRepository.findByRefundPriceNameContainingIgnoreCaseAndRefundPriceType(
-                    refundPriceSearchReqDTO.refundPriceName(), refundPriceSearchReqDTO.refundPriceType(), pageable);
+        if (studyType == null) {
+            studyType = "default";  // 기본값 설정, 필요시 수정
         }
 
+        // 기본 쿼리 조건 생성
+        if ("ALL".equals(refundPriceType)) {
+            refundPricePage = refundPriceRepository.findByStudyTypeAndRefundPriceNameContainingIgnoreCase(studyType, refundPriceName, pageable);
+        } else {
+            refundPricePage = refundPriceRepository.findByStudyTypeAndRefundPriceNameContainingIgnoreCaseAndRefundPriceType(
+                    studyType, refundPriceName, refundPriceType, pageable);
+        }
+
+        // 결과 매핑
         return refundPricePage.map(refundPrice ->
                 new RefundPriceSearchResDTO(
                         refundPrice.getRefundPriceIdx(),
@@ -39,9 +48,12 @@ public class RefundPriceService {
                         refundPrice.getRefundRate(),
                         refundPrice.getChkUse(),
                         refundPrice.getDiscountType(),
-                        refundPrice.getSortno()
+                        refundPrice.getSortno(),
+                        refundPrice.getStudyType()
                 ));
     }
+
+
 
     @Transactional
     public void refundPriceSave(RefundPriceSaveReqDTO refundPriceSaveReqDTO) {

@@ -170,10 +170,11 @@ VALUES
     (4, 7, '이영희', 'password000', '네 번째 댓글입니다.', '192.168.0.4', 'N', 'lee', 'lee', '2025-01-01 13:00:00', '2025-01-01 13:00:00'),
     (5, 7, '박정우', 'password111', '다섯 번째 댓글입니다.', '192.168.0.5', 'Y', 'park', 'park', '2025-01-01 14:00:00', '2025-01-01 14:00:00');
 
-INSERT INTO refund_price (refund_price_idx, refund_price_type, refund_price_name, refund_rate, chk_use, sortno, discount_type)
+INSERT INTO refund_price (refund_price_idx, refund_price_type, refund_price_name, refund_rate, chk_use, sortno, discount_type, study_type)
 VALUES
-    (1, 'saup', '정부지원', 80, 'Y', 1, 'percent'),
-    (2, 'cardsil', '기업지원', 70, 'Y', 2, 'percent'),
-    (3, 'saup', '개인부담', 0, 'Y', 3, 'percent'),
-    (4, 'cardsil', '특별할인', 50000, 'N', 4, 'discount'),
-    (5, 'cardjae', '이벤트할인', 30000, 'Y', 5, 'discount');
+    (1, 'saup', '정부지원', 80, 'Y', 1, 'percent', 'refund'),
+    (2, 'cardsil', '기업지원', 70, 'Y', 2, 'percent', 'refund'),
+    (3, 'saup', '개인부담', 0, 'Y', 3, 'percent', 'refund'),
+    (4, 'cardsil', '특별할인', 50000, 'N', 4, 'discount', 'refund'),
+    (5, 'cardjae', '이벤트할인', 30000, 'Y', 5, 'discount', 'refund'),
+    (6, null, '이벤트할인', 30000, 'Y', 5, 'discount', 'normal');

@@ -34,4 +34,7 @@ public class RefundPrice {
 
     @Column(name = "sortno")
     private Long sortno; // 정렬값
+
+    @Column(name = "study_type")
+    private String studyType; // 사용 여부
 }

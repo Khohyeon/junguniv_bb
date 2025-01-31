@@ -1,0 +1,88 @@
+<div th:fragment="refundPrice_header(refundPriceType)" class="inner">
+    <form method="post" th:action="@{/masterpage_sys/refund_price/api/save}"  id="refundForm">
+        <div class="form-wrap2">
+            <div class="column-tc-wrap column-tc-wrap2 part1" th:if="${refundPriceType}">
+                <div class="column-tc">
+                    <div class="tit">지원금 유형</div>
+                    <div class="con mt10">
+                        <label class="c-input ci-radio">
+                            <input type="radio" name="refundPriceType" value="saup"> 사업주 환급 교육
+                            <div class="ci-show"></div>
+                        </label>
+                        <label class="c-input ci-radio">
+                            <input type="radio" name="refundPriceType" value="cardsil">  국민내일배움카드(실업자)
+                            <div class="ci-show"></div>
+                        </label>
+                        <label class="c-input ci-radio">
+                            <input type="radio" name="refundPriceType" value="cardjae"> 국민내일배움카드(재직자)
+                            <div class="ci-show"></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="column-tc-wrap column-tc-wrap2 part1">
+                <div class="column-tc">
+                    <div class="tit">할인종류선택</div>
+                    <div class="con mt10">
+                        <label class="c-input ci-radio">
+                            <input type="radio" name="discountType"  value="percent"> 지원율(%)
+                            <div class="ci-show"></div>
+                        </label>
+                        <label class="c-input ci-radio">
+                            <input type="radio" name="discountType" value="discount"> 할인금액
+                            <div class="ci-show"></div>
+                        </label>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="column-tc-wrap column-tc-wrap2 part4">
+                <div class="column-tc">
+                    <div class="tit">지원금 종류명</div>
+                    <div class="con">
+                        <input type="text" name="refundPriceName" id="refundPriceName" value="" placeholder="지원금 종류명을 입력해주세요">
+                    </div>
+                </div>
+                <div class="column-tc">
+                    <div class="tit" id="percent-name">지원율(%)</div>
+                    <div class="con flex">
+                        <input type="text" name="refundRate" id="refundRate" value="0" placeholder="반드시 % 단위로 할인/지원율을 숫자로 기입해주세요">
+                        <span id="percent"> (%) </span>
+                    </div>
+                </div>
+                <div class="column-tc">
+                    <div class="tit">사용여부</div>
+                    <div class="con mt10">
+                        <label class="c-input ci-radio">
+                            <input type="radio" name="chkUse"  value="Y"> Y
+                            <div class="ci-show"></div>
+                        </label>
+                        <label class="c-input ci-radio">
+                            <input type="radio" name="chkUse" value="N"> N
+                            <div class="ci-show"></div>
+                        </label>
+                    </div>
+                </div>
+                <div class="column-tc">
+                    <div class="tit">정렬순서</div>
+
+                    <div class="con">
+                        <input type="text" name="sortno" id="sortno" value="">
+                        <!-- <select>
+                            <option>선택</option>
+                            <option>1</option>
+                            <option>2</option>
+                        </select> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="btn-wrap mt50">
+            <a href="javascript:history.back();" class="jv-btn jb-fill01-lg">목록</a>
+            <button type="submit" class="jv-btn fill04-lg">저장</button>
+        </div>
+    </form>
+
+</div>
