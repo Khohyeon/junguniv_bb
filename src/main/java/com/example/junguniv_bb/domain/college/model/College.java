@@ -1,5 +1,6 @@
 package com.example.junguniv_bb.domain.college.model;
 
+import com.example.junguniv_bb._core.common.BaseTime;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,12 +11,12 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class College {
+public class College extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "COLLEGE_IDX")
-    private Integer collegeIdx;  // 분류 선택 코드 IDX (기본키)
+    private Long collegeIdx;  // 분류 선택 코드 IDX (기본키)
 
     @Column(name = "COLLEGE_NAME", length = 255)
     private String collegeName;  // 분류 선택 이름

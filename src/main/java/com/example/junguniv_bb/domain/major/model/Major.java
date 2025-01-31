@@ -1,5 +1,6 @@
 package com.example.junguniv_bb.domain.major.model;
 
+import com.example.junguniv_bb._core.common.BaseTime;
 import com.example.junguniv_bb.domain.college.model.College;
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,12 +12,12 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Major {
+public class Major extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "MAJOR_IDX")
-    private Integer majorIdx;  // 전공 IDX (기본키)
+    private Long majorIdx;  // 전공 IDX (기본키)
 
     @ManyToOne
     @JoinColumn(name = "COLLEGE_IDX", nullable = false)
