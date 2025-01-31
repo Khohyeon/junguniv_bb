@@ -1,13 +1,12 @@
 package com.example.junguniv_bb.domain.refundPrice.dto;
 
-public record RefundPriceSearchResDTO(
+public record RefundPriceDetailResDTO(
         Long refundPriceIdx,
         String refundPriceType,
         String refundPriceName,
+        String discountType,
         Long refundRate,
         String chkUse,
-        String discountType,
-        Long sortno,
-        String studyType
+        Long sortno
 ) {
 }

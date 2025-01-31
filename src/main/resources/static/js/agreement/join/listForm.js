@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 })
         });
     } else {
-        console.error('Element with id "detailForm" not found.');
+        console.error('Element with id "detailForm.html" not found.');
     }
 });
 
