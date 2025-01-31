@@ -19,7 +19,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/jungunivbb
     username: root
-    password: 9608
+    password:
     driver-class-name: com.mysql.cj.jdbc.Driver
 #  MySQL은 더미 데이터 사용불가 -> 수동으로 data.sql 입력필요
 #  sql:
