@@ -18,6 +18,7 @@ public enum ExceptionMessage {
     NOT_FOUND_AUTH_LEVEL("존재하지 않는 권한 레벨입니다."),
     NOT_FOUND_MANAGER_AUTH("존재하지 않는 메뉴 권한입니다."),
     NOT_FOUND_BBS_GROUP("존재하지 않는 게시판입니다."),
+    NOT_FOUND_REFUND_PRICE("존재하지 않는 지원금입니다."),
     EXISTS_AUTH_LEVEL("이미 존재하는 권한 레벨입니다."),
     EXISTS_LINKED_MEMBER_AUTH_LEVEL("연결된 관리자가 있는 관리자 권한은 삭제할 수 없습니다."),
 

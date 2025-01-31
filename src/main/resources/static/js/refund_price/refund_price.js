@@ -98,9 +98,11 @@ function renderSearchResults(results) {
 
             <td>${result.refundPriceIdx}</td>
             <td>${result.refundPriceType}</td>
-            <td>${result.refundPriceName}</td>
-            <td>할인율(%)</td>
-            <td>${result.refundRate} %</td>
+            <td>
+                <a class="jv-btn" href="/masterpage_sys/refund_price/refund/${result.refundPriceIdx}">${result.refundPriceName}</a>
+            </td>
+            <td>${result.discountType === 'percent' ? '지원율(%)' : '할인율(%)'}</td>
+            <td>${result.discountType === 'percent' ? result.refundRate + ' %' : result.refundRate + ' 원'}</td>
             <td>
                 <label class="c-input ci-radio">
                     <input type="radio" name="change_chk_open${index}" value="Y" ${result.chkUse === 'Y' ? 'checked' : ''}> 사용
@@ -111,6 +113,7 @@ function renderSearchResults(results) {
                     <div class="ci-show"></div>
                 </label>
             </td>
+            <td>${result.sortno}</td>
         `;
 
         tbody.appendChild(row);
@@ -156,3 +159,117 @@ function renderPagination(pagination, data, callback) {
         });
     });
 }
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    const saveButton = document.getElementById('saveForm');
+
+    // 목록 버튼 클릭 이벤트
+    if (saveButton) {
+        saveButton.addEventListener('click', () => {
+            window.location.href = '/masterpage_sys/refund_price/refund/save';
+        });
+    }
+})
+
+/**
+ * 지원금종류 저장
+ */
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('refundForm');
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault(); // 기본 폼 제출 동작 방지
+
+        const formData = new FormData(form);
+
+        fetch(form.action, {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) {
+                    // 응답 헤더의 Content-Type이 JSON인지 확인
+                    const contentType = response.headers.get('content-type');
+                    if (contentType && contentType.includes('application/json')) {
+                        // JSON 응답을 파싱하여 에러 메시지를 추출
+                        return response.json().then(errorData => {
+                            alert(errorData.error.message);
+                        });
+                    } else {
+                        // JSON이 아닌 경우 일반 에러 메시지 표시
+                        throw new Error('서버에 오류가 발생했습니다.');
+                    }
+                }
+                return response.json();
+            })
+            .then(data => {
+                // 성공 응답 처리
+                alert(data.response);
+                window.location.href = '/masterpage_sys/refund_price/refund'; // 성공 시 리스트 페이지로 이동
+            })
+
+    });
+});
+
+
+/**
+ * 지원금종류 수정
+ */
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('refundDetailForm');
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault(); // 기본 폼 제출 동작 방지
+
+        const formData = new FormData(form);
+
+        fetch(form.action, {
+            method: 'PUT',
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) {
+                    // 응답 헤더의 Content-Type이 JSON인지 확인
+                    const contentType = response.headers.get('content-type');
+                    if (contentType && contentType.includes('application/json')) {
+                        // JSON 응답을 파싱하여 에러 메시지를 추출
+                        return response.json().then(errorData => {
+                            alert(errorData.error.message);
+                        });
+                    } else {
+                        // JSON이 아닌 경우 일반 에러 메시지 표시
+                        throw new Error('서버에 오류가 발생했습니다.');
+                    }
+                }
+                return response.json();
+            })
+            .then(data => {
+                // 성공 응답 처리
+                alert(data.response);
+                window.location.href = '/masterpage_sys/refund_price/refund'; // 성공 시 리스트 페이지로 이동
+            })
+
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const discountTypeRadios = document.querySelectorAll('input[name="discountType"]');
+    const titleElement = document.getElementById('percent-name');
+    const unitElement = document.getElementById('percent');
+    const refundRateInput = document.getElementById('refundRate');
+
+    discountTypeRadios.forEach(radio => {
+        radio.addEventListener('change', function () {
+            if (this.value === 'percent') {
+                titleElement.textContent = '지원율(%)';
+                unitElement.textContent = ' (%) ';
+                refundRateInput.placeholder = '반드시 % 단위로 할인/지원율을 숫자로 기입해주세요';
+            } else if (this.value === 'discount') {
+                titleElement.textContent = '할인금액(원)';
+                unitElement.textContent = ' (원) ';
+                refundRateInput.placeholder = '할인 금액을 숫자로 입력해주세요';
+            }
+        });
+    });
+});

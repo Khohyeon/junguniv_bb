@@ -94,7 +94,7 @@ public class BoardRestController {
 
     /**
      *  [관리자모드] 홈페이지관리 - 게시판관리 - 게시판상세 - 삭제하기
-     *  detailForm 페이지에서 삭제하기
+     *  detailForm.html 페이지에서 삭제하기
      */
     @DeleteMapping("/delete")
     public ResponseEntity<APIUtils.APIResult<String>> popupDelete(@RequestBody Long boardId) {
