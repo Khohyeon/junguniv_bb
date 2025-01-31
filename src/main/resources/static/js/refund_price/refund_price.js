@@ -93,6 +93,7 @@ function renderSearchResults(results) {
         const row = document.createElement('tr');
 
         let refundPriceTd = '';  // 환급 교육 정보 TD (studyType이 'normal'이 아닐 때만 추가)
+        let refundPriceUrl = '/masterpage_sys/refund_price/normal';
         if (result.studyType !== 'normal') {
             refundPriceTd = `
                 <td>
@@ -101,6 +102,7 @@ function renderSearchResults(results) {
                     (result.refundPriceType === 'cardjae' ? '국민내일배움카드(재직자)' : '알 수 없음'))}</span>
                 </td>
             `;
+            refundPriceUrl = '/masterpage_sys/refund_price'
         }
 
         row.innerHTML = `
@@ -116,7 +118,7 @@ function renderSearchResults(results) {
             ${refundPriceTd} <!-- studyType이 'normal'이 아닐 때만 추가됨 -->
 
             <td>
-                <a class="jv-btn" href="/masterpage_sys/refund_price/${result.studyType}/${result.refundPriceIdx}">
+                <a class="jv-btn" href="${refundPriceUrl}/${result.refundPriceIdx}">
                     ${result.refundPriceName}
                 </a>
             </td>
@@ -197,6 +199,10 @@ document.addEventListener('DOMContentLoaded', function () {
 document.addEventListener('DOMContentLoaded', function () {
     const studyType = document.body.getAttribute('data-study-type');
     const form = document.getElementById('refundForm');
+    let refundPriceUrl = '/masterpage_sys/refund_price/normal';
+    if (studyType !== 'normal') {
+        refundPriceUrl = '/masterpage_sys/refund_price';
+    }
 
     if (form) {  // 폼이 있을 때만 이벤트 리스너를 추가
         form.addEventListener('submit', function (e) {
@@ -228,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(data => {
                     // 성공 응답 처리
                     alert(data.response);
-                    window.location.href = '/masterpage_sys/refund_price/refund'; // 성공 시 리스트 페이지로 이동
+                    window.location.href = refundPriceUrl; // 성공 시 리스트 페이지로 이동
                 })
         });
     }
@@ -240,7 +246,10 @@ document.addEventListener('DOMContentLoaded', function () {
 document.addEventListener('DOMContentLoaded', function () {
     const studyType = document.body.getAttribute('data-study-type');
     const form = document.getElementById('refundDetailForm');
-
+    let refundPriceUrl = '/masterpage_sys/refund_price/normal';
+    if (studyType !== 'normal') {
+        refundPriceUrl = '/masterpage_sys/refund_price';
+    }
     if (form) {  // 폼이 있을 때만 이벤트 리스너를 추가
         form.addEventListener('submit', function (e) {
             e.preventDefault(); // 기본 폼 제출 동작 방지
@@ -271,7 +280,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(data => {
                     // 성공 응답 처리
                     alert(data.response);
-                    window.location.href = '/masterpage_sys/refund_price/'+studyType; // 성공 시 리스트 페이지로 이동
+                    window.location.href = refundPriceUrl; // 성공 시 리스트 페이지로 이동
                 })
         });
     }
@@ -309,19 +318,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const tabs = document.querySelectorAll('.jv-tab.tab2 li');
     const currentUrl = window.location.pathname; // 현재 URL 가져오기
 
-    tabs.forEach(tab => {
-        const link = tab.querySelector('a');
-        if (link) {
-            const href = link.getAttribute('href');
+    // 모든 탭에서 'active' 클래스 제거
+    tabs.forEach(tab => tab.classList.remove('active'));
 
-            // 현재 URL이 해당 href를 포함하고 있으면 active 클래스 추가
-            if (currentUrl.includes('/masterpage_sys/refund_price/refund')) {
-                // tabs.forEach(t => t.classList.remove('active')); // 기존 active 제거
-                document.querySelector('.jv-tab.tab2 li:first-child').classList.add('active'); // 환급교육 활성화
-            } else if (currentUrl.includes('/masterpage_sys/refund_price/normal')) {
-                tabs.forEach(t => t.classList.remove('active')); // 기존 active 제거
-                document.querySelector('.jv-tab.tab2 li:nth-child(2)').classList.add('active'); // 일반교육 활성화
-            }
-        }
-    });
+    // URL에 따라 해당 탭에 'active' 클래스 추가
+    if (currentUrl.includes('/masterpage_sys/refund_price/normal')) {
+        document.querySelector('.jv-tab.tab2 li:nth-child(2)').classList.add('active'); // 일반교육 활성화
+    } else if (currentUrl.includes('/masterpage_sys/refund_price')) {
+        document.querySelector('.jv-tab.tab2 li:first-child').classList.add('active'); // 환급교육 활성화
+    }
 });

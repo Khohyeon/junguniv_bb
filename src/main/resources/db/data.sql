@@ -67,7 +67,7 @@ INSERT INTO MANAGER_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX, MENU_GROU
 ('기본설정', 1, 'Y', '#', 13, 'SYSTEM', 3),
 ('환급교육', 1, 'Y', '#', 14, 'SYSTEM', 3),
 ('일반교육', 2, 'Y', '#', 14, 'SYSTEM', 3),
-('지원금종류설정', 1, 'Y', '/masterpage_sys/refund_price/refund', 15, 'SYSTEM', 3),
+('지원금종류설정', 1, 'Y', '/masterpage_sys/refund_price', 15, 'SYSTEM', 3),
 ('관리자모드 메뉴분류관리', 1, 'Y', '/masterpage_sys/branch/admin', 16, 'SYSTEM', 3),
 ('강사모드 메뉴분류관리', 1, 'Y', '/masterpage_sys/branch/teacher', 16, 'SYSTEM', 3),
 ('위탁기업모드 메뉴분류관리', 1, 'Y', '/masterpage_sys/branch/company', 16, 'SYSTEM', 3),

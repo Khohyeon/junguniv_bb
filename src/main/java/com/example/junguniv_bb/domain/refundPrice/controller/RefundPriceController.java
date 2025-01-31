@@ -15,7 +15,7 @@ public class RefundPriceController {
 
     private final RefundPriceService refundPriceService;
 
-    @GetMapping("/refund")
+    @GetMapping
     public String refundPrice() {
         return "/masterpage_sys/refund_price/refund/listForm";
     }
@@ -25,7 +25,7 @@ public class RefundPriceController {
         return "/masterpage_sys/refund_price/normal/listForm";
     }
 
-    @GetMapping("/refund/save")
+    @GetMapping("/save")
     public String saveRefundPrice() {
         return "/masterpage_sys/refund_price/refund/saveForm";
     }
@@ -35,7 +35,7 @@ public class RefundPriceController {
         return "/masterpage_sys/refund_price/normal/saveForm";
     }
 
-    @GetMapping("/refund/{refundPriceIdx}")
+    @GetMapping("/{refundPriceIdx}")
     public String saveRefundPrice(@PathVariable Long refundPriceIdx, Model model) {
         model.addAttribute("refundDetail", refundPriceService.refundPriceDetail(refundPriceIdx));
         return "/masterpage_sys/refund_price/refund/detailForm";
