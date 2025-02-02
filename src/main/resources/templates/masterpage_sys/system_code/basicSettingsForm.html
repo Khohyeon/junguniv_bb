@@ -1,0 +1,155 @@
+<!-- 📌📌📌📌 시스템관리 > 시스템설정 > 기본설정 페이지입니다. 📌📌📌📌  -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>시스템설정 - 기본설정</title>
+
+	<!-- 헤더에서 CSS 포함 -->
+	<th:block th:replace="fragments/header :: head"></th:block>
+
+	<!-- jQuery UI -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+	<!-- CSS -->
+	<link rel="stylesheet" th:href="@{/css/system_code/system_code.css}">
+
+</head>
+<body>
+
+	<!-- 헤더에서 상단 메뉴 포함 -->
+	<th:block th:replace="fragments/header :: header"></th:block>
+
+	<div class="inner">
+		<div class="form-wrap2 system-setting01">
+			<div class="column-tc-wrap column-tc-wrap2 part2">
+				<div class="column-tc">
+					<div class="con flex2">
+						<div>
+							<div class="tit">로그인 세션관리</div>
+							<div class="con">
+								<div id="range" class="cntr mt15 ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
+									<div class="ui-slider-range ui-corner-all ui-widget-header ui-slider-range-min"></div>
+									<span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"></span>
+								</div>
+							</div>
+						</div>
+						<div>
+							<div class="tit">수강신청 마감시간</div>
+							<div class="con">
+								<div class="flex-def">
+									<input type="text" data-setting="수강신청 마감시간">
+									<a href="#" class="jv-btn fill01 save-btn save-course-deadline">저장</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="column-tc">
+					<div class="con flex2">
+						<div>
+							<div class="tit">관리자모드 제목</div>
+							<div class="con">
+								<div class="flex-def">
+									<input type="text" data-setting="관리자모드 제목">
+									<a href="#" class="jv-btn fill01 save-btn save-admin-title">저장</a>
+								</div>
+							</div>
+						</div>
+						<div>
+							<div class="tit">증명서별 하단 기관명 표시</div>
+							<div class="con">
+								<div class="flex-def">
+									<input type="text" data-setting="증명서별 하단 기관명">
+									<a href="#" class="jv-btn fill01 save-btn save-certificate-footer">저장</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="column-tc-wrap column-tc-wrap2 part2">
+				<div class="column-tc">
+					<div class="con flex2">
+						<div>
+							<div class="tit">평가알림기능</div>
+							<div class="con">
+								<input type="checkbox" class="switch" id="switch1">
+								<label for="switch1" class="switch"></label>
+							</div>
+						</div>
+						<div>
+							<div class="tit">회원가입 안내 자동문자/메일 사용여부</div>
+							<div class="con">
+								<input type="checkbox" class="switch" id="switch2">
+								<label for="switch2" class="switch"></label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="column-tc">
+					<div class="tit">관리자페이지 로고 이미지 등록</div>
+					<div class="con">
+						<div class="flex-def">
+							<input type="file" id="adminLogoFile" accept="image/*">
+							<a href="#" class="jv-btn fill01 save-btn save-admin-logo">저장</a>
+						</div>
+						<div id="previewImage" class="preview-image"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-wrap2 system-setting02">
+			<div class="list-wrap">
+				<div class="monitoring-accounts">
+					<h2 class="form-tit">모니터링 전송 중지 계정 등록</h2>
+					<div class="cont-wrap">
+						<div class="con01">
+							<input type="text" placeholder="ID를 입력하세요">
+							<a href="#none" class="jv-btn fill01">등록하기</a>
+						</div>
+						<div class="con02">
+							<ul>
+								<!-- 동적으로 추가될 계정 목록 -->
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="forbidden-accounts">
+					<h2 class="form-tit">가입불가 ID</h2>
+					<div class="cont-wrap">
+						<div class="con01">
+							<input type="text" placeholder="ID를 입력하세요">
+							<a href="#none" class="jv-btn fill01">등록하기</a>
+						</div>
+						<div class="con02">
+							<ul>
+								<!-- 동적으로 추가될 계정 목록 -->
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="review-accounts">
+					<h2 class="form-tit">심사계정 등록</h2>
+					<div class="cont-wrap">
+						<div class="con01">
+							<input type="text" placeholder="ID를 입력하세요">
+							<a href="#none" class="jv-btn fill01">등록하기</a>
+						</div>
+						<div class="con02">
+							<ul>
+								<!-- 동적으로 추가될 계정 목록 -->
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script th:src="@{/js/system_code/system_code.js}"></script>
+</body>
+</html>

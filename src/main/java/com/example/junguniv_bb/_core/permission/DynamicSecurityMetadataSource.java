@@ -27,7 +27,7 @@ public class DynamicSecurityMetadataSource implements FilterInvocationSecurityMe
     private final Map<String, Collection<ConfigAttribute>> matchCache = new ConcurrentHashMap<>();
 
     // 개발 모드 플래그 추가
-    private static final boolean IS_DEV_MODE = false; // TODO 개발 완료 후 false로 변경
+    private static final boolean IS_DEV_MODE = true; // TODO 개발 완료 후 false로 변경
 
     public DynamicSecurityMetadataSource(ManagerMenuRepository managerMenuRepository) {
         this.managerMenuRepository = managerMenuRepository;
