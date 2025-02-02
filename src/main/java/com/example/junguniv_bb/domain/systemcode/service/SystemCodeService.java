@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -181,5 +182,16 @@ public class SystemCodeService {
      */
     public Optional<SystemCode> findBySystemCodeNameAndSystemCodeGroup(String systemCodeName, String systemCodeGroup) {
         return systemCodeRepository.findBySystemCodeNameAndSystemCodeGroup(systemCodeName, systemCodeGroup);
+    }
+
+    /**
+     * 교육 타입에 맞는 시스템 코드 조회
+     * @param systemCodeKey 시스템 코드 키
+     * @param currentGroup 현재 교육 그룹 (일반교육/환급교육)
+     * @return Optional<SystemCode>
+     */
+    public Optional<SystemCode> findBySystemCodeKeyForEducationType(String systemCodeKey, String currentGroup) {
+        // 현재 그룹의 설정만 반환
+        return findBySystemCodeKeyAndSystemCodeGroup(systemCodeKey, currentGroup);
     }
 }

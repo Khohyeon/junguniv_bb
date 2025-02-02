@@ -102,7 +102,6 @@ async function handleFileSelect(file) {
         const fileNameInput = document.getElementById('tempFileName');
         if (fileNameInput) {
             fileNameInput.value = uploadData.fileName;
-            console.log('임시 파일명 저장됨:', uploadData.fileName); // 디버깅용 로그
         } else {
             console.error('tempFileName input을 찾을 수 없습니다.'); // 디버깅용 로그
         }

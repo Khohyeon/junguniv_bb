@@ -33,54 +33,54 @@ public class MarkRefundRestController {
             Map<String, String> settings = new HashMap<>();
             
             // 기본 사용값 설정
-            systemCodeService.findBySystemCodeKeyAndSystemCodeGroup("SEQUENTIAL_LEARNING", "환급교육")
+            systemCodeService.findBySystemCodeKeyForEducationType("SEQUENTIAL_LEARNING", "환급교육")
                 .ifPresent(code -> settings.put("sequentialLearning", code.getSystemCodeValue()));
             
-            systemCodeService.findBySystemCodeKeyAndSystemCodeGroup("MOTP", "환급교육")
+            systemCodeService.findBySystemCodeKeyForEducationType("MOTP", "환급교육")
                 .ifPresent(code -> settings.put("motp", code.getSystemCodeValue()));
             
-            systemCodeService.findBySystemCodeKeyAndSystemCodeGroup("IDENTITY_VERIFICATION", "환급교육")
+            systemCodeService.findBySystemCodeKeyForEducationType("IDENTITY_VERIFICATION", "환급교육")
                 .ifPresent(code -> settings.put("identityVerification", code.getSystemCodeValue()));
             
-            systemCodeService.findBySystemCodeKeyAndSystemCodeGroup("LEARNING_50_PERCENT", "환급교육")
+            systemCodeService.findBySystemCodeKeyForEducationType("LEARNING_50_PERCENT", "환급교육")
                 .ifPresent(code -> settings.put("per", code.getSystemCodeValue()));
             
-            systemCodeService.findBySystemCodeKeyAndSystemCodeGroup("LCMS_LEARNING_RESTRICT", "환급교육")
+            systemCodeService.findBySystemCodeKeyForEducationType("LCMS_LEARNING_RESTRICT", "환급교육")
                 .ifPresent(code -> settings.put("lcmsLearningRestrict", code.getSystemCodeValue()));
             
-            systemCodeService.findBySystemCodeKeyAndSystemCodeGroup("MONITORING_OTP_AUTH", "환급교육")
+            systemCodeService.findBySystemCodeKeyForEducationType("MONITORING_OTP_AUTH", "환급교육")
                 .ifPresent(code -> settings.put("monitoringOtpAuth", code.getSystemCodeValue()));
             
-            systemCodeService.findBySystemCodeKeyAndSystemCodeGroup("COURSE_BOARD_SHARE", "환급교육")
+            systemCodeService.findBySystemCodeKeyForEducationType("COURSE_BOARD_SHARE", "환급교육")
                 .ifPresent(code -> settings.put("courseBoardShare", code.getSystemCodeValue()));
             
-            systemCodeService.findBySystemCodeKeyAndSystemCodeGroup("AUTO_SMS_MAIL", "환급교육")
+            systemCodeService.findBySystemCodeKeyForEducationType("AUTO_SMS_MAIL", "환급교육")
                 .ifPresent(code -> settings.put("autoSmsMail", code.getSystemCodeValue()));
 
             // 복습 기능 기본 설정
-            systemCodeService.findBySystemCodeKeyAndSystemCodeGroup("REVIEW_PERIOD_TYPE", "환급교육")
+            systemCodeService.findBySystemCodeKeyForEducationType("REVIEW_PERIOD_TYPE", "환급교육")
                 .ifPresent(code -> settings.put("reviewGiganChktype", code.getSystemCodeValue()));
             
-            systemCodeService.findBySystemCodeKeyAndSystemCodeGroup("REVIEW_PERIOD_VALUE", "환급교육")
+            systemCodeService.findBySystemCodeKeyForEducationType("REVIEW_PERIOD_VALUE", "환급교육")
                 .ifPresent(code -> settings.put("reviewGiganChktypeValue", code.getSystemCodeValue()));
 
-            systemCodeService.findBySystemCodeKeyAndSystemCodeGroup("REVIEW_TARGET", "환급교육")
+            systemCodeService.findBySystemCodeKeyForEducationType("REVIEW_TARGET", "환급교육")
                 .ifPresent(code -> settings.put("reviewTarget", code.getSystemCodeValue()));
 
             // 수료 관련 기본 설정
-            systemCodeService.findBySystemCodeKeyAndSystemCodeGroup("LCMS_PROGRESS_FINISH_PERCENT", "환급교육")
+            systemCodeService.findBySystemCodeKeyForEducationType("LCMS_PROGRESS_FINISH_PERCENT", "환급교육")
                 .ifPresent(code -> settings.put("lcmsProgressFinishPercent", code.getSystemCodeValue()));
             
-            systemCodeService.findBySystemCodeKeyAndSystemCodeGroup("LCMS_PROGRESS_1DAY_PERCENT", "환급교육")
+            systemCodeService.findBySystemCodeKeyForEducationType("LCMS_PROGRESS_1DAY_PERCENT", "환급교육")
                 .ifPresent(code -> settings.put("lcmsProgress1dayPercent", code.getSystemCodeValue()));
             
-            systemCodeService.findBySystemCodeKeyAndSystemCodeGroup("LCMS_LIMIT_UNIT_PERCENT", "환급교육")
+            systemCodeService.findBySystemCodeKeyForEducationType("LCMS_LIMIT_UNIT_PERCENT", "환급교육")
                 .ifPresent(code -> settings.put("lcmsLimitUnitPercent", code.getSystemCodeValue()));
 
-            systemCodeService.findBySystemCodeKeyAndSystemCodeGroup("LCMS_RESULT_FINISH_TYPE", "환급교육")
+            systemCodeService.findBySystemCodeKeyForEducationType("LCMS_RESULT_FINISH_TYPE", "환급교육")
                 .ifPresent(code -> settings.put("lcmsResultFinishChktype", code.getSystemCodeValue()));
             
-            systemCodeService.findBySystemCodeKeyAndSystemCodeGroup("LCMS_RESULT_FINISH_VALUE", "환급교육")
+            systemCodeService.findBySystemCodeKeyForEducationType("LCMS_RESULT_FINISH_VALUE", "환급교육")
                 .ifPresent(code -> settings.put("lcmsResultFinishChktypeValue", code.getSystemCodeValue()));
 
             return ResponseEntity.ok(APIUtils.success(settings));

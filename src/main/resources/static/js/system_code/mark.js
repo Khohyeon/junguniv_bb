@@ -1,74 +1,150 @@
 // API 엔드포인트 상수
-const API_ENDPOINT = '/masterpage_sys/mark/refund/api/settings';
+const API_ENDPOINTS = {
+    refund: '/masterpage_sys/mark/refund/api/settings',
+    normal: '/masterpage_sys/mark/normal/api/settings'
+};
 
-// 환급교육 설정 관련 상수
-const REFUND_SETTINGS = {
-    // 체크박스 설정
-    checkboxes: [
-        { id: 'sequentialLearning', name: '순차학습 여부', rule: 'Y/N' },
-        { id: 'motp', name: 'MOTP 사용 여부', rule: 'Y/N' },
-        { id: 'identityVerification', name: '본인인증 사용 여부', rule: 'Y/N' },
-        { id: 'per', name: '50% 학습 설정', rule: 'Y/N' },
-        { id: 'lcmsLearningRestrict', name: '차시 학습 제한 여부', rule: 'Y/N' },
-        { id: 'monitoringOtpAuth', name: '모니터링 전송 여부', rule: 'Y/N' },
-        { id: 'courseBoardShare', name: '개설과정 게시판 공유 여부', rule: 'Y/N' },
-        { id: 'autoSmsMail', name: '자동문자/메일 사용 여부', rule: 'Y/N' }
-    ],
-    // 라디오 버튼 설정
-    radioGroups: [
-        { 
-            name: 'reviewGiganChktype', 
-            groupName: '복습 기간 유형', 
-            rule: 'end/suryo',
-            options: [
-                { value: 'end', inputId: 'reviewGiganChktype1', label: '교육종료일로부터' },
-                { value: 'suryo', inputId: 'reviewGiganChktype2', label: '수료일로부터' }
-            ]
-        },
-        { 
-            name: 'reviewTarget', 
-            groupName: '복습 대상', 
-            rule: 'target_suryo/target_all' 
-        },
-        { 
-            name: 'lcmsResultFinishChktype', 
-            groupName: '수료기준 종합점수 유형', 
-            rule: 'OutOf100/each',
-            options: [
-                { value: 'OutOf100', inputId: 'lcmsResultFinishChktype1', label: '100점 만점 기준' },
-                { value: 'each', inputId: 'lcmsResultFinishChktype2', label: '평가 구분/항목별 점수 기준' }
-            ]
-        }
-    ],
-    // 텍스트 입력 설정
-    textInputs: [
-        { id: 'lcmsProgressFinishPercent', name: '단원수업 최소 학습율', rule: '퍼센트' },
-        { id: 'lcmsProgress1dayPercent', name: '1일 최대 진도율', rule: '퍼센트' },
-        { id: 'lcmsLimitUnitPercent', name: '수료기준 진도율', rule: '퍼센트' }
-    ],
-    // 연관된 값 입력 설정
-    relatedInputs: [
-        { 
-            radioName: 'reviewGiganChktype',
-            name: '복습 기간 값',
-            rule: '일수',
-            valueKey: 'reviewGiganChktypeValue',
-            options: {
-                end: { inputId: 'reviewGiganChktype1' },
-                suryo: { inputId: 'reviewGiganChktype2' }
+// 교육 설정 관련 상수
+const SETTINGS = {
+    // 환급교육 설정
+    refund: {
+        // 체크박스 설정
+        checkboxes: [
+            { id: 'sequentialLearning', name: '순차학습 여부', rule: 'Y/N' },
+            { id: 'motp', name: 'MOTP 사용 여부', rule: 'Y/N' },
+            { id: 'identityVerification', name: '본인인증 사용 여부', rule: 'Y/N' },
+            { id: 'per', name: '50% 학습 설정', rule: 'Y/N' },
+            { id: 'lcmsLearningRestrict', name: '차시 학습 제한 여부', rule: 'Y/N' },
+            { id: 'monitoringOtpAuth', name: '모니터링 전송 여부', rule: 'Y/N' },
+            { id: 'courseBoardShare', name: '개설과정 게시판 공유 여부', rule: 'Y/N' },
+            { id: 'autoSmsMail', name: '자동문자/메일 사용 여부', rule: 'Y/N' }
+        ],
+        // 라디오 버튼 설정
+        radioGroups: [
+            { 
+                name: 'reviewGiganChktype', 
+                groupName: '복습 기간 유형', 
+                rule: 'end/suryo',
+                options: [
+                    { value: 'end', inputId: 'reviewGiganChktype1', label: '교육종료일로부터' },
+                    { value: 'suryo', inputId: 'reviewGiganChktype2', label: '수료일로부터' }
+                ]
+            },
+            { 
+                name: 'reviewTarget', 
+                groupName: '복습 대상', 
+                rule: 'target_suryo/target_all' 
+            },
+            { 
+                name: 'lcmsResultFinishChktype', 
+                groupName: '수료기준 종합점수 유형', 
+                rule: 'OutOf100/each',
+                options: [
+                    { value: 'OutOf100', inputId: 'lcmsResultFinishChktype1', label: '100점 만점 기준' },
+                    { value: 'each', inputId: 'lcmsResultFinishChktype2', label: '평가 구분/항목별 점수 기준' }
+                ]
             }
-        },
-        {
-            radioName: 'lcmsResultFinishChktype',
-            name: '수료기준 종합점수 값',
-            rule: '점수',
-            valueKey: 'lcmsResultFinishChktypeValue',
-            options: {
-                OutOf100: { inputId: 'lcmsResultFinishChktype1' },
-                each: { inputId: 'lcmsResultFinishChktype2' }
+        ],
+        // 텍스트 입력 설정
+        textInputs: [
+            { id: 'lcmsProgressFinishPercent', name: '단원수업 최소 학습율', rule: '퍼센트' },
+            { id: 'lcmsProgress1dayPercent', name: '1일 최대 진도율', rule: '퍼센트' },
+            { id: 'lcmsLimitUnitPercent', name: '수료기준 진도율', rule: '퍼센트' }
+        ],
+        // 연관된 값 입력 설정
+        relatedInputs: [
+            { 
+                radioName: 'reviewGiganChktype',
+                name: '복습 기간 값',
+                rule: '일수',
+                valueKey: 'reviewGiganChktypeValue',
+                options: {
+                    end: { inputId: 'reviewGiganChktype1' },
+                    suryo: { inputId: 'reviewGiganChktype2' }
+                }
+            },
+            {
+                radioName: 'lcmsResultFinishChktype',
+                name: '수료기준 종합점수 값',
+                rule: '점수',
+                valueKey: 'lcmsResultFinishChktypeValue',
+                options: {
+                    OutOf100: { inputId: 'lcmsResultFinishChktype1' },
+                    each: { inputId: 'lcmsResultFinishChktype2' }
+                }
             }
-        }
-    ]
+        ]
+    },
+    // 일반교육 설정
+    normal: {
+        // 체크박스 설정
+        checkboxes: [
+            { id: 'sequentialLearning', name: '순차학습 여부', rule: 'Y/N' },
+            { id: 'courseTakeAuto', name: '수강자동승인', rule: 'Y/N' },
+            { id: 'identityVerification', name: '본인인증 사용 여부', rule: 'Y/N' },
+            { id: 'per', name: '50% 학습 설정', rule: 'Y/N' },
+            { id: 'lcmsLearningRestrict', name: '차시 학습 제한 여부', rule: 'Y/N' },
+            { id: 'retakeAuto', name: '자동 재응시', rule: 'Y/N' },
+            { id: 'courseBoardShare', name: '개설과정 게시판 공유 여부', rule: 'Y/N' },
+            { id: 'autoSmsMail', name: '자동문자/메일 사용 여부', rule: 'Y/N' },
+            { id: 'suryoAuto', name: '자동 수료', rule: 'Y/N' }
+        ],
+        // 라디오 버튼 설정
+        radioGroups: [
+            { 
+                name: 'reviewGiganChktype', 
+                groupName: '복습 기간 유형', 
+                rule: 'end/suryo',
+                options: [
+                    { value: 'end', inputId: 'reviewGiganChktype1', label: '교육종료일로부터' },
+                    { value: 'suryo', inputId: 'reviewGiganChktype2', label: '수료일로부터' }
+                ]
+            },
+            { 
+                name: 'reviewTarget', 
+                groupName: '복습 대상', 
+                rule: 'target_suryo/target_all' 
+            },
+            { 
+                name: 'lcmsResultFinishChktype', 
+                groupName: '수료기준 종합점수 유형', 
+                rule: 'OutOf100/each',
+                options: [
+                    { value: 'OutOf100', inputId: 'lcmsResultFinishChktype1', label: '100점 만점 기준' },
+                    { value: 'each', inputId: 'lcmsResultFinishChktype2', label: '평가 구분/항목별 점수 기준' }
+                ]
+            }
+        ],
+        // 텍스트 입력 설정
+        textInputs: [
+            { id: 'lcmsProgressFinishPercent', name: '단원수업 최소 학습율', rule: '퍼센트' },
+            { id: 'lcmsProgress1dayPercent', name: '1일 최대 진도율', rule: '퍼센트' },
+            { id: 'lcmsLimitUnitPercent', name: '수료기준 진도율', rule: '퍼센트' }
+        ],
+        // 연관된 값 입력 설정
+        relatedInputs: [
+            { 
+                radioName: 'reviewGiganChktype',
+                name: '복습 기간 값',
+                rule: '일수',
+                valueKey: 'reviewGiganChktypeValue',
+                options: {
+                    end: { inputId: 'reviewGiganChktype1' },
+                    suryo: { inputId: 'reviewGiganChktype2' }
+                }
+            },
+            {
+                radioName: 'lcmsResultFinishChktype',
+                name: '수료기준 종합점수 값',
+                rule: '점수',
+                valueKey: 'lcmsResultFinishChktypeValue',
+                options: {
+                    OutOf100: { inputId: 'lcmsResultFinishChktype1' },
+                    each: { inputId: 'lcmsResultFinishChktype2' }
+                }
+            }
+        ]
+    }
 };
 
 // 공통 유틸리티 함수
@@ -115,6 +191,25 @@ const utils = {
     }
 };
 
+// 현재 페이지의 교육 타입 확인
+function getCurrentEducationType() {
+    const pathname = window.location.pathname;
+    const isRefund = pathname.includes('/masterpage_sys/mark/refund');
+    return isRefund ? 'refund' : 'normal';
+}
+
+// 현재 교육 타입의 설정 가져오기
+function getCurrentSettings() {
+    const educationType = getCurrentEducationType();
+    return SETTINGS[educationType];
+}
+
+// API 엔드포인트 가져오기
+function getApiEndpoint() {
+    const educationType = getCurrentEducationType();
+    return API_ENDPOINTS[educationType];
+}
+
 // API 호출 함수
 async function fetchWithErrorHandling(url, options = {}) {
     try {
@@ -143,7 +238,7 @@ async function saveSetting(type, value) {
         return null;
     }
 
-    const data = await fetchWithErrorHandling(API_ENDPOINT, {
+    const data = await fetchWithErrorHandling(getApiEndpoint(), {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -160,9 +255,10 @@ async function saveSetting(type, value) {
 // 설정값 수집 함수
 function collectCurrentSettings() {
     const settings = {};
+    const currentSettings = getCurrentSettings();
 
     // 체크박스 값 수집
-    REFUND_SETTINGS.checkboxes.forEach(({ id }) => {
+    currentSettings.checkboxes.forEach(({ id }) => {
         const checkbox = document.getElementById(id);
         if (checkbox) {
             settings[id] = checkbox.checked ? 'Y' : 'N';
@@ -170,7 +266,7 @@ function collectCurrentSettings() {
     });
 
     // 라디오 버튼 값 수집
-    REFUND_SETTINGS.radioGroups.forEach(({ name }) => {
+    currentSettings.radioGroups.forEach(({ name }) => {
         const checkedRadio = document.querySelector(`input[name="${name}"]:checked`);
         if (checkedRadio) {
             settings[name] = checkedRadio.value;
@@ -178,7 +274,7 @@ function collectCurrentSettings() {
     });
 
     // 텍스트 입력 값 수집
-    REFUND_SETTINGS.textInputs.forEach(({ id }) => {
+    currentSettings.textInputs.forEach(({ id }) => {
         const input = document.getElementById(id);
         if (input && input.value.trim()) {
             settings[id] = input.value.trim();
@@ -186,7 +282,7 @@ function collectCurrentSettings() {
     });
 
     // 연관된 입력 값 수집
-    REFUND_SETTINGS.relatedInputs.forEach(({ radioName, valueKey, options }) => {
+    currentSettings.relatedInputs.forEach(({ radioName, valueKey, options }) => {
         const checkedRadio = document.querySelector(`input[name="${radioName}"]:checked`);
         if (checkedRadio && options[checkedRadio.value]) {
             const input = document.getElementById(options[checkedRadio.value].inputId);
@@ -202,28 +298,30 @@ function collectCurrentSettings() {
 // 설정값 로드 함수
 async function loadSettings() {
     try {
-        const data = await fetchWithErrorHandling(API_ENDPOINT, {
+        const data = await fetchWithErrorHandling(getApiEndpoint(), {
             method: 'GET'
         });
 
         if (data.success) {
+            const currentSettings = getCurrentSettings();
+
             // 체크박스 설정
-            REFUND_SETTINGS.checkboxes.forEach(({ id }) => {
+            currentSettings.checkboxes.forEach(({ id }) => {
                 utils.dom.setCheckboxState(id, data.response[id]);
             });
 
             // 라디오 버튼 설정
-            REFUND_SETTINGS.radioGroups.forEach(({ name }) => {
+            currentSettings.radioGroups.forEach(({ name }) => {
                 utils.dom.setRadioState(name, data.response[name]);
             });
 
             // 텍스트 입력 설정
-            REFUND_SETTINGS.textInputs.forEach(({ id }) => {
+            currentSettings.textInputs.forEach(({ id }) => {
                 utils.dom.setTextInputValue(id, data.response[id]);
             });
 
             // 연관된 입력 값 설정
-            REFUND_SETTINGS.relatedInputs.forEach(({ radioName, valueKey, options }) => {
+            currentSettings.relatedInputs.forEach(({ radioName, valueKey, options }) => {
                 const checkedRadio = document.querySelector(`input[name="${radioName}"]:checked`);
                 if (checkedRadio && options[checkedRadio.value]) {
                     const input = document.getElementById(options[checkedRadio.value].inputId);
@@ -275,7 +373,7 @@ function handleSaveButtonClick() {
 
 // 라디오 버튼 변경 이벤트 핸들러 추가
 function handleRadioChange() {
-    REFUND_SETTINGS.relatedInputs.forEach(({ radioName, options }) => {
+    getCurrentSettings().relatedInputs.forEach(({ radioName, options }) => {
         const radios = document.getElementsByName(radioName);
         radios.forEach(radio => {
             radio.addEventListener('change', function() {
