@@ -34,8 +34,8 @@ INSERT INTO MANAGER_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX, MENU_GROU
 ('게시판관리', 3, 'Y', '/masterpage_sys/board/counsel', 2, 'SYSTEM', 2),
 ('문의상담관리', 4, 'Y', '/masterpage_sys/counsel', 2, 'SYSTEM', 2),
 ('일반통계', 1, 'Y', '#', 3, 'SYSTEM', 2),
-('기본설정', 1, 'Y', '#', 4, 'SYSTEM', 2),
-('기본표시정보', 2, 'Y', '#', 4, 'SYSTEM', 2),
+('기본설정', 1, 'Y', '/masterpage_sys/settings/basic', 4, 'SYSTEM', 2),
+('기본표시정보', 2, 'Y', '/masterpage_sys/mark/refund', 4, 'SYSTEM', 2),
 ('지원금종류설정', 3, 'Y', '#', 4, 'SYSTEM', 2),
 ('메뉴분류관리', 4, 'Y', '#', 4, 'SYSTEM', 2),
 ('메뉴명관리', 4, 'Y', '#', 4, 'SYSTEM', 2),
@@ -64,9 +64,9 @@ INSERT INTO MANAGER_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX, MENU_GROU
 ('홈페이지 Q&A', 1, 'Y', '#', 12, 'SYSTEM', 3),
 ('회원통계', 2, 'Y', '#', 12, 'SYSTEM', 3),
 ('회원접속통계', 3, 'Y', '#', 12, 'SYSTEM', 3),
-('기본설정', 1, 'Y', '#', 13, 'SYSTEM', 3),
-('환급교육', 1, 'Y', '#', 14, 'SYSTEM', 3),
-('일반교육', 2, 'Y', '#', 14, 'SYSTEM', 3),
+('기본설정', 1, 'Y', '/masterpage_sys/settings/basic', 13, 'SYSTEM', 3),
+('환급교육', 1, 'Y', '/masterpage_sys/mark/refund', 14, 'SYSTEM', 3),
+('일반교육', 2, 'Y', '/masterpage_sys/mark/normal', 14, 'SYSTEM', 3),
 ('지원금종류설정', 1, 'Y', '/masterpage_sys/refund_price', 15, 'SYSTEM', 3),
 ('관리자모드 메뉴분류관리', 1, 'Y', '/masterpage_sys/branch/admin', 16, 'SYSTEM', 3),
 ('강사모드 메뉴분류관리', 1, 'Y', '/masterpage_sys/branch/teacher', 16, 'SYSTEM', 3),
@@ -178,3 +178,11 @@ VALUES
     (4, 'cardsil', '특별할인', 50000, 'N', 4, 'discount', 'refund'),
     (5, 'cardjae', '이벤트할인', 30000, 'Y', 5, 'discount', 'refund'),
     (6, null, '이벤트할인', 30000, 'Y', 5, 'discount', 'normal');
+
+INSERT INTO SYSTEM_CODE (SYSTEM_CODE_NAME, SYSTEM_CODE_RULE, SYSTEM_CODE_GROUP, SYSTEM_CODE_KEY, SYSTEM_CODE_VALUE)
+VALUES
+('수강신청 마감시간', '시간 형식 (HH:mm)', '기본설정', 'COURSE_DEADLINE', '17:00'), 
+('관리자모드 제목', NULL, '기본설정', 'ADMIN_TITLE', '정유니브대학교 관리자'), 
+('증명서별 하단 기관명', NULL, '기본설정', 'CERTIFICATE_FOOTER', '정유니브대학교'),
+('평가알림기능', 'Y/N', '기본설정', 'EVAL_NOTIFICATION', 'N'),
+('회원가입 안내 자동문자/메일 사용여부', 'Y/N', '기본설정', 'AUTO_MESSAGE', 'N');

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+	<meta charset="UTF-8">
+	<title>기본표시정보 - 일반교육</title>
+
+	<!-- 헤더에서 CSS 포함 -->
+	<th:block th:replace="fragments/header :: head"></th:block>
+
+	<!-- CSS -->
+	<link rel="stylesheet" th:href="@{/css/system_code/mark.css}">
+</head>
+
+
+<body>
+
+	<!-- 헤더에서 상단 메뉴 포함 -->
+	<th:block th:replace="fragments/header :: header"></th:block>
+
+	
+	<div class="inner">
+		<div class="form-wrap2">
+			<h2 class="form-tit">기본 사용값 설정</h2>
+			<table class="table01-hor">
+				<colgroup>
+					<col width="16.666%">
+					<col width="16.666%">
+					<col width="16.666%">
+					<col width="16.666%">
+					<col width="16.666%">
+					<col width="16.666%">
+				</colgroup>
+				<form name="mainform" method="post">
+					<tbody>
+						<tr>
+							<th>순차학습 여부</th>
+							<td>
+								<input type="checkbox" class="switch" id="sequentialLearning" name="sequentialLearning" value="Y">
+								<label for="sequentialLearning" class="switch"></label>
+							</td>
+							<th>수강자동승인</th>
+							<td>
+								<input type="checkbox" class="switch" id="courseTakeAuto" name="courseTakeAuto" value="Y">
+								<label for="courseTakeAuto" class="switch"></label>
+							</td>
+							<th>본인인증 사용 여부</th>
+							<td>
+								<input type="checkbox" class="switch" id="identityVerification" name="identityVerification" value="Y">
+								<label for="identityVerification" class="switch"></label>
+							</td>
+						</tr>
+						<tr>
+							<th>차시학습 제한 여부</th>
+							<td>
+								<input type="checkbox" class="switch" id="lcmsLearningRestrict" name="lcmsLearningRestrict" value="Y">
+								<label for="lcmsLearningRestrict" class="switch"></label>
+							</td>
+							<th>50% 학습 설정</th>
+							<td>
+								<input type="checkbox" class="switch" id="per" name="per" value="Y">
+								<label for="per" class="switch"></label>
+							</td>
+							<th>자동 재응시</th>
+							<td>
+								<input type="checkbox" class="switch" id="retakeAuto" name="retakeAuto" value="Y">
+								<label for="retakeAuto" class="switch"></label>
+							</td>
+						</tr>
+						<tr>
+							<th>개설과정 게시판 공유 여부</th>
+							<td>
+								<input type="checkbox" class="switch" id="courseBoardShare" name="courseBoardShare" value="Y">
+								<label for="courseBoardShare" class="switch"></label>
+							</td>
+							<th>자동문자/메일 사용 여부</th>
+							<td>
+								<input type="checkbox" class="switch" id="autoSmsMail" name="autoSmsMail" value="Y">
+								<label for="autoSmsMail" class="switch"></label>
+							</td>
+							<th>자동 수료</th>
+							<td>
+								<input type="checkbox" class="switch" id="suryoAuto" name="suryoAuto" value="Y">
+								<label for="suryoAuto" class="switch"></label>
+							</td>
+						</tr>
+					</tbody>
+				</form>
+			</table>
+		</div>
+
+		<div class="form-wrap2 system-info-review">
+			<h2 class="form-tit">복습 기능 기본 설정</h2>
+			<table class="table01-hor">
+				<colgroup>
+					<col width="20%">
+					<col width="80%">
+				</colgroup>
+				<tbody>
+					<tr>
+						<th>복습기간</th>
+						<td>
+							<div class="card-wrap">
+								<label class="ci-card">
+									<input type="radio" name="reviewGiganChktype" id="reviewGiganChktypeEnd" value="end" class="ci-card-input">
+									<div class="ci-card-body">
+										<div class="body-tit">
+											교육종료일로부터
+										</div>
+										<div class="body-con">
+											<input type="text" name="reviewGiganChktypeValue" id="reviewGiganChktype1"> 일
+										</div>
+									</div>
+								</label>
+								<label class="ci-card">
+									<input type="radio" name="reviewGiganChktype" id="reviewGiganChktypeSuryo" value="suryo" class="ci-card-input">
+									<div class="ci-card-body">
+										<div class="body-tit">
+											수료일로부터
+										</div>
+										<div class="body-con">
+											<input type="text" name="reviewGiganChktypeValue" id="reviewGiganChktype2"> 일
+										</div>
+									</div>
+								</label>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<th>복습대상</th>
+						<td>
+							<label class="c-input ci-radio">
+								<input type="radio" name="reviewTarget" id="reviewTargetSuryo" value="target_suryo"> 수료처리된 인원만 복습
+								<div class="ci-show"></div>
+							</label>
+							<label class="c-input ci-radio">
+								<input type="radio" name="reviewTarget" id="reviewTargetAll" value="target_all"> 수료/미수료 포함 개설 과정 수강 인원 모두 복습
+								<div class="ci-show"></div>
+							</label>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="form-wrap2 system-info-complete">
+			<h2 class="form-tit">수료 관련 기본 설정</h2>
+			<table class="table01-hor">
+				<colgroup>
+					<col width="13.333%">
+					<col width="20%">
+					<col width="13.333%">
+					<col width="20%">
+					<col width="13.333%">
+					<col width="20%">
+				</colgroup>
+				<tbody>
+					<tr>
+						<th>단원수업 최소 학습율</th>
+						<td>
+							<input type="text" name="lcmsProgressFinishPercent" id="lcmsProgressFinishPercent"> %
+						</td>
+						<th>1일 최대 진도율</th>
+						<td>
+							<input type="text" name="lcmsProgress1dayPercent" id="lcmsProgress1dayPercent"> %
+						</td>
+						<th>수료기준 진도율</th>
+						<td>
+							<input type="text" name="lcmsLimitUnitPercent" id="lcmsLimitUnitPercent"> %
+						</td>
+					</tr>
+					<tr>
+						<th>수료기준 종합점수</th>
+						<td colspan="5">
+							<div class="card-wrap">
+								<label class="ci-card">
+									<input type="radio" name="lcmsResultFinishChktype" id="lcmsResultFinishChktype100" value="OutOf100" class="ci-card-input">
+									<div class="ci-card-body">
+										<div class="body-tit">평가 구분/항목별 환산 점수 합계 기준</div>
+										<div class="body-con">
+											100점 만점 기준 <input type="text" name="lcmsResultFinishChktypeValue" id="lcmsResultFinishChktype1"> 점
+										</div>
+									</div>
+								</label>
+								<label class="ci-card">
+									<input type="radio" name="lcmsResultFinishChktype" id="lcmsResultFinishChktypeEach" value="each" class="ci-card-input">
+									<div class="ci-card-body">
+										<div class="body-tit">평가 구분/항목별 점수 기준</div>
+										<div class="body-con">
+											평가 구분/항목별 획득 점수가 각각 <input type="text" name="lcmsResultFinishChktypeValue" id="lcmsResultFinishChktype2"> 점 이상
+										</div>
+									</div>
+								</label>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		</form>
+		<div class="btn-wrap mt50">
+			<button type="button" class="jv-btn jb-fill04-lg" id="saveButton">저장</button>
+		</div>
+	</div>
+
+	<script th:src="@{/js/system_code/mark.js}"></script>
+</body>
+</html>
