@@ -34,8 +34,8 @@ INSERT INTO MANAGER_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX, MENU_GROU
 ('게시판관리', 3, 'Y', '/masterpage_sys/board/counsel', 2, 'SYSTEM', 2),
 ('문의상담관리', 4, 'Y', '/masterpage_sys/counsel', 2, 'SYSTEM', 2),
 ('일반통계', 1, 'Y', '#', 3, 'SYSTEM', 2),
-('기본설정', 1, 'Y', '#', 4, 'SYSTEM', 2),
-('기본표시정보', 2, 'Y', '#', 4, 'SYSTEM', 2),
+('기본설정', 1, 'Y', '/masterpage_sys/settings/basic', 4, 'SYSTEM', 2),
+('기본표시정보', 2, 'Y', '/masterpage_sys/mark/refund', 4, 'SYSTEM', 2),
 ('지원금종류설정', 3, 'Y', '#', 4, 'SYSTEM', 2),
 ('메뉴분류관리', 4, 'Y', '#', 4, 'SYSTEM', 2),
 ('메뉴명관리', 4, 'Y', '#', 4, 'SYSTEM', 2),
@@ -64,9 +64,9 @@ INSERT INTO MANAGER_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX, MENU_GROU
 ('홈페이지 Q&A', 1, 'Y', '#', 12, 'SYSTEM', 3),
 ('회원통계', 2, 'Y', '#', 12, 'SYSTEM', 3),
 ('회원접속통계', 3, 'Y', '#', 12, 'SYSTEM', 3),
-('기본설정', 1, 'Y', '#', 13, 'SYSTEM', 3),
-('환급교육', 1, 'Y', '#', 14, 'SYSTEM', 3),
-('일반교육', 2, 'Y', '#', 14, 'SYSTEM', 3),
+('기본설정', 1, 'Y', '/masterpage_sys/settings/basic', 13, 'SYSTEM', 3),
+('환급교육', 1, 'Y', '/masterpage_sys/mark/refund', 14, 'SYSTEM', 3),
+('일반교육', 2, 'Y', '/masterpage_sys/mark/normal', 14, 'SYSTEM', 3),
 ('지원금종류설정', 1, 'Y', '/masterpage_sys/refund_price', 15, 'SYSTEM', 3),
 ('관리자모드 메뉴분류관리', 1, 'Y', '/masterpage_sys/branch/admin', 16, 'SYSTEM', 3),
 ('강사모드 메뉴분류관리', 1, 'Y', '/masterpage_sys/branch/teacher', 16, 'SYSTEM', 3),
@@ -197,3 +197,11 @@ INSERT INTO MAJOR (MAJOR_IDX, COLLEGE_IDX, MAJOR_NAME, ENG_NAME, CHK_USE, PURPOS
 -- (1, 1, 1, '소프트웨어 공학 개론', 'SW101', '이론', 100000, 3, '4개월', 30, '공개', '2024', '06', '소프트웨어 공학반', 1, 1, '2024-05-01', '2024-05-30', '2024-06-01', '2024-10-01', 'N', 'Y', 'N', 'Y', 'Y', 'N', 'N', 20000, 5000, '장학금', '지원금'),
 -- (2, 1, 2, 'AI 머신러닝 기초', 'AI101', '실습', 120000, 4, '6개월', 40, '공개', '2024', '07', 'AI 기초반', 2, 2, '2024-06-01', '2024-06-30', '2024-07-01', '2024-12-01', 'Y', 'Y', 'Y', 'Y', 'N', 'N', 'N', 25000, 7000, '할인', '추가금'),
 -- (3, 2, 3, '디지털 마케팅 전략', 'MK201', '이론', 80000, 3, '3개월', 25, '공개', '2024', '05', '마케팅 전략반', 3, 3, '2024-04-01', '2024-04-30', '2024-05-01', '2024-08-01', 'N', 'N', 'N', 'N', 'Y', 'N', 'Y', 15000, 3000, '장학금', '지원금');
+
+INSERT INTO SYSTEM_CODE (SYSTEM_CODE_NAME, SYSTEM_CODE_RULE, SYSTEM_CODE_GROUP, SYSTEM_CODE_KEY, SYSTEM_CODE_VALUE)
+VALUES
+('수강신청 마감시간', '시간 형식 (HH:mm)', '기본설정', 'COURSE_DEADLINE', '17:00'),
+('관리자모드 제목', NULL, '기본설정', 'ADMIN_TITLE', '정유니브대학교 관리자'),
+('증명서별 하단 기관명', NULL, '기본설정', 'CERTIFICATE_FOOTER', '정유니브대학교'),
+('평가알림기능', 'Y/N', '기본설정', 'EVAL_NOTIFICATION', 'N'),
+('회원가입 안내 자동문자/메일 사용여부', 'Y/N', '기본설정', 'AUTO_MESSAGE', 'N');

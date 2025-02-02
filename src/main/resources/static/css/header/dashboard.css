@@ -267,7 +267,7 @@ div.form-wrap2.use-status div.company-list ul{display:flex;}
 div.form-wrap2.use-status div.company-list ul li{position:relative; display:flex; justify-content:space-between; align-items:center; margin:3px 10px 3px 0; padding:5px 10px; border:1px solid #ddd; border-radius:5px; background:#f5f5f5;}
 div.form-wrap2.use-status div.company-list ul li div.txt div.txt01{font-size:12px; color:#888;}
 div.form-wrap2.use-status div.company-list ul li div.txt div.txt02{font-size:14px; font-family:"Pretendard-SemiBold";}
-div.form-wrap2.use-status div.company-list ul li a{position:absolute; top:-7px; right:-7px; display:block; width:15px; height:15px; border-radius:50%; background:#333 url("/fro_end/img/IC_close_WH.svg") center / 13px auto no-repeat;}
+div.form-wrap2.use-status div.company-list ul li a{position:absolute; top:-7px; right:-7px; display:block; width:15px; height:15px; border-radius:50%; background:#333 url("../../img/header/IC_close_WH.svg") center / 13px auto no-repeat;}
 div.form-wrap2.use-status div.company-list ul li div.txt{display:flex;}
 div.form-wrap2.use-status div.company-list ul li div.txt div.txt01{font-size:14px; color:#333; font-family:"Pretendard-SemiBold";}
 div.form-wrap2.use-status div.company-list ul li div.txt div.txt01:after{content:""; display:inline-block; width:1px; height:8px; transform:rotate(30deg); margin:0 10px; background:#aaa; font-family:"Pretendard-Regular";}
@@ -311,7 +311,7 @@ div.modal.operationSetting div.company-list ul{display:flex;}
 div.modal.operationSetting div.company-list ul li{position:relative; display:flex; justify-content:space-between; align-items:center; margin:3px 10px 3px 0; padding:5px 10px; border:1px solid #ddd; border-radius:5px; background:#f5f5f5;}
 div.modal.operationSetting div.company-list ul li div.txt div.txt01{font-size:12px; color:#888;}
 div.modal.operationSetting div.company-list ul li div.txt div.txt02{font-size:14px; font-family:"Pretendard-SemiBold";}
-div.modal.operationSetting div.company-list ul li a{position:absolute; top:-7px; right:-7px; display:block; width:15px; height:15px; border-radius:50%; background:#333 url("/fro_end/img/IC_close_WH.svg") center / 13px auto no-repeat;}
+div.modal.operationSetting div.company-list ul li a{position:absolute; top:-7px; right:-7px; display:block; width:15px; height:15px; border-radius:50%; background:#333 url("../../img/header/IC_close_WH.svg") center / 13px auto no-repeat;}
 div.modal.operationSetting div.company-list ul li div.txt{display:flex;}
 div.modal.operationSetting div.company-list ul li div.txt div.txt01{font-size:14px; color:#333; font-family:"Pretendard-SemiBold";}
 div.modal.operationSetting div.company-list ul li div.txt div.txt01:after{content:""; display:inline-block; width:1px; height:8px; transform:rotate(30deg); margin:0 10px; background:#aaa; font-family:"Pretendard-Regular";}
@@ -330,7 +330,7 @@ div.form-wrap2.course-regist div.cont-wrap > div.right div.list-wrap ul li{posit
 div.form-wrap2.course-regist div.cont-wrap > div.right div.list-wrap ul li:last-child{margin-bottom:0;}
 div.form-wrap2.course-regist div.cont-wrap > div.right div.list-wrap ul li div.txt div.txt01{font-size:12px; color:#888;}
 div.form-wrap2.course-regist div.cont-wrap > div.right div.list-wrap ul li div.txt div.txt02{font-size:14px; font-family:"Pretendard-SemiBold";}
-div.form-wrap2.course-regist div.cont-wrap > div.right div.list-wrap ul li a{position:absolute; top:-7px; right:-7px; display:block; width:15px; height:15px; border-radius:50%; background:#333 url("/fro_end/img/IC_close_WH.svg") center / 13px auto no-repeat;}
+div.form-wrap2.course-regist div.cont-wrap > div.right div.list-wrap ul li a{position:absolute; top:-7px; right:-7px; display:block; width:15px; height:15px; border-radius:50%; background:#333 url("../../img/header/IC_close_WH.svg") center / 13px auto no-repeat;}
 div.form-wrap2.course-regist div.cont-wrap > div.right div.list-wrap.list-wrap-student ul li{display:inline-block; margin-right:10px;}
 div.form-wrap2.course-regist div.cont-wrap > div.right div.list-wrap.list-wrap-student ul li div.txt{display:flex;}
 div.form-wrap2.course-regist div.cont-wrap > div.right div.list-wrap.list-wrap-student ul li div.txt div.txt01{font-size:14px; color:#333; font-family:"Pretendard-SemiBold";}
@@ -515,7 +515,7 @@ div.form-wrap2.system-setting02 div.list-wrap > div div.cont-wrap div.con01{disp
 div.form-wrap2.system-setting02 div.list-wrap > div div.cont-wrap div.con01 > a{width:110px;}
 div.form-wrap2.system-setting02 div.list-wrap > div div.cont-wrap div.con02{height:350px; padding:15px; border:1px solid #ddd; border-radius:5px; overflow-y:auto;}
 div.form-wrap2.system-setting02 div.list-wrap > div div.cont-wrap div.con02 ul li{position:relative; display:inline-block; padding:5px 10px; margin:0 10px 10px 0; border:1px solid #ddd; border-radius:5px; background:#f5f5f5; font-size:14px;}
-div.form-wrap2.system-setting02 div.list-wrap > div div.cont-wrap div.con02 ul li a{position:absolute; top:-7px; right:-7px; display:block; width:15px; height:15px; border-radius:50%; background:#333 url("/fro_end/img/IC_close_WH.svg") center / 11px auto no-repeat;}
+div.form-wrap2.system-setting02 div.list-wrap > div div.cont-wrap div.con02 ul li a{position:absolute; top:-7px; right:-7px; display:block; width:15px; height:15px; border-radius:50%; background:#333 url("../../img/header/IC_close_WH.svg") center / 11px auto no-repeat;}
 div.form-wrap2.system-info-review div.card-wrap{display:flex; justify-content:space-between;}
 div.form-wrap2.system-info-review div.card-wrap > label.ci-card{width:49%}
 div.form-wrap2.system-info-review div.card-wrap > label.ci-card div.ci-card-body{padding:15px 25px;}

@@ -21,7 +21,7 @@ public enum ExceptionMessage {
     NOT_FOUND_REFUND_PRICE("존재하지 않는 지원금입니다."),
     EXISTS_AUTH_LEVEL("이미 존재하는 권한 레벨입니다."),
     EXISTS_LINKED_MEMBER_AUTH_LEVEL("연결된 관리자가 있는 관리자 권한은 삭제할 수 없습니다."),
-
+    NOT_FOUND_SYSTEM_CODE("존재하지 않는 시스템 코드입니다."),
 
     JOIN_FAIL("code17: 회원가입 중 오류가 발생했습니다."),
     EXISTS_EXAM_PAPER_IN_EXAM("code18: 시험안에 시험지가 존재합니다."),

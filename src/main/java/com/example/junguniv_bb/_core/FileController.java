@@ -37,11 +37,16 @@ public class FileController {
     @Value("${file.upload.directories.board-temp}")
     private String boardTempDir; // upload/board/temp
 
+    @Value("${file.upload.directories.system-code}")
+    private String systemCodeDir;
+
+    @Value("${file.upload.directories.system-code-temp}")
+    private String systemCodeTempDir;
 
     /**
      * 임시 디렉토리에 파일을 업로드합니다.
      * 
-     * @param type 파일 업로드 타입 (member 또는 board)
+     * @param type 파일 업로드 타입 (member, board, system-code)
      * @param file 업로드할 파일 (MultipartFile)
      * @return 업로드된 파일 정보 (fileName, originalFileName)를 포함한 ResponseEntity
      * @throws IllegalArgumentException 잘못된 업로드 타입이 전달된 경우
@@ -66,6 +71,7 @@ public class FileController {
             String tempDir = switch (type) {
                 case "member" -> memberTempDir;
                 case "board" -> boardTempDir;
+                case "system-code" -> systemCodeTempDir;
                 default -> throw new IllegalArgumentException("잘못된 업로드 타입입니다: " + type);
             };
 
@@ -87,7 +93,7 @@ public class FileController {
     /**
      * 임시 디렉토리에 있는 파일을 실제 디렉토리로 이동시킵니다.
      * 
-     * @param type 파일 타입 (member 또는 board)
+     * @param type 파일 타입 (member, board, system-code)
      * @param fileName 이동할 파일명
      * @return 이동 결과를 포함한 ResponseEntity
      *         - 성공 시: 200 OK와 성공 메시지
@@ -104,12 +110,14 @@ public class FileController {
             String sourceDir = switch (type) {
                 case "member" -> memberTempDir;
                 case "board" -> boardTempDir;
+                case "system-code" -> systemCodeTempDir;
                 default -> throw new IllegalArgumentException("잘못된 파일 타입입니다: " + type);
             };
 
             String targetDir = switch (type) {
                 case "member" -> memberDir;
                 case "board" -> boardDir;
+                case "system-code" -> systemCodeDir;
                 default -> throw new IllegalArgumentException("잘못된 파일 타입입니다: " + type);
             };
 
@@ -140,7 +148,7 @@ public class FileController {
      * 파일 삭제 API
      * 지정된 타입의 디렉토리에서 파일을 삭제합니다.
      * 
-     * @param type 파일 타입 (member, board, member-temp, board-temp)
+     * @param type 파일 타입 (member, board, member-temp, board-temp, system-code, system-code-temp)
      * @param fileName 삭제할 파일명
      * @return 삭제 결과를 포함한 ResponseEntity
      *         - 성공 시: 200 OK
@@ -157,6 +165,8 @@ public class FileController {
                 case "board" -> boardDir;
                 case "member-temp" -> memberTempDir;
                 case "board-temp" -> boardTempDir;
+                case "system-code" -> systemCodeDir;
+                case "system-code-temp" -> systemCodeTempDir;
                 default -> throw new IllegalArgumentException("잘못된 파일 타입입니다: " + type);
             };
 
@@ -177,7 +187,7 @@ public class FileController {
      * 파일 다운로드 API
      * 지정된 타입의 디렉토리에서 파일을 다운로드합니다.
      * 
-     * @param type 파일 타입 (member, board)
+     * @param type 파일 타입 (member, board, system-code)
      * @param fileName 다운로드할 파일명
      * @return ResponseEntity<Resource>
      */
@@ -189,6 +199,7 @@ public class FileController {
             String targetDir = switch (type) {
                 case "member" -> memberDir;
                 case "board" -> boardDir;
+                case "system-code" -> systemCodeDir;
                 default -> throw new IllegalArgumentException("잘못된 파일 타입입니다: " + type);
             };
 
