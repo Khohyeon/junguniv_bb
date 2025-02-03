@@ -73,7 +73,10 @@ INSERT INTO MANAGER_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX, MENU_GROU
 ('위탁기업모드 메뉴분류관리', 1, 'Y', '/masterpage_sys/branch/company', 16, 'SYSTEM', 3),
 ('관리자모드 메뉴명관리', 2, 'Y', '/masterpage_sys/manager_menu', 17, 'SYSTEM', 3),
 ('강사모드 메뉴명관리', 2, 'Y', '#', 17, 'SYSTEM', 3),
-('위탁기업모드 메뉴명관리', 2, 'Y', '#', 17, 'SYSTEM', 3);
+('위탁기업모드 메뉴명관리', 2, 'Y', '#', 17, 'SYSTEM', 3),
+('교육관리', 2, 'Y', '#', null, 'ADMIN_REFUND', 3),
+('과정관리', 2, 'Y', '#', 50, 'ADMIN_REFUND', 3),
+('과정정보등록', 2, 'Y', '/masterpage_pro/subject', 51, 'ADMIN_REFUND', 3);
 
 INSERT INTO POPUP (POPUP_NAME, START_DATE, END_DATE, WIDTH_SIZE, HEIGHT_SIZE, TOP_SIZE, LEFT_SIZE, CONTENTS, CHK_TODAY, POPUP_TYPE, CHK_OPEN, CHK_SCROLLBAR) VALUES
 ('이벤트 팝업', '2023-01-01', '2023-01-10', '800', '600', '100', '100', '이벤트 내용입니다.', 'Y', 'popup', 'Y', 'N'),

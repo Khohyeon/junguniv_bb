@@ -70,3 +70,46 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    const state = {
+        menuIdx: "51",  // 숫자든 문자열이든 원하는 형태로 지정하세요.
+        depth3Menus: [
+            {
+                url: "http://localhost:8080/masterpage_pro/subject",
+                target: "_self",
+                name: "과정정보등록"
+            },
+            {
+                url: "#",
+                target: "_self",
+                name: "콘텐츠차시설정"
+            },
+            {
+                url: "#",
+                target: "_self",
+                name: "평가문제관리"
+            },
+            {
+                url: "#",
+                target: "_self",
+                name: "수강정보설정"
+            },
+            {
+                url: "#",
+                target: "_self",
+                name: "역량평가등록"
+            },
+            {
+                url: "#",
+                target: "_self",
+                name: "설문평가등록"
+            },
+        ]
+    };
+
+    localStorage.setItem('tabState', JSON.stringify(state));
+
+    restoreTabState();
+});
