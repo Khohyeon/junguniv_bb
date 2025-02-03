@@ -116,6 +116,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     /* 주소록 검색 */
     @Query("SELECT m FROM Member m WHERE " +
+           "m.userType = :userType AND " +
            "(:name IS NULL OR m.name LIKE %:name%) AND " +
            "(:userId IS NULL OR m.userId LIKE %:userId%) AND " +
            "(:address IS NULL OR m.addr1 LIKE %:address% OR m.addr2 LIKE %:address%) AND " +
@@ -123,6 +124,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
            "(:email IS NULL OR m.email LIKE %:email%) AND " +
            "(:jobName IS NULL OR m.jobName LIKE %:jobName%)")
     Page<Member> searchAddress(
+            @Param("userType") UserType userType,
             @Param("name") String name,
             @Param("userId") String userId,
             @Param("address") String address,
