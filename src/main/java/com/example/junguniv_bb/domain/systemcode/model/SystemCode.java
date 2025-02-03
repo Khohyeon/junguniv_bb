@@ -1,5 +1,6 @@
 package com.example.junguniv_bb.domain.systemcode.model;
 
+import com.example.junguniv_bb._core.common.BaseTime;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,7 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SystemCode {
+public class SystemCode extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

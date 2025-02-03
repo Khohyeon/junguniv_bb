@@ -19,7 +19,7 @@ public class Subject extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "SUBJECT_IDX")
-    private Long subjectIdx;  // 과목 IDX (기본키)
+    private Integer subjectIdx;  // 과목 IDX (기본키)
 
     // 🔹 ManyToOne 관계 설정 (FK)
     @ManyToOne
@@ -30,9 +30,9 @@ public class Subject extends BaseTime {
     @JoinColumn(name = "MAJOR_IDX", nullable = false)
     private Major major;  // 전공
 
-//    @ManyToOne
-//    @JoinColumn(name = "COURSE_IDX", nullable = false)
-//    private Course course;  // 과정
+    @ManyToOne
+    @JoinColumn(name = "COURSE_IDX", nullable = false)
+    private Course course;  // 과정
 
     @Column(name = "SUBJECT_CODE", length = 100)
     private String subjectCode;  // 과정 코드
@@ -46,7 +46,7 @@ public class Subject extends BaseTime {
     @Column(name = "INTRODUCE", columnDefinition = "MEDIUMTEXT")
     private String introduce;  // 과정소개 (에디터)
 
-    @Column(name = "EVALUATION_STATE_IS")
+    @Column(name = "EVALUATION_STATE_IS", length = 1)
     private String evaluationStateIs;  // 평가적합여부
 
     @Column(name = "RESULT_PERFECT_LIMIT")

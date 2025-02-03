@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>설문평가 - 리스트</title>
+</head>
+<body>
+	<div class="inner">
+		<form name="searchform" method="get" action="">
+			<input type="hidden" name="updateMode" value="search">
+			<input type="hidden" name="orderField" value="">
+			<input type="hidden" name="orderDesc" value="">
+			<input type="hidden" name="courseIdx" id="courseIdx" value="">
+			<div class="form-wrap">
+				<div class="inner">
+					<div class="group01">
+						<div class="tit">검색</div>
+						<div class="con">
+							<div class="column-tc-wrap">
+								<div class="column-tc">
+									<div class="tit">과정명</div>
+									<div class="con">
+										<input name="subjectName" type="text" placeholder="과정명을 입력해주세요." value="">
+									</div>
+								</div>
+								<div class="column-tc">
+									<div class="tit">년/월/기수/회차</div>
+									<div class="con flex4">
+										<select name="nyear" id="nyear">
+											<option value="">년도</option>
+										</select>
+										<select name="unit" id="unit">
+
+											<option value="">분기</option>
+										</select>
+										<select name="className" id="className">
+											<option value="">기수</option>
+										</select>
+										<select name="tracseTme" id="tracseTme">
+											<option value="">회차</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="btn-wrap">
+				<a href="javascript:submit();" class="jv-btn jb-fill01-lg">검색</a>
+			</div>
+		</form>
+		<form method="post" action="" name="mainform">
+			<input type="hidden" name="updateMode" value="search">
+			<input type="hidden" name="goPage" value="">
+			<input type="hidden" name="pageSize" value="">
+			<input type="hidden" name="keyField" value="">
+			<input type="hidden" name="keyWord" value="">
+			<div class="table-util mt50">
+				<div class="left">
+					<a href="javascript:" onclick="deleteRows();" class="jv-btn fill05">삭제</a>
+					<div class="page-view flex">
+						<span>페이지수</span>
+						<select name="pageSize" onchange="changePagesize(this.form);">
+							<option value="">선택</option>
+						</select>
+					</div>
+					<div class="count">
+						<span class="Pretd_B"></span>건 검색되었습니다.
+					</div>
+				</div>
+				<div class="right">
+					<a href="" class="jv-btn fill04">신규 등록</a>
+				</div>
+			</div>
+			<table class="table01 T_center">
+				<thead>
+					<tr>
+						<th>
+							<label class="c-input ci-check single">
+								<input type="checkbox" name="chk" value="" onclick="checkAllInstr(document.mainform,this.checked,'vIdx');">
+								<div class="ci-show"></div>
+							</label>
+						</th>
+						<th>NO</th>
+						<th>년도/월</th>
+						<th>기수</th>
+						<th>회차</th>
+						<th>과정명</th>
+						<th>사용여부</th>
+						<th>필수여부</th>
+						<th>등록 문제수</th>
+						<th>미리보기</th>
+						<th>복사</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- 데이터 행을 여기에 추가하세요 -->
+				</tbody>
+			</table>
+			<table class="table_list01">
+				<tr>
+					<td align="center">데이타가 없습니다.</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</body>
+</html>

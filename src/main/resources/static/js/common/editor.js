@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     // TinyMCE 초기화
     tinymce.init({
-        selector: '.tinymce-editor',
+        selector: '#editor',
         height: 400,
         menubar: true,
         plugins: [
@@ -27,4 +27,6 @@ document.addEventListener('DOMContentLoaded', function () {
             'alignleft aligncenter alignright alignjustify | ' +
             'bullist numlist outdent indent | removeformat | help'
     });
+
+
 });
