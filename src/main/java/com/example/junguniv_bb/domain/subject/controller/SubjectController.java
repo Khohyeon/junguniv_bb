@@ -18,4 +18,9 @@ public class SubjectController {
     public String subjectPage(Model model) {
         return "/masterpage_pro/subject/listForm";
     }
+
+    @GetMapping("/save")
+    public String subjectSaveForm(Model model) {
+        return "/masterpage_pro/subject/saveForm";
+    }
 }

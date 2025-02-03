@@ -50,13 +50,13 @@
 <!-- Fragment Definition -->
 <div th:fragment="header">
     <div class="menu-category">
-        <a th:href="@{/masterpage_pro/subject}">
+        <a th:href="@{/masterpage_pro/subject}" data-menu="subject">
             <img th:src="@{/img/header/intro_IC01.png}" alt="환급과정">환급과정
         </a>
-        <a th:href="@{/masterpage_pro/subject.registration.php}">
+        <a th:href="@{/masterpage_pro/subject.registration.php}" data-menu="registration">
             <img th:src="@{/img/header/intro_IC02.png}" alt="일반과정">일반과정
         </a>
-        <a th:href="@{/masterpage_sys/member/student}" class="active">
+        <a th:href="@{/masterpage_sys/member/student}"  data-menu="system">
             <img th:src="@{/img/header/intro_IC03.png}" alt="시스템관리">시스템관리
         </a>
     </div>

@@ -236,4 +236,52 @@ function saveTabStateOnNavigation() {
 }
 
 
+/**
+ * 메뉴 클릭 시 active 활성화
+ */
+document.addEventListener("DOMContentLoaded", function() {
+    const menuItems = document.querySelectorAll('.menu-category a');
 
+    // 페이지 로드시 로컬 스토리지에서 활성 메뉴를 가져와서 해당 메뉴에 active 클래스 추가
+    const activeMenu = localStorage.getItem('activeMenu');
+    if (activeMenu) {
+        menuItems.forEach(item => {
+            if (item.dataset.menu === activeMenu) {
+                item.classList.add('active');
+            }
+        });
+    }
+
+    menuItems.forEach(function(item) {
+        item.addEventListener('click', function() {
+            // 모든 메뉴 항목에서 active 클래스 제거
+            menuItems.forEach(el => el.classList.remove('active'));
+
+            // 클릭한 메뉴 항목에 active 클래스 추가
+            this.classList.add('active');
+
+            // 활성 메뉴 정보를 로컬 스토리지에 저장
+            localStorage.setItem('activeMenu', this.dataset.menu);
+        });
+    });
+});
+
+// document.addEventListener("DOMContentLoaded", function() {
+//     // 뒤로가기 등으로 페이지가 로드될 때마다 active 메뉴 초기화
+//     localStorage.removeItem('activeMenu');
+//
+//     const menuItems = document.querySelectorAll('.menu-category a');
+//
+//     menuItems.forEach(function(item) {
+//         item.addEventListener('click', function() {
+//             // 모든 메뉴 항목에서 active 클래스 제거
+//             menuItems.forEach(el => el.classList.remove('active'));
+//
+//             // 클릭한 메뉴 항목에 active 클래스 추가
+//             this.classList.add('active');
+//
+//             // 활성 메뉴 정보를 로컬 스토리지에 저장
+//             localStorage.setItem('activeMenu', this.dataset.menu);
+//         });
+//     });
+// });

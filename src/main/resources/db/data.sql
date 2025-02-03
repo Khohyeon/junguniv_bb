@@ -73,7 +73,10 @@ INSERT INTO MANAGER_MENU (MENU_NAME, SORTNO, CHK_USE, URL, PARENT_IDX, MENU_GROU
 ('위탁기업모드 메뉴분류관리', 1, 'Y', '/masterpage_sys/branch/company', 16, 'SYSTEM', 3),
 ('관리자모드 메뉴명관리', 2, 'Y', '/masterpage_sys/manager_menu', 17, 'SYSTEM', 3),
 ('강사모드 메뉴명관리', 2, 'Y', '#', 17, 'SYSTEM', 3),
-('위탁기업모드 메뉴명관리', 2, 'Y', '#', 17, 'SYSTEM', 3);
+('위탁기업모드 메뉴명관리', 2, 'Y', '#', 17, 'SYSTEM', 3),
+('교육관리', 2, 'Y', '#', null, 'ADMIN_REFUND', 3),
+('과정관리', 2, 'Y', '#', 50, 'ADMIN_REFUND', 3),
+('과정정보등록', 2, 'Y', '/masterpage_pro/subject', 51, 'ADMIN_REFUND', 3);
 
 INSERT INTO POPUP (POPUP_NAME, START_DATE, END_DATE, WIDTH_SIZE, HEIGHT_SIZE, TOP_SIZE, LEFT_SIZE, CONTENTS, CHK_TODAY, POPUP_TYPE, CHK_OPEN, CHK_SCROLLBAR) VALUES
 ('이벤트 팝업', '2023-01-01', '2023-01-10', '800', '600', '100', '100', '이벤트 내용입니다.', 'Y', 'popup', 'Y', 'N'),
@@ -179,10 +182,29 @@ VALUES
     (5, 'cardjae', '이벤트할인', 30000, 'Y', 5, 'discount', 'refund'),
     (6, null, '이벤트할인', 30000, 'Y', 5, 'discount', 'normal');
 
+-- College 더미 데이터
+INSERT INTO COLLEGE (COLLEGE_IDX, COLLEGE_NAME, ENG_NAME, CHK_USE, COLLEGE_CODE, CONTENTS) VALUES
+(1, '컴퓨터공학부', 'Computer Science', 'Y', 'CS001', '컴퓨터 관련 학과'),
+(2, '경영학부', 'Business Administration', 'Y', 'BA001', '경영 관련 학과'),
+(3, '전자공학부', 'Electrical Engineering', 'Y', 'EE001', '전자공학 관련 학과');
+
+-- Major 더미 데이터
+INSERT INTO MAJOR (MAJOR_IDX, COLLEGE_IDX, MAJOR_NAME, ENG_NAME, CHK_USE, PURPOSE, NOTE, MAJOR_CODE) VALUES
+(1, 1, '소프트웨어공학', 'Software Engineering', 'Y', '소프트웨어 개발 및 이론 연구', '소프트웨어 공학 개론', 'SE001'),
+(2, 1, '인공지능', 'Artificial Intelligence', 'Y', 'AI 연구 및 데이터 분석', 'AI 및 머신러닝 연구', 'AI001'),
+(3, 2, '마케팅', 'Marketing', 'Y', '마케팅 전략 연구 및 기획', '브랜드 전략 연구', 'MK001'),
+(4, 3, '반도체공학', 'Semiconductor Engineering', 'Y', '반도체 설계 및 제조', '반도체 산업 연구', 'SEMI001');
+
+-- Course 더미 데이터
+-- INSERT INTO COURSE (COURSE_IDX, COLLEGE_IDX, MAJOR_IDX, COURSE_NAME, COURSE_CODE, COURSE_TYPE, COURSE_PRICES, UNIT_POINT, COURSE_PERIOD, COURSE_CAPACITY, OPEN_STATE, NYEAR, MONTH, CLASS_NAME, TRACSE_TME, SUBJECT_IDX, RECEIPTPERIOD_START_DATE, RECEIPTPERIOD_END_DATE, STUDY_START_DATE, STUDY_END_DATE, CHK_COMPANY, CHK_MONITERING, CHK_MOTP, CHK_AI_NOTICE_USE, CHK_BOK, CHK_STUDYLIMIT, CHK_BOOKPRICE, MINUS_PRICES, PLUS_PRICES, MINUS_TYPE, PLUS_TYPE) VALUES
+-- (1, 1, 1, '소프트웨어 공학 개론', 'SW101', '이론', 100000, 3, '4개월', 30, '공개', '2024', '06', '소프트웨어 공학반', 1, 1, '2024-05-01', '2024-05-30', '2024-06-01', '2024-10-01', 'N', 'Y', 'N', 'Y', 'Y', 'N', 'N', 20000, 5000, '장학금', '지원금'),
+-- (2, 1, 2, 'AI 머신러닝 기초', 'AI101', '실습', 120000, 4, '6개월', 40, '공개', '2024', '07', 'AI 기초반', 2, 2, '2024-06-01', '2024-06-30', '2024-07-01', '2024-12-01', 'Y', 'Y', 'Y', 'Y', 'N', 'N', 'N', 25000, 7000, '할인', '추가금'),
+-- (3, 2, 3, '디지털 마케팅 전략', 'MK201', '이론', 80000, 3, '3개월', 25, '공개', '2024', '05', '마케팅 전략반', 3, 3, '2024-04-01', '2024-04-30', '2024-05-01', '2024-08-01', 'N', 'N', 'N', 'N', 'Y', 'N', 'Y', 15000, 3000, '장학금', '지원금');
+
 INSERT INTO SYSTEM_CODE (SYSTEM_CODE_NAME, SYSTEM_CODE_RULE, SYSTEM_CODE_GROUP, SYSTEM_CODE_KEY, SYSTEM_CODE_VALUE)
 VALUES
-('수강신청 마감시간', '시간 형식 (HH:mm)', '기본설정', 'COURSE_DEADLINE', '17:00'), 
-('관리자모드 제목', NULL, '기본설정', 'ADMIN_TITLE', '정유니브대학교 관리자'), 
+('수강신청 마감시간', '시간 형식 (HH:mm)', '기본설정', 'COURSE_DEADLINE', '17:00'),
+('관리자모드 제목', NULL, '기본설정', 'ADMIN_TITLE', '정유니브대학교 관리자'),
 ('증명서별 하단 기관명', NULL, '기본설정', 'CERTIFICATE_FOOTER', '정유니브대학교'),
 ('평가알림기능', 'Y/N', '기본설정', 'EVAL_NOTIFICATION', 'N'),
 ('회원가입 안내 자동문자/메일 사용여부', 'Y/N', '기본설정', 'AUTO_MESSAGE', 'N');

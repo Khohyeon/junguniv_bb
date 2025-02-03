@@ -1,5 +1,6 @@
 package com.example.junguniv_bb.domain.subject.model;
 
+import com.example.junguniv_bb._core.common.BaseTime;
 import com.example.junguniv_bb.domain.college.model.College;
 import com.example.junguniv_bb.domain.course.model.Course;
 import com.example.junguniv_bb.domain.major.model.Major;
@@ -13,7 +14,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Subject {
+public class Subject extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -115,10 +116,10 @@ public class Subject {
     private String studyEndDate;  // 교육기간 종료일
 
     @Column(name = "COURSE_PRICES")
-    private Integer coursePrices;  // 교육비
+    private Long coursePrices;  // 수강료
 
     @Column(name = "COURSE_CAPACITY")
-    private Integer courseCapacity;  // 훈련 정원
+    private Long courseCapacity;  // 수강 정원
 
     @Column(name = "COURSETAKE_TARGET", length = 100)
     private String coursetakeTarget;  // 수강 대상
@@ -133,11 +134,14 @@ public class Subject {
     private String simsaCode;  // e-simsa 과정 신청 코드
 
     @Column(name = "EXPIRY_DATE", length = 100)
-    private String expiryDate;  // 유효기간
+    private String expiryDate;  //  e-simsa 유효기간
+
+    @Column(name = "TRACSE_STATE")
+    private String tracseState; // hrd-net 인정 체크
 
     @Column(name = "TRACSE_ID", length = 10)
     private String tracseId;  // hrd-net 과정 신청 코드
 
     @Column(name = "TRACSE_DATE", length = 100)
-    private String tracseDate;  // 유효기간
+    private String tracseDate;  // hrd-net 유효기간
 }

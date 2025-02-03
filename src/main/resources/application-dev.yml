@@ -50,6 +50,8 @@ file:
       board-temp: ${file.upload.base-dir}/board/temp
       member: ${file.upload.base-dir}/member
       member-temp: ${file.upload.base-dir}/member/temp
+      system-code: ${file.upload.base-dir}/system_code
+      system-code-temp: ${file.upload.base-dir}/system_code/temp
       # 아래 처럼 사용하면됨.
       # board: ${file.upload.base-dir}/board
       # profile: ${file.upload.base-dir}/profile

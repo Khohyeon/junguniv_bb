@@ -35,11 +35,18 @@ public class ManagerMenuRestController {
      * 2차 메뉴를 선택 했을 때 Rest API 요청
      * 권한이 있는 3차 메뉴만 반환
      */
-    @GetMapping("/depth3")
-    public List<ManagerMenuDepth3ListResDTO> getDepth3Menus(@RequestParam Long parentMenuIdx, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    // TODO : 3차 Tab 안나오는 원인 찾아봐야함
+//    @GetMapping("/depth3")
+//    public List<ManagerMenuDepth3ListResDTO> getDepth3Menus(@RequestParam Long parentMenuIdx, @AuthenticationPrincipal CustomUserDetails userDetails) {
+//
+//        // 권한이 있는 3차 메뉴만 필터링하여 반환
+//        return managerMenuService.getDepth3MenusWithPermission(parentMenuIdx, userDetails);
+//    }
 
-        // 권한이 있는 3차 메뉴만 필터링하여 반환
-        return managerMenuService.getDepth3MenusWithPermission(parentMenuIdx, userDetails);
+    @GetMapping("/depth3")
+    public List<ManagerMenuDepth3ListResDTO> getDepth3Menus(@RequestParam Long parentMenuIdx) {
+
+        return managerMenuService.getDepth3Menus(parentMenuIdx);
     }
 
     @DeleteMapping

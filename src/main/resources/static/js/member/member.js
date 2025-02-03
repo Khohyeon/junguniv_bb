@@ -2170,3 +2170,39 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    const state = {
+        menuIdx: "5",  // 숫자든 문자열이든 원하는 형태로 지정하세요.
+        depth3Menus: [
+            {
+                url: "http://localhost:8080/masterpage_sys/member/student",
+                target: "_self",
+                name: "수강생"
+            },
+            {
+                url: "http://localhost:8080/masterpage_sys/member/teacher",
+                target: "_self",
+                name: "교강사(튜터)"
+            },
+            {
+                url: "http://localhost:8080/masterpage_sys/member/company",
+                target: "_self",
+                name: "위탁기업"
+            },
+            {
+                url: "http://localhost:8080/masterpage_sys/member/admin",
+                target: "_self",
+                name: "LMS관리자"
+            }
+        ]
+    };
+
+    // state 객체를 JSON 문자열로 변환하여 localStorage에 저장
+    localStorage.setItem('tabState', JSON.stringify(state));
+
+    // 복원 함수 호출 (구현되어 있다면)
+    restoreTabState();
+});
