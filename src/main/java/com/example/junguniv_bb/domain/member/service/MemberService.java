@@ -111,9 +111,9 @@ public class MemberService {
         UserType userType = null;
 
         if (referer != null) {
-            // 주소록 페이지인 경우
+            // 주소록 페이지인 경우 학생만 조회
             if (referer.contains("/address")) {
-                memberPagePS = memberRepository.findAll(pageable);
+                memberPagePS = memberRepository.findByUserType(UserType.STUDENT, pageable);
                 return ResponseEntity.ok(new MemberAddressPageResDTO(memberPagePS));
             }
 
@@ -259,14 +259,15 @@ public class MemberService {
     @Transactional(readOnly = true)
     public ResponseEntity<?> searchMemberAddress(MemberAddressSearchReqDTO searchDTO, Pageable pageable) {
         try {
-            // 모든 검색 조건이 비어있으면 전체 목록 반환
+            // 모든 검색 조건이 비어있으면 전체 목록 반환 (학생만)
             if (isEmptySearchCondition(searchDTO)) {
-                Page<Member> memberPagePS = memberRepository.findAll(pageable);
+                Page<Member> memberPagePS = memberRepository.findByUserType(UserType.STUDENT, pageable);
                 return ResponseEntity.ok(new MemberAddressPageResDTO(memberPagePS));
             }
 
-            // 검색 조건이 있는 경우 검색 실행
+            // 검색 조건이 있는 경우 검색 실행 (학생만)
             Page<Member> memberPagePS = memberRepository.searchAddress(
+                UserType.STUDENT,
                 searchDTO.name(),
                 searchDTO.userId(),
                 searchDTO.address(),

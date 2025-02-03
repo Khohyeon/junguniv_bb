@@ -298,7 +298,7 @@ async function loadBasicSettings() {
     }
 }
 
-// 계정 관리 관련 함수들
+// 계정 목록 조회 함수 수정
 async function loadAccounts(type) {
     try {
         const response = await fetch(`/masterpage_sys/settings/basic/api/accounts/${type}`);
@@ -308,11 +308,14 @@ async function loadAccounts(type) {
             const accountList = document.querySelector(`.${type}-accounts ul`);
             accountList.innerHTML = '';
             
-            data.response.forEach(account => {
+            // 빈 문자열이나 공백만 있는 계정은 필터링
+            const filteredAccounts = data.response.filter(account => account && account.trim());
+            
+            filteredAccounts.forEach(account => {
                 const li = document.createElement('li');
                 li.innerHTML = `
-                    <span class="txt">${account}</span>
-                    <a href="#none" onclick="deleteAccount('${type}', '${account}')"></a>
+                    <span class="txt">${account.trim()}</span>
+                    <a href="#none" onclick="deleteAccount('${type}', '${account.trim()}')"></a>
                 `;
                 accountList.appendChild(li);
             });
@@ -325,22 +328,44 @@ async function loadAccounts(type) {
     }
 }
 
+// 계정 추가 함수 수정
 async function addAccount(type) {
     const input = document.querySelector(`.${type}-accounts input[type="text"]`);
-    const account = input.value.trim();
+    const account = input.value.trim();  // 입력값의 앞뒤 공백 제거
     
     if (!account) {
         alert('계정 ID를 입력해주세요.');
         return;
     }
-    
+
+    // 공백만 있는 경우 체크
+    if (account.replace(/\s/g, '').length === 0) {
+        alert('공백만으로는 계정을 등록할 수 없습니다.');
+        return;
+    }
+
     try {
+        // 가입불가 ID는 존재하는 아이디 체크를 하지 않음
+        if (type !== 'forbidden') {
+            // 존재하는 아이디인지 체크
+            const checkResponse = await fetch(`/masterpage_sys/member/api/idCheck?userId=${account}`);
+            const checkResult = await checkResponse.json();
+            
+            // checkDuplicateId는 중복되면 false를 반환하므로, 
+            // 존재하는 아이디인 경우 response가 false가 됨
+            if (checkResult.response) {
+                alert('존재하지 않는 아이디입니다.');
+                return;
+            }
+        }
+        
+        // 이미 등록된 계정인지 확인
         const response = await fetch(`/masterpage_sys/settings/basic/api/accounts/${type}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ account })
+            body: JSON.stringify({ account: account.trim() })  // 전송 시에도 공백 제거
         });
         
         const data = await response.json();
@@ -349,7 +374,7 @@ async function addAccount(type) {
             input.value = '';
             await loadAccounts(type);
         } else {
-            alert(data.error.message || '계정 추가에 실패했습니다.');
+            alert(data.error.message || '이미 등록된 계정입니다.');
         }
     } catch (error) {
         console.error('계정 추가 중 오류 발생:', error);
@@ -357,13 +382,19 @@ async function addAccount(type) {
     }
 }
 
+// 계정 삭제 함수 수정
 async function deleteAccount(type, account) {
-    if (!confirm(`${account} 계정을 삭제하시겠습니까?`)) {
+    // 빈 문자열이나 공백만 있는 계정은 삭제하지 않음
+    if (!account || !account.trim()) {
+        return;
+    }
+
+    if (!confirm(`${account.trim()} 계정을 삭제하시겠습니까?`)) {
         return;
     }
     
     try {
-        const response = await fetch(`/masterpage_sys/settings/basic/api/accounts/${type}/${account}`, {
+        const response = await fetch(`/masterpage_sys/settings/basic/api/accounts/${type}/${encodeURIComponent(account.trim())}`, {
             method: 'DELETE'
         });
         
