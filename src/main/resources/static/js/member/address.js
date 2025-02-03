@@ -4,7 +4,7 @@ const AddressModule = {
         // 주소록 목록 조회
         getList: async function(page = 0, size = 10) {
             try {
-                const response = await fetch(`/masterpage_sys/member/api/address?page=${page}&size=${size}`, {
+                const response = await fetch(`/masterpage_sys/member/api/address?page=${page}&size=${size}&userType=STUDENT`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -26,6 +26,7 @@ const AddressModule = {
         // 주소록 검색
         search: async function(searchParams, page = 0, size = 10) {
             try {
+                searchParams.userType = 'STUDENT';  // 학생 회원만 검색하도록 파라미터 추가
                 const queryString = new URLSearchParams({
                     ...searchParams,
                     page: page,
