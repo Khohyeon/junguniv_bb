@@ -12,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -78,9 +77,5 @@ public class RefundPriceService {
     @Transactional
     public void refundPriceUpdate(RefundPriceUpdateReqDTO refundPriceUpdateReqDTO) {
         refundPriceRepository.save(refundPriceUpdateReqDTO.updateEntity());
-    }
-
-    public List<RefundPrice> refundPriceList() {
-        return refundPriceRepository.findAll();
     }
 }

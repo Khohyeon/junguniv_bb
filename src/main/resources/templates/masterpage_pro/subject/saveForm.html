@@ -4,26 +4,19 @@
     <!-- 헤더에서 CSS 포함 -->
     <th:block th:replace="fragments/header :: head"></th:block>
     <script th:src="@{/js/subject/subject.js}"></script>
-
-    <!-- TinyMCE CDN -->
-    <script src="https://cdn.tiny.cloud/1/k5zf849n8pjpkhfi1fjilm3rdkphbmrm37osivbz5908i8da/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-
-    <!-- editor.js 파일 불러오기 -->
-    <script th:src="@{/js/common/editor.js}"></script>
-
 </head>
 <body>
 <!-- 헤더에서 상단 메뉴 포함 -->
 <div th:replace="fragments/header :: header"></div>
 
 <div class="inner">
-<!--    <form method="post" action="/masterpage_pro/subject/api/save" name="mainform" id="mainform" enctype="multipart/form-data" autocomplete="off">-->
+    <form method="post" action="./modules/subject.registration.new.regist.db.php" name="mainform" id="mainform" enctype="multipart/form-data" autocomplete="off">
         <input name="practice_hour" id="practice_hour" type="hidden" size="4" value="" class="text-input">
         <br>
         <div id="smartwizard" class="sw sw-theme-arrows sw-justified">
             <div class="step-wrap">
                 <ul class="nav">
-                    <li class="nav-item active" id="stepcheck-0">
+                    <li class="nav-item" id="stepcheck-0">
                         <a class="nav-link active" href="#step-0" id="stepprogress-0">
                             <span class="num">1</span>
                             <span class="sub-num">step01</span>
@@ -56,16 +49,13 @@
                     </li>
                 </ul>
             </div>
-            <div class="tab-content">
-                <!-- 📌📌📌📌 교육관리 > 과정관리 > 과정정보등록 페이지에서 [신규등록] 버튼 클릭시 나타나는 페이지의 STEP1 기본정보설정 페이지입니다. 📌📌📌📌  -->
-                <form method="post" action="/masterpage_pro/subject/api/save1" id="step1Form">
-                    <div id="step-0" class="tab-pane" role="tabpanel" aria-labelledby="step-0" style="display: block">
+            <div class="tab-content" style="height: 1877px;">
+                <div id="step-0" class="tab-pane" role="tabpanel" aria-labelledby="step-0" style="display: block">
 
-<!--                    <input type="hidden" id="subject_idx_step2" name="subjectIdx">-->
-
+                    <input type="hidden" name="ui_stepmode" id="ui_stepmode" value="#step-0">
                     <div class="form-wrap2">
                         <h2 class="form-tit">기본정보 <span class="required-txt">표시 항목은 필수 입력/설정 사항입니다.</span></h2>
-                        <div class="column-tc-wrap column-tc-wrap2 part2">
+                        <div class="column-tc-wrap column-tc-wrap2 part4">
                             <div class="column-tc">
                                 <div class="tit"><span class="required">과정명</span></div>
                                 <div class="con">
@@ -78,30 +68,26 @@
                                     <input name="subjectCode" id="subject_code" type="text" value="" placeholder="과정코드명을 입력해주세요">
                                 </div>
                             </div>
-                        </div>
-                        <div class="column-tc-wrap column-tc-wrap2 part4">
                             <div class="column-tc">
                                 <div class="tit"><span class="required">분야</span></div>
                                 <div class="con">
-                                    <select name="collegeIdx" id="firstChoice" onchange="collegeChanged(this.value)" class="w45p">
+                                    <select name="collegeIdx" id="firstChoice" onchange="selectChange(this, this.form.secondChoice, arrItems1, arrItemsGrp1);updateSelectValue(this.form.college_idx,this.value);" class="w45p">
                                         <option value="0">분야 선택</option>
-                                        <!-- collegeList가 모델에 담겨있다고 가정 -->
-                                        <th:block th:each="college : ${collegeList}">
-                                            <option th:value="${college.collegeIdx}" th:text="${college.collegeName}"></option>
-                                        </th:block>
+                                        <option value="1">OA</option>
+                                        <option value="2">경비</option>
+                                        <option value="4">수한</option>
+                                        <option value="3">테스트</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="column-tc">
                                 <div class="tit"><span class="required">분류</span></div>
                                 <div class="con">
-                                    <select name="majorIdx" id="secondChoice" class="w45p">
+                                    <select name="majorIdx" id="secondChoice" onchange="updateSelectValue(this.form.major_idx,this.value);major_click(this.value);" class="w45p">
                                         <option value="0">분류 선택</option>
-                                        <!-- AJAX로 가져온 데이터로 옵션을 채울 예정 -->
                                     </select>
-                                    <!-- 선택된 collegeIdx와 majorIdx를 별도로 보관하는 hidden 필드 -->
-                                    <input type="hidden" id="college_idx" value="">
-                                    <input type="hidden" id="major_idx" value="">
+                                    <input type="hidden" name="college_idx" value="">
+                                    <input type="hidden" name="major_idx" value="">
                                 </div>
                             </div>
                             <div class="column-tc">
@@ -111,19 +97,9 @@
                                 </div>
                             </div>
                             <div class="column-tc">
-                                <div class="tit"><span class="required">공개여부</span></div>
-                                <div class="con">
-                                    <input type="checkbox" class="switch" id="open" name="homepage_yn" value="Y" checked="">
-                                    <label for="open" class="switch mt5"></label>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="column-tc-wrap column-tc-wrap2 part2">
-                            <div class="column-tc">
                                 <div class="tit"><span class="required">수강료</span></div>
                                 <div class="con">
-                                    <input type="text" name="coursePrices" id="course_prices" value="0" >
+                                    <input type="text" name="coursePrices" id="course_prices" value="0" onkeyup="this.value=numchk(this.value);CalPrice(this.value);" onblur="this.value=numchk(this.value);CalPrice(this.value);">
                                 </div>
                             </div>
                             <div class="column-tc">
@@ -132,8 +108,14 @@
                                     <input type="text" name="coursetakeTarget" id="course_target" value="" placeholder="수강대상 텍스트">
                                 </div>
                             </div>
+<!--                            <div class="column-tc">-->
+<!--                                <div class="tit"><span class="required">썸네일</span></div>-->
+<!--                                <div class="con">-->
+<!--                                    <input type="file">-->
+<!--                                </div>-->
+<!--                            </div>-->
                         </div>
-                        <div class="column-tc-wrap column-tc-wrap2 part4">
+                        <div class="column-tc-wrap column-tc-wrap2 part3n1">
                             <div class="column-tc">
                                 <div class="tit">태그 <span class="required-txt">단어입력시 , 으로 나뉘어 표기됩니다</span></div>
                                 <div class="con">
@@ -142,72 +124,370 @@
                                     </ul>
                                 </div>
                             </div>
-
+                            <div class="column-tc">
+                                <div class="tit"><span class="required">공개여부</span></div>
+                                <div class="con">
+                                    <input type="checkbox" class="switch" id="open" name="homepage_yn" value="Y" checked="">
+                                    <label for="open" class="switch mt5"></label>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <!-- 라디오 버튼 (지원금 유형 선택) -->
+
+
                     <div class="form-wrap2">
                         <h2 class="form-tit">지원금 유형</h2>
                         <div>
+
+
                             <label class="c-input ci-radio">
-                                <input type="radio" name="refundType" value="saup" checked> 사업주 환급 교육
+                                <input type="radio" name="refund_type" onchange="changeEmpInsFlag(this.value);" value="saup" checked=""> 사업주 환급 교육
                                 <div class="ci-show"></div>
                             </label>
                             <label class="c-input ci-radio">
-                                <input type="radio" name="refundType" value="cardsil"> 국민내일배움카드(실업자)
+                                <input type="radio" name="refund_type" onchange="changeEmpInsFlag(this.value);" value="cardsil"> 국민내일배움카드(실업자)
                                 <div class="ci-show"></div>
                             </label>
                             <label class="c-input ci-radio">
-                                <input type="radio" name="refundType" value="cardjae"> 국민내일배움카드(재직자)
+                                <input type="radio" name="refund_type" onchange="changeEmpInsFlag(this.value);" value="cardjae"> 국민내일배움카드(재직자)
                                 <div class="ci-show"></div>
                             </label>
+
                         </div>
-                        <!-- 테이블 (tbody 부분에 id 부여) -->
                         <table class="table01-in T_center mt30">
                             <thead>
                             <tr>
                                 <th>사용여부</th>
                                 <th>종류</th>
+                                <th>할인종류</th>
                                 <th>할인금액/지원율(%)</th>
                                 <th>지원금 적용 수강료(자부담금)</th>
                             </tr>
                             </thead>
-                            <tbody id="refundTableBody">
-                            <!-- 초기 데이터 렌더링 후 JS로 채워짐 -->
+                            <tbody>
+                            <input type="hidden" name="sub_idx[]"  value="">
+                            <input type="hidden" name="support_idx[]" value="1">
+                            <input type="hidden" name="support_name[]"  value="우선지원대상기업">
+                            <input type="hidden" name="support_type[]" value="saup">
+
+                            <!-- <tr class="check_refundtype chk_firstcompany"> -->
+                            <tr class="use_saup" >
+                                <td>
+                                    <!-- <input type="checkbox" class="switch" id="switch"> -->
+                                    <input class="switch" type="checkbox" name="chk_use_1" id="chk_use_1" value="Y">
+                                    <label for="chk_use_1" class="switch"></label>
+                                </td>
+                                <td>우선지원대상기업</td>
+                                <td>
+                                    <label class="c-input ci-radio">
+                                        <input type="radio" name="dis_type_1" value="percent" checked="" onclick="percentkind('percent','1')">지원율(%)
+                                        <div class="ci-show"></div>
+                                    </label>
+                                    <label class="c-input ci-radio">
+                                        <input type="radio" name="dis_type_1" value="disprice" onclick="percentkind('disprice','1')">할인금액
+                                        <div class="ci-show"></div>
+                                    </label>
+                                </td>
+                                <td>
+                                    <div class="flex-center">
+                                        <!-- <input type="text" placeholder="할인지원율을 입력해주세요" class="w50p"> -->
+                                        <input class="w50p" name="discount_rate_1" id="discount_rate_1" type="text" value="70" style="text-align:right" onkeyup="this.value=numchk(this.value);changePrice(this.form.dis_type_1.value,this.value,this.form.course_prices.value,1);" onblur="this.value=numchk(this.value);changePrice(this.form.dis_type_1.value,this.value,form.course_prices.value,1);">
+                                        <span id="chkper_1">%</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex-center">
+                                        <!-- <input type="text" class="w50p" readonly> -->
+                                        <input class="ji_price" name="ji_price_1" id="ji_price_1" type="text" value="0" style="text-align:right" readonly="">
+
+                                        <span>&nbsp;원</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <input type="hidden" name="sub_idx[]" value="">
+                            <input type="hidden" name="support_idx[]" value="2">
+                            <input type="hidden" name="support_name[]" value="근로장려금 수급자">
+                            <input type="hidden" name="support_type[]" value="cardsil">
+
+                            <!-- <tr class="check_refundtype chk_firstcompany"> -->
+                            <tr class="use_cardsil" style="display: none;">
+                                <td>
+                                    <!-- <input type="checkbox" class="switch" id="switch"> -->
+                                    <input class="switch" type="checkbox" name="chk_use_2" id="chk_use_2" value="Y">
+                                    <label for="chk_use_2" class="switch"></label>
+                                </td>
+                                <td>
+                                    근로장려금 수급자							</td>
+
+
+                                <td>
+                                    <label class="c-input ci-radio">
+                                        <input type="radio" name="dis_type_2" value="percent" checked="" onclick="percentkind('percent','2')">지원율(%)
+                                        <div class="ci-show"></div>
+                                    </label>
+                                    <label class="c-input ci-radio">
+                                        <input type="radio" name="dis_type_2"value="disprice" onclick="percentkind('disprice','2')">할인금액
+                                        <div class="ci-show"></div>
+                                    </label>
+                                </td>
+
+
+                                <td>
+                                    <div class="flex-center">
+                                        <!-- <input type="text" placeholder="할인지원율을 입력해주세요" class="w50p"> -->
+                                        <input class="w50p" name="discount_rate_2" id="discount_rate_2" type="text" value="80" style="text-align:right" onkeyup="this.value=numchk(this.value);changePrice(this.form.dis_type_2.value,this.value,this.form.course_prices.value,2);" onblur="this.value=numchk(this.value);changePrice(this.form.dis_type_2.value,this.value,form.course_prices.value,2);">
+                                        <span id="chkper_2">%</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex-center">
+                                        <!-- <input type="text" class="w50p" readonly> -->
+                                        <input class="ji_price" name="ji_price_2" id="ji_price_2" type="text" value="0" style="text-align:right" readonly="">
+
+                                        <span>&nbsp;원</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <input type="hidden" name="sub_idx[]" value="">
+                            <input type="hidden" name="support_idx[]" value="3">
+                            <input type="hidden" name="support_name[]" value="국민내일배움카드 일반">
+                            <input type="hidden" name="support_type[]" value="cardjae">
+
+                            <!-- <tr class="check_refundtype chk_firstcompany"> -->
+                            <tr class="use_cardjae" style="display: none;">
+                                <td>
+                                    <!-- <input type="checkbox" class="switch" id="switch"> -->
+                                    <input class="switch" type="checkbox" name="chk_use_3" id="chk_use_3" value="Y">
+                                    <label for="chk_use_3" class="switch"></label>
+                                </td>
+                                <td>
+                                    국민내일배움카드 일반							</td>
+
+
+                                <td>
+                                    <label class="c-input ci-radio">
+                                        <input type="radio" name="dis_type_3" value="percent" checked="" onclick="percentkind('percent','3')">지원율(%)
+                                        <div class="ci-show"></div>
+                                    </label>
+                                    <label class="c-input ci-radio">
+                                        <input type="radio" name="dis_type_3" value="disprice" onclick="percentkind('disprice','3')">할인금액
+                                        <div class="ci-show"></div>
+                                    </label>
+                                </td>
+
+
+                                <td>
+                                    <div class="flex-center">
+                                        <!-- <input type="text" placeholder="할인지원율을 입력해주세요" class="w50p"> -->
+                                        <input class="w50p" name="discount_rate_3" id="discount_rate_3" type="text" value="80" style="text-align:right" onkeyup="this.value=numchk(this.value);changePrice(this.form.dis_type_3.value,this.value,this.form.course_prices.value,3);" onblur="this.value=numchk(this.value);changePrice(this.form.dis_type_3.value,this.value,form.course_prices.value,3);">
+                                        <span id="chkper_3">%</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex-center">
+                                        <!-- <input type="text" class="w50p" readonly> -->
+                                        <input class="ji_price" name="ji_price_3" id="ji_price_3" type="text" value="0" style="text-align:right" readonly="">
+
+                                        <span>&nbsp;원</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <input type="hidden" name="sub_idx[]" value="">
+                            <input type="hidden" name="support_idx[]" value="19">
+                            <input type="hidden" name="support_name[]" value="우선기업대상지원2">
+                            <input type="hidden" name="support_type[]" value="saup">
+
+                            <!-- <tr class="check_refundtype chk_firstcompany"> -->
+                            <tr class="use_saup">
+                                <td>
+                                    <!-- <input type="checkbox" class="switch" id="switch"> -->
+                                    <input class="switch" type="checkbox" name="chk_use_19" id="chk_use_19" value="Y">
+                                    <label for="chk_use_19" class="switch"></label>
+                                </td>
+                                <td>
+                                    우선기업대상지원2							</td>
+
+
+                                <td>
+                                    <label class="c-input ci-radio">
+                                        <input type="radio" name="dis_type_19" value="percent" checked="" onclick="percentkind('percent','19')">지원율(%)
+                                        <div class="ci-show"></div>
+                                    </label>
+                                    <label class="c-input ci-radio">
+                                        <input type="radio" name="dis_type_19" value="disprice" onclick="percentkind('disprice','19')">할인금액
+                                        <div class="ci-show"></div>
+                                    </label>
+                                </td>
+
+
+                                <td>
+                                    <div class="flex-center">
+                                        <!-- <input type="text" placeholder="할인지원율을 입력해주세요" class="w50p"> -->
+                                        <input class="w50p" name="discount_rate_19" id="discount_rate_19" type="text" value="30" style="text-align:right" onkeyup="this.value=numchk(this.value);changePrice(this.form.dis_type_19.value,this.value,this.form.course_prices.value,19);" onblur="this.value=numchk(this.value);changePrice(this.form.dis_type_19.value,this.value,form.course_prices.value,19);">
+                                        <span id="chkper_19">%</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex-center">
+                                        <!-- <input type="text" class="w50p" readonly> -->
+                                        <input class="ji_price" name="ji_price_19" id="ji_price_19" type="text" value="0" style="text-align:right" readonly="">
+
+                                        <span>&nbsp;원</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <input type="hidden" name="sub_idx[]"  value="">
+                            <input type="hidden" name="support_idx[]" value="20">
+                            <input type="hidden" name="support_name[]" value="우선대상기업3">
+                            <input type="hidden" name="support_type[]" value="saup">
+
+                            <!-- <tr class="check_refundtype chk_firstcompany"> -->
+                            <tr class="use_saup" id="use_saup">
+                                <td>
+                                    <!-- <input type="checkbox" class="switch" id="switch"> -->
+                                    <input class="switch" type="checkbox" name="chk_use_20" id="chk_use_20" value="Y">
+                                    <label for="chk_use_20" class="switch"></label>
+                                </td>
+                                <td>
+                                    우선대상기업3							</td>
+
+
+                                <td>
+                                    <label class="c-input ci-radio">
+                                        <input type="radio" name="dis_type_20" value="percent" checked="" onclick="percentkind('percent','20')">지원율(%)
+                                        <div class="ci-show"></div>
+                                    </label>
+                                    <label class="c-input ci-radio">
+                                        <input type="radio" name="dis_type_20" value="disprice" onclick="percentkind('disprice','20')">할인금액
+                                        <div class="ci-show"></div>
+                                    </label>
+                                </td>
+
+
+                                <td>
+                                    <div class="flex-center">
+                                        <!-- <input type="text" placeholder="할인지원율을 입력해주세요" class="w50p"> -->
+                                        <input class="w50p" name="discount_rate_20" id="discount_rate_20" type="text" value="25" style="text-align:right" onkeyup="this.value=numchk(this.value);changePrice(this.form.dis_type_20.value,this.value,this.form.course_prices.value,20);" onblur="this.value=numchk(this.value);changePrice(this.form.dis_type_20.value,this.value,form.course_prices.value,20);">
+                                        <span id="chkper_20">%</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex-center">
+                                        <!-- <input type="text" class="w50p" readonly> -->
+                                        <input class="ji_price" name="ji_price_20" id="ji_price_20" type="text" value="0" style="text-align:right" readonly="">
+
+                                        <span>&nbsp;원</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <input type="hidden" name="sub_idx[]" value="">
+                            <input type="hidden" name="support_idx[]" value="21">
+                            <input type="hidden" name="support_name[]"  value="국민내일배움실업2">
+                            <input type="hidden" name="support_type[]"  value="cardsil">
+
+                            <!-- <tr class="check_refundtype chk_firstcompany"> -->
+                            <tr class="use_cardsil" id="use_cardsil" style="display: none;">
+                                <td>
+                                    <!-- <input type="checkbox" class="switch" id="switch"> -->
+                                    <input class="switch" type="checkbox" name="chk_use_21" id="chk_use_21" value="Y">
+                                    <label for="chk_use_21" class="switch"></label>
+                                </td>
+                                <td>
+                                    국민내일배움실업2							</td>
+
+
+                                <td>
+                                    <label class="c-input ci-radio">
+                                        <input type="radio" name="dis_type_21" value="percent" checked="" onclick="percentkind('percent','21')">지원율(%)
+                                        <div class="ci-show"></div>
+                                    </label>
+                                    <label class="c-input ci-radio">
+                                        <input type="radio" name="dis_type_21" value="disprice" onclick="percentkind('disprice','21')">할인금액
+                                        <div class="ci-show"></div>
+                                    </label>
+                                </td>
+
+
+                                <td>
+                                    <div class="flex-center">
+                                        <!-- <input type="text" placeholder="할인지원율을 입력해주세요" class="w50p"> -->
+                                        <input class="w50p" name="discount_rate_21" id="discount_rate_21" type="text" value="30" style="text-align:right" onkeyup="this.value=numchk(this.value);changePrice(this.form.dis_type_21.value,this.value,this.form.course_prices.value,21);" onblur="this.value=numchk(this.value);changePrice(this.form.dis_type_21.value,this.value,form.course_prices.value,21);">
+                                        <span id="chkper_21">%</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex-center">
+                                        <!-- <input type="text" class="w50p" readonly> -->
+                                        <input class="ji_price" name="ji_price_21" id="ji_price_21" type="text" value="0" style="text-align:right" readonly="">
+
+                                        <span>&nbsp;원</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <input type="hidden" name="sub_idx[]" id="sub_idx[]" value="">
+                            <input type="hidden" name="support_idx[]" id="support_idx[]" value="23">
+                            <input type="hidden" name="support_name[]" id="support_name[]" value="국민내일배움재직2">
+                            <input type="hidden" name="support_type[]" id="support_type[]" value="cardjae">
+
+                            <!-- <tr class="check_refundtype chk_firstcompany"> -->
+                            <tr class="use_cardjae" id="use_cardjae" style="display: none;">
+                                <td>
+                                    <!-- <input type="checkbox" class="switch" id="switch"> -->
+                                    <input class="switch" type="checkbox" name="chk_use_23" id="chk_use_23" value="Y">
+                                    <label for="chk_use_23" class="switch"></label>
+                                </td>
+                                <td>
+                                    국민내일배움재직2							</td>
+
+
+                                <td>
+                                    <label class="c-input ci-radio">
+                                        <input type="radio" name="dis_type_23" value="percent" checked="" onclick="percentkind('percent','23')">지원율(%)
+                                        <div class="ci-show"></div>
+                                    </label>
+                                    <label class="c-input ci-radio">
+                                        <input type="radio" name="dis_type_23" value="disprice" onclick="percentkind('disprice','23')">할인금액
+                                        <div class="ci-show"></div>
+                                    </label>
+                                </td>
+
+
+                                <td>
+                                    <div class="flex-center">
+                                        <!-- <input type="text" placeholder="할인지원율을 입력해주세요" class="w50p"> -->
+                                        <input class="w50p" name="discount_rate_23" id="discount_rate_23" type="text" value="30" style="text-align:right" onkeyup="this.value=numchk(this.value);changePrice(this.form.dis_type_23.value,this.value,this.form.course_prices.value,23);" onblur="this.value=numchk(this.value);changePrice(this.form.dis_type_23.value,this.value,form.course_prices.value,23);">
+                                        <span id="chkper_23">%</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex-center">
+                                        <!-- <input type="text" class="w50p" readonly> -->
+                                        <input class="ji_price" name="ji_price_23" id="ji_price_23" type="text" value="0" style="text-align:right" readonly="">
+
+                                        <span>&nbsp;원</span>
+                                    </div>
+                                </td>
+                            </tr>
+
                             </tbody>
                         </table>
+
                     </div>
+
+
+
+
 
                     <div class="form-wrap2">
                         <h2 class="form-tit">과정안내 <span class="required-txt">표시 항목은 필수 입력/설정 사항입니다.</span></h2>
-                        <div class="column-tc-wrap column-tc-wrap2 part2">
+                        <div class="column-tc-wrap column-tc-wrap2 part1">
                             <div class="column-tc">
                                 <div class="tit"><span class="required">1일 학습량</span></div>
                                 <div class="con">
                                     <textarea name="progressInfo" id="subject_oneday"></textarea>
                                 </div>
                             </div>
-                            <div class="column-tc-wrap column-tc-wrap2 part2">
-                                <div class="column-tc">
-                                    <div class="tit">학습수준</div>
-                                    <div class="con">
-                                        <select name="learningLevel" id="learning_level">
-                                            <option>학습 수준을 선택해주세요</option>
-                                            <option value="초">초</option>
-                                            <option value="중">중</option>
-                                            <option value="상">상</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="column-tc">
-                                    <div class="tit">학습기간</div>
-                                    <div class="con">
-                                        <input type="date" name="learningGigan" id="learning_gigan">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="column-tc-wrap column-tc-wrap2 part2">
+
                             <div class="column-tc">
                                 <div class="tit"><span class="required">수료기준</span></div>
                                 <div class="con">
@@ -221,7 +501,31 @@
                                 </div>
                             </div>
                         </div>
-
+                        <div class="column-tc-wrap column-tc-wrap2 part2">
+                            <div class="column-tc">
+                                <div class="tit">학습수준</div>
+                                <div class="con">
+                                    <textarea name="learningLevel" id="learning_level"></textarea>
+                                    <!-- <select name="learning_level" id="learning_level">
+									<option>학습 수준을 선택해주세요</option>
+									<option value="초">초</option>
+									<option value="중">중</option>
+									<option value="상">상</option>
+								</select> -->
+                                </div>
+                            </div>
+                            <div class="column-tc">
+                                <div class="tit">학습기간</div>
+                                <div class="con">
+                                    <textarea name="learningGigan" id="learning_gigan"></textarea>
+                                    <!-- <select name="learning_gigan" id="learning_gigan">
+									<option>학습 기간을 선택해주세요</option>
+									<option value="">option 01</option>
+									<option value="">option 02</option>
+								</select> -->
+                                </div>
+                            </div>
+                        </div>
                         <div class="subject-regi-tab mt30">
                             <ul class="jv-tab-list">
                                 <li rel="tab1" class="active"><span>과정소개(미완료)</span></li>
@@ -231,59 +535,129 @@
                             </ul>
                             <div class="jv-tab-cont-wrap">
                                 <div id="tab1" class="jv-tab-cont" style="display: block;">
-                                    <textarea name="introduce" class="tinymce-editor w100p" cols="70" rows="4" placeholder="과정소개를 입력해 주세요"></textarea>
+                                    <textarea name="introduce" id="introduce" class="w100p" cols="70" rows="4" placeholder="과정소개를 입력해 주세요" style="visibility: hidden; display: none;">
+
+                                    </textarea>
+                                    <div id="cke_introduce" class="cke_1 cke cke_reset cke_chrome cke_editor_introduce cke_ltr cke_browser_webkit" dir="ltr" lang="ko" role="application" aria-labelledby="cke_introduce_arialbl" style="width: 100%;">
+                                        <span id="cke_introduce_arialbl" class="cke_voice_label">리치 텍스트 편집기, introduce</span>
+                                        <div class="cke_inner cke_reset" role="presentation">
+                                            <span id="cke_1_top" class="cke_top cke_reset_all" role="presentation" style="height: auto; user-select: none;">
+                                                <span id="cke_24" class="cke_voice_label">에디터 툴바</span>
+                                                <span id="cke_1_toolbox" class="cke_toolbox" role="group" aria-labelledby="cke_24" onmousedown="return false;">
+                                                    <span id="cke_29" class="cke_toolbar" role="toolbar">
+                                                        <span class="cke_toolbar_start"></span>
+                                                        <span class="cke_toolgroup" role="presentation">
+                                                            <a id="cke_30" class="cke_button cke_button__preview cke_button_off" href="javascript:void('미리보기')" title="미리보기" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_30_label" aria-describedby="cke_30_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(4,event);" onfocus="return CKEDITOR.tools.callFunction(5,event);" onclick="CKEDITOR.tools.callFunction(6,this);return false;"><span class="cke_button_icon cke_button__preview_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1680px;background-size:auto;">&nbsp;</span>
+                                                                <span id="cke_30_label" class="cke_button_label cke_button__preview_label" aria-hidden="false">미리보기</span>
+                                                                <span id="cke_30_description" class="cke_button_label" aria-hidden="false"></span></a>
+                                                            <a id="cke_31" class="cke_button cke_button__print cke_button_off" href="javascript:void('인쇄')" title="인쇄" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_31_label" aria-describedby="cke_31_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(7,event);" onfocus="return CKEDITOR.tools.callFunction(8,event);" onclick="CKEDITOR.tools.callFunction(9,this);return false;"><span class="cke_button_icon cke_button__print_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1704px;background-size:auto;">&nbsp;</span><span id="cke_31_label" class="cke_button_label cke_button__print_label" aria-hidden="false">인쇄</span><span id="cke_31_description" class="cke_button_label" aria-hidden="false"></span></a><span class="cke_toolbar_separator" role="separator"></span><a id="cke_32" class="cke_button cke_button__newpage cke_button_off" href="javascript:void('새 페이지')" title="새 페이지" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_32_label" aria-describedby="cke_32_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(10,event);" onfocus="return CKEDITOR.tools.callFunction(11,event);" onclick="CKEDITOR.tools.callFunction(12,this);return false;"><span class="cke_button_icon cke_button__newpage_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1488px;background-size:auto;">&nbsp;</span><span id="cke_32_label" class="cke_button_label cke_button__newpage_label" aria-hidden="false">새 페이지</span><span id="cke_32_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_33" class="cke_button cke_button__source cke_button_off" href="javascript:void('소스')" title="소스" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_33_label" aria-describedby="cke_33_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(13,event);" onfocus="return CKEDITOR.tools.callFunction(14,event);" onclick="CKEDITOR.tools.callFunction(15,this);return false;"><span class="cke_button_icon cke_button__source_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1872px;background-size:auto;">&nbsp;</span><span id="cke_33_label" class="cke_button_label cke_button__source_label" aria-hidden="false">소스</span>
+                                                            <span id="cke_33_description" class="cke_button_label" aria-hidden="false"></span></a></span><span class="cke_toolbar_end"></span>
+                                                    </span><span id="cke_34" class="cke_toolbar" role="toolbar">
+                                                    <span class="cke_toolbar_start"></span><span class="cke_toolgroup" role="presentation"><a id="cke_35" class="cke_button cke_button__numberedlist cke_button_off" href="javascript:void('순서 있는 목록')" title="순서 있는 목록" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_35_label" aria-describedby="cke_35_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(16,event);" onfocus="return CKEDITOR.tools.callFunction(17,event);" onclick="CKEDITOR.tools.callFunction(18,this);return false;"><span class="cke_button_icon cke_button__numberedlist_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1416px;background-size:auto;">&nbsp;</span><span id="cke_35_label" class="cke_button_label cke_button__numberedlist_label" aria-hidden="false">순서 있는 목록</span><span id="cke_35_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_36" class="cke_button cke_button__bulletedlist cke_button_off" href="javascript:void('순서 없는 목록')" title="순서 없는 목록" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_36_label" aria-describedby="cke_36_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(19,event);" onfocus="return CKEDITOR.tools.callFunction(20,event);" onclick="CKEDITOR.tools.callFunction(21,this);return false;"><span class="cke_button_icon cke_button__bulletedlist_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1368px;background-size:auto;">&nbsp;</span><span id="cke_36_label" class="cke_button_label cke_button__bulletedlist_label" aria-hidden="false">순서 없는 목록</span><span id="cke_36_description" class="cke_button_label" aria-hidden="false"></span></a><span class="cke_toolbar_separator" role="separator"></span><a id="cke_37" class="cke_button cke_button__outdent cke_button_disabled " href="javascript:void('내어쓰기')" title="내어쓰기" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_37_label" aria-describedby="cke_37_description" aria-haspopup="false" aria-disabled="true" onkeydown="return CKEDITOR.tools.callFunction(22,event);" onfocus="return CKEDITOR.tools.callFunction(23,event);" onclick="CKEDITOR.tools.callFunction(24,this);return false;"><span class="cke_button_icon cke_button__outdent_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1080px;background-size:auto;">&nbsp;</span><span id="cke_37_label" class="cke_button_label cke_button__outdent_label" aria-hidden="false">내어쓰기</span><span id="cke_37_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_38" class="cke_button cke_button__indent cke_button_off" href="javascript:void('들여쓰기')" title="들여쓰기" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_38_label" aria-describedby="cke_38_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(25,event);" onfocus="return CKEDITOR.tools.callFunction(26,event);" onclick="CKEDITOR.tools.callFunction(27,this);return false;"><span class="cke_button_icon cke_button__indent_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1032px;background-size:auto;">&nbsp;</span><span id="cke_38_label" class="cke_button_label cke_button__indent_label" aria-hidden="false">들여쓰기</span><span id="cke_38_description" class="cke_button_label" aria-hidden="false"></span></a><span class="cke_toolbar_separator" role="separator"></span><a id="cke_39" class="cke_button cke_button__justifyleft cke_button_off" href="javascript:void('왼쪽 정렬')" title="왼쪽 정렬" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_39_label" aria-describedby="cke_39_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(28,event);" onfocus="return CKEDITOR.tools.callFunction(29,event);" onclick="CKEDITOR.tools.callFunction(30,this);return false;"><span class="cke_button_icon cke_button__justifyleft_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1176px;background-size:auto;">&nbsp;</span><span id="cke_39_label" class="cke_button_label cke_button__justifyleft_label" aria-hidden="false">왼쪽 정렬</span><span id="cke_39_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_40" class="cke_button cke_button__justifycenter cke_button_off" href="javascript:void('중앙')" title="중앙" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_40_label" aria-describedby="cke_40_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(31,event);" onfocus="return CKEDITOR.tools.callFunction(32,event);" onclick="CKEDITOR.tools.callFunction(33,this);return false;"><span class="cke_button_icon cke_button__justifycenter_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1152px;background-size:auto;">&nbsp;</span><span id="cke_40_label" class="cke_button_label cke_button__justifycenter_label" aria-hidden="false">중앙</span><span id="cke_40_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_41" class="cke_button cke_button__justifyright cke_button_off" href="javascript:void('오른쪽 정렬')" title="오른쪽 정렬" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_41_label" aria-describedby="cke_41_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(34,event);" onfocus="return CKEDITOR.tools.callFunction(35,event);" onclick="CKEDITOR.tools.callFunction(36,this);return false;"><span class="cke_button_icon cke_button__justifyright_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1200px;background-size:auto;">&nbsp;</span><span id="cke_41_label" class="cke_button_label cke_button__justifyright_label" aria-hidden="false">오른쪽 정렬</span><span id="cke_41_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_42" class="cke_button cke_button__justifyblock cke_button_off" href="javascript:void('양쪽 정렬')" title="양쪽 정렬" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_42_label" aria-describedby="cke_42_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(37,event);" onfocus="return CKEDITOR.tools.callFunction(38,event);" onclick="CKEDITOR.tools.callFunction(39,this);return false;"><span class="cke_button_icon cke_button__justifyblock_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1128px;background-size:auto;">&nbsp;</span><span id="cke_42_label" class="cke_button_label cke_button__justifyblock_label" aria-hidden="false">양쪽 정렬</span><span id="cke_42_description" class="cke_button_label" aria-hidden="false"></span></a></span><span class="cke_toolbar_end"></span></span><span id="cke_43" class="cke_toolbar" role="toolbar"><span class="cke_toolbar_start"></span><span class="cke_toolgroup" role="presentation"><a id="cke_44" class="cke_button cke_button__link cke_button_off" href="javascript:void('링크 삽입/변경')" title="링크 삽입/변경 (컨트롤+K)" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_44_label" aria-describedby="cke_44_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(40,event);" onfocus="return CKEDITOR.tools.callFunction(41,event);" onclick="CKEDITOR.tools.callFunction(42,this);return false;"><span class="cke_button_icon cke_button__link_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1296px;background-size:auto;">&nbsp;</span><span id="cke_44_label" class="cke_button_label cke_button__link_label" aria-hidden="false">링크 삽입/변경</span><span id="cke_44_description" class="cke_button_label" aria-hidden="false">키보드 단축키 컨트롤+K</span></a><a id="cke_45" class="cke_button cke_button__unlink cke_button_disabled " href="javascript:void('링크 지우기')" title="링크 지우기" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_45_label" aria-describedby="cke_45_description" aria-haspopup="false" aria-disabled="true" onkeydown="return CKEDITOR.tools.callFunction(43,event);" onfocus="return CKEDITOR.tools.callFunction(44,event);" onclick="CKEDITOR.tools.callFunction(45,this);return false;"><span class="cke_button_icon cke_button__unlink_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1320px;background-size:auto;">&nbsp;</span><span id="cke_45_label" class="cke_button_label cke_button__unlink_label" aria-hidden="false">링크 지우기</span><span id="cke_45_description" class="cke_button_label" aria-hidden="false"></span></a></span><span class="cke_toolbar_end"></span></span><span id="cke_46" class="cke_toolbar" role="toolbar"><span class="cke_toolbar_start"></span><span class="cke_toolgroup" role="presentation"><a id="cke_47" class="cke_button cke_button__image cke_button_off" href="javascript:void('이미지')" title="이미지" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_47_label" aria-describedby="cke_47_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(46,event);" onfocus="return CKEDITOR.tools.callFunction(47,event);" onclick="CKEDITOR.tools.callFunction(48,this);return false;"><span class="cke_button_icon cke_button__image_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -984px;background-size:auto;">&nbsp;</span><span id="cke_47_label" class="cke_button_label cke_button__image_label" aria-hidden="false">이미지</span><span id="cke_47_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_48" class="cke_button cke_button__table cke_button_off" href="javascript:void('표')" title="표" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_48_label" aria-describedby="cke_48_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(49,event);" onfocus="return CKEDITOR.tools.callFunction(50,event);" onclick="CKEDITOR.tools.callFunction(51,this);return false;"><span class="cke_button_icon cke_button__table_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1944px;background-size:auto;">&nbsp;</span><span id="cke_48_label" class="cke_button_label cke_button__table_label" aria-hidden="false">표</span><span id="cke_48_description" class="cke_button_label" aria-hidden="false"></span></a></span><span class="cke_toolbar_end"></span></span><span id="cke_49" class="cke_toolbar cke_toolbar_last" role="toolbar"><span class="cke_toolbar_start"></span><span class="cke_toolgroup" role="presentation"><a id="cke_50" class="cke_button cke_button__templates cke_button_off" href="javascript:void('템플릿')" title="템플릿" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_50_label" aria-describedby="cke_50_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(52,event);" onfocus="return CKEDITOR.tools.callFunction(53,event);" onclick="CKEDITOR.tools.callFunction(54,this);return false;"><span class="cke_button_icon cke_button__templates_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -456px;background-size:auto;">&nbsp;</span><span id="cke_50_label" class="cke_button_label cke_button__templates_label" aria-hidden="false">템플릿</span><span id="cke_50_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_51" class="cke_button cke_button__youtube cke_button_off" href="javascript:void('유투브 비디오 삽입')" title="유투브 비디오 삽입" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_51_label" aria-describedby="cke_51_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(55,event);" onfocus="return CKEDITOR.tools.callFunction(56,event);" onclick="CKEDITOR.tools.callFunction(57,this);return false;"><span class="cke_button_icon cke_button__youtube_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/youtube/images/icon.png?t=K87C');background-position:0 0px;background-size:16px;">&nbsp;</span><span id="cke_51_label" class="cke_button_label cke_button__youtube_label" aria-hidden="false">유투브 비디오 삽입</span><span id="cke_51_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_52" class="cke_button cke_button__video cke_button_off" href="javascript:void('Video')" title="Video" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_52_label" aria-describedby="cke_52_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(58,event);" onfocus="return CKEDITOR.tools.callFunction(59,event);" onclick="CKEDITOR.tools.callFunction(60,this);return false;"><span class="cke_button_icon cke_button__video_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/video/icons/video.png?t=K87C');background-position:0 0px;background-size:16px;">&nbsp;</span><span id="cke_52_label" class="cke_button_label cke_button__video_label" aria-hidden="false">Video</span><span id="cke_52_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_53" class="cke_button cke_button__audio cke_button_off" href="javascript:void('audio')" title="audio" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_53_label" aria-describedby="cke_53_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(61,event);" onfocus="return CKEDITOR.tools.callFunction(62,event);" onclick="CKEDITOR.tools.callFunction(63,this);return false;"><span class="cke_button_icon cke_button__audio_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/audio/icons/audio.png?t=K87C');background-position:0 0px;background-size:16px;">&nbsp;</span><span id="cke_53_label" class="cke_button_label cke_button__audio_label" aria-hidden="false">audio</span><span id="cke_53_description" class="cke_button_label" aria-hidden="false"></span></a></span><span class="cke_toolbar_end"></span></span><span class="cke_toolbar_break"></span><span id="cke_54" class="cke_toolbar" role="toolbar"><span class="cke_toolbar_start"></span><span id="cke_25" class="cke_combo cke_combo__styles cke_combo_off" role="presentation"><span id="cke_25_label" class="cke_combo_label">스타일</span><a class="cke_combo_button" title="전체 구성 스타일" tabindex="-1" href="javascript:void('전체 구성 스타일')" hidefocus="true" role="button" aria-labelledby="cke_25_label" aria-haspopup="listbox" onkeydown="return CKEDITOR.tools.callFunction(65,event,this);" onfocus="return CKEDITOR.tools.callFunction(66,event);" onclick="CKEDITOR.tools.callFunction(64,this);return false;" aria-expanded="false"><span id="cke_25_text" class="cke_combo_text cke_combo_inlinelabel">스타일</span><span class="cke_combo_open"><span class="cke_combo_arrow"></span></span></a></span><span id="cke_26" class="cke_combo cke_combo__format cke_combo_off" role="presentation"><span id="cke_26_label" class="cke_combo_label">문단</span><a class="cke_combo_button" title="문단 형식" tabindex="-1" href="javascript:void('문단 형식')" hidefocus="true" role="button" aria-labelledby="cke_26_label" aria-haspopup="listbox" onkeydown="return CKEDITOR.tools.callFunction(68,event,this);" onfocus="return CKEDITOR.tools.callFunction(69,event);" onclick="CKEDITOR.tools.callFunction(67,this);return false;" aria-expanded="false"><span id="cke_26_text" class="cke_combo_text cke_combo_inlinelabel">문단</span><span class="cke_combo_open"><span class="cke_combo_arrow"></span></span></a></span><span id="cke_27" class="cke_combo cke_combo__font cke_combo_off" role="presentation"><span id="cke_27_label" class="cke_combo_label">글꼴</span><a class="cke_combo_button" title="글꼴" tabindex="-1" href="javascript:void('글꼴')" hidefocus="true" role="button" aria-labelledby="cke_27_label" aria-haspopup="listbox" onkeydown="return CKEDITOR.tools.callFunction(71,event,this);" onfocus="return CKEDITOR.tools.callFunction(72,event);" onclick="CKEDITOR.tools.callFunction(70,this);return false;" aria-expanded="false"><span id="cke_27_text" class="cke_combo_text cke_combo_inlinelabel">글꼴</span><span class="cke_combo_open"><span class="cke_combo_arrow"></span></span></a></span><span id="cke_28" class="cke_combo cke_combo__fontsize cke_combo_off" role="presentation"><span id="cke_28_label" class="cke_combo_label">크기</span><a class="cke_combo_button" title="글자 크기" tabindex="-1" href="javascript:void('글자 크기')" hidefocus="true" role="button" aria-labelledby="cke_28_label" aria-haspopup="listbox" onkeydown="return CKEDITOR.tools.callFunction(74,event,this);" onfocus="return CKEDITOR.tools.callFunction(75,event);" onclick="CKEDITOR.tools.callFunction(73,this);return false;" aria-expanded="false"><span id="cke_28_text" class="cke_combo_text cke_combo_inlinelabel">크기</span><span class="cke_combo_open"><span class="cke_combo_arrow"></span></span></a></span><span class="cke_toolbar_end"></span></span><span id="cke_55" class="cke_toolbar" role="toolbar"><span class="cke_toolbar_start"></span><span class="cke_toolgroup" role="presentation"><a id="cke_56" class="cke_button cke_button__bold cke_button_off" href="javascript:void('굵게')" title="굵게 (컨트롤+B)" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_56_label" aria-describedby="cke_56_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(76,event);" onfocus="return CKEDITOR.tools.callFunction(77,event);" onclick="CKEDITOR.tools.callFunction(78,this);return false;"><span class="cke_button_icon cke_button__bold_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -24px;background-size:auto;">&nbsp;</span><span id="cke_56_label" class="cke_button_label cke_button__bold_label" aria-hidden="false">굵게</span><span id="cke_56_description" class="cke_button_label" aria-hidden="false">키보드 단축키 컨트롤+B</span></a><a id="cke_57" class="cke_button cke_button__italic cke_button_off" href="javascript:void('기울임꼴')" title="기울임꼴 (컨트롤+I)" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_57_label" aria-describedby="cke_57_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(79,event);" onfocus="return CKEDITOR.tools.callFunction(80,event);" onclick="CKEDITOR.tools.callFunction(81,this);return false;"><span class="cke_button_icon cke_button__italic_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -48px;background-size:auto;">&nbsp;</span><span id="cke_57_label" class="cke_button_label cke_button__italic_label" aria-hidden="false">기울임꼴</span><span id="cke_57_description" class="cke_button_label" aria-hidden="false">키보드 단축키 컨트롤+I</span></a><a id="cke_58" class="cke_button cke_button__underline cke_button_off" href="javascript:void('밑줄')" title="밑줄 (컨트롤+U)" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_58_label" aria-describedby="cke_58_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(82,event);" onfocus="return CKEDITOR.tools.callFunction(83,event);" onclick="CKEDITOR.tools.callFunction(84,this);return false;"><span class="cke_button_icon cke_button__underline_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -144px;background-size:auto;">&nbsp;</span><span id="cke_58_label" class="cke_button_label cke_button__underline_label" aria-hidden="false">밑줄</span><span id="cke_58_description" class="cke_button_label" aria-hidden="false">키보드 단축키 컨트롤+U</span></a><a id="cke_59" class="cke_button cke_button__strike cke_button_off" href="javascript:void('취소선')" title="취소선" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_59_label" aria-describedby="cke_59_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(85,event);" onfocus="return CKEDITOR.tools.callFunction(86,event);" onclick="CKEDITOR.tools.callFunction(87,this);return false;"><span class="cke_button_icon cke_button__strike_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -72px;background-size:auto;">&nbsp;</span><span id="cke_59_label" class="cke_button_label cke_button__strike_label" aria-hidden="false">취소선</span><span id="cke_59_description" class="cke_button_label" aria-hidden="false"></span></a></span><span class="cke_toolbar_end"></span></span><span id="cke_60" class="cke_toolbar cke_toolbar_last" role="toolbar"><span class="cke_toolbar_start"></span><span class="cke_toolgroup" role="presentation"><a id="cke_61" class="cke_button cke_button__textcolor cke_button_expandable cke_button_off" href="javascript:void('글자 색상')" title="글자 색상" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_61_label" aria-describedby="cke_61_description" aria-haspopup="listbox" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(88,event);" onfocus="return CKEDITOR.tools.callFunction(89,event);" onclick="CKEDITOR.tools.callFunction(90,this);return false;" aria-expanded="false"><span class="cke_button_icon cke_button__textcolor_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -408px;background-size:auto;">&nbsp;</span><span id="cke_61_label" class="cke_button_label cke_button__textcolor_label" aria-hidden="false">글자 색상</span><span id="cke_61_description" class="cke_button_label" aria-hidden="false"></span><span class="cke_button_arrow"></span></a><a id="cke_62" class="cke_button cke_button__bgcolor cke_button_expandable cke_button_off" href="javascript:void('배경 색상')" title="배경 색상" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_62_label" aria-describedby="cke_62_description" aria-haspopup="listbox" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(91,event);" onfocus="return CKEDITOR.tools.callFunction(92,event);" onclick="CKEDITOR.tools.callFunction(93,this);return false;" aria-expanded="false"><span class="cke_button_icon cke_button__bgcolor_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -384px;background-size:auto;">&nbsp;</span><span id="cke_62_label" class="cke_button_label cke_button__bgcolor_label" aria-hidden="false">배경 색상</span><span id="cke_62_description" class="cke_button_label" aria-hidden="false"></span><span class="cke_button_arrow"></span></a></span><span class="cke_toolbar_end"></span></span></span></span><div id="cke_1_contents" class="cke_contents cke_reset" role="presentation" style="height: 400px;"><span id="cke_66" class="cke_voice_label">도움이 필요하면 ALT 0 을 누르세요</span><iframe src="" frameborder="0" class="cke_wysiwyg_frame cke_reset" title="리치 텍스트 편집기, introduce" aria-describedby="cke_66" tabindex="0" allowtransparency="true" style="width: 100%; height: 100%;"></iframe></div>
+                                            <span id="cke_1_bottom" class="cke_bottom cke_reset_all" role="presentation" style="user-select: none;">
+                                            <span id="cke_1_resizer" class="cke_resizer cke_resizer_vertical cke_resizer_ltr" title="크기 조절" >◢</span><span id="cke_1_path_label" class="cke_voice_label">요소 경로</span>
+                                        <span id="cke_1_path" class="cke_path" role="group" aria-labelledby="cke_1_path_label">
+                                            <span class="cke_path_empty">&nbsp;</span>
+                                        </span>
+                                    </span></div>
+                                    </div>
                                 </div>
-                                <div id="tab2" class="jv-tab-cont" style="display: none;">
-                                    <textarea name="purpose" class="tinymce-editor w100p" cols="70" rows="4" placeholder="학습목표를 입력해 주세요"></textarea>
+                                <div id="tab2" class="jv-tab-cont" style="display: none;">								<textarea name="purpose" id="purpose" placeholder="학습목표를 입력해주세요" style="visibility: hidden; display: none;"></textarea><div id="cke_purpose" class="cke_2 cke cke_reset cke_chrome cke_editor_purpose cke_ltr cke_browser_webkit" dir="ltr" lang="ko" role="application" aria-labelledby="cke_purpose_arialbl" style="width: 100%;"><span id="cke_purpose_arialbl" class="cke_voice_label">리치 텍스트 편집기, purpose</span><div class="cke_inner cke_reset" role="presentation"><span id="cke_2_top" class="cke_top cke_reset_all" role="presentation" style="height: auto; user-select: none;"><span id="cke_78" class="cke_voice_label">에디터 툴바</span><span id="cke_2_toolbox" class="cke_toolbox" role="group" aria-labelledby="cke_78" onmousedown="return false;"><span id="cke_83" class="cke_toolbar" role="toolbar"><span class="cke_toolbar_start"></span><span class="cke_toolgroup" role="presentation"><a id="cke_84" class="cke_button cke_button__preview cke_button_off" href="javascript:void('미리보기')" title="미리보기" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_84_label" aria-describedby="cke_84_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(101,event);" onfocus="return CKEDITOR.tools.callFunction(102,event);" onclick="CKEDITOR.tools.callFunction(103,this);return false;"><span class="cke_button_icon cke_button__preview_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1680px;background-size:auto;">&nbsp;</span><span id="cke_84_label" class="cke_button_label cke_button__preview_label" aria-hidden="false">미리보기</span><span id="cke_84_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_85" class="cke_button cke_button__print cke_button_off" href="javascript:void('인쇄')" title="인쇄" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_85_label" aria-describedby="cke_85_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(104,event);" onfocus="return CKEDITOR.tools.callFunction(105,event);" onclick="CKEDITOR.tools.callFunction(106,this);return false;"><span class="cke_button_icon cke_button__print_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1704px;background-size:auto;">&nbsp;</span><span id="cke_85_label" class="cke_button_label cke_button__print_label" aria-hidden="false">인쇄</span><span id="cke_85_description" class="cke_button_label" aria-hidden="false"></span></a><span class="cke_toolbar_separator" role="separator"></span><a id="cke_86" class="cke_button cke_button__newpage cke_button_off" href="javascript:void('새 페이지')" title="새 페이지" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_86_label" aria-describedby="cke_86_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(107,event);" onfocus="return CKEDITOR.tools.callFunction(108,event);" onclick="CKEDITOR.tools.callFunction(109,this);return false;"><span class="cke_button_icon cke_button__newpage_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1488px;background-size:auto;">&nbsp;</span><span id="cke_86_label" class="cke_button_label cke_button__newpage_label" aria-hidden="false">새 페이지</span><span id="cke_86_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_87" class="cke_button cke_button__source cke_button_off" href="javascript:void('소스')" title="소스" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_87_label" aria-describedby="cke_87_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(110,event);" onfocus="return CKEDITOR.tools.callFunction(111,event);" onclick="CKEDITOR.tools.callFunction(112,this);return false;"><span class="cke_button_icon cke_button__source_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1872px;background-size:auto;">&nbsp;</span><span id="cke_87_label" class="cke_button_label cke_button__source_label" aria-hidden="false">소스</span><span id="cke_87_description" class="cke_button_label" aria-hidden="false"></span></a></span><span class="cke_toolbar_end"></span></span><span id="cke_88" class="cke_toolbar" role="toolbar"><span class="cke_toolbar_start"></span><span class="cke_toolgroup" role="presentation"><a id="cke_89" class="cke_button cke_button__numberedlist cke_button_off" href="javascript:void('순서 있는 목록')" title="순서 있는 목록" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_89_label" aria-describedby="cke_89_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(113,event);" onfocus="return CKEDITOR.tools.callFunction(114,event);" onclick="CKEDITOR.tools.callFunction(115,this);return false;"><span class="cke_button_icon cke_button__numberedlist_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1416px;background-size:auto;">&nbsp;</span><span id="cke_89_label" class="cke_button_label cke_button__numberedlist_label" aria-hidden="false">순서 있는 목록</span><span id="cke_89_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_90" class="cke_button cke_button__bulletedlist cke_button_off" href="javascript:void('순서 없는 목록')" title="순서 없는 목록" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_90_label" aria-describedby="cke_90_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(116,event);" onfocus="return CKEDITOR.tools.callFunction(117,event);" onclick="CKEDITOR.tools.callFunction(118,this);return false;"><span class="cke_button_icon cke_button__bulletedlist_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1368px;background-size:auto;">&nbsp;</span><span id="cke_90_label" class="cke_button_label cke_button__bulletedlist_label" aria-hidden="false">순서 없는 목록</span><span id="cke_90_description" class="cke_button_label" aria-hidden="false"></span></a><span class="cke_toolbar_separator" role="separator"></span><a id="cke_91" class="cke_button cke_button__outdent cke_button_disabled " href="javascript:void('내어쓰기')" title="내어쓰기" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_91_label" aria-describedby="cke_91_description" aria-haspopup="false" aria-disabled="true" onkeydown="return CKEDITOR.tools.callFunction(119,event);" onfocus="return CKEDITOR.tools.callFunction(120,event);" onclick="CKEDITOR.tools.callFunction(121,this);return false;"><span class="cke_button_icon cke_button__outdent_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1080px;background-size:auto;">&nbsp;</span><span id="cke_91_label" class="cke_button_label cke_button__outdent_label" aria-hidden="false">내어쓰기</span><span id="cke_91_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_92" class="cke_button cke_button__indent cke_button_off" href="javascript:void('들여쓰기')" title="들여쓰기" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_92_label" aria-describedby="cke_92_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(122,event);" onfocus="return CKEDITOR.tools.callFunction(123,event);" onclick="CKEDITOR.tools.callFunction(124,this);return false;"><span class="cke_button_icon cke_button__indent_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1032px;background-size:auto;">&nbsp;</span><span id="cke_92_label" class="cke_button_label cke_button__indent_label" aria-hidden="false">들여쓰기</span><span id="cke_92_description" class="cke_button_label" aria-hidden="false"></span></a><span class="cke_toolbar_separator" role="separator"></span><a id="cke_93" class="cke_button cke_button__justifyleft cke_button_off" href="javascript:void('왼쪽 정렬')" title="왼쪽 정렬" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_93_label" aria-describedby="cke_93_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(125,event);" onfocus="return CKEDITOR.tools.callFunction(126,event);" onclick="CKEDITOR.tools.callFunction(127,this);return false;"><span class="cke_button_icon cke_button__justifyleft_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1176px;background-size:auto;">&nbsp;</span><span id="cke_93_label" class="cke_button_label cke_button__justifyleft_label" aria-hidden="false">왼쪽 정렬</span><span id="cke_93_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_94" class="cke_button cke_button__justifycenter cke_button_off" href="javascript:void('중앙')" title="중앙" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_94_label" aria-describedby="cke_94_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(128,event);" onfocus="return CKEDITOR.tools.callFunction(129,event);" onclick="CKEDITOR.tools.callFunction(130,this);return false;"><span class="cke_button_icon cke_button__justifycenter_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1152px;background-size:auto;">&nbsp;</span><span id="cke_94_label" class="cke_button_label cke_button__justifycenter_label" aria-hidden="false">중앙</span><span id="cke_94_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_95" class="cke_button cke_button__justifyright cke_button_off" href="javascript:void('오른쪽 정렬')" title="오른쪽 정렬" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_95_label" aria-describedby="cke_95_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(131,event);" onfocus="return CKEDITOR.tools.callFunction(132,event);" onclick="CKEDITOR.tools.callFunction(133,this);return false;"><span class="cke_button_icon cke_button__justifyright_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1200px;background-size:auto;">&nbsp;</span><span id="cke_95_label" class="cke_button_label cke_button__justifyright_label" aria-hidden="false">오른쪽 정렬</span><span id="cke_95_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_96" class="cke_button cke_button__justifyblock cke_button_off" href="javascript:void('양쪽 정렬')" title="양쪽 정렬" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_96_label" aria-describedby="cke_96_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(134,event);" onfocus="return CKEDITOR.tools.callFunction(135,event);" onclick="CKEDITOR.tools.callFunction(136,this);return false;"><span class="cke_button_icon cke_button__justifyblock_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1128px;background-size:auto;">&nbsp;</span><span id="cke_96_label" class="cke_button_label cke_button__justifyblock_label" aria-hidden="false">양쪽 정렬</span><span id="cke_96_description" class="cke_button_label" aria-hidden="false"></span></a></span><span class="cke_toolbar_end"></span></span><span id="cke_97" class="cke_toolbar" role="toolbar"><span class="cke_toolbar_start"></span><span class="cke_toolgroup" role="presentation"><a id="cke_98" class="cke_button cke_button__link cke_button_off" href="javascript:void('링크 삽입/변경')" title="링크 삽입/변경 (컨트롤+K)" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_98_label" aria-describedby="cke_98_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(137,event);" onfocus="return CKEDITOR.tools.callFunction(138,event);" onclick="CKEDITOR.tools.callFunction(139,this);return false;"><span class="cke_button_icon cke_button__link_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1296px;background-size:auto;">&nbsp;</span><span id="cke_98_label" class="cke_button_label cke_button__link_label" aria-hidden="false">링크 삽입/변경</span><span id="cke_98_description" class="cke_button_label" aria-hidden="false">키보드 단축키 컨트롤+K</span></a><a id="cke_99" class="cke_button cke_button__unlink cke_button_disabled " href="javascript:void('링크 지우기')" title="링크 지우기" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_99_label" aria-describedby="cke_99_description" aria-haspopup="false" aria-disabled="true" onkeydown="return CKEDITOR.tools.callFunction(140,event);" onfocus="return CKEDITOR.tools.callFunction(141,event);" onclick="CKEDITOR.tools.callFunction(142,this);return false;"><span class="cke_button_icon cke_button__unlink_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1320px;background-size:auto;">&nbsp;</span><span id="cke_99_label" class="cke_button_label cke_button__unlink_label" aria-hidden="false">링크 지우기</span><span id="cke_99_description" class="cke_button_label" aria-hidden="false"></span></a></span><span class="cke_toolbar_end"></span></span><span id="cke_100" class="cke_toolbar" role="toolbar"><span class="cke_toolbar_start"></span><span class="cke_toolgroup" role="presentation"><a id="cke_101" class="cke_button cke_button__image cke_button_off" href="javascript:void('이미지')" title="이미지" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_101_label" aria-describedby="cke_101_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(143,event);" onfocus="return CKEDITOR.tools.callFunction(144,event);" onclick="CKEDITOR.tools.callFunction(145,this);return false;"><span class="cke_button_icon cke_button__image_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -984px;background-size:auto;">&nbsp;</span><span id="cke_101_label" class="cke_button_label cke_button__image_label" aria-hidden="false">이미지</span><span id="cke_101_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_102" class="cke_button cke_button__table cke_button_off" href="javascript:void('표')" title="표" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_102_label" aria-describedby="cke_102_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(146,event);" onfocus="return CKEDITOR.tools.callFunction(147,event);" onclick="CKEDITOR.tools.callFunction(148,this);return false;"><span class="cke_button_icon cke_button__table_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1944px;background-size:auto;">&nbsp;</span><span id="cke_102_label" class="cke_button_label cke_button__table_label" aria-hidden="false">표</span><span id="cke_102_description" class="cke_button_label" aria-hidden="false"></span></a></span><span class="cke_toolbar_end"></span></span><span id="cke_103" class="cke_toolbar cke_toolbar_last" role="toolbar"><span class="cke_toolbar_start"></span><span class="cke_toolgroup" role="presentation"><a id="cke_104" class="cke_button cke_button__templates cke_button_off" href="javascript:void('템플릿')" title="템플릿" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_104_label" aria-describedby="cke_104_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(149,event);" onfocus="return CKEDITOR.tools.callFunction(150,event);" onclick="CKEDITOR.tools.callFunction(151,this);return false;"><span class="cke_button_icon cke_button__templates_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -456px;background-size:auto;">&nbsp;</span><span id="cke_104_label" class="cke_button_label cke_button__templates_label" aria-hidden="false">템플릿</span><span id="cke_104_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_105" class="cke_button cke_button__youtube cke_button_off" href="javascript:void('유투브 비디오 삽입')" title="유투브 비디오 삽입" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_105_label" aria-describedby="cke_105_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(152,event);" onfocus="return CKEDITOR.tools.callFunction(153,event);" onclick="CKEDITOR.tools.callFunction(154,this);return false;"><span class="cke_button_icon cke_button__youtube_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/youtube/images/icon.png?t=K87C');background-position:0 0px;background-size:16px;">&nbsp;</span><span id="cke_105_label" class="cke_button_label cke_button__youtube_label" aria-hidden="false">유투브 비디오 삽입</span><span id="cke_105_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_106" class="cke_button cke_button__video cke_button_off" href="javascript:void('Video')" title="Video" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_106_label" aria-describedby="cke_106_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(155,event);" onfocus="return CKEDITOR.tools.callFunction(156,event);" onclick="CKEDITOR.tools.callFunction(157,this);return false;"><span class="cke_button_icon cke_button__video_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/video/icons/video.png?t=K87C');background-position:0 0px;background-size:16px;">&nbsp;</span><span id="cke_106_label" class="cke_button_label cke_button__video_label" aria-hidden="false">Video</span><span id="cke_106_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_107" class="cke_button cke_button__audio cke_button_off" href="javascript:void('audio')" title="audio" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_107_label" aria-describedby="cke_107_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(158,event);" onfocus="return CKEDITOR.tools.callFunction(159,event);" onclick="CKEDITOR.tools.callFunction(160,this);return false;"><span class="cke_button_icon cke_button__audio_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/audio/icons/audio.png?t=K87C');background-position:0 0px;background-size:16px;">&nbsp;</span><span id="cke_107_label" class="cke_button_label cke_button__audio_label" aria-hidden="false">audio</span><span id="cke_107_description" class="cke_button_label" aria-hidden="false"></span></a></span><span class="cke_toolbar_end"></span></span><span class="cke_toolbar_break"></span><span id="cke_108" class="cke_toolbar" role="toolbar"><span class="cke_toolbar_start"></span><span id="cke_79" class="cke_combo cke_combo__styles cke_combo_off" role="presentation"><span id="cke_79_label" class="cke_combo_label">스타일</span><a class="cke_combo_button" title="전체 구성 스타일" tabindex="-1" href="javascript:void('전체 구성 스타일')" hidefocus="true" role="button" aria-labelledby="cke_79_label" aria-haspopup="listbox" onkeydown="return CKEDITOR.tools.callFunction(162,event,this);" onfocus="return CKEDITOR.tools.callFunction(163,event);" onclick="CKEDITOR.tools.callFunction(161,this);return false;" aria-expanded="false"><span id="cke_79_text" class="cke_combo_text cke_combo_inlinelabel">스타일</span><span class="cke_combo_open"><span class="cke_combo_arrow"></span></span></a></span><span id="cke_80" class="cke_combo cke_combo__format cke_combo_off" role="presentation"><span id="cke_80_label" class="cke_combo_label">문단</span><a class="cke_combo_button" title="문단 형식" tabindex="-1" href="javascript:void('문단 형식')" hidefocus="true" role="button" aria-labelledby="cke_80_label" aria-haspopup="listbox" onkeydown="return CKEDITOR.tools.callFunction(165,event,this);" onfocus="return CKEDITOR.tools.callFunction(166,event);" onclick="CKEDITOR.tools.callFunction(164,this);return false;" aria-expanded="false"><span id="cke_80_text" class="cke_combo_text cke_combo_inlinelabel">문단</span><span class="cke_combo_open"><span class="cke_combo_arrow"></span></span></a></span><span id="cke_81" class="cke_combo cke_combo__font cke_combo_off" role="presentation"><span id="cke_81_label" class="cke_combo_label">글꼴</span><a class="cke_combo_button" title="글꼴" tabindex="-1" href="javascript:void('글꼴')" hidefocus="true" role="button" aria-labelledby="cke_81_label" aria-haspopup="listbox" onkeydown="return CKEDITOR.tools.callFunction(168,event,this);" onfocus="return CKEDITOR.tools.callFunction(169,event);" onclick="CKEDITOR.tools.callFunction(167,this);return false;" aria-expanded="false"><span id="cke_81_text" class="cke_combo_text cke_combo_inlinelabel">글꼴</span><span class="cke_combo_open"><span class="cke_combo_arrow"></span></span></a></span><span id="cke_82" class="cke_combo cke_combo__fontsize cke_combo_off" role="presentation"><span id="cke_82_label" class="cke_combo_label">크기</span><a class="cke_combo_button" title="글자 크기" tabindex="-1" href="javascript:void('글자 크기')" hidefocus="true" role="button" aria-labelledby="cke_82_label" aria-haspopup="listbox" onkeydown="return CKEDITOR.tools.callFunction(171,event,this);" onfocus="return CKEDITOR.tools.callFunction(172,event);" onclick="CKEDITOR.tools.callFunction(170,this);return false;" aria-expanded="false"><span id="cke_82_text" class="cke_combo_text cke_combo_inlinelabel">크기</span><span class="cke_combo_open"><span class="cke_combo_arrow"></span></span></a></span><span class="cke_toolbar_end"></span></span><span id="cke_109" class="cke_toolbar" role="toolbar"><span class="cke_toolbar_start"></span><span class="cke_toolgroup" role="presentation"><a id="cke_110" class="cke_button cke_button__bold cke_button_off" href="javascript:void('굵게')" title="굵게 (컨트롤+B)" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_110_label" aria-describedby="cke_110_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(173,event);" onfocus="return CKEDITOR.tools.callFunction(174,event);" onclick="CKEDITOR.tools.callFunction(175,this);return false;"><span class="cke_button_icon cke_button__bold_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -24px;background-size:auto;">&nbsp;</span><span id="cke_110_label" class="cke_button_label cke_button__bold_label" aria-hidden="false">굵게</span><span id="cke_110_description" class="cke_button_label" aria-hidden="false">키보드 단축키 컨트롤+B</span></a><a id="cke_111" class="cke_button cke_button__italic cke_button_off" href="javascript:void('기울임꼴')" title="기울임꼴 (컨트롤+I)" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_111_label" aria-describedby="cke_111_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(176,event);" onfocus="return CKEDITOR.tools.callFunction(177,event);" onclick="CKEDITOR.tools.callFunction(178,this);return false;"><span class="cke_button_icon cke_button__italic_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -48px;background-size:auto;">&nbsp;</span><span id="cke_111_label" class="cke_button_label cke_button__italic_label" aria-hidden="false">기울임꼴</span><span id="cke_111_description" class="cke_button_label" aria-hidden="false">키보드 단축키 컨트롤+I</span></a><a id="cke_112" class="cke_button cke_button__underline cke_button_off" href="javascript:void('밑줄')" title="밑줄 (컨트롤+U)" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_112_label" aria-describedby="cke_112_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(179,event);" onfocus="return CKEDITOR.tools.callFunction(180,event);" onclick="CKEDITOR.tools.callFunction(181,this);return false;"><span class="cke_button_icon cke_button__underline_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -144px;background-size:auto;">&nbsp;</span><span id="cke_112_label" class="cke_button_label cke_button__underline_label" aria-hidden="false">밑줄</span><span id="cke_112_description" class="cke_button_label" aria-hidden="false">키보드 단축키 컨트롤+U</span></a><a id="cke_113" class="cke_button cke_button__strike cke_button_off" href="javascript:void('취소선')" title="취소선" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_113_label" aria-describedby="cke_113_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(182,event);" onfocus="return CKEDITOR.tools.callFunction(183,event);" onclick="CKEDITOR.tools.callFunction(184,this);return false;"><span class="cke_button_icon cke_button__strike_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -72px;background-size:auto;">&nbsp;</span><span id="cke_113_label" class="cke_button_label cke_button__strike_label" aria-hidden="false">취소선</span><span id="cke_113_description" class="cke_button_label" aria-hidden="false"></span></a></span><span class="cke_toolbar_end"></span></span><span id="cke_114" class="cke_toolbar cke_toolbar_last" role="toolbar"><span class="cke_toolbar_start"></span><span class="cke_toolgroup" role="presentation"><a id="cke_115" class="cke_button cke_button__textcolor cke_button_expandable cke_button_off" href="javascript:void('글자 색상')" title="글자 색상" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_115_label" aria-describedby="cke_115_description" aria-haspopup="listbox" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(185,event);" onfocus="return CKEDITOR.tools.callFunction(186,event);" onclick="CKEDITOR.tools.callFunction(187,this);return false;" aria-expanded="false"><span class="cke_button_icon cke_button__textcolor_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -408px;background-size:auto;">&nbsp;</span><span id="cke_115_label" class="cke_button_label cke_button__textcolor_label" aria-hidden="false">글자 색상</span><span id="cke_115_description" class="cke_button_label" aria-hidden="false"></span><span class="cke_button_arrow"></span></a><a id="cke_116" class="cke_button cke_button__bgcolor cke_button_expandable cke_button_off" href="javascript:void('배경 색상')" title="배경 색상" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_116_label" aria-describedby="cke_116_description" aria-haspopup="listbox" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(188,event);" onfocus="return CKEDITOR.tools.callFunction(189,event);" onclick="CKEDITOR.tools.callFunction(190,this);return false;" aria-expanded="false"><span class="cke_button_icon cke_button__bgcolor_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -384px;background-size:auto;">&nbsp;</span><span id="cke_116_label" class="cke_button_label cke_button__bgcolor_label" aria-hidden="false">배경 색상</span><span id="cke_116_description" class="cke_button_label" aria-hidden="false"></span><span class="cke_button_arrow"></span></a></span><span class="cke_toolbar_end"></span></span></span></span><div id="cke_2_contents" class="cke_contents cke_reset" role="presentation" style="height: 400px;"><span id="cke_120" class="cke_voice_label">도움이 필요하면 ALT 0 을 누르세요</span><iframe src="" frameborder="0" class="cke_wysiwyg_frame cke_reset" title="리치 텍스트 편집기, purpose" aria-describedby="cke_120" tabindex="0" allowtransparency="true" style="width: 100%; height: 100%;"></iframe></div><span id="cke_2_bottom" class="cke_bottom cke_reset_all" role="presentation" style="user-select: none;"><span id="cke_2_resizer" class="cke_resizer cke_resizer_vertical cke_resizer_ltr" title="크기 조절" onmousedown="CKEDITOR.tools.callFunction(99, event)">◢</span><span id="cke_2_path_label" class="cke_voice_label">요소 경로</span><span id="cke_2_path" class="cke_path" role="group" aria-labelledby="cke_2_path_label"><span class="cke_path_empty">&nbsp;</span></span></span></div></div>
                                 </div>
                                 <div id="tab3" class="jv-tab-cont" style="display: none;">
-                                    <textarea name="teacher_introduce" class="tinymce-editor w100p" cols="70" rows="4" placeholder="강사소개를 입력해 주세요"></textarea>
-                                </div>
+                                    <textarea name="teacher_introduce" id="teacher_introduce" placeholder="강사소개를 입력해주세요" style="visibility: hidden; display: none;"></textarea><div id="cke_teacher_introduce" class="cke_3 cke cke_reset cke_chrome cke_editor_teacher_introduce cke_ltr cke_browser_webkit" dir="ltr" lang="ko" role="application" aria-labelledby="cke_teacher_introduce_arialbl" style="width: 100%;"><span id="cke_teacher_introduce_arialbl" class="cke_voice_label">리치 텍스트 편집기, teacher_introduce</span><div class="cke_inner cke_reset" role="presentation"><span id="cke_3_top" class="cke_top cke_reset_all" role="presentation" style="height: auto; user-select: none;"><span id="cke_132" class="cke_voice_label">에디터 툴바</span><span id="cke_3_toolbox" class="cke_toolbox" role="group" aria-labelledby="cke_132" onmousedown="return false;"><span id="cke_137" class="cke_toolbar" role="toolbar"><span class="cke_toolbar_start"></span><span class="cke_toolgroup" role="presentation"><a id="cke_138" class="cke_button cke_button__preview cke_button_off" href="javascript:void('미리보기')" title="미리보기" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_138_label" aria-describedby="cke_138_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(198,event);" onfocus="return CKEDITOR.tools.callFunction(199,event);" onclick="CKEDITOR.tools.callFunction(200,this);return false;"><span class="cke_button_icon cke_button__preview_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1680px;background-size:auto;">&nbsp;</span><span id="cke_138_label" class="cke_button_label cke_button__preview_label" aria-hidden="false">미리보기</span><span id="cke_138_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_139" class="cke_button cke_button__print cke_button_off" href="javascript:void('인쇄')" title="인쇄" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_139_label" aria-describedby="cke_139_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(201,event);" onfocus="return CKEDITOR.tools.callFunction(202,event);" onclick="CKEDITOR.tools.callFunction(203,this);return false;"><span class="cke_button_icon cke_button__print_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1704px;background-size:auto;">&nbsp;</span><span id="cke_139_label" class="cke_button_label cke_button__print_label" aria-hidden="false">인쇄</span><span id="cke_139_description" class="cke_button_label" aria-hidden="false"></span></a><span class="cke_toolbar_separator" role="separator"></span><a id="cke_140" class="cke_button cke_button__newpage cke_button_off" href="javascript:void('새 페이지')" title="새 페이지" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_140_label" aria-describedby="cke_140_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(204,event);" onfocus="return CKEDITOR.tools.callFunction(205,event);" onclick="CKEDITOR.tools.callFunction(206,this);return false;"><span class="cke_button_icon cke_button__newpage_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1488px;background-size:auto;">&nbsp;</span><span id="cke_140_label" class="cke_button_label cke_button__newpage_label" aria-hidden="false">새 페이지</span><span id="cke_140_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_141" class="cke_button cke_button__source cke_button_off" href="javascript:void('소스')" title="소스" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_141_label" aria-describedby="cke_141_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(207,event);" onfocus="return CKEDITOR.tools.callFunction(208,event);" onclick="CKEDITOR.tools.callFunction(209,this);return false;"><span class="cke_button_icon cke_button__source_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1872px;background-size:auto;">&nbsp;</span><span id="cke_141_label" class="cke_button_label cke_button__source_label" aria-hidden="false">소스</span><span id="cke_141_description" class="cke_button_label" aria-hidden="false"></span></a></span><span class="cke_toolbar_end"></span></span><span id="cke_142" class="cke_toolbar" role="toolbar"><span class="cke_toolbar_start"></span><span class="cke_toolgroup" role="presentation"><a id="cke_143" class="cke_button cke_button__numberedlist cke_button_off" href="javascript:void('순서 있는 목록')" title="순서 있는 목록" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_143_label" aria-describedby="cke_143_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(210,event);" onfocus="return CKEDITOR.tools.callFunction(211,event);" onclick="CKEDITOR.tools.callFunction(212,this);return false;"><span class="cke_button_icon cke_button__numberedlist_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1416px;background-size:auto;">&nbsp;</span><span id="cke_143_label" class="cke_button_label cke_button__numberedlist_label" aria-hidden="false">순서 있는 목록</span><span id="cke_143_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_144" class="cke_button cke_button__bulletedlist cke_button_off" href="javascript:void('순서 없는 목록')" title="순서 없는 목록" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_144_label" aria-describedby="cke_144_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(213,event);" onfocus="return CKEDITOR.tools.callFunction(214,event);" onclick="CKEDITOR.tools.callFunction(215,this);return false;"><span class="cke_button_icon cke_button__bulletedlist_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1368px;background-size:auto;">&nbsp;</span><span id="cke_144_label" class="cke_button_label cke_button__bulletedlist_label" aria-hidden="false">순서 없는 목록</span><span id="cke_144_description" class="cke_button_label" aria-hidden="false"></span></a><span class="cke_toolbar_separator" role="separator"></span><a id="cke_145" class="cke_button cke_button__outdent cke_button_disabled " href="javascript:void('내어쓰기')" title="내어쓰기" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_145_label" aria-describedby="cke_145_description" aria-haspopup="false" aria-disabled="true" onkeydown="return CKEDITOR.tools.callFunction(216,event);" onfocus="return CKEDITOR.tools.callFunction(217,event);" onclick="CKEDITOR.tools.callFunction(218,this);return false;"><span class="cke_button_icon cke_button__outdent_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1080px;background-size:auto;">&nbsp;</span><span id="cke_145_label" class="cke_button_label cke_button__outdent_label" aria-hidden="false">내어쓰기</span><span id="cke_145_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_146" class="cke_button cke_button__indent cke_button_off" href="javascript:void('들여쓰기')" title="들여쓰기" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_146_label" aria-describedby="cke_146_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(219,event);" onfocus="return CKEDITOR.tools.callFunction(220,event);" onclick="CKEDITOR.tools.callFunction(221,this);return false;"><span class="cke_button_icon cke_button__indent_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1032px;background-size:auto;">&nbsp;</span><span id="cke_146_label" class="cke_button_label cke_button__indent_label" aria-hidden="false">들여쓰기</span><span id="cke_146_description" class="cke_button_label" aria-hidden="false"></span></a><span class="cke_toolbar_separator" role="separator"></span><a id="cke_147" class="cke_button cke_button__justifyleft cke_button_off" href="javascript:void('왼쪽 정렬')" title="왼쪽 정렬" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_147_label" aria-describedby="cke_147_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(222,event);" onfocus="return CKEDITOR.tools.callFunction(223,event);" onclick="CKEDITOR.tools.callFunction(224,this);return false;"><span class="cke_button_icon cke_button__justifyleft_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1176px;background-size:auto;">&nbsp;</span><span id="cke_147_label" class="cke_button_label cke_button__justifyleft_label" aria-hidden="false">왼쪽 정렬</span><span id="cke_147_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_148" class="cke_button cke_button__justifycenter cke_button_off" href="javascript:void('중앙')" title="중앙" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_148_label" aria-describedby="cke_148_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(225,event);" onfocus="return CKEDITOR.tools.callFunction(226,event);" onclick="CKEDITOR.tools.callFunction(227,this);return false;"><span class="cke_button_icon cke_button__justifycenter_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1152px;background-size:auto;">&nbsp;</span><span id="cke_148_label" class="cke_button_label cke_button__justifycenter_label" aria-hidden="false">중앙</span><span id="cke_148_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_149" class="cke_button cke_button__justifyright cke_button_off" href="javascript:void('오른쪽 정렬')" title="오른쪽 정렬" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_149_label" aria-describedby="cke_149_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(228,event);" onfocus="return CKEDITOR.tools.callFunction(229,event);" onclick="CKEDITOR.tools.callFunction(230,this);return false;"><span class="cke_button_icon cke_button__justifyright_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1200px;background-size:auto;">&nbsp;</span><span id="cke_149_label" class="cke_button_label cke_button__justifyright_label" aria-hidden="false">오른쪽 정렬</span><span id="cke_149_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_150" class="cke_button cke_button__justifyblock cke_button_off" href="javascript:void('양쪽 정렬')" title="양쪽 정렬" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_150_label" aria-describedby="cke_150_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(231,event);" onfocus="return CKEDITOR.tools.callFunction(232,event);" onclick="CKEDITOR.tools.callFunction(233,this);return false;"><span class="cke_button_icon cke_button__justifyblock_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1128px;background-size:auto;">&nbsp;</span><span id="cke_150_label" class="cke_button_label cke_button__justifyblock_label" aria-hidden="false">양쪽 정렬</span><span id="cke_150_description" class="cke_button_label" aria-hidden="false"></span></a></span><span class="cke_toolbar_end"></span></span><span id="cke_151" class="cke_toolbar" role="toolbar"><span class="cke_toolbar_start"></span><span class="cke_toolgroup" role="presentation"><a id="cke_152" class="cke_button cke_button__link cke_button_off" href="javascript:void('링크 삽입/변경')" title="링크 삽입/변경 (컨트롤+K)" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_152_label" aria-describedby="cke_152_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(234,event);" onfocus="return CKEDITOR.tools.callFunction(235,event);" onclick="CKEDITOR.tools.callFunction(236,this);return false;"><span class="cke_button_icon cke_button__link_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1296px;background-size:auto;">&nbsp;</span><span id="cke_152_label" class="cke_button_label cke_button__link_label" aria-hidden="false">링크 삽입/변경</span><span id="cke_152_description" class="cke_button_label" aria-hidden="false">키보드 단축키 컨트롤+K</span></a><a id="cke_153" class="cke_button cke_button__unlink cke_button_disabled " href="javascript:void('링크 지우기')" title="링크 지우기" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_153_label" aria-describedby="cke_153_description" aria-haspopup="false" aria-disabled="true" onkeydown="return CKEDITOR.tools.callFunction(237,event);" onfocus="return CKEDITOR.tools.callFunction(238,event);" onclick="CKEDITOR.tools.callFunction(239,this);return false;"><span class="cke_button_icon cke_button__unlink_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1320px;background-size:auto;">&nbsp;</span><span id="cke_153_label" class="cke_button_label cke_button__unlink_label" aria-hidden="false">링크 지우기</span><span id="cke_153_description" class="cke_button_label" aria-hidden="false"></span></a></span><span class="cke_toolbar_end"></span></span><span id="cke_154" class="cke_toolbar" role="toolbar"><span class="cke_toolbar_start"></span><span class="cke_toolgroup" role="presentation"><a id="cke_155" class="cke_button cke_button__image cke_button_off" href="javascript:void('이미지')" title="이미지" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_155_label" aria-describedby="cke_155_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(240,event);" onfocus="return CKEDITOR.tools.callFunction(241,event);" onclick="CKEDITOR.tools.callFunction(242,this);return false;"><span class="cke_button_icon cke_button__image_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -984px;background-size:auto;">&nbsp;</span><span id="cke_155_label" class="cke_button_label cke_button__image_label" aria-hidden="false">이미지</span><span id="cke_155_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_156" class="cke_button cke_button__table cke_button_off" href="javascript:void('표')" title="표" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_156_label" aria-describedby="cke_156_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(243,event);" onfocus="return CKEDITOR.tools.callFunction(244,event);" onclick="CKEDITOR.tools.callFunction(245,this);return false;"><span class="cke_button_icon cke_button__table_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1944px;background-size:auto;">&nbsp;</span><span id="cke_156_label" class="cke_button_label cke_button__table_label" aria-hidden="false">표</span><span id="cke_156_description" class="cke_button_label" aria-hidden="false"></span></a></span><span class="cke_toolbar_end"></span></span><span id="cke_157" class="cke_toolbar cke_toolbar_last" role="toolbar"><span class="cke_toolbar_start"></span><span class="cke_toolgroup" role="presentation"><a id="cke_158" class="cke_button cke_button__templates cke_button_off" href="javascript:void('템플릿')" title="템플릿" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_158_label" aria-describedby="cke_158_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(246,event);" onfocus="return CKEDITOR.tools.callFunction(247,event);" onclick="CKEDITOR.tools.callFunction(248,this);return false;"><span class="cke_button_icon cke_button__templates_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -456px;background-size:auto;">&nbsp;</span><span id="cke_158_label" class="cke_button_label cke_button__templates_label" aria-hidden="false">템플릿</span><span id="cke_158_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_159" class="cke_button cke_button__youtube cke_button_off" href="javascript:void('유투브 비디오 삽입')" title="유투브 비디오 삽입" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_159_label" aria-describedby="cke_159_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(249,event);" onfocus="return CKEDITOR.tools.callFunction(250,event);" onclick="CKEDITOR.tools.callFunction(251,this);return false;"><span class="cke_button_icon cke_button__youtube_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/youtube/images/icon.png?t=K87C');background-position:0 0px;background-size:16px;">&nbsp;</span><span id="cke_159_label" class="cke_button_label cke_button__youtube_label" aria-hidden="false">유투브 비디오 삽입</span><span id="cke_159_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_160" class="cke_button cke_button__video cke_button_off" href="javascript:void('Video')" title="Video" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_160_label" aria-describedby="cke_160_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(252,event);" onfocus="return CKEDITOR.tools.callFunction(253,event);" onclick="CKEDITOR.tools.callFunction(254,this);return false;"><span class="cke_button_icon cke_button__video_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/video/icons/video.png?t=K87C');background-position:0 0px;background-size:16px;">&nbsp;</span><span id="cke_160_label" class="cke_button_label cke_button__video_label" aria-hidden="false">Video</span><span id="cke_160_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_161" class="cke_button cke_button__audio cke_button_off" href="javascript:void('audio')" title="audio" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_161_label" aria-describedby="cke_161_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(255,event);" onfocus="return CKEDITOR.tools.callFunction(256,event);" onclick="CKEDITOR.tools.callFunction(257,this);return false;"><span class="cke_button_icon cke_button__audio_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/audio/icons/audio.png?t=K87C');background-position:0 0px;background-size:16px;">&nbsp;</span><span id="cke_161_label" class="cke_button_label cke_button__audio_label" aria-hidden="false">audio</span><span id="cke_161_description" class="cke_button_label" aria-hidden="false"></span></a></span><span class="cke_toolbar_end"></span></span><span class="cke_toolbar_break"></span><span id="cke_162" class="cke_toolbar" role="toolbar"><span class="cke_toolbar_start"></span><span id="cke_133" class="cke_combo cke_combo__styles cke_combo_off" role="presentation"><span id="cke_133_label" class="cke_combo_label">스타일</span><a class="cke_combo_button" title="전체 구성 스타일" tabindex="-1" href="javascript:void('전체 구성 스타일')" hidefocus="true" role="button" aria-labelledby="cke_133_label" aria-haspopup="listbox" onkeydown="return CKEDITOR.tools.callFunction(259,event,this);" onfocus="return CKEDITOR.tools.callFunction(260,event);" onclick="CKEDITOR.tools.callFunction(258,this);return false;" aria-expanded="false"><span id="cke_133_text" class="cke_combo_text cke_combo_inlinelabel">스타일</span><span class="cke_combo_open"><span class="cke_combo_arrow"></span></span></a></span><span id="cke_134" class="cke_combo cke_combo__format cke_combo_off" role="presentation"><span id="cke_134_label" class="cke_combo_label">문단</span><a class="cke_combo_button" title="문단 형식" tabindex="-1" href="javascript:void('문단 형식')" hidefocus="true" role="button" aria-labelledby="cke_134_label" aria-haspopup="listbox" onkeydown="return CKEDITOR.tools.callFunction(262,event,this);" onfocus="return CKEDITOR.tools.callFunction(263,event);" onclick="CKEDITOR.tools.callFunction(261,this);return false;" aria-expanded="false"><span id="cke_134_text" class="cke_combo_text cke_combo_inlinelabel">문단</span><span class="cke_combo_open"><span class="cke_combo_arrow"></span></span></a></span><span id="cke_135" class="cke_combo cke_combo__font cke_combo_off" role="presentation"><span id="cke_135_label" class="cke_combo_label">글꼴</span><a class="cke_combo_button" title="글꼴" tabindex="-1" href="javascript:void('글꼴')" hidefocus="true" role="button" aria-labelledby="cke_135_label" aria-haspopup="listbox" onkeydown="return CKEDITOR.tools.callFunction(265,event,this);" onfocus="return CKEDITOR.tools.callFunction(266,event);" onclick="CKEDITOR.tools.callFunction(264,this);return false;" aria-expanded="false"><span id="cke_135_text" class="cke_combo_text cke_combo_inlinelabel">글꼴</span><span class="cke_combo_open"><span class="cke_combo_arrow"></span></span></a></span><span id="cke_136" class="cke_combo cke_combo__fontsize cke_combo_off" role="presentation"><span id="cke_136_label" class="cke_combo_label">크기</span><a class="cke_combo_button" title="글자 크기" tabindex="-1" href="javascript:void('글자 크기')" hidefocus="true" role="button" aria-labelledby="cke_136_label" aria-haspopup="listbox" onkeydown="return CKEDITOR.tools.callFunction(268,event,this);" onfocus="return CKEDITOR.tools.callFunction(269,event);" onclick="CKEDITOR.tools.callFunction(267,this);return false;" aria-expanded="false"><span id="cke_136_text" class="cke_combo_text cke_combo_inlinelabel">크기</span><span class="cke_combo_open"><span class="cke_combo_arrow"></span></span></a></span><span class="cke_toolbar_end"></span></span><span id="cke_163" class="cke_toolbar" role="toolbar"><span class="cke_toolbar_start"></span><span class="cke_toolgroup" role="presentation"><a id="cke_164" class="cke_button cke_button__bold cke_button_off" href="javascript:void('굵게')" title="굵게 (컨트롤+B)" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_164_label" aria-describedby="cke_164_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(270,event);" onfocus="return CKEDITOR.tools.callFunction(271,event);" onclick="CKEDITOR.tools.callFunction(272,this);return false;"><span class="cke_button_icon cke_button__bold_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -24px;background-size:auto;">&nbsp;</span><span id="cke_164_label" class="cke_button_label cke_button__bold_label" aria-hidden="false">굵게</span><span id="cke_164_description" class="cke_button_label" aria-hidden="false">키보드 단축키 컨트롤+B</span></a><a id="cke_165" class="cke_button cke_button__italic cke_button_off" href="javascript:void('기울임꼴')" title="기울임꼴 (컨트롤+I)" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_165_label" aria-describedby="cke_165_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(273,event);" onfocus="return CKEDITOR.tools.callFunction(274,event);" onclick="CKEDITOR.tools.callFunction(275,this);return false;"><span class="cke_button_icon cke_button__italic_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -48px;background-size:auto;">&nbsp;</span><span id="cke_165_label" class="cke_button_label cke_button__italic_label" aria-hidden="false">기울임꼴</span><span id="cke_165_description" class="cke_button_label" aria-hidden="false">키보드 단축키 컨트롤+I</span></a><a id="cke_166" class="cke_button cke_button__underline cke_button_off" href="javascript:void('밑줄')" title="밑줄 (컨트롤+U)" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_166_label" aria-describedby="cke_166_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(276,event);" onfocus="return CKEDITOR.tools.callFunction(277,event);" onclick="CKEDITOR.tools.callFunction(278,this);return false;"><span class="cke_button_icon cke_button__underline_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -144px;background-size:auto;">&nbsp;</span><span id="cke_166_label" class="cke_button_label cke_button__underline_label" aria-hidden="false">밑줄</span><span id="cke_166_description" class="cke_button_label" aria-hidden="false">키보드 단축키 컨트롤+U</span></a><a id="cke_167" class="cke_button cke_button__strike cke_button_off" href="javascript:void('취소선')" title="취소선" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_167_label" aria-describedby="cke_167_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(279,event);" onfocus="return CKEDITOR.tools.callFunction(280,event);" onclick="CKEDITOR.tools.callFunction(281,this);return false;"><span class="cke_button_icon cke_button__strike_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -72px;background-size:auto;">&nbsp;</span><span id="cke_167_label" class="cke_button_label cke_button__strike_label" aria-hidden="false">취소선</span><span id="cke_167_description" class="cke_button_label" aria-hidden="false"></span></a></span><span class="cke_toolbar_end"></span></span><span id="cke_168" class="cke_toolbar cke_toolbar_last" role="toolbar"><span class="cke_toolbar_start"></span><span class="cke_toolgroup" role="presentation"><a id="cke_169" class="cke_button cke_button__textcolor cke_button_expandable cke_button_off" href="javascript:void('글자 색상')" title="글자 색상" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_169_label" aria-describedby="cke_169_description" aria-haspopup="listbox" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(282,event);" onfocus="return CKEDITOR.tools.callFunction(283,event);" onclick="CKEDITOR.tools.callFunction(284,this);return false;" aria-expanded="false"><span class="cke_button_icon cke_button__textcolor_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -408px;background-size:auto;">&nbsp;</span><span id="cke_169_label" class="cke_button_label cke_button__textcolor_label" aria-hidden="false">글자 색상</span><span id="cke_169_description" class="cke_button_label" aria-hidden="false"></span><span class="cke_button_arrow"></span></a><a id="cke_170" class="cke_button cke_button__bgcolor cke_button_expandable cke_button_off" href="javascript:void('배경 색상')" title="배경 색상" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_170_label" aria-describedby="cke_170_description" aria-haspopup="listbox" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(285,event);" onfocus="return CKEDITOR.tools.callFunction(286,event);" onclick="CKEDITOR.tools.callFunction(287,this);return false;" aria-expanded="false"><span class="cke_button_icon cke_button__bgcolor_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -384px;background-size:auto;">&nbsp;</span><span id="cke_170_label" class="cke_button_label cke_button__bgcolor_label" aria-hidden="false">배경 색상</span><span id="cke_170_description" class="cke_button_label" aria-hidden="false"></span><span class="cke_button_arrow"></span></a></span><span class="cke_toolbar_end"></span></span></span></span><div id="cke_3_contents" class="cke_contents cke_reset" role="presentation" style="height: 400px;"><span id="cke_174" class="cke_voice_label">도움이 필요하면 ALT 0 을 누르세요</span><iframe src="" frameborder="0" class="cke_wysiwyg_frame cke_reset" title="리치 텍스트 편집기, teacher_introduce" aria-describedby="cke_174" tabindex="0" allowtransparency="true" style="width: 100%; height: 100%;"></iframe></div><span id="cke_3_bottom" class="cke_bottom cke_reset_all" role="presentation" style="user-select: none;"><span id="cke_3_resizer" class="cke_resizer cke_resizer_vertical cke_resizer_ltr" title="크기 조절" onmousedown="CKEDITOR.tools.callFunction(196, event)">◢</span><span id="cke_3_path_label" class="cke_voice_label">요소 경로</span><span id="cke_3_path" class="cke_path" role="group" aria-labelledby="cke_3_path_label"><span class="cke_path_empty">&nbsp;</span></span></span></div></div>							</div>
                                 <div id="tab4" class="jv-tab-cont" style="display: none;">
-                                    <textarea name="class_studyway" class="tinymce-editor w100p" cols="70" rows="4" placeholder="수업방법을 입력해 주세요"></textarea>
-                                </div>
+                                    <textarea name="class_studyway" id="class_studyway" placeholder="수업방법을 입력해주세요" style="visibility: hidden; display: none;"></textarea><div id="cke_class_studyway" class="cke_4 cke cke_reset cke_chrome cke_editor_class_studyway cke_ltr cke_browser_webkit" dir="ltr" lang="ko" role="application" aria-labelledby="cke_class_studyway_arialbl" style="width: 100%;"><span id="cke_class_studyway_arialbl" class="cke_voice_label">리치 텍스트 편집기, class_studyway</span><div class="cke_inner cke_reset" role="presentation"><span id="cke_4_top" class="cke_top cke_reset_all" role="presentation" style="height: auto; user-select: none;"><span id="cke_186" class="cke_voice_label">에디터 툴바</span><span id="cke_4_toolbox" class="cke_toolbox" role="group" aria-labelledby="cke_186" onmousedown="return false;"><span id="cke_191" class="cke_toolbar" role="toolbar"><span class="cke_toolbar_start"></span><span class="cke_toolgroup" role="presentation"><a id="cke_192" class="cke_button cke_button__preview cke_button_off" href="javascript:void('미리보기')" title="미리보기" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_192_label" aria-describedby="cke_192_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(295,event);" onfocus="return CKEDITOR.tools.callFunction(296,event);" onclick="CKEDITOR.tools.callFunction(297,this);return false;"><span class="cke_button_icon cke_button__preview_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1680px;background-size:auto;">&nbsp;</span><span id="cke_192_label" class="cke_button_label cke_button__preview_label" aria-hidden="false">미리보기</span><span id="cke_192_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_193" class="cke_button cke_button__print cke_button_off" href="javascript:void('인쇄')" title="인쇄" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_193_label" aria-describedby="cke_193_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(298,event);" onfocus="return CKEDITOR.tools.callFunction(299,event);" onclick="CKEDITOR.tools.callFunction(300,this);return false;"><span class="cke_button_icon cke_button__print_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1704px;background-size:auto;">&nbsp;</span><span id="cke_193_label" class="cke_button_label cke_button__print_label" aria-hidden="false">인쇄</span><span id="cke_193_description" class="cke_button_label" aria-hidden="false"></span></a><span class="cke_toolbar_separator" role="separator"></span><a id="cke_194" class="cke_button cke_button__newpage cke_button_off" href="javascript:void('새 페이지')" title="새 페이지" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_194_label" aria-describedby="cke_194_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(301,event);" onfocus="return CKEDITOR.tools.callFunction(302,event);" onclick="CKEDITOR.tools.callFunction(303,this);return false;"><span class="cke_button_icon cke_button__newpage_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1488px;background-size:auto;">&nbsp;</span><span id="cke_194_label" class="cke_button_label cke_button__newpage_label" aria-hidden="false">새 페이지</span><span id="cke_194_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_195" class="cke_button cke_button__source cke_button_off" href="javascript:void('소스')" title="소스" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_195_label" aria-describedby="cke_195_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(304,event);" onfocus="return CKEDITOR.tools.callFunction(305,event);" onclick="CKEDITOR.tools.callFunction(306,this);return false;"><span class="cke_button_icon cke_button__source_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1872px;background-size:auto;">&nbsp;</span><span id="cke_195_label" class="cke_button_label cke_button__source_label" aria-hidden="false">소스</span><span id="cke_195_description" class="cke_button_label" aria-hidden="false"></span></a></span><span class="cke_toolbar_end"></span></span><span id="cke_196" class="cke_toolbar" role="toolbar"><span class="cke_toolbar_start"></span><span class="cke_toolgroup" role="presentation"><a id="cke_197" class="cke_button cke_button__numberedlist cke_button_off" href="javascript:void('순서 있는 목록')" title="순서 있는 목록" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_197_label" aria-describedby="cke_197_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(307,event);" onfocus="return CKEDITOR.tools.callFunction(308,event);" onclick="CKEDITOR.tools.callFunction(309,this);return false;"><span class="cke_button_icon cke_button__numberedlist_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1416px;background-size:auto;">&nbsp;</span><span id="cke_197_label" class="cke_button_label cke_button__numberedlist_label" aria-hidden="false">순서 있는 목록</span><span id="cke_197_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_198" class="cke_button cke_button__bulletedlist cke_button_off" href="javascript:void('순서 없는 목록')" title="순서 없는 목록" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_198_label" aria-describedby="cke_198_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(310,event);" onfocus="return CKEDITOR.tools.callFunction(311,event);" onclick="CKEDITOR.tools.callFunction(312,this);return false;"><span class="cke_button_icon cke_button__bulletedlist_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1368px;background-size:auto;">&nbsp;</span><span id="cke_198_label" class="cke_button_label cke_button__bulletedlist_label" aria-hidden="false">순서 없는 목록</span><span id="cke_198_description" class="cke_button_label" aria-hidden="false"></span></a><span class="cke_toolbar_separator" role="separator"></span><a id="cke_199" class="cke_button cke_button__outdent cke_button_disabled " href="javascript:void('내어쓰기')" title="내어쓰기" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_199_label" aria-describedby="cke_199_description" aria-haspopup="false" aria-disabled="true" onkeydown="return CKEDITOR.tools.callFunction(313,event);" onfocus="return CKEDITOR.tools.callFunction(314,event);" onclick="CKEDITOR.tools.callFunction(315,this);return false;"><span class="cke_button_icon cke_button__outdent_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1080px;background-size:auto;">&nbsp;</span><span id="cke_199_label" class="cke_button_label cke_button__outdent_label" aria-hidden="false">내어쓰기</span><span id="cke_199_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_200" class="cke_button cke_button__indent cke_button_off" href="javascript:void('들여쓰기')" title="들여쓰기" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_200_label" aria-describedby="cke_200_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(316,event);" onfocus="return CKEDITOR.tools.callFunction(317,event);" onclick="CKEDITOR.tools.callFunction(318,this);return false;"><span class="cke_button_icon cke_button__indent_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1032px;background-size:auto;">&nbsp;</span><span id="cke_200_label" class="cke_button_label cke_button__indent_label" aria-hidden="false">들여쓰기</span><span id="cke_200_description" class="cke_button_label" aria-hidden="false"></span></a><span class="cke_toolbar_separator" role="separator"></span><a id="cke_201" class="cke_button cke_button__justifyleft cke_button_off" href="javascript:void('왼쪽 정렬')" title="왼쪽 정렬" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_201_label" aria-describedby="cke_201_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(319,event);" onfocus="return CKEDITOR.tools.callFunction(320,event);" onclick="CKEDITOR.tools.callFunction(321,this);return false;"><span class="cke_button_icon cke_button__justifyleft_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1176px;background-size:auto;">&nbsp;</span><span id="cke_201_label" class="cke_button_label cke_button__justifyleft_label" aria-hidden="false">왼쪽 정렬</span><span id="cke_201_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_202" class="cke_button cke_button__justifycenter cke_button_off" href="javascript:void('중앙')" title="중앙" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_202_label" aria-describedby="cke_202_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(322,event);" onfocus="return CKEDITOR.tools.callFunction(323,event);" onclick="CKEDITOR.tools.callFunction(324,this);return false;"><span class="cke_button_icon cke_button__justifycenter_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1152px;background-size:auto;">&nbsp;</span><span id="cke_202_label" class="cke_button_label cke_button__justifycenter_label" aria-hidden="false">중앙</span><span id="cke_202_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_203" class="cke_button cke_button__justifyright cke_button_off" href="javascript:void('오른쪽 정렬')" title="오른쪽 정렬" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_203_label" aria-describedby="cke_203_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(325,event);" onfocus="return CKEDITOR.tools.callFunction(326,event);" onclick="CKEDITOR.tools.callFunction(327,this);return false;"><span class="cke_button_icon cke_button__justifyright_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1200px;background-size:auto;">&nbsp;</span><span id="cke_203_label" class="cke_button_label cke_button__justifyright_label" aria-hidden="false">오른쪽 정렬</span><span id="cke_203_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_204" class="cke_button cke_button__justifyblock cke_button_off" href="javascript:void('양쪽 정렬')" title="양쪽 정렬" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_204_label" aria-describedby="cke_204_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(328,event);" onfocus="return CKEDITOR.tools.callFunction(329,event);" onclick="CKEDITOR.tools.callFunction(330,this);return false;"><span class="cke_button_icon cke_button__justifyblock_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1128px;background-size:auto;">&nbsp;</span><span id="cke_204_label" class="cke_button_label cke_button__justifyblock_label" aria-hidden="false">양쪽 정렬</span><span id="cke_204_description" class="cke_button_label" aria-hidden="false"></span></a></span><span class="cke_toolbar_end"></span></span><span id="cke_205" class="cke_toolbar" role="toolbar"><span class="cke_toolbar_start"></span><span class="cke_toolgroup" role="presentation"><a id="cke_206" class="cke_button cke_button__link cke_button_off" href="javascript:void('링크 삽입/변경')" title="링크 삽입/변경 (컨트롤+K)" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_206_label" aria-describedby="cke_206_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(331,event);" onfocus="return CKEDITOR.tools.callFunction(332,event);" onclick="CKEDITOR.tools.callFunction(333,this);return false;"><span class="cke_button_icon cke_button__link_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1296px;background-size:auto;">&nbsp;</span><span id="cke_206_label" class="cke_button_label cke_button__link_label" aria-hidden="false">링크 삽입/변경</span><span id="cke_206_description" class="cke_button_label" aria-hidden="false">키보드 단축키 컨트롤+K</span></a><a id="cke_207" class="cke_button cke_button__unlink cke_button_disabled " href="javascript:void('링크 지우기')" title="링크 지우기" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_207_label" aria-describedby="cke_207_description" aria-haspopup="false" aria-disabled="true" onkeydown="return CKEDITOR.tools.callFunction(334,event);" onfocus="return CKEDITOR.tools.callFunction(335,event);" onclick="CKEDITOR.tools.callFunction(336,this);return false;"><span class="cke_button_icon cke_button__unlink_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1320px;background-size:auto;">&nbsp;</span><span id="cke_207_label" class="cke_button_label cke_button__unlink_label" aria-hidden="false">링크 지우기</span><span id="cke_207_description" class="cke_button_label" aria-hidden="false"></span></a></span><span class="cke_toolbar_end"></span></span><span id="cke_208" class="cke_toolbar" role="toolbar"><span class="cke_toolbar_start"></span><span class="cke_toolgroup" role="presentation"><a id="cke_209" class="cke_button cke_button__image cke_button_off" href="javascript:void('이미지')" title="이미지" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_209_label" aria-describedby="cke_209_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(337,event);" onfocus="return CKEDITOR.tools.callFunction(338,event);" onclick="CKEDITOR.tools.callFunction(339,this);return false;"><span class="cke_button_icon cke_button__image_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -984px;background-size:auto;">&nbsp;</span><span id="cke_209_label" class="cke_button_label cke_button__image_label" aria-hidden="false">이미지</span><span id="cke_209_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_210" class="cke_button cke_button__table cke_button_off" href="javascript:void('표')" title="표" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_210_label" aria-describedby="cke_210_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(340,event);" onfocus="return CKEDITOR.tools.callFunction(341,event);" onclick="CKEDITOR.tools.callFunction(342,this);return false;"><span class="cke_button_icon cke_button__table_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -1944px;background-size:auto;">&nbsp;</span><span id="cke_210_label" class="cke_button_label cke_button__table_label" aria-hidden="false">표</span><span id="cke_210_description" class="cke_button_label" aria-hidden="false"></span></a></span><span class="cke_toolbar_end"></span></span><span id="cke_211" class="cke_toolbar cke_toolbar_last" role="toolbar"><span class="cke_toolbar_start"></span><span class="cke_toolgroup" role="presentation"><a id="cke_212" class="cke_button cke_button__templates cke_button_off" href="javascript:void('템플릿')" title="템플릿" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_212_label" aria-describedby="cke_212_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(343,event);" onfocus="return CKEDITOR.tools.callFunction(344,event);" onclick="CKEDITOR.tools.callFunction(345,this);return false;"><span class="cke_button_icon cke_button__templates_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -456px;background-size:auto;">&nbsp;</span><span id="cke_212_label" class="cke_button_label cke_button__templates_label" aria-hidden="false">템플릿</span><span id="cke_212_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_213" class="cke_button cke_button__youtube cke_button_off" href="javascript:void('유투브 비디오 삽입')" title="유투브 비디오 삽입" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_213_label" aria-describedby="cke_213_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(346,event);" onfocus="return CKEDITOR.tools.callFunction(347,event);" onclick="CKEDITOR.tools.callFunction(348,this);return false;"><span class="cke_button_icon cke_button__youtube_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/youtube/images/icon.png?t=K87C');background-position:0 0px;background-size:16px;">&nbsp;</span><span id="cke_213_label" class="cke_button_label cke_button__youtube_label" aria-hidden="false">유투브 비디오 삽입</span><span id="cke_213_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_214" class="cke_button cke_button__video cke_button_off" href="javascript:void('Video')" title="Video" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_214_label" aria-describedby="cke_214_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(349,event);" onfocus="return CKEDITOR.tools.callFunction(350,event);" onclick="CKEDITOR.tools.callFunction(351,this);return false;"><span class="cke_button_icon cke_button__video_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/video/icons/video.png?t=K87C');background-position:0 0px;background-size:16px;">&nbsp;</span><span id="cke_214_label" class="cke_button_label cke_button__video_label" aria-hidden="false">Video</span><span id="cke_214_description" class="cke_button_label" aria-hidden="false"></span></a><a id="cke_215" class="cke_button cke_button__audio cke_button_off" href="javascript:void('audio')" title="audio" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_215_label" aria-describedby="cke_215_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(352,event);" onfocus="return CKEDITOR.tools.callFunction(353,event);" onclick="CKEDITOR.tools.callFunction(354,this);return false;"><span class="cke_button_icon cke_button__audio_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/audio/icons/audio.png?t=K87C');background-position:0 0px;background-size:16px;">&nbsp;</span><span id="cke_215_label" class="cke_button_label cke_button__audio_label" aria-hidden="false">audio</span><span id="cke_215_description" class="cke_button_label" aria-hidden="false"></span></a></span><span class="cke_toolbar_end"></span></span><span class="cke_toolbar_break"></span><span id="cke_216" class="cke_toolbar" role="toolbar"><span class="cke_toolbar_start"></span><span id="cke_187" class="cke_combo cke_combo__styles cke_combo_off" role="presentation"><span id="cke_187_label" class="cke_combo_label">스타일</span><a class="cke_combo_button" title="전체 구성 스타일" tabindex="-1" href="javascript:void('전체 구성 스타일')" hidefocus="true" role="button" aria-labelledby="cke_187_label" aria-haspopup="listbox" onkeydown="return CKEDITOR.tools.callFunction(356,event,this);" onfocus="return CKEDITOR.tools.callFunction(357,event);" onclick="CKEDITOR.tools.callFunction(355,this);return false;" aria-expanded="false"><span id="cke_187_text" class="cke_combo_text cke_combo_inlinelabel">스타일</span><span class="cke_combo_open"><span class="cke_combo_arrow"></span></span></a></span><span id="cke_188" class="cke_combo cke_combo__format cke_combo_off" role="presentation"><span id="cke_188_label" class="cke_combo_label">문단</span><a class="cke_combo_button" title="문단 형식" tabindex="-1" href="javascript:void('문단 형식')" hidefocus="true" role="button" aria-labelledby="cke_188_label" aria-haspopup="listbox" onkeydown="return CKEDITOR.tools.callFunction(359,event,this);" onfocus="return CKEDITOR.tools.callFunction(360,event);" onclick="CKEDITOR.tools.callFunction(358,this);return false;" aria-expanded="false"><span id="cke_188_text" class="cke_combo_text cke_combo_inlinelabel">문단</span><span class="cke_combo_open"><span class="cke_combo_arrow"></span></span></a></span><span id="cke_189" class="cke_combo cke_combo__font cke_combo_off" role="presentation"><span id="cke_189_label" class="cke_combo_label">글꼴</span><a class="cke_combo_button" title="글꼴" tabindex="-1" href="javascript:void('글꼴')" hidefocus="true" role="button" aria-labelledby="cke_189_label" aria-haspopup="listbox" onkeydown="return CKEDITOR.tools.callFunction(362,event,this);" onfocus="return CKEDITOR.tools.callFunction(363,event);" onclick="CKEDITOR.tools.callFunction(361,this);return false;" aria-expanded="false"><span id="cke_189_text" class="cke_combo_text cke_combo_inlinelabel">글꼴</span><span class="cke_combo_open"><span class="cke_combo_arrow"></span></span></a></span><span id="cke_190" class="cke_combo cke_combo__fontsize cke_combo_off" role="presentation"><span id="cke_190_label" class="cke_combo_label">크기</span><a class="cke_combo_button" title="글자 크기" tabindex="-1" href="javascript:void('글자 크기')" hidefocus="true" role="button" aria-labelledby="cke_190_label" aria-haspopup="listbox" onkeydown="return CKEDITOR.tools.callFunction(365,event,this);" onfocus="return CKEDITOR.tools.callFunction(366,event);" onclick="CKEDITOR.tools.callFunction(364,this);return false;" aria-expanded="false"><span id="cke_190_text" class="cke_combo_text cke_combo_inlinelabel">크기</span><span class="cke_combo_open"><span class="cke_combo_arrow"></span></span></a></span><span class="cke_toolbar_end"></span></span><span id="cke_217" class="cke_toolbar" role="toolbar"><span class="cke_toolbar_start"></span><span class="cke_toolgroup" role="presentation"><a id="cke_218" class="cke_button cke_button__bold cke_button_off" href="javascript:void('굵게')" title="굵게 (컨트롤+B)" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_218_label" aria-describedby="cke_218_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(367,event);" onfocus="return CKEDITOR.tools.callFunction(368,event);" onclick="CKEDITOR.tools.callFunction(369,this);return false;"><span class="cke_button_icon cke_button__bold_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -24px;background-size:auto;">&nbsp;</span><span id="cke_218_label" class="cke_button_label cke_button__bold_label" aria-hidden="false">굵게</span><span id="cke_218_description" class="cke_button_label" aria-hidden="false">키보드 단축키 컨트롤+B</span></a><a id="cke_219" class="cke_button cke_button__italic cke_button_off" href="javascript:void('기울임꼴')" title="기울임꼴 (컨트롤+I)" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_219_label" aria-describedby="cke_219_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(370,event);" onfocus="return CKEDITOR.tools.callFunction(371,event);" onclick="CKEDITOR.tools.callFunction(372,this);return false;"><span class="cke_button_icon cke_button__italic_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -48px;background-size:auto;">&nbsp;</span><span id="cke_219_label" class="cke_button_label cke_button__italic_label" aria-hidden="false">기울임꼴</span><span id="cke_219_description" class="cke_button_label" aria-hidden="false">키보드 단축키 컨트롤+I</span></a><a id="cke_220" class="cke_button cke_button__underline cke_button_off" href="javascript:void('밑줄')" title="밑줄 (컨트롤+U)" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_220_label" aria-describedby="cke_220_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(373,event);" onfocus="return CKEDITOR.tools.callFunction(374,event);" onclick="CKEDITOR.tools.callFunction(375,this);return false;"><span class="cke_button_icon cke_button__underline_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -144px;background-size:auto;">&nbsp;</span><span id="cke_220_label" class="cke_button_label cke_button__underline_label" aria-hidden="false">밑줄</span><span id="cke_220_description" class="cke_button_label" aria-hidden="false">키보드 단축키 컨트롤+U</span></a><a id="cke_221" class="cke_button cke_button__strike cke_button_off" href="javascript:void('취소선')" title="취소선" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_221_label" aria-describedby="cke_221_description" aria-haspopup="false" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(376,event);" onfocus="return CKEDITOR.tools.callFunction(377,event);" onclick="CKEDITOR.tools.callFunction(378,this);return false;"><span class="cke_button_icon cke_button__strike_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -72px;background-size:auto;">&nbsp;</span><span id="cke_221_label" class="cke_button_label cke_button__strike_label" aria-hidden="false">취소선</span><span id="cke_221_description" class="cke_button_label" aria-hidden="false"></span></a></span><span class="cke_toolbar_end"></span></span><span id="cke_222" class="cke_toolbar cke_toolbar_last" role="toolbar"><span class="cke_toolbar_start"></span><span class="cke_toolgroup" role="presentation"><a id="cke_223" class="cke_button cke_button__textcolor cke_button_expandable cke_button_off" href="javascript:void('글자 색상')" title="글자 색상" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_223_label" aria-describedby="cke_223_description" aria-haspopup="listbox" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(379,event);" onfocus="return CKEDITOR.tools.callFunction(380,event);" onclick="CKEDITOR.tools.callFunction(381,this);return false;" aria-expanded="false"><span class="cke_button_icon cke_button__textcolor_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -408px;background-size:auto;">&nbsp;</span><span id="cke_223_label" class="cke_button_label cke_button__textcolor_label" aria-hidden="false">글자 색상</span><span id="cke_223_description" class="cke_button_label" aria-hidden="false"></span><span class="cke_button_arrow"></span></a><a id="cke_224" class="cke_button cke_button__bgcolor cke_button_expandable cke_button_off" href="javascript:void('배경 색상')" title="배경 색상" tabindex="-1" hidefocus="true" role="button" aria-labelledby="cke_224_label" aria-describedby="cke_224_description" aria-haspopup="listbox" aria-disabled="false" onkeydown="return CKEDITOR.tools.callFunction(382,event);" onfocus="return CKEDITOR.tools.callFunction(383,event);" onclick="CKEDITOR.tools.callFunction(384,this);return false;" aria-expanded="false"><span class="cke_button_icon cke_button__bgcolor_icon" style="background-image:url('http://univonline.uzn.kr/_core/js/ckeditor4/plugins/icons.png?t=K87C');background-position:0 -384px;background-size:auto;">&nbsp;</span><span id="cke_224_label" class="cke_button_label cke_button__bgcolor_label" aria-hidden="false">배경 색상</span><span id="cke_224_description" class="cke_button_label" aria-hidden="false"></span><span class="cke_button_arrow"></span></a></span><span class="cke_toolbar_end"></span></span></span></span><div id="cke_4_contents" class="cke_contents cke_reset" role="presentation" style="height: 400px;"><span id="cke_228" class="cke_voice_label">도움이 필요하면 ALT 0 을 누르세요</span><iframe src="" frameborder="0" class="cke_wysiwyg_frame cke_reset" title="리치 텍스트 편집기, class_studyway" aria-describedby="cke_228" tabindex="0" allowtransparency="true" style="width: 100%; height: 100%;"></iframe></div><span id="cke_4_bottom" class="cke_bottom cke_reset_all" role="presentation" style="user-select: none;"><span id="cke_4_resizer" class="cke_resizer cke_resizer_vertical cke_resizer_ltr" title="크기 조절" onmousedown="CKEDITOR.tools.callFunction(293, event)">◢</span><span id="cke_4_path_label" class="cke_voice_label">요소 경로</span><span id="cke_4_path" class="cke_path" role="group" aria-labelledby="cke_4_path_label"><span class="cke_path_empty">&nbsp;</span></span></span></div></div>							</div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="btn-wrap mt50">
-                        <button id="listForm" class="jv-btn jb-fill01-lg">목록</button>
-                        <button id="saveButton1" class="jv-btn jb-fill04-lg">저장 및 다음단계 이동</button>
-                    </div>
+                    <!--2023-03-06 <div class="btn-wrap mt50">
+					<a href="javascript:listgo();" class="jv-btn jb-fill01-lg">목록chk</a>
+					<a href="./design.subject.registration.step2.php" class="jv-btn jb-fill04-lg">저장 및 다음단계 이동chk</a>
+				</div> -->
+                    <!-- cotents -->
                 </div>
-                </form>
 
-                <!-- 📌📌📌📌 교육관리 > 과정관리 > 과정정보등록 페이지에서 [신규등록] 버튼 클릭시 나타나는 페이지의 STEP2 심사/강사 정보 페이지입니다. 📌📌📌📌  -->
-                <form method="post" action="/masterpage_pro/subject/api/save2" id="step2Form">
-                    <div id="step-1" class="tab-pane" role="tabpanel" aria-labelledby="step-1" style="display: none;">
+                <div id="step-1" class="tab-pane" role="tabpanel" aria-labelledby="step-1" style="display: none;">
+                    <!-- 📌📌📌📌 교육관리 > 과정관리 > 과정정보등록 페이지에서 [신규등록] 버튼 클릭시 나타나는 페이지의 STEP2 심사/강사 정보 페이지입니다. 📌📌📌📌  -->
 
                     <div class="form-wrap2">
                         <h2 class="form-tit">심사 정보 설정 <span class="required-txt">표시 항목은 필수 입력/설정 사항입니다.</span></h2>
                         <div class="column-tc-wrap column-tc-wrap2 part2">
-
-                            <input type="hidden" id="subject_idx_step2" name="subjectIdx">
                             <div class="column-tc">
                                 <div class="tit">과정명</div>
                                 <div class="con">
-                                    <input id="subject_name_step1" type="text" size="40" value="" disabled="">
+                                    <input name="subject_name_view" type="text" size="40" value="" disabled="">
+                                    <!-- <input type="text" value="경비직무교육 일반경비원 직군 대상 이론 과정" readonly> -->
                                 </div>
                             </div>
                             <div class="column-tc">
                                 <div class="tit">과정코드</div>
                                 <div class="con">
-                                    <input id="subject_code_step1" type="text" size="20" value="" disabled="">
+                                    <!-- <input type="text" value="ASDDFG1233456" readonly> -->
+                                    <input name="subject_code_view"  type="text" size="20" value="" disabled="">
                                 </div>
                             </div>
                             <div class="column-tc">
                                 <div class="tit"><span class="required">심사차수</span></div>
                                 <div class="con flex3">
+                                    <!-- <select>
+									<option>년도</option>
+									<option>option 01</option>
+									<option>option 02</option>
+								</select>
+								<select>
+									<option>월</option>
+									<option>option 01</option>
+									<option>option 02</option>
+								</select>
+								<select>
+									<option>차수</option>
+									<option>option 01</option>
+									<option>option 02</option>
+								</select>
+								-->
                                     <select name="registYear" id="regist_year">
-                                        <th:block th:each="year : ${#numbers.sequence(2008, 2026)}">
-                                            <option th:value="${year}"
-                                                    th:text="${year}"
-                                                    th:selected="${year == 2025}"></option>
-                                        </th:block>
+                                        <option value="2026">2026</option>
+                                        <option value="2025" selected="">2025</option>
+                                        <option value="2024">2024</option>
+                                        <option value="2023">2023</option>
+                                        <option value="2022">2022</option>
+                                        <option value="2021">2021</option>
+                                        <option value="2020">2020</option>
+                                        <option value="2019">2019</option>
+                                        <option value="2018">2018</option>
+                                        <option value="2017">2017</option>
+                                        <option value="2016">2016</option>
+                                        <option value="2015">2015</option>
+                                        <option value="2014">2014</option>
+                                        <option value="2013">2013</option>
+                                        <option value="2012">2012</option>
+                                        <option value="2011">2011</option>
+                                        <option value="2010">2010</option>
+                                        <option value="2009">2009</option>
+                                        <option value="2008">2008</option>
+                                        <option value="2007">2007</option>
+                                        <option value="2006">2006</option>
+                                        <option value="2005">2005</option>
+                                        <option value="2004">2004</option>
+                                        <option value="2003">2003</option>
+                                        <option value="2002">2002</option>
+                                        <option value="2001">2001</option>
+                                        <option value="2000">2000</option>
+                                        <option value="1999">1999</option>
+                                        <option value="1998">1998</option>
+                                        <option value="1997">1997</option>
+                                        <option value="1996">1996</option>
+                                        <option value="1995">1995</option>
+                                        <option value="1994">1994</option>
+                                        <option value="1993">1993</option>
+                                        <option value="1992">1992</option>
+                                        <option value="1991">1991</option>
                                     </select>
+
+
                                     <select name="registMonth" id="regist_month">
                                         <option value="01" selected="">01</option>
                                         <option value="02">02</option>
@@ -312,6 +686,11 @@
                                     <div>
                                         <div class="tit"><span class="required">신청상태</span></div>
                                         <div class="con">
+                                            <!-- <select>
+											<option>신청상태</option>
+											<option>option 01</option>
+											<option>option 02</option>
+										</select> -->
                                             <select name="simsaState" id="simsa_state">
                                                 <option value="해당없음" selected="">해당없음</option>
                                                 <option value="준비중">준비중</option>
@@ -324,10 +703,18 @@
                                     <div>
                                         <div class="tit"><span class="required">적합여부</span></div>
                                         <div class="con">
+                                            <!-- <select>
+											<option>신청상태</option>
+											<option>option 01</option>
+											<option>option 02</option>
+										</select> -->
                                             <select name="evaluationStateIs" class="evaluation_state">
                                                 <option value="적합">적합</option>
                                                 <option value="부적합">부적합</option>
                                             </select>
+
+
+
                                         </div>
                                     </div>
                                 </div>
@@ -338,6 +725,7 @@
                                     <div class="">
                                         <div class="tit"><span class="required">신청코드</span></div>
                                         <div class="con">
+                                            <!-- <input type="text" placeholder="코드 정보를 입력해주세요"> -->
                                             <input name="simsaCode" id="simsa_code" type="text" value="">
                                         </div>
                                     </div>
@@ -354,7 +742,7 @@
                             <div class="column-tc">
                                 <div class="tit">HRD-Net 과정코드 정보설정
                                     <label class="c-input ci-radio">
-                                        <input type="checkbox" name="tracseState" id="tracse_state" value="Y"> 인정 시 체크
+                                        <input type="checkbox" name="tracse_state" id="tracse_state" value="Y"> 인정 시 체크
                                         <div class="ci-show"></div>
                                     </label>
                                 </div>
@@ -362,6 +750,7 @@
                                     <div class="">
                                         <div class="tit"><span class="required">신청코드</span></div>
                                         <div class="con">
+                                            <!-- <input type="text" placeholder="코드 정보를 입력해주세요"> -->
                                             <input name="tracseId" id="tracse_id" type="text" value="">
                                         </div>
                                     </div>
@@ -391,6 +780,7 @@
                                         </div>
                                     </label>
                                     <label class="ci-card">
+                                        <!-- <input type="radio" name="demo" class="ci-card-input"> -->
                                         <input type="radio" name="player_type" class="ci-card-input" value="mp4">
                                         <div class="ci-card-body">
                                             <div class="body-tit">다중MP4</div>
@@ -398,6 +788,7 @@
                                         </div>
                                     </label>
                                     <label class="ci-card">
+                                        <!-- <input type="radio" name="demo" class="ci-card-input"> -->
                                         <input type="radio" name="player_type" class="ci-card-input" value="jungunivlcms">
                                         <div class="ci-card-body">
                                             <div class="body-tit">LCMS 콘텐츠</div>
@@ -439,6 +830,7 @@
                                             <tr>
                                                 <td colspan="6">과정 등록후 이용 가능합니다.</td>
                                             </tr>
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -460,21 +852,12 @@
                             </div>
                         </div>
                     </div>
-                        <div class="btn-wrap mt50">
-                            <button class="jv-btn jb-fill01-lg">목록</button>
-                            <button id="saveButton2" class="jv-btn jb-fill04-lg">저장 및 다음단계 이동</button>
-                        </div>
                 </div>
 
-                </form>
-
-                <!-- 📌📌📌📌 교육관리 > 과정관리 > 과정정보등록 페이지에서 [신규등록] 버튼 클릭시 나타나는 페이지의 STEP3 운영/평가 정보 페이지입니다. 📌📌📌📌  -->
-                <form method="post" action="/masterpage_pro/subject/api/save3" id="step3Form">
-                    <div id="step-2" class="tab-pane" role="tabpanel" aria-labelledby="step-2" style="display: none;">
+                <div id="step-2" class="tab-pane" role="tabpanel" aria-labelledby="step-2" style="display: none;">
                     <div class="form-wrap2">
 
                         <div class="column-tc-wrap column-tc-wrap2 part2">
-                            <input type="hidden" name="subjectIdx">
                             <div class="column-tc">
                                 <div class="tit">과정명</div>
                                 <div class="con">
@@ -531,6 +914,9 @@
                                                 <!-- 2022-09-08<input type="text">&nbsp; -->
                                                 <input name="lcmsLimitUnitPercent" id="lcms_limit_unit_percent" type="text" value="20">&nbsp;
                                                 <span>% 이상</span>
+
+
+
                                             </div>
                                         </td>
                                         <td><span class="info">시스템 관리 모드의 기본표시정보 메뉴에 설정된 진도율이 기본값으로 보여집니다.</span></td>
@@ -595,68 +981,52 @@
                                     <div class="mt10">
                                         <label class="c-input ci-check">
                                             <!-- 	<input type="checkbox"> 시험_1 -->
-                                            <input type="checkbox" name="evform_evaluation_code[result1_number]" class="check_evaluation_code" value="시험_1" data-id="result1_number" data-title="시험_1"> 시험_1
-                                            <div class="ci-show"></div>
+                                            <input type="checkbox" name="evform_evaluation_code[result1_number]" class="check_evaluation_code" value="시험_1" data-id="result1_number" data-title="시험_1"> 시험_1											<div class="ci-show"></div>
                                         </label>
 
                                         <label class="c-input ci-check">
                                             <!-- 	<input type="checkbox"> 시험_1 -->
-                                            <input type="checkbox" name="evform_evaluation_code[result2_number]" class="check_evaluation_code" value="시험_2" data-id="result2_number" data-title="시험_2"> 시험_2
-                                            <div class="ci-show"></div>
+                                            <input type="checkbox" name="evform_evaluation_code[result2_number]" class="check_evaluation_code" value="시험_2" data-id="result2_number" data-title="시험_2"> 시험_2											<div class="ci-show"></div>
                                         </label>
 
                                         <label class="c-input ci-check">
                                             <!-- 	<input type="checkbox"> 시험_1 -->
-                                            <input type="checkbox" name="evform_evaluation_code[result3_number]" class="check_evaluation_code" value="시험_3" data-id="result3_number" data-title="시험_3"> 시험_3
-                                            <div class="ci-show"></div>
+                                            <input type="checkbox" name="evform_evaluation_code[result3_number]" class="check_evaluation_code" value="시험_3" data-id="result3_number" data-title="시험_3"> 시험_3											<div class="ci-show"></div>
                                         </label>
 
                                         <label class="c-input ci-check">
                                             <!-- 	<input type="checkbox"> 시험_1 -->
-                                            <input type="checkbox" name="evform_evaluation_code[result4_number]" class="check_evaluation_code" value="과제_1" data-id="result4_number" data-title="과제_1"> 과제_1
-                                            <div class="ci-show"></div>
+                                            <input type="checkbox" name="evform_evaluation_code[result4_number]" class="check_evaluation_code" value="과제_1" data-id="result4_number" data-title="과제_1"> 과제_1											<div class="ci-show"></div>
                                         </label>
 
                                         <label class="c-input ci-check">
                                             <!-- 	<input type="checkbox"> 시험_1 -->
-                                            <input type="checkbox" name="evform_evaluation_code[result5_number]" class="check_evaluation_code" value="토론" data-id="result5_number" data-title="토론"> 토론
-                                            <div class="ci-show"></div>
+                                            <input type="checkbox" name="evform_evaluation_code[result5_number]" class="check_evaluation_code" value="토론" data-id="result5_number" data-title="토론"> 토론											<div class="ci-show"></div>
                                         </label>
 
                                         <label class="c-input ci-check">
                                             <!-- 	<input type="checkbox"> 시험_1 -->
-                                            <input type="checkbox" name="evform_evaluation_code[result6_number]" class="check_evaluation_code" value="진행평가_1" data-id="result6_number" data-title="진행평가_1">
-                                            진행평가_1
-                                            <div class="ci-show"></div>
+                                            <input type="checkbox" name="evform_evaluation_code[result6_number]" class="check_evaluation_code" value="진행평가_1" data-id="result6_number" data-title="진행평가_1"> 진행평가_1											<div class="ci-show"></div>
                                         </label>
 
                                         <label class="c-input ci-check">
                                             <!-- 	<input type="checkbox"> 시험_1 -->
-                                            <input type="checkbox" name="evform_evaluation_code[result7_number]" class="check_evaluation_code" value="진행평가_2" data-id="result7_number" data-title="진행평가_2">
-                                            진행평가_2
-                                            <div class="ci-show"></div>
+                                            <input type="checkbox" name="evform_evaluation_code[result7_number]" class="check_evaluation_code" value="진행평가_2" data-id="result7_number" data-title="진행평가_2"> 진행평가_2											<div class="ci-show"></div>
                                         </label>
 
                                         <label class="c-input ci-check">
                                             <!-- 	<input type="checkbox"> 시험_1 -->
-                                            <input type="checkbox" name="evform_evaluation_code[result8_number]" class="check_evaluation_code" value="진행평가_3" data-id="result8_number" data-title="진행평가_3">
-                                            진행평가_3
-                                            <div class="ci-show"></div>
+                                            <input type="checkbox" name="evform_evaluation_code[result8_number]" class="check_evaluation_code" value="진행평가_3" data-id="result8_number" data-title="진행평가_3"> 진행평가_3											<div class="ci-show"></div>
                                         </label>
 
                                         <label class="c-input ci-check">
                                             <!-- 	<input type="checkbox"> 시험_1 -->
-                                            <input type="checkbox" name="evform_evaluation_code[result9_number]" class="check_evaluation_code" value="진행평가_4" data-id="result9_number" data-title="진행평가_4">
-                                            진행평가_4
-                                            <div class="ci-show"></div>
+                                            <input type="checkbox" name="evform_evaluation_code[result9_number]" class="check_evaluation_code" value="진행평가_4" data-id="result9_number" data-title="진행평가_4"> 진행평가_4											<div class="ci-show"></div>
                                         </label>
-
 
                                         <label class="c-input ci-check">
                                             <!-- 	<input type="checkbox"> 시험_1 -->
-                                            <input type="checkbox" name="evform_evaluation_code[result10_number]" class="check_evaluation_code" value="진행평가_5" data-id="result10_number" data-title="진행평가_5">
-                                            진행평가_5
-                                            <div class="ci-show"></div>
+                                            <input type="checkbox" name="evform_evaluation_code[result10_number]" class="check_evaluation_code" value="진행평가_5" data-id="result10_number" data-title="진행평가_5"> 진행평가_5											<div class="ci-show"></div>
                                         </label>
 
 
@@ -739,7 +1109,6 @@
 
 
                 </div>
-                </form>
 
                 <div id="step-3" class="tab-pane" role="tabpanel" aria-labelledby="step-3" style="display: none;">
 
@@ -909,12 +1278,13 @@
                 </div>
 
             </div>
-
             <div class="toolbar toolbar-bottom" role="toolbar" style="text-align: right;">
                 <a href="#none" class="jv-btn jb-fill01-lg" id="btn-list-go">목록</a>
                 <a href="#none" class="jv-btn jb-fill04-lg" id="sw-btn-next">저장 및 다음단계 이동</a>
                 <div class="btn-wrap mt50">저장하기</div></div>
         </div>
-<!--    </form>-->
+    </form>
+    <iframe name="iframeprocess" id="iframeprocess" width="100%" height="0" frameborder="0"></iframe>
+
 
 </div>
