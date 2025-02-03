@@ -137,7 +137,7 @@
 
         <!-- 내용 -->
         <div class="mt30 con">
-            <textarea id="editor" name="contents" th:text="${board.contents() ?: ''}"></textarea>
+            <textarea class="tinymce-editor" name="contents" th:text="${board.contents() ?: ''}"></textarea>
         </div>
 
         <!-- 버튼 -->
